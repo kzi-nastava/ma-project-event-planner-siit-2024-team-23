@@ -1,15 +1,18 @@
 package com.example.fusmobilni.activities;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
+import android.window.OnBackInvokedDispatcher;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -19,6 +22,7 @@ import androidx.navigation.ui.NavigationUI;
 import com.example.fusmobilni.R;
 import com.example.fusmobilni.databinding.ActivityHomeBinding;
 import com.google.android.material.navigation.NavigationView;
+import androidx.activity.OnBackPressedCallback;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -60,6 +64,25 @@ public class HomeActivity extends AppCompatActivity {
 
         // This line will now correctly reference the NavHostFragment
 
+        // Hide or show items based on the user login status and role
+//        Menu menu = _navigationView.getMenu();
+//        menu.findItem(R.id.third_dummy_fragment).setVisible(false);
+
+
+        //    when the drawer is opened and user clicks the back btn we want to close
+        //    the drawer not to go back to main activity
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if(_drawer.isDrawerOpen(GravityCompat.START)){
+                    _drawer.closeDrawer(GravityCompat.START);
+                    return;
+                }
+                finish();
+            }
+        });
+
+
     }
     @Override
     protected void onStart() {
@@ -99,5 +122,7 @@ public class HomeActivity extends AppCompatActivity {
         _navController = Navigation.findNavController(this, R.id.fragment_nav_content_main);
         return NavigationUI.navigateUp(_navController, _topAppBarConfiguration) || super.onSupportNavigateUp();
     }
+
+
 
 }

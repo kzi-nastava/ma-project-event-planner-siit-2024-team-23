@@ -24,9 +24,15 @@
         android:label="Home"
         tools:layout="@layout/fragment_second_dummy"
         />
-    <fragment
+<!--    this need to be changed later!!!-->
+    <activity
         android:id="@+id/third_dummy_fragment"
-        android:name="com.example.fusmobilni.fragments.ThirdDummyFragment"
+        android:name="com.example.fusmobilni.activities.LoginActivity"
         android:label="Profile"
         tools:layout="@layout/fragment_third_dummy"/>
+    <activity
+        android:id="@+id/activity_register"
+        android:name="com.example.fusmobilni.activities.RegisterActivity"
+        android:label="Register"
+        tools:layout="@layout/activity_register"/>
 </navigation>
