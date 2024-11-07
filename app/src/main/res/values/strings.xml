@@ -1,7 +1,14 @@
 <resources>
-    <string name="app_name">FusMobilni</string>
+    <string name="app_name">EventHub</string>
     <string name="navigation_drawer_open">Open drawer</string>
     <string name="navigation_drawer_close">Closed Drawer</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="email_placeholder">abc@email.com</string>
+    <string name="sign_in">Sign in</string>
+    <string name="don_t_have_an_account">Don\'t have an account? <font color="#5669FF">Sign up</font></string>
+    <string name="sign_up">Sign up\n</string>
+    <string name="name_placeholder">Milan Lazarevic\n</string>
+    <string name="repeat_password">Repeat password</string>
+    <string name="your_password">Your password</string>
+    <string name="have_an_account">Already have an account?<font color="#5669FF">Sign in</font></string>
 </resources>
