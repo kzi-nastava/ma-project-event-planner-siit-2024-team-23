@@ -10,9 +10,6 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -28,11 +25,11 @@ import java.util.Set;
 
 public class HomeActivity extends AppCompatActivity {
     private ActivityHomeBinding _binding;
-    private AppBarConfiguration _appBarConfiguration;
+    private AppBarConfiguration _topAppBarConfiguration;
     private DrawerLayout _drawer;
     private NavigationView _navigationView;
     private NavController _navController;
-    private Toolbar _toolbar;
+    private Toolbar _topToolbar;
     private ActionBar _actionBar;
     private ActionBarDrawerToggle _actionBarDrawerToggle;
 
@@ -46,16 +43,16 @@ public class HomeActivity extends AppCompatActivity {
 
         _drawer = _binding.drawerLayout;
         _navigationView = _binding.navView;
-        _toolbar = _binding.activityHomeBase.topAppBar;
+        _topToolbar = _binding.activityHomeBase.topAppBar;
 
-        setSupportActionBar(_toolbar);
+        setSupportActionBar(_topToolbar);
         if (_actionBar != null) {
             _actionBar.setDisplayHomeAsUpEnabled(false);
             _actionBar.setHomeAsUpIndicator(R.drawable.ic_hamburger);
             _actionBar.setHomeButtonEnabled(false);
         }
 
-        _actionBarDrawerToggle = new ActionBarDrawerToggle(this, _drawer, _toolbar,
+        _actionBarDrawerToggle = new ActionBarDrawerToggle(this, _drawer, _topToolbar,
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         _drawer.addDrawerListener(_actionBarDrawerToggle);
         _actionBarDrawerToggle.syncState();
@@ -82,13 +79,13 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-        _appBarConfiguration = new AppBarConfiguration.Builder(R.id.home_fragment, R.id.dummy_fragment,R.id.second_dummy_fragment).setOpenableLayout(_drawer).build();
+        _topAppBarConfiguration = new AppBarConfiguration.Builder(R.id.home_fragment, R.id.dummy_fragment,R.id.second_dummy_fragment).setOpenableLayout(_drawer).build();
         NavigationUI.setupWithNavController(_navigationView, _navController);
-        NavigationUI.setupActionBarWithNavController(this, _navController, _appBarConfiguration);
+        NavigationUI.setupActionBarWithNavController(this, _navController, _topAppBarConfiguration);
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.navigation_menu, menu);
+        getMenuInflater().inflate(R.menu.toolbar_menu, menu);
         return true;
     }
     @Override
@@ -100,7 +97,7 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     public boolean onSupportNavigateUp() {
         _navController = Navigation.findNavController(this, R.id.fragment_nav_content_main);
-        return NavigationUI.navigateUp(_navController, _appBarConfiguration) || super.onSupportNavigateUp();
+        return NavigationUI.navigateUp(_navController, _topAppBarConfiguration) || super.onSupportNavigateUp();
     }
 
 }

@@ -24,4 +24,9 @@
         android:label="Home"
         tools:layout="@layout/fragment_second_dummy"
         />
+    <fragment
+        android:id="@+id/third_dummy_fragment"
+        android:name="com.example.fusmobilni.fragments.ThirdDummyFragment"
+        android:label="Profile"
+        tools:layout="@layout/fragment_third_dummy"/>
 </navigation>

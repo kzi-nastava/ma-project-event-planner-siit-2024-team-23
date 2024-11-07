@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#00FFFFFF"
     tools:context=".fragments.HomeFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -21,289 +22,137 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <TextView
-                android:id="@+id/textViewTop5Events"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/textViewTop5Events"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:text="Top 5 events in your city"
+                    android:textAlignment="viewStart"
+                    android:textSize="18sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/home_events_see_all_button"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="250dp"
+                    android:layout_marginEnd="20dp"
+                    android:text="See All"
+                    android:textColor="#2962FF"
+                    app:backgroundTint="#FFFFFF"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:strokeColor="@color/primary_blue_900"
+                    app:strokeWidth="2dp" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/eventsRecycleView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Top 5 events in your city"
-                android:textAlignment="center"
-                android:textSize="24sp" />
+                android:padding="14dp"
+                android:scrollbars="none"
+                android:orientation="horizontal"
 
-            <HorizontalScrollView
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="250dp"
-                android:padding="8dp"
-                android:scrollbars="none">
+                android:layout_height="wrap_content">
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/home_services_see_all_button"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="250dp"
+                    android:layout_marginEnd="20dp"
+                    android:text="See All"
+                    android:textColor="#2962FF"
+                    app:backgroundTint="#FFFFFF"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:strokeColor="@color/primary_blue_900"
+                    app:strokeWidth="2dp" />
 
-                    <!-- Material Cards for Top 5 Events -->
-                    <com.google.android.material.card.MaterialCardView
-                        android:layout_width="200dp"
-                        android:layout_height="200dp"
-                        android:layout_margin="8dp"
-                        app:cardCornerRadius="8dp"
+                <TextView
+                    android:id="@+id/textViewTop5Services2"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:text="Top 5 services in your city"
+                    android:textAlignment="viewStart"
+                    android:textSize="18sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-                        app:cardElevation="10dp">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Event 1" />
-                    </com.google.android.material.card.MaterialCardView>
-
-                    <com.google.android.material.card.MaterialCardView
-                        android:layout_width="200dp"
-                        android:layout_height="200dp"
-                        android:layout_margin="8dp"
-
-                        app:cardCornerRadius="8dp"
-                        app:cardElevation="10dp">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Event 2" />
-                    </com.google.android.material.card.MaterialCardView>
-
-                    <com.google.android.material.card.MaterialCardView
-                        android:layout_width="200dp"
-                        android:layout_height="200dp"
-                        android:layout_margin="8dp"
-                        app:cardCornerRadius="8dp"
-
-                        app:cardElevation="10dp">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Event 3" />
-                    </com.google.android.material.card.MaterialCardView>
-
-                    <com.google.android.material.card.MaterialCardView
-                        android:layout_width="200dp"
-                        android:layout_height="200dp"
-                        android:layout_margin="8dp"
-
-                        app:cardCornerRadius="8dp"
-                        app:cardElevation="10dp">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Event 4" />
-                    </com.google.android.material.card.MaterialCardView>
-
-                    <com.google.android.material.card.MaterialCardView
-                        android:layout_width="200dp"
-                        android:layout_height="200dp"
-                        android:layout_margin="8dp"
-
-                        app:cardCornerRadius="8dp"
-                        app:cardElevation="10dp">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Event 5" />
-                    </com.google.android.material.card.MaterialCardView>
-
-                </LinearLayout>
-            </HorizontalScrollView>
-
-            <TextView
-                android:id="@+id/textViewTop5Services"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/servicesRecycleView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Top 5 services in your city"
-                android:textAlignment="center"
-                android:textSize="24sp" />
+                android:padding="14dp"
+                android:scrollbars="none"
+                android:orientation="horizontal"
 
-            <HorizontalScrollView
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/home_products_see_all_button"
                 android:layout_width="match_parent"
-                android:layout_height="250dp"
-                android:padding="8dp"
-                android:scrollbars="none">
+                android:layout_height="wrap_content">
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
+                <com.google.android.material.button.MaterialButton
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="250dp"
+                    android:layout_marginEnd="20dp"
+                    android:text="See All"
+                    android:textColor="@color/primary_blue_900"
+                    app:backgroundTint="#FFFFFF"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:strokeColor="@color/primary_blue_900"
+                    app:strokeWidth="2dp" />
 
-                    <!-- Material Cards for Top 5 Services -->
-                    <com.google.android.material.card.MaterialCardView
-                        android:layout_width="200dp"
-                        android:layout_height="200dp"
-                        android:layout_margin="8dp"
-                        app:cardCornerRadius="8dp"
+                <TextView
+                    android:id="@+id/textViewTop5Products2"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:text="Top 5 products in your city"
+                    android:textAlignment="viewStart"
+                    android:textSize="18sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-                        app:cardElevation="10dp">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Service 1" />
-                    </com.google.android.material.card.MaterialCardView>
-
-                    <com.google.android.material.card.MaterialCardView
-                        android:layout_width="200dp"
-                        android:layout_height="200dp"
-                        android:layout_margin="8dp"
-                        app:cardCornerRadius="8dp"
-
-                        app:cardElevation="10dp">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Service 1" />
-                    </com.google.android.material.card.MaterialCardView>
-
-                    <com.google.android.material.card.MaterialCardView
-                        android:layout_width="200dp"
-                        android:layout_height="200dp"
-                        android:layout_margin="8dp"
-                        app:cardCornerRadius="8dp"
-
-                        app:cardElevation="10dp">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Service 1" />
-                    </com.google.android.material.card.MaterialCardView>
-
-                    <com.google.android.material.card.MaterialCardView
-                        android:layout_width="200dp"
-                        android:layout_height="200dp"
-                        android:layout_margin="8dp"
-                        app:cardCornerRadius="8dp"
-
-                        app:cardElevation="10dp">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Service 1" />
-                    </com.google.android.material.card.MaterialCardView>
-
-                    <com.google.android.material.card.MaterialCardView
-                        android:layout_width="200dp"
-                        android:layout_height="200dp"
-                        android:layout_margin="8dp"
-                        app:cardCornerRadius="8dp"
-
-                        app:cardElevation="10dp">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Service 1" />
-                    </com.google.android.material.card.MaterialCardView>
-
-                    <!-- Add more MaterialCardView for each service as needed -->
-
-                </LinearLayout>
-            </HorizontalScrollView>
-
-            <TextView
-                android:id="@+id/textViewTop5Products"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/productsRecycleView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Top 5 products in your city"
-                android:textAlignment="center"
-                android:textSize="24sp" />
+                android:padding="14dp"
+                android:scrollbars="none"
+                android:orientation="horizontal"
 
-            <HorizontalScrollView
-                android:layout_width="match_parent"
-                android:layout_height="250dp"
-                android:padding="8dp"
-                android:scrollbars="none">
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
-
-                    <!-- Material Cards for Top 5 Products -->
-                    <com.google.android.material.card.MaterialCardView
-                        android:layout_width="200dp"
-                        android:layout_height="200dp"
-
-                        android:layout_margin="8dp"
-                        app:cardCornerRadius="8dp"
-                        app:cardElevation="10dp">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Product 1" />
-                    </com.google.android.material.card.MaterialCardView>
-
-                    <com.google.android.material.card.MaterialCardView
-                        android:layout_width="200dp"
-                        android:layout_height="200dp"
-
-                        android:layout_margin="8dp"
-                        app:cardCornerRadius="8dp"
-                        app:cardElevation="10dp">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Product 1" />
-                    </com.google.android.material.card.MaterialCardView>
-
-                    <com.google.android.material.card.MaterialCardView
-                        android:layout_width="200dp"
-                        android:layout_height="200dp"
-
-                        android:layout_margin="8dp"
-                        app:cardCornerRadius="8dp"
-                        app:cardElevation="10dp">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Product 1" />
-                    </com.google.android.material.card.MaterialCardView>
-
-                    <com.google.android.material.card.MaterialCardView
-                        android:layout_width="200dp"
-                        android:layout_height="200dp"
-
-                        android:layout_margin="8dp"
-                        app:cardCornerRadius="8dp"
-                        app:cardElevation="10dp">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Product 1" />
-                    </com.google.android.material.card.MaterialCardView>
-
-                    <com.google.android.material.card.MaterialCardView
-                        android:layout_width="200dp"
-
-                        android:layout_height="200dp"
-                        android:layout_margin="8dp"
-                        app:cardCornerRadius="8dp"
-                        app:cardElevation="10dp">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Product 1" />
-                    </com.google.android.material.card.MaterialCardView>
-
-
-                    <!-- Add more MaterialCardView for each product as needed -->
-
-                </LinearLayout>
-            </HorizontalScrollView>
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>
