@@ -44,6 +44,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
         public TextView location;
 
         public EventsViewHolder(@NonNull View itemView) {
+
             super(itemView);
             title = itemView.findViewById(R.id.textViewServiceTitle);
             day = itemView.findViewById(R.id.textViewDay);

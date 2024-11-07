@@ -78,6 +78,11 @@ public class HomeActivity extends AppCompatActivity {
                     _drawer.closeDrawer(GravityCompat.START);
                     return;
                 }
+                // If the NavController has fragments in the back stack, pop the back stack
+                if (_navController.getCurrentDestination().getId() != R.id.home_fragment) {
+                    _navController.popBackStack();
+                    return;
+                }
                 finish();
             }
         });
@@ -91,18 +96,27 @@ public class HomeActivity extends AppCompatActivity {
         _navController.addOnDestinationChangedListener((navController, navDestination, bundle) -> {
             int id = navDestination.getId();
             boolean isTopLevelDestination = topLevelDestinations.contains(id);
-            if (!isTopLevelDestination) {
-                if(id == R.id.dummy_fragment){
 
-                    Toast.makeText(HomeActivity.this, "Dummy 1", Toast.LENGTH_LONG).show();
-                }else if(id == R.id.second_dummy_fragment){
-                    Toast.makeText(HomeActivity.this,"Dummy 2",Toast.LENGTH_LONG).show();
-                }
-                _drawer.closeDrawers();
+            _drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+            if (id == R.id.home_fragment) {
+                // Show drawer toggle only on the home fragment
+                _actionBarDrawerToggle.setDrawerIndicatorEnabled(true);
+                _drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+            } else {
+                // Show back button on other fragments
+                _actionBarDrawerToggle.setDrawerIndicatorEnabled(false);
+                _drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+                // Set a click listener on the navigation icon to handle the back action
+                _actionBarDrawerToggle.setToolbarNavigationClickListener(v -> {
+                    // Trigger the NavController's back stack
+                    if (_navController.getCurrentBackStackEntry() != null) {
+                        _navController.popBackStack();
+                    }
+                });
             }
         });
-
-        _topAppBarConfiguration = new AppBarConfiguration.Builder(R.id.home_fragment, R.id.dummy_fragment,R.id.second_dummy_fragment).setOpenableLayout(_drawer).build();
+        // add a list of top level fragments - on which you want hamburger menu
+        _topAppBarConfiguration = new AppBarConfiguration.Builder(R.id.home_fragment).setOpenableLayout(_drawer).build();
         NavigationUI.setupWithNavController(_navigationView, _navController);
         NavigationUI.setupActionBarWithNavController(this, _navController, _topAppBarConfiguration);
     }
