@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/base_navigation"
+    app:startDestination="@id/home_fragment"
+    >
+    <fragment
+        android:id="@+id/dummy_fragment"
+        android:name="com.example.fusmobilni.fragments.DummyFragment"
+        android:label="Home"
+        tools:layout="@layout/fragment_dummy"
+        />
+    <fragment
+        android:id="@+id/second_dummy_fragment"
+        android:name="com.example.fusmobilni.fragments.SecondDummyFragment"
+        android:label="Dummy"
+        tools:layout="@layout/fragment_second_dummy"
+        />
+    <fragment
+        android:id="@+id/home_fragment"
+        android:name="com.example.fusmobilni.fragments.HomeFragment"
+        android:label="Home"
+        tools:layout="@layout/fragment_second_dummy"
+        />
+</navigation>
