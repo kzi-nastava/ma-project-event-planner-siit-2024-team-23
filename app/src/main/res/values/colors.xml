@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <!--    BLUE    -->
+    <color name="primary_blue_900">#5669FF</color>
+    <color name="primary_blue_700">#7887FF</color>
+    <color name="primary_blue_500">#9AA5FF</color>
+    <color name="primary_blue_300">#BBC3FF</color>
+    <!--    CYAN    -->
+    <color name="secondary_cyan_900">#00F8FF</color>
+    <color name="secondary_cyan_700">#66FBFF</color>
+    <color name="secondary_cyan_500">#99FCFF</color>
+    <color name="secondary_cyan_300">#CCFEFF</color>
+
+    <!--    TEXT   -->
+    <color name="text_900">#120D26</color>
+    <color name="text_800">#29253C</color>
+    <color name="text_700">#888693</color>
+    <color name="text_600">#B8B6BE</color>
+    <color name="text_500">#D0CFD4</color>
+    <color name="text_400">#E7E7E9</color>
+
+    <!--    ACCENT COLORS    -->
+    <color name="accent_red">#F0635A</color>
+    <color name="accent_orange">#F59762</color>
+    <color name="accent_green">#29D697</color>
+    <color name="accent_blue">#46CDFB</color>
+    <color name="accent_purple">#8C3EF1</color>
+    <color name="accent_yellow">#FDC400</color>
+
+    <!--    BG     -->
+    <color name="bg_black">#2D2D3A</color>
+    <color name="bg_gray">#858585</color>
+    <color name="bg_light_gray">#E5E5E5</color>
+
+
+
+</resources>
