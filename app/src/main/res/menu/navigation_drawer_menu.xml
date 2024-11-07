@@ -24,7 +24,10 @@
                 android:id="@+id/second_dummy_fragment"
                 android:icon="@drawable/ic_message"
                 android:title="Messages" />
-
+            <item
+                android:id="@+id/fragment_service_view"
+                android:icon="@drawable/services_icon"
+                android:title="My Services"/>
 
         </menu>
     </item>

@@ -3,13 +3,14 @@ package com.example.fusmobilni.fragments;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import com.example.fusmobilni.R;
 import com.example.fusmobilni.adapters.EventsAdapter;
 import com.example.fusmobilni.adapters.ProductsAdapter;
 import com.example.fusmobilni.adapters.ServicesAdapter;
@@ -75,13 +76,14 @@ public class HomeFragment extends Fragment {
         events = fillEvents();
         services = fillServices();
         products = fillProducts();
-        // Set up RecyclerView with LayoutManager
 
-        // Optionally, set up the adapter
         this._binding.eventsRecycleView.setAdapter(new EventsAdapter(events));
         this._binding.servicesRecycleView.setAdapter(new ServicesAdapter(services));
         this._binding.productsRecycleView.setAdapter(new ProductsAdapter(products));
-        //this._binding.productsRecycleView.setAdapter();
+
+        this._binding.homeEventsSeeAllButton.setOnClickListener(v->{
+            Navigation.findNavController(view).navigate(R.id.action_homeFragment_to_searchFragment);
+        });
 
         return view;
     }

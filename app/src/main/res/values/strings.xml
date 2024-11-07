@@ -3,6 +3,20 @@
     <string name="navigation_drawer_open">Open drawer</string>
     <string name="navigation_drawer_close">Closed Drawer</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="label">Name</string>
+    <string-array name="categories">
+        <item>Music</item>
+        <item>Food</item>
+        <item>Beverages</item>
+        <item>Sport</item>
+    </string-array>
+
+    <string-array name="EventTypes">
+        <item>Svadba</item>
+        <item>SLavlje</item>
+        <item>Veselje</item>
+        <item>Rodjendan</item>
+    </string-array>
     <string name="email_placeholder">abc@email.com</string>
     <string name="sign_in">Sign in</string>
     <string name="don_t_have_an_account">Don\'t have an account? <font color="#5669FF">Sign up</font></string>
