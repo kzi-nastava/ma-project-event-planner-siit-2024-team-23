@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--
+    u user              auth user
+
+all
+    home                home
+    see events          events
+    products            products
+    services            services
+
+                    notifications
+                        notifications
+                        messages
+profile
+    register            profile
+    login               logout
+
+-->
+    <group android:checkableBehavior="single">
+        <item
+            android:title="Home">
+            <menu>
+
+                <item
+                    android:id="@id/home_fragment"
+                    android:icon="@drawable/ic_home_big_black"
+                    android:title="Home" />
+                <item
+                    android:id="@+id/event_fragment"
+                    android:icon="@drawable/baseline_event_24"
+                    android:title="Events" />
+                <item
+                    android:id="@+id/products_fragment"
+                    android:icon="@drawable/outline_shopping_bag_24"
+                    android:title="Products" />
+                <item
+                    android:id="@+id/services_fragment"
+                    android:icon="@drawable/ic_notification"
+                    android:title="Services" />
+
+            </menu>
+
+        </item>
+
+    </group>
+
+    <group android:checkableBehavior="single">
+        <item
+            android:title="Notifications"
+            >
+            <menu>
+                <item
+                    android:id="@+id/messages_fragment"
+                    android:icon="@drawable/outline_message_24"
+                    android:title="Messages" />
+                <item
+                    android:id="@+id/notifications_fragment"
+                    android:icon="@drawable/ic_notification"
+                    android:title="Notifications" />
+            </menu>
+        </item>
+    </group>
+
+    <group android:checkableBehavior="single">
+        <item
+            android:title="Profile"
+            >
+            <menu>
+                <item
+                    android:id="@+id/login_activity"
+                    android:icon="@drawable/baseline_login_24"
+                    android:title="Login" />
+                <item
+                    android:id="@+id/register_activity"
+                    android:icon="@drawable/ic_person"
+                    android:title="Register" />
+            </menu>
+        </item>
+    </group>
+
+</menu>

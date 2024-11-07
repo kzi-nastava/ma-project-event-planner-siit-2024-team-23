@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/user_navigation"
+    app:startDestination="@id/home_fragment">
+
+    <!-- Home Section -->
+    <fragment
+        android:id="@+id/home_fragment"
+        android:name="com.example.fusmobilni.fragments.HomeFragment"
+        android:label="Home"
+        tools:layout="@layout/fragment_home"
+        >
+        <action
+            android:id="@+id/action_home_to_events"
+            app:destination="@id/event_fragment" />
+        <action
+            android:id="@+id/action_home_to_products"
+            app:destination="@id/products_fragment" />
+        <action
+            android:id="@+id/action_home_to_services"
+            app:destination="@id/services_fragment" />
+        <action
+            android:id="@+id/action_home_fragment_to_notifications_fragment"
+            app:destination="@id/notifications_fragment" />
+        <action
+            android:id="@+id/action_home_fragment_to_messages_fragment"
+            app:destination="@id/messages_fragment" />
+        <action
+            android:id="@+id/action_home_fragment_to_login_activity"
+            app:destination="@id/login_activity" />
+        <action
+            android:id="@+id/action_home_fragment_to_register_activity"
+            app:destination="@id/register_activity" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/event_fragment"
+        android:name="com.example.fusmobilni.fragments.EventSearchFragment"
+        android:label="Events"
+        tools:layout="@layout/event_fragment_search"
+        >
+        <action
+            android:id="@+id/action_event_to_home"
+            app:destination="@id/home_fragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/products_fragment"
+        android:name="com.example.fusmobilni.fragments.ProductsFragment"
+        android:label="Products"
+        tools:layout="@layout/fragment_products"
+        >
+        <action
+            android:id="@+id/action_products_to_home"
+            app:destination="@id/home_fragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/services_fragment"
+        android:name="com.example.fusmobilni.fragments.ServiceView"
+        android:label="Services"
+        tools:layout="@layout/fragment_service_view"
+        >
+        <action
+            android:id="@+id/action_services_to_home"
+            app:destination="@id/home_fragment" />
+    </fragment>
+
+    <!-- Notifications Section -->
+    <fragment
+        android:id="@+id/notifications_fragment"
+        android:name="com.example.fusmobilni.fragments.NotificationsFragment"
+        android:label="Notifications"
+        tools:layout="@layout/fragment_notifications"
+        >
+        <action
+            android:id="@+id/action_notifications_fragment_to_home_fragment"
+            app:destination="@id/home_fragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/messages_fragment"
+        android:name="com.example.fusmobilni.fragments.MessagesFragment"
+        android:label="Messages"
+        tools:layout="@layout/fragment_messages"
+        >
+        <action
+            android:id="@+id/action_messages_fragment_to_home_fragment"
+            app:destination="@id/home_fragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/events_search_fragment"
+        android:name="com.example.fusmobilni.fragments.EventSearchFragment"
+        android:label="Search"
+        tools:layout="@layout/event_fragment_search"/>
+    <action
+        android:id="@+id/action_homeFragment_to_searchFragment"
+        app:destination="@id/events_search_fragment" />
+
+    <!-- Profile Section -->
+    <activity
+        android:id="@+id/login_activity"
+        android:name="com.example.fusmobilni.activities.LoginActivity"
+        android:label="Login"
+        tools:layout="@layout/activity_login"
+        />
+
+    <activity
+        android:id="@+id/register_activity"
+        android:name="com.example.fusmobilni.activities.RegisterActivity"
+        android:label="Register"
+        tools:layout="@layout/activity_register"
+        />
+
+
+</navigation>
