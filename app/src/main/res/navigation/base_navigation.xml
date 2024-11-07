@@ -43,7 +43,6 @@
     <action
         android:id="@+id/action_homeFragment_to_searchFragment"
         app:destination="@id/events_search_fragment" />
-
     <activity
         android:id="@+id/activity_register"
         android:name="com.example.fusmobilni.activities.RegisterActivity"
