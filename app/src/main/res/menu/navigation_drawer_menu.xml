@@ -11,7 +11,11 @@
             <item
                 android:id="@+id/third_dummy_fragment"
                 android:icon="@drawable/ic_person"
-                android:title="Profile" />
+                android:title="Login" />
+            <item
+                android:id="@+id/activity_register"
+                android:icon="@drawable/ic_person"
+                android:title="Register" />
             <item
                 android:id="@+id/dummy_fragment"
                 android:icon="@drawable/ic_notification"
@@ -20,7 +24,10 @@
                 android:id="@+id/second_dummy_fragment"
                 android:icon="@drawable/ic_message"
                 android:title="Messages" />
-
+            <item
+                android:id="@+id/fragment_service_view"
+                android:icon="@drawable/services_icon"
+                android:title="My Services"/>
 
         </menu>
     </item>

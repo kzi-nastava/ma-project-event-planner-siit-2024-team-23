@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".activities.RegisterActivity">
+
+    <LinearLayout
+        android:layout_width="344dp"
+        android:layout_height="689dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="match_parent"
+            android:layout_height="87dp"
+            app:srcCompat="@mipmap/ic_launcher" />
+
+        <TextView
+            android:id="@+id/appName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/poppins_bold"
+            android:text="@string/app_name"
+            android:textAlignment="center"
+            android:textColor="@color/text_800"
+            android:textSize="35sp" />
+
+        <TextView
+            android:id="@+id/signIn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/poppins_medium"
+            android:text="@string/sign_up"
+            android:textColor="@color/text_800"
+            android:textSize="24sp" />
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/nameInput"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10sp"
+            android:hint="@string/name_placeholder"
+            app:startIconDrawable="@drawable/ic_home_small_black"
+            app:startIconTint="@color/text_500"> <!-- Optional: Customize icon tint -->
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/emailInput"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10sp"
+            android:hint="@string/email_placeholder"
+            app:startIconDrawable="@drawable/ic_home_small_black"
+            app:startIconTint="@color/text_500"> <!-- Optional: Customize icon tint -->
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/passwordInput"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10sp"
+            android:hint="@string/your_password"
+            app:endIconMode="password_toggle"
+            app:startIconDrawable="@drawable/ic_home_small_black"
+            app:startIconTint="@color/text_500">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/repeatPasswordInput"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10sp"
+            android:hint="@string/repeat_password"
+            app:endIconMode="password_toggle"
+            app:startIconDrawable="@drawable/ic_home_small_black"
+            app:startIconTint="@color/text_500">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <RadioGroup
+            android:id="@+id/toggleGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <!-- Event Organizer Toggle Button -->
+            <RadioButton
+                android:id="@+id/toggle_event_organizer"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/toggle_button_selector"
+                android:text="Event Organizer" />
+
+            <!-- Product Owner Toggle Button -->
+            <RadioButton
+                android:id="@+id/toggle_product_owner"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/toggle_button_selector"
+                android:text="Product Owner" />
+        </RadioGroup>
+
+        <Button
+            android:id="@+id/button_with_arrow"
+            android:layout_width="match_parent"
+            android:layout_height="57dp"
+            android:backgroundTint="@color/primary_blue_900"
+            android:drawableEnd="@drawable/ic_arrow_right_white"
+            android:fontFamily="@font/poppins_bold"
+            android:gravity="center"
+            android:padding="12dp"
+            android:text="@string/sign_up"
+            android:textColor="@color/white"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/loginText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/have_an_account"
+            android:textAlignment="center"
+            android:clickable="true"
+            android:enabled="true"
+            />
+
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

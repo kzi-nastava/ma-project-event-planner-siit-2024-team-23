@@ -24,9 +24,29 @@
         android:label="Home"
         tools:layout="@layout/fragment_second_dummy"
         />
-    <fragment
+<!--    this need to be changed later!!!-->
+    <activity
         android:id="@+id/third_dummy_fragment"
-        android:name="com.example.fusmobilni.fragments.ThirdDummyFragment"
+        android:name="com.example.fusmobilni.activities.LoginActivity"
         android:label="Profile"
         tools:layout="@layout/fragment_third_dummy"/>
+    <fragment
+        android:id="@+id/fragment_service_view"
+        android:name="com.example.fusmobilni.fragments.ServiceView"
+        android:label="My Services"
+        tools:layout="@layout/fragment_service_view"/>
+  <fragment>
+        android:id="@+id/events_search_fragment"
+        android:name="com.example.fusmobilni.fragments.EventSearchFragment"
+        android:label="Search"
+        tools:layout="@layout/event_fragment_search"/>
+    <action
+        android:id="@+id/action_homeFragment_to_searchFragment"
+        app:destination="@id/events_search_fragment" />
+
+    <activity
+        android:id="@+id/activity_register"
+        android:name="com.example.fusmobilni.activities.RegisterActivity"
+        android:label="Register"
+        tools:layout="@layout/activity_register"/>
 </navigation>
