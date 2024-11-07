@@ -6,6 +6,8 @@ import android.os.Bundle;
 
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,6 +24,7 @@ import com.example.fusmobilni.adapters.PupServiceAdapter;
 import com.example.fusmobilni.databinding.FragmentServiceCreationBinding;
 import com.example.fusmobilni.databinding.FragmentServiceViewBinding;
 import com.example.fusmobilni.model.DummyService;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -33,6 +36,8 @@ public class ServiceView extends Fragment {
     FragmentServiceViewBinding binding;
     private RecyclerView recyclerView;
     private PupServiceAdapter serviceAdapter;
+
+    private FloatingActionButton floatingActionButton;
     private List<DummyService> services;
 
     public ServiceView() {
@@ -65,8 +70,13 @@ public class ServiceView extends Fragment {
         services.add(new DummyService("Service 5", "Description 5"));
 
         serviceAdapter = new PupServiceAdapter(services);
-
         recyclerView.setAdapter(serviceAdapter);
+
+        floatingActionButton = binding.floatingActionButton;
+        floatingActionButton.setOnClickListener(v -> {
+            Navigation.findNavController(view).navigate(R.id.action_serviceView_toServiceCreation);
+        });
+
 
         return view;
     }

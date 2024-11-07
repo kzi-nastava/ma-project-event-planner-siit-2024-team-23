@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -32,6 +33,10 @@ public class ServiceCreation extends Fragment implements ItemClickListener {
     private RecyclerAdapter imageAdapter;
     private RecyclerView recyclerView;
     private Button imageButton;
+
+    private Button submitButton;
+
+    private Button cancelButton;
     int PICK_IMAGE_MULTIPLE = 1;
     ArrayList<Uri> imageUris = new ArrayList<>();
 
@@ -80,6 +85,16 @@ public class ServiceCreation extends Fragment implements ItemClickListener {
         imageAdapter = new RecyclerAdapter(imageUris, this);
         recyclerView.setLayoutManager(new GridLayoutManager(requireContext(), 4));
         recyclerView.setAdapter(imageAdapter);
+
+        submitButton = binding.submitButton;
+        cancelButton = binding.cancelButton;
+
+        submitButton.setOnClickListener(v -> {
+            Navigation.findNavController(view).navigate(R.id.action_serviceCreation_toServiceView);
+        });
+        cancelButton.setOnClickListener(v -> {
+            Navigation.findNavController(view).navigate(R.id.action_serviceCreation_toServiceView);
+        });
 
         return view;
     }
