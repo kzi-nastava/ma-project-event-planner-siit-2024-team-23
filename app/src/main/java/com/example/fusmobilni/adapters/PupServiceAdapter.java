@@ -5,6 +5,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,18 +17,23 @@ import com.bumptech.glide.Glide;
 import com.example.fusmobilni.R;
 import com.example.fusmobilni.interfaces.DeleteServiceListener;
 import com.example.fusmobilni.model.DummyService;
+import com.example.fusmobilni.model.Event;
 import com.example.fusmobilni.model.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class PupServiceAdapter extends RecyclerView.Adapter<PupServiceAdapter.ServiceViewHolder> {
+public class PupServiceAdapter extends RecyclerView.Adapter<PupServiceAdapter.ServiceViewHolder> implements Filterable {
 
     private List<DummyService> serviceList;
+
+    private List<DummyService> filterableServices;
 
     private DeleteServiceListener clickListener;
 
     public PupServiceAdapter(List<DummyService> serviceList, DeleteServiceListener clickListener) {
         this.serviceList = serviceList;
+        this.filterableServices = new ArrayList<>(serviceList);
         this.clickListener = clickListener;
     }
 
@@ -49,6 +56,36 @@ public class PupServiceAdapter extends RecyclerView.Adapter<PupServiceAdapter.Se
     @Override
     public int getItemCount() {
         return serviceList.size();
+    }
+
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
+                List<DummyService> filteredList = new ArrayList<>();
+                if (constraint == null || constraint.length() == 0) {
+                    filteredList.addAll(filterableServices);
+                } else {
+                    String filterPatter = constraint.toString().toLowerCase().trim();
+                    for (DummyService service : filterableServices) {
+                        if (service.getTitle().toLowerCase().contains(filterPatter)) {
+                            filteredList.add(service);
+                        }
+                    }
+                }
+                FilterResults results = new FilterResults();
+                results.values = filteredList;
+                return results;
+            }
+
+            @Override
+            protected void publishResults(CharSequence constraint, FilterResults results) {
+                serviceList.clear();
+                serviceList.addAll((List) results.values);
+                notifyDataSetChanged();
+            }
+        };
     }
 
     public static class ServiceViewHolder extends RecyclerView.ViewHolder {

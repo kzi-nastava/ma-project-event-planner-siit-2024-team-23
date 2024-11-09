@@ -12,6 +12,8 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,6 +43,8 @@ public class ServiceView extends Fragment implements DeleteServiceListener {
     private PupServiceAdapter serviceAdapter;
     private View modalBackground;
     private View deleteModal;
+
+    private SearchView searchView;
     private FloatingActionButton floatingActionButton;
     private List<DummyService> services = new ArrayList<>();
 
@@ -77,6 +81,21 @@ public class ServiceView extends Fragment implements DeleteServiceListener {
         });
         modalBackground = binding.modalBackground;
         deleteModal = view.findViewById(R.id.nigger);
+        searchView = binding.searchView;
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                serviceAdapter.getFilter().filter(newText);
+                return false;
+            }
+        });
         return view;
     }
 
