@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.fusmobilni.R;
+import com.example.fusmobilni.interfaces.DeleteServiceListener;
 import com.example.fusmobilni.model.DummyService;
 import com.example.fusmobilni.model.Service;
 
@@ -22,8 +23,11 @@ public class PupServiceAdapter extends RecyclerView.Adapter<PupServiceAdapter.Se
 
     private List<DummyService> serviceList;
 
-    public PupServiceAdapter(List<DummyService> serviceList) {
+    private DeleteServiceListener clickListener;
+
+    public PupServiceAdapter(List<DummyService> serviceList, DeleteServiceListener clickListener) {
         this.serviceList = serviceList;
+        this.clickListener = clickListener;
     }
 
     @NonNull
@@ -39,6 +43,7 @@ public class PupServiceAdapter extends RecyclerView.Adapter<PupServiceAdapter.Se
         DummyService service = serviceList.get(position);
         holder.title.setText(service.getTitle());
         holder.description.setText(service.getDescription());
+        holder.deleteButton.setOnClickListener(v -> clickListener.onDeleteService(position));
     }
 
     @Override
@@ -59,6 +64,7 @@ public class PupServiceAdapter extends RecyclerView.Adapter<PupServiceAdapter.Se
             image = itemView.findViewById(R.id.cardImage);
             editButton = itemView.findViewById(R.id.editButton);
             deleteButton = itemView.findViewById(R.id.deleteButton);
+
         }
     }
 }

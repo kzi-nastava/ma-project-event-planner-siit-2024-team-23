@@ -12,9 +12,11 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -23,6 +25,7 @@ import com.example.fusmobilni.R;
 import com.example.fusmobilni.adapters.PupServiceAdapter;
 import com.example.fusmobilni.databinding.FragmentServiceCreationBinding;
 import com.example.fusmobilni.databinding.FragmentServiceViewBinding;
+import com.example.fusmobilni.interfaces.DeleteServiceListener;
 import com.example.fusmobilni.model.DummyService;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -31,14 +34,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class ServiceView extends Fragment {
+public class ServiceView extends Fragment implements DeleteServiceListener {
 
     FragmentServiceViewBinding binding;
     private RecyclerView recyclerView;
     private PupServiceAdapter serviceAdapter;
-
+    private View modalBackground;
+    private View deleteModal;
     private FloatingActionButton floatingActionButton;
-    private List<DummyService> services;
+    private List<DummyService> services = new ArrayList<>();
 
     public ServiceView() {
         // Required empty public constructor
@@ -62,22 +66,47 @@ public class ServiceView extends Fragment {
         recyclerView = binding.recyclerView;
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        services = new ArrayList<>();
-        services.add(new DummyService("Service 1", "Description 1"));
-        services.add(new DummyService("Service 2", "Description 2"));
-        services.add(new DummyService("Service 3", "Description 3"));
-        services.add(new DummyService("Service 4", "Description 4"));
-        services.add(new DummyService("Service 5", "Description 5"));
+        addDummyData();
 
-        serviceAdapter = new PupServiceAdapter(services);
+        serviceAdapter = new PupServiceAdapter(services, this);
         recyclerView.setAdapter(serviceAdapter);
 
         floatingActionButton = binding.floatingActionButton;
         floatingActionButton.setOnClickListener(v -> {
             Navigation.findNavController(view).navigate(R.id.action_serviceView_toServiceCreation);
         });
-
-
+        modalBackground = binding.modalBackground;
+        deleteModal = view.findViewById(R.id.nigger);
         return view;
     }
+
+    @Override
+    public void onDeleteService(int position) {
+        modalBackground.setVisibility(View.VISIBLE);
+        deleteModal.setVisibility(View.VISIBLE);
+        Button cancelButton = deleteModal.findViewById(R.id.cancelButton);
+        Button confirmButton = deleteModal.findViewById(R.id.confirmButton);
+
+        cancelButton.setOnClickListener(v -> {
+            modalBackground.setVisibility(View.INVISIBLE);
+            deleteModal.setVisibility(View.INVISIBLE);
+        });
+
+        confirmButton.setOnClickListener(v -> {
+            this.services.remove(position);
+            serviceAdapter.notifyItemRemoved(position);
+            serviceAdapter.notifyItemRangeChanged(position, services.size());
+            modalBackground.setVisibility(View.INVISIBLE);
+            deleteModal.setVisibility(View.INVISIBLE);
+        });
+    }
+
+    public void addDummyData() {
+        services.add(new DummyService("Service 1", "Description 1"));
+        services.add(new DummyService("Service 2", "Description 2"));
+        services.add(new DummyService("Service 3", "Description 3"));
+        services.add(new DummyService("Service 4", "Description 4"));
+        services.add(new DummyService("Service 5", "Description 5"));
+    }
+
 }
