@@ -1,37 +1,29 @@
 package com.example.fusmobilni.fragments;
 
-import android.graphics.Color;
-import android.net.Uri;
-import android.os.Bundle;
 
+
+import android.os.Bundle;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.Navigation;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TextView;
-
+import android.widget.ImageButton;
 import com.example.fusmobilni.R;
 import com.example.fusmobilni.adapters.PupServiceAdapter;
-import com.example.fusmobilni.databinding.FragmentServiceCreationBinding;
 import com.example.fusmobilni.databinding.FragmentServiceViewBinding;
 import com.example.fusmobilni.interfaces.DeleteServiceListener;
 import com.example.fusmobilni.model.DummyService;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
-import java.lang.reflect.Field;
+import com.google.android.material.slider.RangeSlider;
+import com.google.android.material.switchmaterial.SwitchMaterial;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,7 +35,7 @@ public class ServiceView extends Fragment implements DeleteServiceListener {
     private PupServiceAdapter serviceAdapter;
     private View modalBackground;
     private View deleteModal;
-
+    private ImageButton filterBtn;
     private SearchView searchView;
     private FloatingActionButton floatingActionButton;
     private List<DummyService> services = new ArrayList<>();
@@ -96,6 +88,64 @@ public class ServiceView extends Fragment implements DeleteServiceListener {
                 return false;
             }
         });
+
+        filterBtn = binding.filterBtn;
+        filterBtn.setOnClickListener(v -> {
+            BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(requireActivity(), R.style.FullScreenBottomSheetDialog);
+            View dialogView = getLayoutInflater().inflate(R.layout.service_filter, null);
+            bottomSheetDialog.setContentView(dialogView);
+            AutoCompleteTextView categoryDropdown = dialogView.findViewById(R.id.text_services_category);
+            AutoCompleteTextView eventTypeDropdown = dialogView.findViewById(R.id.text_event_type);
+            RangeSlider priceRangeSlider = dialogView.findViewById(R.id.range_slider_price);
+            priceRangeSlider.setValueFrom(0f);
+            priceRangeSlider.setValueTo(1000f);
+            priceRangeSlider.setStepSize(1f);
+            priceRangeSlider.setValues(100f, 500f);
+            priceRangeSlider.setLabelFormatter(value -> "$" + String.format("%.0f", value));
+            SwitchMaterial availabilitySwitch = dialogView.findViewById(R.id.switch_availability);
+            String[] categories = getResources().getStringArray(R.array.categories);
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, categories);
+            categoryDropdown.setAdapter(adapter);
+            String[] eventTypes = getResources().getStringArray(R.array.EventTypes);
+            ArrayAdapter<String> eventAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, eventTypes);
+            eventTypeDropdown.setAdapter(eventAdapter);
+            bottomSheetDialog.setContentView(dialogView);
+            bottomSheetDialog.show();
+
+            Button cancelBtn = dialogView.findViewById(R.id.cancelButton);
+            Button applyBtn = dialogView.findViewById(R.id.applyButton);
+            cancelBtn.setOnClickListener(filterView -> bottomSheetDialog.cancel());
+
+            applyBtn.setOnClickListener(filteredServices -> {
+                String selectedCategory = categoryDropdown.getText().toString();
+                String selectedEventType = eventTypeDropdown.getText().toString();
+                List<Float> priceRangeValues = priceRangeSlider.getValues();
+                float minPrice = priceRangeValues.get(0);
+                float maxPrice = priceRangeValues.get(1);
+                boolean availability = availabilitySwitch.isChecked();
+
+                List<DummyService> filteredServicesList = new ArrayList<>();
+                for (DummyService service : services) {
+                    boolean matchesCategory = service.getCategory().equalsIgnoreCase(selectedCategory) || selectedCategory.isEmpty();
+                    boolean matchesEventType = service.getEventType().equalsIgnoreCase(selectedEventType) || selectedEventType.isEmpty();
+                    boolean matchesPrice = service.getPrice() >= minPrice && service.getPrice() <= maxPrice;
+                    boolean matchesAvailability = service.isAvailable() == availability;
+
+                    if (matchesCategory && matchesEventType && matchesPrice && matchesAvailability) {
+                        filteredServicesList.add(service);
+                    }
+                }
+
+                // Update the adapter with the filtered list
+                serviceAdapter.updateServiceList(filteredServicesList);
+
+                // Close the bottom sheet dialog
+                bottomSheetDialog.dismiss();
+            });
+
+
+        });
+
         return view;
     }
 
@@ -121,10 +171,10 @@ public class ServiceView extends Fragment implements DeleteServiceListener {
     }
 
     public void addDummyData() {
-        services.add(new DummyService("Service 1", "Description 1"));
-        services.add(new DummyService("Service 2", "Description 2"));
-        services.add(new DummyService("Service 3", "Description 3"));
-        services.add(new DummyService("Service 4", "Description 4"));
+        services.add(new DummyService("Service 1", "Description 1", "Sport", "Svadba", true, 350.78));
+        services.add(new DummyService("Service 2", "Description 2", "Music", "Veselje", false, 600));
+        services.add(new DummyService("Service 3", "Description 3", "Sport", "Veselje", false, 800));
+        services.add(new DummyService("Service 4", "Description 4", "Food", "Rodjendan", true, 100));
         services.add(new DummyService("Service 5", "Description 5"));
     }
 

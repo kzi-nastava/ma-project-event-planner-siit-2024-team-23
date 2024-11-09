@@ -58,6 +58,11 @@ public class PupServiceAdapter extends RecyclerView.Adapter<PupServiceAdapter.Se
         return serviceList.size();
     }
 
+    public void updateServiceList(List<DummyService> newServiceList) {
+        this.serviceList = new ArrayList<>(newServiceList);
+        notifyDataSetChanged();
+    }
+
     @Override
     public Filter getFilter() {
         return new Filter() {
