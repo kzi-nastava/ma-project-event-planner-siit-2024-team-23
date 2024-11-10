@@ -69,7 +69,7 @@ public class ServiceView extends Fragment implements DeleteServiceListener {
 
         floatingActionButton = binding.floatingActionButton;
         floatingActionButton.setOnClickListener(v -> {
-            Navigation.findNavController(view).navigate(R.id.action_serviceView_toServiceCreation);
+            Navigation.findNavController(view).navigate(R.id.action_serviceView_toServiceCreationStepOne);
         });
         modalBackground = binding.modalBackground;
         deleteModal = view.findViewById(R.id.nigger);
