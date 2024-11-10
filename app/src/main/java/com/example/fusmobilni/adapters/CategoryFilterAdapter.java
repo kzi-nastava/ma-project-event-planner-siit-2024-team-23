@@ -24,6 +24,17 @@ public class CategoryFilterAdapter extends RecyclerView.Adapter<CategoryFilterAd
 
     }
 
+    public Category getSelectedCategory() {
+       if(selectedCategory == -1){
+           return null;
+       }
+       return _categories.get(selectedCategory);
+    }
+
+    public void setSelectedCategory(int selectedCategory) {
+        this.selectedCategory = selectedCategory;
+    }
+
     @NonNull
     @Override
     public CategoryFilterAdapter.CategoryFilterViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

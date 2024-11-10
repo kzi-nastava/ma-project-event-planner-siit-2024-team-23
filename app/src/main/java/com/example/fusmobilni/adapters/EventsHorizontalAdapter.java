@@ -11,7 +11,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fusmobilni.R;
-import com.example.fusmobilni.model.Category;
 import com.example.fusmobilni.model.Event;
 
 import java.util.ArrayList;
@@ -21,8 +20,13 @@ public class EventsHorizontalAdapter extends RecyclerView.Adapter<EventsHorizont
     private List<Event> _eventList;
     private List<Event> _eventsFull;
     private List<Event> _pagedEvents;
-    private int currentPage = 0;
-    private int itemsPerPage = 5;
+    private String _constraint = "";
+    private int _currentPage = 0;
+    private int _itemsPerPage = 5;
+
+    private String _selectedCategory = "";
+    private String _selectedLocation = "";
+    private String _selectedDate = "";
 
     public EventsHorizontalAdapter() {
         this._eventList = new ArrayList<>();
@@ -40,25 +44,40 @@ public class EventsHorizontalAdapter extends RecyclerView.Adapter<EventsHorizont
         this._eventsFull = new ArrayList<>(list);
         notifyDataSetChanged();
     }
-    public void setFilteringData(List<Event> list){
-        this._eventList  = new ArrayList<>(list);
+
+    public void setFilteringData(List<Event> list) {
+        this._eventList = new ArrayList<>(list);
         notifyDataSetChanged();
     }
+
     public void setData(List<Event> list) {
         this._pagedEvents = new ArrayList<>(list);
         notifyDataSetChanged();
     }
 
+    public void setFilters(String constraint,String category, String location, String date) {
+        _selectedCategory = category.toLowerCase().trim();
+        _selectedDate = date.toLowerCase().trim();
+        _selectedLocation = location.toLowerCase().trim();
+        _constraint = constraint.toLowerCase().trim();
+        notifyDataSetChanged();
+        applyFilters();
+    }
+
+    private void applyFilters() {
+        getFilter().filter(_constraint);
+    }
+
     public void loadPage(int page) {
-        if (page < 0 || page * itemsPerPage >= _eventList.size()) {
+        if (page < 0) {
             return;
         }
 
-        currentPage = page;
+        _currentPage = page;
 
-        int start = page * itemsPerPage;
-        int end = start + itemsPerPage;
-        if(end > _eventList.size()){
+        int start = page * _itemsPerPage;
+        int end = start + _itemsPerPage;
+        if (end > _eventList.size()) {
             end = _eventList.size();
         }
         List<Event> pageCategories = _eventList.subList(start, end);
@@ -68,14 +87,14 @@ public class EventsHorizontalAdapter extends RecyclerView.Adapter<EventsHorizont
     }
 
     public void prevPage() {
-        if (currentPage > 0) {
-            loadPage(currentPage - 1);
+        if (_currentPage > 0) {
+            loadPage(_currentPage - 1);
         }
     }
 
     public void nextPage() {
-        if ((currentPage + 1) * itemsPerPage < _eventsFull.size()) {
-            loadPage(currentPage + 1);
+        if ((_currentPage + 1) * _itemsPerPage < _eventsFull.size()) {
+            loadPage(_currentPage + 1);
         }
     }
 
@@ -85,17 +104,18 @@ public class EventsHorizontalAdapter extends RecyclerView.Adapter<EventsHorizont
             @Override
             protected FilterResults performFiltering(CharSequence constraint) {
                 List<Event> filteredList = new ArrayList<>();
-                if (constraint == null || constraint.length() == 0) {
-                    filteredList.addAll(_eventsFull);
-                } else {
-                    String filterPattern = constraint.toString().toLowerCase().trim();
-                    for (Event event : _eventsFull) {
-                        if (event.getTitle().toLowerCase().contains(filterPattern) ||
-                                event.getLocation().toLowerCase().contains(filterPattern)) {
-                            filteredList.add(event);
-                        }
+
+                _constraint  = constraint.toString().toLowerCase().trim();
+                for (Event event : _eventsFull) {
+                    boolean matchesConstraint = _constraint.isEmpty() || event.getTitle().toLowerCase().contains(_constraint);
+                    boolean matchesLocation = _selectedLocation.isEmpty() || event.getLocation().toLowerCase().equals(_selectedLocation);
+                    boolean matchesCategory = _selectedCategory.isEmpty() || event.getCategory().toLowerCase().equals(_selectedCategory);
+                    boolean matchesDate = _selectedDate.isEmpty()||event.getDate().toLowerCase().equals(_selectedDate);
+                    if (matchesConstraint && matchesLocation && matchesCategory && matchesDate) {
+                        filteredList.add(event);
                     }
                 }
+
                 FilterResults results = new FilterResults();
                 results.values = filteredList;
                 return results;
@@ -111,10 +131,15 @@ public class EventsHorizontalAdapter extends RecyclerView.Adapter<EventsHorizont
             }
         };
     }
-
-    public void setPageSize(int selectedItem,String currentText) {
-        itemsPerPage = selectedItem;
-        getFilter().filter( currentText);
+    public void resetFilters(){
+        _constraint = "";
+        _selectedLocation = "";
+        _selectedDate = "";
+        _selectedCategory ="";
+    }
+    public void setPageSize(int selectedItem, String currentText) {
+        _itemsPerPage = selectedItem;
+        getFilter().filter(currentText);
     }
 
     static class EventHorizontalViewHolder extends RecyclerView.ViewHolder {
@@ -143,8 +168,8 @@ public class EventsHorizontalAdapter extends RecyclerView.Adapter<EventsHorizont
     public void onBindViewHolder(@NonNull EventHorizontalViewHolder holder, int position) {
         Event event = _pagedEvents.get(position);
         holder.title.setText(event.getTitle());
-        holder.day.setText(event.get_day());
-        holder.monthYear.setText(event.get_month() + " " + event.getYear());
+        holder.day.setText(event.getDay());
+        holder.monthYear.setText(event.getMonth() + " " + event.getYear());
         holder.location.setText(event.getLocation());
     }
 

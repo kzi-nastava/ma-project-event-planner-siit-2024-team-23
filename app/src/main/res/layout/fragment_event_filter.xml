@@ -226,7 +226,7 @@
                     app:elevation="4dp" />
 
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/button2"
+                    android:id="@+id/eventsFilterApplyButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="10dp"

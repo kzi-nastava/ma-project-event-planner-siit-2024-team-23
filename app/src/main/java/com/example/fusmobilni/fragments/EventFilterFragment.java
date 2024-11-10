@@ -11,11 +11,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import com.example.fusmobilni.R;
 import com.example.fusmobilni.adapters.CategoryFilterAdapter;
 import com.example.fusmobilni.databinding.FragmentEventFilterBinding;
+import com.example.fusmobilni.interfaces.OnFilterApplyListener;
 import com.example.fusmobilni.model.Category;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.button.MaterialButton;
@@ -23,7 +23,9 @@ import com.google.android.material.chip.Chip;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -33,15 +35,11 @@ import java.util.List;
  */
 public class EventFilterFragment extends BottomSheetDialogFragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private String selectedCategory = "";
+    private String selectedLocation = "";
+    private String selectedDate = "";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
+    private OnFilterApplyListener filterListener;
     private RecyclerView categoryRecyclerView;
     private FragmentEventFilterBinding _binding;
     private List<Category> _categories;
@@ -67,8 +65,7 @@ public class EventFilterFragment extends BottomSheetDialogFragment {
     public static EventFilterFragment newInstance(String param1, String param2) {
         EventFilterFragment fragment = new EventFilterFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+
         fragment.setArguments(args);
         return fragment;
     }
@@ -77,8 +74,6 @@ public class EventFilterFragment extends BottomSheetDialogFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
 
@@ -123,11 +118,24 @@ public class EventFilterFragment extends BottomSheetDialogFragment {
             updateChipStyles(_binding.eventFilterChipThisWeek, _binding.eventFilterChipToday, _binding.eventFilterChipTomorrow);
         });
 
-        _binding.eventFilterResetButton.setOnClickListener(v->{
+        _binding.eventFilterResetButton.setOnClickListener(v -> {
             invalidateAllChips(_binding.eventFilterChipThisWeek, _binding.eventFilterChipToday, _binding.eventFilterChipTomorrow);
             _binding.textViewSelectedDateDisplay.setText("");
             resetDatePicker();
             _adapter.resetCategories();
+        });
+
+        _binding.eventsFilterApplyButton.setOnClickListener(v -> {
+            Category fetchedCategory = _adapter.getSelectedCategory();
+
+            selectedCategory = (fetchedCategory != null) ? fetchedCategory.getName() : "";
+            selectedLocation = String.valueOf(_locationSpinner.getSelectedItem());
+            selectedDate = convertDate();
+
+            if (filterListener != null) {
+                filterListener.onFilterApply(selectedCategory, selectedLocation, selectedDate);
+            }
+            dismiss();
         });
 
         datePickerButton.setOnClickListener(
@@ -157,9 +165,13 @@ public class EventFilterFragment extends BottomSheetDialogFragment {
     }
 
     private void initializeAdapter() {
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this.getContext(), R.array.spinner_items, android.R.layout.simple_spinner_item);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this.getContext(), R.array.event_locations, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         _locationSpinner.setAdapter(adapter);
+    }
+
+    public void setFilterListener(OnFilterApplyListener listener) {
+        this.filterListener = listener;
     }
 
     private void invalidateAllChips(Chip... chips) {
@@ -209,5 +221,17 @@ public class EventFilterFragment extends BottomSheetDialogFragment {
                         resetDatePicker(); // Reset picker after selection
                     }
                 });
+    }
+
+    private String convertDate() {
+        Object fetchedDate = datePicker.getSelection();
+
+        if (fetchedDate == null) {
+            return "";
+        }
+
+        Long dateInMiliseconds = (Long) fetchedDate;
+        Date date = new Date(dateInMiliseconds);
+        return (new SimpleDateFormat("dd-MM-yyyy")).format(date);
     }
 }
