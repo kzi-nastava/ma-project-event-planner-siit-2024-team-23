@@ -10,7 +10,11 @@
         <item>Beverages</item>
         <item>Sport</item>
     </string-array>
-
+    <string-array name="spinner_items">
+        <item>London</item>
+        <item>New York</item>
+        <item>Dublin</item>
+    </string-array>
     <string-array name="EventTypes">
         <item>Svadba</item>
         <item>SLavlje</item>

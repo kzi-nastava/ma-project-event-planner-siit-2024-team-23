@@ -19,6 +19,7 @@ import com.example.fusmobilni.databinding.EventFragmentSearchBinding;
 import com.example.fusmobilni.model.Event;
 import com.google.android.material.search.SearchBar;
 import com.google.android.material.search.SearchView;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +32,7 @@ import java.util.List;
 public class EventSearchFragment extends Fragment {
 
     private EventFragmentSearchBinding _binding;
-    private SearchView _searchView;
+    private TextInputLayout _searchView;
     private ArrayList<Event> events;
     private RecyclerView listView;
     private EventsHorizontalAdapter adapter;
@@ -81,9 +82,8 @@ public class EventSearchFragment extends Fragment {
         View view = this._binding.getRoot();
 
         listView = this._binding.eventsList;
-        this._searchView = this._binding.eventsSearchView;
+        this._searchView = this._binding.searchTextInputLayout;
 
-        this._searchView.show();
 
         events = fillEvents();
 

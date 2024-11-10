@@ -9,6 +9,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.fusmobilni.R;
@@ -44,6 +46,8 @@ public class EventFilterFragment extends BottomSheetDialogFragment {
     private FragmentEventFilterBinding _binding;
     private List<Category> _categories;
     private CategoryFilterAdapter _adapter;
+
+    private Spinner _locationSpinner;
 
     public EventFilterFragment() {
         // Required empty public constructor
@@ -82,6 +86,7 @@ public class EventFilterFragment extends BottomSheetDialogFragment {
         // Inflate the layout for this fragment
         _binding = FragmentEventFilterBinding.inflate(inflater, container, false);
         View view = _binding.getRoot();
+        _binding.textViewSelectedDateDisplay.setText("");
         categoryRecyclerView = _binding.categoryRecyclerView;
         this._categories = Arrays.asList(
                 new Category("Sports", R.drawable.ic_category_sports_active, R.drawable.ic_category_sports_inactive),
@@ -98,14 +103,14 @@ public class EventFilterFragment extends BottomSheetDialogFragment {
         _adapter = new CategoryFilterAdapter(_categories);
         categoryRecyclerView.setAdapter(_adapter);
 
-        _binding.eventFilterChipToday.setOnClickListener(v->{
-            updateChipStyles(_binding.eventFilterChipToday,_binding.eventFilterChipThisWeek,_binding.eventFilterChipTomorrow);
+        _binding.eventFilterChipToday.setOnClickListener(v -> {
+            updateChipStyles(_binding.eventFilterChipToday, _binding.eventFilterChipThisWeek, _binding.eventFilterChipTomorrow);
         });
-        _binding.eventFilterChipTomorrow.setOnClickListener(v->{
-            updateChipStyles(_binding.eventFilterChipTomorrow,_binding.eventFilterChipToday,_binding.eventFilterChipThisWeek);
+        _binding.eventFilterChipTomorrow.setOnClickListener(v -> {
+            updateChipStyles(_binding.eventFilterChipTomorrow, _binding.eventFilterChipToday, _binding.eventFilterChipThisWeek);
         });
-        _binding.eventFilterChipThisWeek.setOnClickListener(v->{
-            updateChipStyles(_binding.eventFilterChipThisWeek,_binding.eventFilterChipToday,_binding.eventFilterChipTomorrow);
+        _binding.eventFilterChipThisWeek.setOnClickListener(v -> {
+            updateChipStyles(_binding.eventFilterChipThisWeek, _binding.eventFilterChipToday, _binding.eventFilterChipTomorrow);
         });
 
         MaterialButton datePickerButton = _binding.openDatepicker;
@@ -118,28 +123,39 @@ public class EventFilterFragment extends BottomSheetDialogFragment {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        // getSupportFragmentManager() to
-                        // interact with the fragments
-                        // associated with the material design
-                        // date picker tag is to get any error
-                        // in logcat
+
+
                         datePicker.show(getParentFragmentManager(), "MATERIAL_DATE_PICKER");
                     }
                 });
 
-        // now handle the positive button click from the
-        // material design date picker
         datePicker.addOnPositiveButtonClickListener(
                 new MaterialPickerOnPositiveButtonClickListener() {
                     @SuppressLint("SetTextI18n")
                     @Override
                     public void onPositiveButtonClick(Object selection) {
 
-                        Toast.makeText(getParentFragment().getContext(),"IT is:" + datePicker.getHeaderText(),Toast.LENGTH_LONG).show();
+                        invalidateAllChips(_binding.eventFilterChipToday, _binding.eventFilterChipThisWeek, _binding.eventFilterChipTomorrow);
+                        _binding.textViewSelectedDateDisplay.setText(datePicker.getHeaderText());
                     }
                 });
-
+        _locationSpinner = this._binding.spinner;
+        initializeAdapter();
         return view;
+    }
+    private void initializeAdapter(){
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this.getContext(),R.array.spinner_items,android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        _locationSpinner.setAdapter(adapter);
+    }
+    private void invalidateAllChips(Chip... chips) {
+        for (Chip chip : chips) {
+            chip.setChecked(false);
+            chip.setChipBackgroundColorResource(R.color.white);
+            chip.setTextColor(getResources().getColor(R.color.bg_gray));
+            chip.setCheckable(true); // Ensures the chip is checkable
+            chip.invalidate();
+        }
     }
 
     private void updateChipStyles(Chip selectedChip, Chip... otherChips) {
