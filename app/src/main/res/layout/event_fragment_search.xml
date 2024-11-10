@@ -11,18 +11,41 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <com.google.android.material.search.SearchView
-            android:id="@+id/events_search_view"
-            android:layout_width="match_parent"
-            android:layout_height="93dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="16dp"
-            android:focusable="true"
-            android:hint="Search">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="70sp"
+            android:orientation="horizontal">
 
-            <!-- Search suggestions/results go here (ScrollView, RecyclerView, etc.). -->
+            <com.google.android.material.search.SearchView
+                android:id="@+id/events_search_view"
+                android:layout_width="270sp"
+                android:layout_height="match_parent"
+                android:focusable="true"
+                android:hint="Search" />
 
-        </com.google.android.material.search.SearchView>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/events_filter_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Filter"
+                    android:textColor="@color/white"
+                    app:backgroundTint="@color/primary_blue_900"
+                    app:icon="@drawable/ic_filter"
+                    app:iconTint="@color/primary_blue_900"
+                    app:iconTintMode="screen"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:strokeColor="@color/primary_blue_900"
+                    app:strokeWidth="2dp" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/events_list"
@@ -32,6 +55,7 @@
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             android:orientation="vertical"
             ></androidx.recyclerview.widget.RecyclerView>
+
     </LinearLayout>
 
 </FrameLayout>

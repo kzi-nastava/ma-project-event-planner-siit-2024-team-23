@@ -1,0 +1,4 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="@color/primary_blue_900" /> <!-- Light gray for non-selected items -->
+    <corners android:radius="2000dp" />
+</shape>

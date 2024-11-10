@@ -106,6 +106,10 @@ public class EventSearchFragment extends Fragment {
 
             }
         });
+        _binding.eventsFilterButton.setOnClickListener(v->{
+            EventFilterFragment fragment = new EventFilterFragment();
+            fragment.show(getParentFragmentManager(),fragment.getTag());
+        });
         return view;
     }
 
