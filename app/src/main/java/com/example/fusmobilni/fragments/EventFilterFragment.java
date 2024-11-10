@@ -49,6 +49,8 @@ public class EventFilterFragment extends BottomSheetDialogFragment {
 
     private Spinner _locationSpinner;
 
+    private MaterialDatePicker datePicker;
+
     public EventFilterFragment() {
         // Required empty public constructor
     }
@@ -88,6 +90,13 @@ public class EventFilterFragment extends BottomSheetDialogFragment {
         View view = _binding.getRoot();
         _binding.textViewSelectedDateDisplay.setText("");
         categoryRecyclerView = _binding.categoryRecyclerView;
+
+        MaterialButton datePickerButton = _binding.openDatepicker;
+        MaterialDatePicker.Builder datePickerBuilder = MaterialDatePicker.Builder.datePicker();
+
+        datePickerBuilder.setTitleText("Select a date!");
+        datePicker = datePickerBuilder.build();
+
         this._categories = Arrays.asList(
                 new Category("Sports", R.drawable.ic_category_sports_active, R.drawable.ic_category_sports_inactive),
                 new Category("Music", R.drawable.ic_category_music_active, R.drawable.ic_category_music_inactive),
@@ -105,6 +114,7 @@ public class EventFilterFragment extends BottomSheetDialogFragment {
 
         _binding.eventFilterChipToday.setOnClickListener(v -> {
             updateChipStyles(_binding.eventFilterChipToday, _binding.eventFilterChipThisWeek, _binding.eventFilterChipTomorrow);
+
         });
         _binding.eventFilterChipTomorrow.setOnClickListener(v -> {
             updateChipStyles(_binding.eventFilterChipTomorrow, _binding.eventFilterChipToday, _binding.eventFilterChipThisWeek);
@@ -112,12 +122,6 @@ public class EventFilterFragment extends BottomSheetDialogFragment {
         _binding.eventFilterChipThisWeek.setOnClickListener(v -> {
             updateChipStyles(_binding.eventFilterChipThisWeek, _binding.eventFilterChipToday, _binding.eventFilterChipTomorrow);
         });
-
-        MaterialButton datePickerButton = _binding.openDatepicker;
-        MaterialDatePicker.Builder datePickerBuilder = MaterialDatePicker.Builder.datePicker();
-
-        datePickerBuilder.setTitleText("Select a date!");
-        final MaterialDatePicker datePicker = datePickerBuilder.build();
 
         datePickerButton.setOnClickListener(
                 new View.OnClickListener() {
@@ -137,17 +141,20 @@ public class EventFilterFragment extends BottomSheetDialogFragment {
 
                         invalidateAllChips(_binding.eventFilterChipToday, _binding.eventFilterChipThisWeek, _binding.eventFilterChipTomorrow);
                         _binding.textViewSelectedDateDisplay.setText(datePicker.getHeaderText());
+
                     }
                 });
         _locationSpinner = this._binding.spinner;
         initializeAdapter();
         return view;
     }
-    private void initializeAdapter(){
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this.getContext(),R.array.spinner_items,android.R.layout.simple_spinner_item);
+
+    private void initializeAdapter() {
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this.getContext(), R.array.spinner_items, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         _locationSpinner.setAdapter(adapter);
     }
+
     private void invalidateAllChips(Chip... chips) {
         for (Chip chip : chips) {
             chip.setChecked(false);
@@ -177,5 +184,23 @@ public class EventFilterFragment extends BottomSheetDialogFragment {
         for (Chip chip : otherChips) {
             chip.invalidate();
         }
+        _binding.textViewSelectedDateDisplay.setText("");
+        resetDatePicker();
+    }
+
+    private void resetDatePicker() {
+        MaterialDatePicker.Builder<Long> datePickerBuilder = MaterialDatePicker.Builder.datePicker();
+        datePickerBuilder.setTitleText("Select a date!");
+        datePicker = datePickerBuilder.build();
+        datePicker.addOnPositiveButtonClickListener(
+                new MaterialPickerOnPositiveButtonClickListener<Long>() {
+                    @SuppressLint("SetTextI18n")
+                    @Override
+                    public void onPositiveButtonClick(Long selection) {
+                        invalidateAllChips(_binding.eventFilterChipToday, _binding.eventFilterChipThisWeek, _binding.eventFilterChipTomorrow);
+                        _binding.textViewSelectedDateDisplay.setText(datePicker.getHeaderText());
+                        resetDatePicker(); // Reset picker after selection
+                    }
+                });
     }
 }
