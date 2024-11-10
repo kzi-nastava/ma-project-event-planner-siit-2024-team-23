@@ -26,13 +26,13 @@ public class CategoryFilterAdapter extends RecyclerView.Adapter<CategoryFilterAd
 
     @NonNull
     @Override
-    public CategoryFilterViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public CategoryFilterAdapter.CategoryFilterViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_category_card, parent, false);
         return new CategoryFilterViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull CategoryFilterViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull CategoryFilterAdapter.CategoryFilterViewHolder holder, int position) {
         Category category = _categories.get(position);
         holder.categoryIcon.setImageResource(position == selectedCategory ? category.getActiveIconResId() : category.getInactiveIconResId());
         holder.categoryName.setText(category.getName());

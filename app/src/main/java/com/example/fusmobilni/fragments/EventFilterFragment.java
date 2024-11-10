@@ -1,5 +1,6 @@
 package com.example.fusmobilni.fragments;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -8,12 +9,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.fusmobilni.R;
 import com.example.fusmobilni.adapters.CategoryFilterAdapter;
 import com.example.fusmobilni.databinding.FragmentEventFilterBinding;
 import com.example.fusmobilni.model.Category;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.datepicker.MaterialDatePicker;
+import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 
 import java.util.Arrays;
 import java.util.List;
@@ -81,11 +87,79 @@ public class EventFilterFragment extends BottomSheetDialogFragment {
                 new Category("Sports", R.drawable.ic_category_sports_active, R.drawable.ic_category_sports_inactive),
                 new Category("Music", R.drawable.ic_category_music_active, R.drawable.ic_category_music_inactive),
                 new Category("Art", R.drawable.ic_category_arts_active, R.drawable.ic_category_arts_inactive),
-                new Category("Food", R.drawable.ic_category_food_active, R.drawable.ic_category_food_inactive)
+                new Category("Food", R.drawable.ic_category_food_active, R.drawable.ic_category_food_inactive),
+                new Category("Tech", R.drawable.ic_category_sports_active, R.drawable.ic_category_sports_inactive),
+                new Category("Travel", R.drawable.ic_category_music_active, R.drawable.ic_category_music_inactive),
+                new Category("Education", R.drawable.ic_category_arts_active, R.drawable.ic_category_arts_inactive),
+                new Category("Health", R.drawable.ic_category_sports_active, R.drawable.ic_category_sports_inactive),
+                new Category("Fashion", R.drawable.ic_category_music_active, R.drawable.ic_category_music_inactive)
+
         );
         _adapter = new CategoryFilterAdapter(_categories);
         categoryRecyclerView.setAdapter(_adapter);
 
+        _binding.eventFilterChipToday.setOnClickListener(v->{
+            updateChipStyles(_binding.eventFilterChipToday,_binding.eventFilterChipThisWeek,_binding.eventFilterChipTomorrow);
+        });
+        _binding.eventFilterChipTomorrow.setOnClickListener(v->{
+            updateChipStyles(_binding.eventFilterChipTomorrow,_binding.eventFilterChipToday,_binding.eventFilterChipThisWeek);
+        });
+        _binding.eventFilterChipThisWeek.setOnClickListener(v->{
+            updateChipStyles(_binding.eventFilterChipThisWeek,_binding.eventFilterChipToday,_binding.eventFilterChipTomorrow);
+        });
+
+        MaterialButton datePickerButton = _binding.openDatepicker;
+        MaterialDatePicker.Builder datePickerBuilder = MaterialDatePicker.Builder.datePicker();
+
+        datePickerBuilder.setTitleText("Select a date!");
+        final MaterialDatePicker datePicker = datePickerBuilder.build();
+
+        datePickerButton.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // getSupportFragmentManager() to
+                        // interact with the fragments
+                        // associated with the material design
+                        // date picker tag is to get any error
+                        // in logcat
+                        datePicker.show(getParentFragmentManager(), "MATERIAL_DATE_PICKER");
+                    }
+                });
+
+        // now handle the positive button click from the
+        // material design date picker
+        datePicker.addOnPositiveButtonClickListener(
+                new MaterialPickerOnPositiveButtonClickListener() {
+                    @SuppressLint("SetTextI18n")
+                    @Override
+                    public void onPositiveButtonClick(Object selection) {
+
+                        Toast.makeText(getParentFragment().getContext(),"IT is:" + datePicker.getHeaderText(),Toast.LENGTH_LONG).show();
+                    }
+                });
+
         return view;
+    }
+
+    private void updateChipStyles(Chip selectedChip, Chip... otherChips) {
+        selectedChip.setChecked(true);
+        selectedChip.setChipBackgroundColorResource(R.color.primary_blue_900);
+        selectedChip.setTextColor(getResources().getColor(R.color.white));
+        selectedChip.setCheckable(true); // Ensures the chip is checkable
+
+        // Deselect and reset style for other chips
+        for (Chip chip : otherChips) {
+            chip.setChecked(false);
+            chip.setChipBackgroundColorResource(R.color.white);
+            chip.setTextColor(getResources().getColor(R.color.bg_gray));
+            chip.setCheckable(true); // Ensures the chip is checkable
+        }
+
+        // Force a redraw on each chip to apply changes
+        selectedChip.invalidate();
+        for (Chip chip : otherChips) {
+            chip.invalidate();
+        }
     }
 }
