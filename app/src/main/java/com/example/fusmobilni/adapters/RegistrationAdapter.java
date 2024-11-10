@@ -29,7 +29,7 @@ public class RegistrationAdapter extends FragmentStateAdapter {
     public void setFragments(List<Fragment> fragments) {
         _fragmentList.clear();
         _fragmentList.addAll(fragments);
-        notifyDataSetChanged();
+        notifyItemRangeChanged(0, _fragmentList.size());
     }
 
 

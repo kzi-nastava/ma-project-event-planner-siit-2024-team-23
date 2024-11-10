@@ -4,34 +4,32 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
-
 import com.example.fusmobilni.fragments.RegisterFragments.RoleSelectionFragment;
 import com.example.fusmobilni.fragments.RegisterFragments.StepOneFragment;
 import com.example.fusmobilni.fragments.RegisterFragments.StepThreeFragment;
 import com.example.fusmobilni.fragments.RegisterFragments.StepTwoFragment;
 import com.example.fusmobilni.fragments.RegisterFragments.VerifyEmailFragment;
 import com.example.fusmobilni.model.enums.RegisterUserRole;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class RegisterViewModel extends ViewModel {
 
-    private MutableLiveData<List<Fragment>> _fragments = new MutableLiveData<>();
+    private final MutableLiveData<List<Fragment>> _fragments = new MutableLiveData<>();
     public LiveData<List<Fragment>> fragments = _fragments;
-    private MutableLiveData<RegisterUserRole> _role = new MutableLiveData<>();
+    private final MutableLiveData<RegisterUserRole> _role = new MutableLiveData<>();
 
-    private  MutableLiveData<String> _name = new MutableLiveData<>();
-    private  MutableLiveData<String> _lastName = new MutableLiveData<>();
-    private  MutableLiveData<String> _email = new MutableLiveData<>();
-    private  MutableLiveData<String> _password = new MutableLiveData<>();
-    private  MutableLiveData<String> _city = new MutableLiveData<>();
-    private  MutableLiveData<String> _address = new MutableLiveData<>();
-    private  MutableLiveData<String> _phone = new MutableLiveData<>();
-    private  MutableLiveData<byte[]> _profileImage = new MutableLiveData<>();
-    private MutableLiveData<String> _companyName = new MutableLiveData<>();
-    private MutableLiveData<String> _companyDescriptionName = new MutableLiveData<>();
+    private final  MutableLiveData<String> _name = new MutableLiveData<>();
+    private final  MutableLiveData<String> _lastName = new MutableLiveData<>();
+    private final  MutableLiveData<String> _email = new MutableLiveData<>();
+    private final  MutableLiveData<String> _password = new MutableLiveData<>();
+    private final  MutableLiveData<String> _city = new MutableLiveData<>();
+    private final  MutableLiveData<String> _address = new MutableLiveData<>();
+    private final  MutableLiveData<String> _phone = new MutableLiveData<>();
+    private final  MutableLiveData<byte[]> _profileImage = new MutableLiveData<>();
+    private final MutableLiveData<String> _companyName = new MutableLiveData<>();
+    private final MutableLiveData<String> _companyDescriptionName = new MutableLiveData<>();
 
 
 

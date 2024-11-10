@@ -48,4 +48,5 @@
     <string name="success_image">Success image</string>
     <string name="company_description">Company description</string>
     <string name="company_name">Company name</string>
+    <string name="email_label">Email</string>
 </resources>
