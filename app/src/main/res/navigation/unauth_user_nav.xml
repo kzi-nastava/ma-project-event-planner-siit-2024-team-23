@@ -115,5 +115,20 @@
         tools:layout="@layout/activity_register"
         />
 
+    <fragment
+        android:id="@+id/service_creation"
+        android:name="com.example.fusmobilni.fragments.ServiceCreation"
+        android:label="ServiceCreation"
+        tools:layout="@layout/fragment_service_creation">
+
+    </fragment>
+    <action
+        android:id="@+id/action_serviceView_toServiceCreation"
+        app:destination="@id/service_creation" />
+
+    <action
+        android:id="@+id/action_serviceCreation_toServiceView"
+        app:destination="@id/services_fragment" />
+
 
 </navigation>
