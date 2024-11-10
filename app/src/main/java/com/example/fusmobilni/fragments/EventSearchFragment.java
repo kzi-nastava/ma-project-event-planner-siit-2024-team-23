@@ -10,8 +10,9 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.ListView;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 import com.example.fusmobilni.R;
 import com.example.fusmobilni.adapters.EventsHorizontalAdapter;
@@ -19,11 +20,9 @@ import com.example.fusmobilni.databinding.EventFragmentSearchBinding;
 import com.example.fusmobilni.model.Event;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.search.SearchBar;
-import com.google.android.material.search.SearchView;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -36,8 +35,8 @@ public class EventSearchFragment extends Fragment {
     private TextInputLayout _searchView;
     private ArrayList<Event> events;
     private RecyclerView listView;
-    private EventsHorizontalAdapter adapter;
-
+    private EventsHorizontalAdapter eventsHorizontalAdapter;
+    private Spinner paginationSpinner;
     private MaterialButton prevButton;
     private MaterialButton nextButton;
     private SearchBar _searchBar;
@@ -89,15 +88,10 @@ public class EventSearchFragment extends Fragment {
         listView = this._binding.eventsList;
         this._searchView = this._binding.searchTextInputLayout;
 
+        initializeButtons();
 
-        prevButton = this._binding.eventSearchPreviousButton;
-        nextButton = this._binding.eventSearchNextButton;
-
-        prevButton.setOnClickListener(v -> adapter.prevPage());
-        nextButton.setOnClickListener(v -> adapter.nextPage());
-
-        adapter = new EventsHorizontalAdapter();
-        listView.setAdapter(adapter);
+        eventsHorizontalAdapter = new EventsHorizontalAdapter();
+        listView.setAdapter(eventsHorizontalAdapter);
 
 
         this._searchView.getEditText().addTextChangedListener(new TextWatcher() {
@@ -108,7 +102,7 @@ public class EventSearchFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                adapter.getFilter().filter(s);
+                eventsHorizontalAdapter.getFilter().filter(s);
             }
 
             @Override
@@ -121,15 +115,42 @@ public class EventSearchFragment extends Fragment {
             fragment.show(getParentFragmentManager(), fragment.getTag());
         });
         events = fillEvents();
-        adapter.setOriginalData(events);
-        adapter.setFilteringData(events);
-        adapter.setData(events);
-        adapter.loadPage(0);
+        eventsHorizontalAdapter.setOriginalData(events);
+        eventsHorizontalAdapter.setFilteringData(events);
+        eventsHorizontalAdapter.setData(events);
+        eventsHorizontalAdapter.loadPage(0);
+
+        initializePaginationSpinner();
 
         return view;
     }
+    private void initializePaginationSpinner(){
+        paginationSpinner = _binding.paginationSpinner;
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this.getContext(), R.array.paginationPageSizes, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        paginationSpinner.setAdapter(adapter);
+        paginationSpinner.setSelection(0);
+        paginationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                int selectedItem = Integer.parseInt(String.valueOf(parent.getItemAtPosition(position)));
+                eventsHorizontalAdapter.setPageSize(selectedItem, _searchView.getEditText().getText().toString());
+            }
 
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
 
+            }
+        });
+    }
+    private void initializeButtons(){
+
+        prevButton = this._binding.eventSearchPreviousButton;
+        nextButton = this._binding.eventSearchNextButton;
+
+        prevButton.setOnClickListener(v -> eventsHorizontalAdapter.prevPage());
+        nextButton.setOnClickListener(v -> eventsHorizontalAdapter.nextPage());
+    }
     private ArrayList<Event> fillEvents() {
         ArrayList<Event> e = new ArrayList<>();
         e.add(new Event("12", "July", "Food and Wine Tasting Festival", "2024", "Napa Valley Vineyard"));
@@ -188,7 +209,7 @@ public class EventSearchFragment extends Fragment {
         e.add(new Event("3", "January", "Epiphany Celebration", "2024", "Madrid"));
 
         e.add(new Event("10", "February", "Winter Carnival", "2024", "Quebec"));
-        e.add(new Event("15", "March", "Art and Design Fair", "2024", "Tokyo"));
+        e.add(new Event("15", "March", "Wi Art and Design Fair", "2024", "Tokyo"));
         return e;
     }
 

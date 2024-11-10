@@ -43,6 +43,7 @@
                         android:layout_height="wrap_content"
                         android:hint="Search"
                         android:inputType="text" />
+
                 </com.google.android.material.textfield.TextInputLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -93,6 +94,13 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Items per page" />
+
+                <Spinner
+                    android:id="@+id/paginationSpinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:minHeight="48dp" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/event_search_previous_button"

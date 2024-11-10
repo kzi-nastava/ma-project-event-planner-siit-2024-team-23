@@ -112,6 +112,11 @@ public class EventsHorizontalAdapter extends RecyclerView.Adapter<EventsHorizont
         };
     }
 
+    public void setPageSize(int selectedItem,String currentText) {
+        itemsPerPage = selectedItem;
+        getFilter().filter( currentText);
+    }
+
     static class EventHorizontalViewHolder extends RecyclerView.ViewHolder {
         TextView title;
         TextView day;

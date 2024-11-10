@@ -10,6 +10,14 @@
         <item>Beverages</item>
         <item>Sport</item>
     </string-array>
+    <string-array name="paginationPageSizes">
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+    </string-array>
     <string-array name="spinner_items">
         <item>London</item>
         <item>New York</item>
