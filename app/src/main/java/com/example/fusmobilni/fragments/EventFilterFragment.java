@@ -123,6 +123,13 @@ public class EventFilterFragment extends BottomSheetDialogFragment {
             updateChipStyles(_binding.eventFilterChipThisWeek, _binding.eventFilterChipToday, _binding.eventFilterChipTomorrow);
         });
 
+        _binding.eventFilterResetButton.setOnClickListener(v->{
+            invalidateAllChips(_binding.eventFilterChipThisWeek, _binding.eventFilterChipToday, _binding.eventFilterChipTomorrow);
+            _binding.textViewSelectedDateDisplay.setText("");
+            resetDatePicker();
+            _adapter.resetCategories();
+        });
+
         datePickerButton.setOnClickListener(
                 new View.OnClickListener() {
                     @Override

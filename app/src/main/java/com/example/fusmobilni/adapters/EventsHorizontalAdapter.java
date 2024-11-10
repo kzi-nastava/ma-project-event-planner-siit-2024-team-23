@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fusmobilni.R;
+import com.example.fusmobilni.model.Category;
 import com.example.fusmobilni.model.Event;
 
 import java.util.ArrayList;
@@ -19,10 +20,63 @@ import java.util.List;
 public class EventsHorizontalAdapter extends RecyclerView.Adapter<EventsHorizontalAdapter.EventHorizontalViewHolder> implements Filterable {
     private List<Event> _eventList;
     private List<Event> _eventsFull;
+    private List<Event> _pagedEvents;
+    private int currentPage = 0;
+    private int itemsPerPage = 5;
+
+    public EventsHorizontalAdapter() {
+        this._eventList = new ArrayList<>();
+        this._eventsFull = new ArrayList<>();
+        this._pagedEvents = new ArrayList<>();
+    }
 
     public EventsHorizontalAdapter(ArrayList<Event> events) {
         this._eventList = events;
         this._eventsFull = new ArrayList<>(events);
+        this._pagedEvents = new ArrayList<>(events);
+    }
+
+    public void setOriginalData(List<Event> list) {
+        this._eventsFull = new ArrayList<>(list);
+        notifyDataSetChanged();
+    }
+    public void setFilteringData(List<Event> list){
+        this._eventList  = new ArrayList<>(list);
+        notifyDataSetChanged();
+    }
+    public void setData(List<Event> list) {
+        this._pagedEvents = new ArrayList<>(list);
+        notifyDataSetChanged();
+    }
+
+    public void loadPage(int page) {
+        if (page < 0 || page * itemsPerPage >= _eventList.size()) {
+            return;
+        }
+
+        currentPage = page;
+
+        int start = page * itemsPerPage;
+        int end = start + itemsPerPage;
+        if(end > _eventList.size()){
+            end = _eventList.size();
+        }
+        List<Event> pageCategories = _eventList.subList(start, end);
+
+        this.setData(pageCategories);
+
+    }
+
+    public void prevPage() {
+        if (currentPage > 0) {
+            loadPage(currentPage - 1);
+        }
+    }
+
+    public void nextPage() {
+        if ((currentPage + 1) * itemsPerPage < _eventsFull.size()) {
+            loadPage(currentPage + 1);
+        }
     }
 
     @Override
@@ -34,9 +88,10 @@ public class EventsHorizontalAdapter extends RecyclerView.Adapter<EventsHorizont
                 if (constraint == null || constraint.length() == 0) {
                     filteredList.addAll(_eventsFull);
                 } else {
-                    String filterPatter = constraint.toString().toLowerCase().trim();
+                    String filterPattern = constraint.toString().toLowerCase().trim();
                     for (Event event : _eventsFull) {
-                        if (event.getTitle().toLowerCase().contains(filterPatter)) {
+                        if (event.getTitle().toLowerCase().contains(filterPattern) ||
+                                event.getLocation().toLowerCase().contains(filterPattern)) {
                             filteredList.add(event);
                         }
                     }
@@ -49,8 +104,10 @@ public class EventsHorizontalAdapter extends RecyclerView.Adapter<EventsHorizont
             @Override
             protected void publishResults(CharSequence constraint, FilterResults results) {
                 _eventList.clear();
-                _eventList.addAll((List) results.values);
-                notifyDataSetChanged();
+                if (results.values != null) {
+                    _eventList.addAll((List<Event>) results.values);
+                }
+                loadPage(0);
             }
         };
     }
@@ -79,7 +136,7 @@ public class EventsHorizontalAdapter extends RecyclerView.Adapter<EventsHorizont
 
     @Override
     public void onBindViewHolder(@NonNull EventHorizontalViewHolder holder, int position) {
-        Event event = _eventList.get(position);
+        Event event = _pagedEvents.get(position);
         holder.title.setText(event.getTitle());
         holder.day.setText(event.get_day());
         holder.monthYear.setText(event.get_month() + " " + event.getYear());
@@ -89,7 +146,7 @@ public class EventsHorizontalAdapter extends RecyclerView.Adapter<EventsHorizont
 
     @Override
     public int getItemCount() {
-        return _eventList.size();
+        return _pagedEvents.size();
     }
 
 

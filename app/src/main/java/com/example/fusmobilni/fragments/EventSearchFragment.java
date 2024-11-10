@@ -17,6 +17,7 @@ import com.example.fusmobilni.R;
 import com.example.fusmobilni.adapters.EventsHorizontalAdapter;
 import com.example.fusmobilni.databinding.EventFragmentSearchBinding;
 import com.example.fusmobilni.model.Event;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.search.SearchBar;
 import com.google.android.material.search.SearchView;
 import com.google.android.material.textfield.TextInputLayout;
@@ -36,7 +37,11 @@ public class EventSearchFragment extends Fragment {
     private ArrayList<Event> events;
     private RecyclerView listView;
     private EventsHorizontalAdapter adapter;
+
+    private MaterialButton prevButton;
+    private MaterialButton nextButton;
     private SearchBar _searchBar;
+
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -85,10 +90,15 @@ public class EventSearchFragment extends Fragment {
         this._searchView = this._binding.searchTextInputLayout;
 
 
-        events = fillEvents();
+        prevButton = this._binding.eventSearchPreviousButton;
+        nextButton = this._binding.eventSearchNextButton;
 
-        adapter = new EventsHorizontalAdapter( events);
+        prevButton.setOnClickListener(v -> adapter.prevPage());
+        nextButton.setOnClickListener(v -> adapter.nextPage());
+
+        adapter = new EventsHorizontalAdapter();
         listView.setAdapter(adapter);
+
 
         this._searchView.getEditText().addTextChangedListener(new TextWatcher() {
             @Override
@@ -106,12 +116,19 @@ public class EventSearchFragment extends Fragment {
 
             }
         });
-        _binding.eventsFilterButton.setOnClickListener(v->{
+        _binding.eventsFilterButton.setOnClickListener(v -> {
             EventFilterFragment fragment = new EventFilterFragment();
-            fragment.show(getParentFragmentManager(),fragment.getTag());
+            fragment.show(getParentFragmentManager(), fragment.getTag());
         });
+        events = fillEvents();
+        adapter.setOriginalData(events);
+        adapter.setFilteringData(events);
+        adapter.setData(events);
+        adapter.loadPage(0);
+
         return view;
     }
+
 
     private ArrayList<Event> fillEvents() {
         ArrayList<Event> e = new ArrayList<>();
@@ -172,10 +189,6 @@ public class EventSearchFragment extends Fragment {
 
         e.add(new Event("10", "February", "Winter Carnival", "2024", "Quebec"));
         e.add(new Event("15", "March", "Art and Design Fair", "2024", "Tokyo"));
-        e.add(new Event("30", "April", "National Cherry Blossom Festival", "2024", "Washington D.C."));
-        e.add(new Event("14", "May", "International Jazz Day", "2024", "New Orleans"));
-        e.add(new Event("21", "June", "Summer Solstice Festival", "2024", "Stonehenge"));
-
         return e;
     }
 

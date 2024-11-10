@@ -50,7 +50,10 @@ public class CategoryFilterAdapter extends RecyclerView.Adapter<CategoryFilterAd
         });
 
     }
-
+    public void resetCategories(){
+        selectedCategory = -1;
+        notifyDataSetChanged();
+    }
     @Override
     public int getItemCount() {
         return _categories.size();
