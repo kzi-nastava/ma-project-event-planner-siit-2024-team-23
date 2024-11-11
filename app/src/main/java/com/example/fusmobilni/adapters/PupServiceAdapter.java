@@ -18,6 +18,7 @@ import com.example.fusmobilni.R;
 import com.example.fusmobilni.interfaces.DeleteServiceListener;
 import com.example.fusmobilni.model.DummyService;
 import com.example.fusmobilni.model.Event;
+import com.example.fusmobilni.model.PrototypeService;
 import com.example.fusmobilni.model.Service;
 
 import java.util.ArrayList;
@@ -25,13 +26,13 @@ import java.util.List;
 
 public class PupServiceAdapter extends RecyclerView.Adapter<PupServiceAdapter.ServiceViewHolder> implements Filterable {
 
-    private List<DummyService> serviceList;
+    private List<PrototypeService> serviceList;
 
-    private List<DummyService> filterableServices;
+    private List<PrototypeService> filterableServices;
 
     private DeleteServiceListener clickListener;
 
-    public PupServiceAdapter(List<DummyService> serviceList, DeleteServiceListener clickListener) {
+    public PupServiceAdapter(List<PrototypeService> serviceList, DeleteServiceListener clickListener) {
         this.serviceList = serviceList;
         this.filterableServices = new ArrayList<>(serviceList);
         this.clickListener = clickListener;
@@ -47,10 +48,11 @@ public class PupServiceAdapter extends RecyclerView.Adapter<PupServiceAdapter.Se
 
     @Override
     public void onBindViewHolder(@NonNull ServiceViewHolder holder, int position) {
-        DummyService service = serviceList.get(position);
-        holder.title.setText(service.getTitle());
+        PrototypeService service = serviceList.get(position);
+        holder.title.setText(service.getName());
         holder.description.setText(service.getDescription());
         holder.deleteButton.setOnClickListener(v -> clickListener.onDeleteService(position));
+        holder.editButton.setOnClickListener(v -> clickListener.onUpdateService(position));
     }
 
     @Override
@@ -58,7 +60,7 @@ public class PupServiceAdapter extends RecyclerView.Adapter<PupServiceAdapter.Se
         return serviceList.size();
     }
 
-    public void updateServiceList(List<DummyService> newServiceList) {
+    public void updateServiceList(List<PrototypeService> newServiceList) {
         this.serviceList = new ArrayList<>(newServiceList);
         notifyDataSetChanged();
     }
@@ -68,13 +70,13 @@ public class PupServiceAdapter extends RecyclerView.Adapter<PupServiceAdapter.Se
         return new Filter() {
             @Override
             protected FilterResults performFiltering(CharSequence constraint) {
-                List<DummyService> filteredList = new ArrayList<>();
+                List<PrototypeService> filteredList = new ArrayList<>();
                 if (constraint == null || constraint.length() == 0) {
                     filteredList.addAll(filterableServices);
                 } else {
                     String filterPatter = constraint.toString().toLowerCase().trim();
-                    for (DummyService service : filterableServices) {
-                        if (service.getTitle().toLowerCase().contains(filterPatter)) {
+                    for (PrototypeService service : filterableServices) {
+                        if (service.getName().toLowerCase().contains(filterPatter)) {
                             filteredList.add(service);
                         }
                     }

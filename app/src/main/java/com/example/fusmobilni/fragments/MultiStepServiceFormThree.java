@@ -90,8 +90,13 @@ public class MultiStepServiceFormThree extends Fragment implements ItemClickList
         });
         binding.forwardButton.setOnClickListener(v -> {
             //create new service
+            requireActivity().getViewModelStore().clear();
             Navigation.findNavController(view).navigate(R.id.action_serviceCreationStepThree_toServiceView);
         });
+
+        if (viewModel.getIsUpdating().getValue()) {
+            binding.textView2.setText("Update Service Form");
+        }
 
         return view;
     }

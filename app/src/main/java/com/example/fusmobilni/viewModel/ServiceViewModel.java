@@ -5,6 +5,8 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.fusmobilni.model.PrototypeService;
+
 import java.util.ArrayList;
 
 public class ServiceViewModel extends ViewModel {
@@ -24,6 +26,7 @@ public class ServiceViewModel extends ViewModel {
     private final MutableLiveData<Integer> reservationDeadline = new MutableLiveData<>(0);
     private final MutableLiveData<Boolean> isAutomaticReservation = new MutableLiveData<>(false);
     private final MutableLiveData<Boolean> isDeleted = new MutableLiveData<>(false);
+    private final MutableLiveData<Boolean> isUpdating = new MutableLiveData<>(false);
 
     // Getters for LiveData
     public LiveData<String> getCategory() { return category; }
@@ -41,6 +44,7 @@ public class ServiceViewModel extends ViewModel {
     public LiveData<Integer> getReservationDeadline() { return reservationDeadline; }
     public LiveData<Boolean> getIsAutomaticReservation() { return isAutomaticReservation; }
     public LiveData<Boolean> getIsDeleted() { return isDeleted; }
+    public LiveData<Boolean> getIsUpdating() {return isUpdating; }
 
     // Setters for MutableLiveData (can add validation if needed)
     public void setCategory(String value) { category.setValue(value); }
@@ -65,5 +69,26 @@ public class ServiceViewModel extends ViewModel {
     public void clearImageUris() {
         this.imageUris.setValue(new ArrayList<>());
     }
+
+    public void populate(PrototypeService service) {
+        this.category.setValue(service.getCategory());
+        this.name.setValue(service.getName());
+        this.description.setValue(service.getDescription());
+        this.specificities.setValue(service.getSpecificities());
+        this.price.setValue(service.getPrice());
+        this.discount.setValue(service.getDiscount());
+        this.imageUris.setValue(new ArrayList<>(service.getImageUris()));
+        this.eventType.setValue(service.getEventType());
+        this.isVisible.setValue(service.isVisible());
+        this.isAvailable.setValue(service.isAvailable());
+        this.duration.setValue(service.getDuration());
+        this.cancellationDeadline.setValue(service.getCancellationDeadline());
+        this.reservationDeadline.setValue(service.getReservationDeadline());
+        this.isAutomaticReservation.setValue(service.isAutomaticReservation());
+        this.isDeleted.setValue(service.isDeleted());
+        this.isUpdating.setValue(true);
+    }
+
+
 }
 

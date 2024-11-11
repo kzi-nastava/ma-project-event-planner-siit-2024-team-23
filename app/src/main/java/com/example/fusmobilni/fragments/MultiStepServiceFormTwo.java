@@ -56,6 +56,10 @@ public class MultiStepServiceFormTwo extends Fragment {
             Navigation.findNavController(view).navigate(R.id.action_serviceCreationStepTwo_toServiceCreationStepThree);
         });
 
+        if (viewModel.getIsUpdating().getValue()) {
+            binding.textView2.setText("Update Service Form");
+        }
+
         return view;
     }
 

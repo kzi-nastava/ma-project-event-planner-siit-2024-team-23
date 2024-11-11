@@ -5,6 +5,7 @@ package com.example.fusmobilni.fragments;
 import android.os.Bundle;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,12 +21,17 @@ import com.example.fusmobilni.adapters.PupServiceAdapter;
 import com.example.fusmobilni.databinding.FragmentServiceViewBinding;
 import com.example.fusmobilni.interfaces.DeleteServiceListener;
 import com.example.fusmobilni.model.DummyService;
+import com.example.fusmobilni.model.PrototypeService;
+import com.example.fusmobilni.viewModel.ServiceViewModel;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.slider.RangeSlider;
 import com.google.android.material.switchmaterial.SwitchMaterial;
+
+import java.net.ServerSocket;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 public class ServiceView extends Fragment implements DeleteServiceListener {
@@ -38,7 +44,7 @@ public class ServiceView extends Fragment implements DeleteServiceListener {
     private ImageButton filterBtn;
     private SearchView searchView;
     private FloatingActionButton floatingActionButton;
-    private List<DummyService> services = new ArrayList<>();
+    private List<PrototypeService> services = new ArrayList<>();
 
     public ServiceView() {
         // Required empty public constructor
@@ -59,6 +65,7 @@ public class ServiceView extends Fragment implements DeleteServiceListener {
                              Bundle savedInstanceState) {
         binding = FragmentServiceViewBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
+        requireActivity().getViewModelStore().clear();
         recyclerView = binding.recyclerView;
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
@@ -124,8 +131,8 @@ public class ServiceView extends Fragment implements DeleteServiceListener {
                 float maxPrice = priceRangeValues.get(1);
                 boolean availability = availabilitySwitch.isChecked();
 
-                List<DummyService> filteredServicesList = new ArrayList<>();
-                for (DummyService service : services) {
+                List<PrototypeService> filteredServicesList = new ArrayList<>();
+                for (PrototypeService service : services) {
                     boolean matchesCategory = service.getCategory().equalsIgnoreCase(selectedCategory) || selectedCategory.isEmpty();
                     boolean matchesEventType = service.getEventType().equalsIgnoreCase(selectedEventType) || selectedEventType.isEmpty();
                     boolean matchesPrice = service.getPrice() >= minPrice && service.getPrice() <= maxPrice;
@@ -170,12 +177,19 @@ public class ServiceView extends Fragment implements DeleteServiceListener {
         });
     }
 
+    @Override
+    public void onUpdateService(int position) {
+        PrototypeService service = services.get(position);
+        ServiceViewModel viewModel = new ViewModelProvider(requireActivity()).get(ServiceViewModel.class);
+        viewModel.populate(service);
+        Navigation.findNavController(binding.getRoot()).navigate(R.id.action_serviceView_toServiceCreationStepOne);
+    }
+
     public void addDummyData() {
-        services.add(new DummyService("Service 1", "Description 1", "Sport", "Svadba", true, 350.78));
-        services.add(new DummyService("Service 2", "Description 2", "Music", "Veselje", false, 600));
-        services.add(new DummyService("Service 3", "Description 3", "Sport", "Veselje", false, 800));
-        services.add(new DummyService("Service 4", "Description 4", "Food", "Rodjendan", true, 100));
-        services.add(new DummyService("Service 5", "Description 5"));
+        services.add(new PrototypeService("Music", "Orkestar", "Jako dobar orekstar", "Ovo je zaista jako specificno", 500, 25, true, false, 3.5, 3, 3, true, new ArrayList<>(), "Veselje"));
+        services.add(new PrototypeService("Food", "Ketering", "Jako dobra hrana", "Ovo je zaista jako specificno", 500, 25, false, true, 2.5, 5, 5, false, new ArrayList<>(), "Svadba"));
+        services.add(new PrototypeService("Beverages", "Hranilica", "Jako dobra hranilica", "Ovo je zaista jako specificno", 250, 25, true, true, 5, 1, 1, true, new ArrayList<>(), "SLavlje"));
+        services.add(new PrototypeService("Sport", "Kosarka", "Jako dobar sport", "Ovo je zaista jako specificno", 560, 25, false, false, 4, 2, 2, false, new ArrayList<>(), "Rodjendan"));
     }
 
 }
