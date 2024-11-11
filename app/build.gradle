@@ -29,11 +29,20 @@ android {
     buildFeatures{
         viewBinding true
     }
+
+    task wrapper(type: Wrapper){
+        gradleVersion = '7.2'
+    }
+
+    task prepareKotlinBuildScriptModel {
+
+    }
 }
 
 
 dependencies {
     implementation libs.glide
+    implementation 'androidx.constraintlayout:constraintlayout:2.2.0'
     annotationProcessor libs.compiler
     implementation libs.appcompat
     implementation libs.material
