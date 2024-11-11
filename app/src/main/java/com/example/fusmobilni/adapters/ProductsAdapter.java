@@ -48,7 +48,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
             this.name = view.findViewById(R.id.textViewProductTitle);
             this.description = view.findViewById(R.id.textViewProductDescription);
             _price = itemView.findViewById(R.id.productsPrice);
-            _location = itemView.findViewById(R.id.textViewLocationProduct);
+            _location = itemView.findViewById(R.id.textViewLocationService);
         }
     }
 

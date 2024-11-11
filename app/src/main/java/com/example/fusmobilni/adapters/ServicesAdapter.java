@@ -29,6 +29,7 @@ public class ServicesAdapter extends RecyclerView.Adapter<ServicesAdapter.Servic
         Service service = serviceList.get(position);
         holder.name.setText(service.getName());
         holder.description.setText(service.getDescription());
+        holder.location.setText(service.getLocation());
     }
 
     @Override
@@ -40,11 +41,13 @@ public class ServicesAdapter extends RecyclerView.Adapter<ServicesAdapter.Servic
     public static class ServicesViewHolder extends RecyclerView.ViewHolder {
         public TextView name;
         public TextView description;
+        public TextView location;
 
         public ServicesViewHolder(@NonNull View view) {
             super(view);
             this.name = view.findViewById(R.id.textViewServiceTitle);
             this.description = view.findViewById(R.id.textViewServiceDescription);
+            this.location = view.findViewById(R.id.textViewLocationService);
 
         }
     }

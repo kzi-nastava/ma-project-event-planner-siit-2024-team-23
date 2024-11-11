@@ -18,7 +18,53 @@
         <item>9</item>
         <item>10</item>
     </string-array>
+    <string-array name="service_locations">
+        <item></item>
+        <item>New York</item>
+        <item>Los Angeles</item>
+        <item>Chicago</item>
+        <item>San Francisco</item>
+        <item>Miami</item>
+        <item>Las Vegas</item>
+        <item>New York</item>
+        <item>Austin</item>
+        <item>Orlando</item>
+        <item>Atlanta</item>
+        <item>Houston</item>
+        <item>Seattle</item>
+        <item>Dallas</item>
+        <item>San Diego</item>
+        <item>Los Angeles</item>
+        <item>Miami</item>
+        <item>Nashville</item>
+        <item>Chicago</item>
+        <item>Boston</item>
+        <item>New York</item>
+        <item>Denver</item>
+        <item>Phoenix</item>
+        <item>San Antonio</item>
+        <item>Portland</item>
+        <item>Las Vegas</item>
+        <item>New York</item>
+        <item>San Francisco</item>
+        <item>Houston</item>
+        <item>Miami</item>
+        <item>Los Angeles</item>
+        <item>Philadelphia</item>
+        <item>Seattle</item>
+        <item>San Diego</item>
+        <item>Chicago</item>
+        <item>Boston</item>
+        <item>Santa Monica</item>
+        <item>Orlando</item>
+        <item>Las Vegas</item>
+        <item>Phoenix</item>
+        <item>San Antonio</item>
+        <item>Portland</item>
+        <item>New York</item>
+    </string-array>
     <string-array name="product_locations">
+        <item></item>
         <item>New York</item>
         <item>California</item>
         <item>Texas</item>

@@ -19,11 +19,11 @@
         android:padding="4dp">
 
         <ImageView
-            android:id="@+id/productImageBannerHorizontal"
+            android:id="@+id/serviceImageBannerHorizontal"
             android:layout_width="150dp"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
-            android:src="@drawable/product_placeholder" />
+            android:src="@drawable/service_placeholder" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -36,7 +36,7 @@
                 android:textAlignment="center">
 
                 <TextView
-                    android:id="@+id/textViewProductNameHorizontal"
+                    android:id="@+id/textViewServiceNameHorizontal"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
@@ -57,58 +57,10 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:background="@drawable/price_tag"
-                    android:orientation="horizontal"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1">
-
-                        <ImageView
-                            android:id="@+id/imageView3"
-                            android:layout_width="25dp"
-                            android:layout_height="0dp"
-                            android:layout_weight="1"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:srcCompat="@drawable/ic_dolar" />
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-
-                    <TextView
-                        android:id="@+id/productsHorizontalPrice"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
-                        android:layout_weight="1"
-
-                        android:padding="5dp"
-                        android:text="TextView"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                </LinearLayout>
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
                 android:layout_height="65dp">
 
                 <TextView
-                    android:id="@+id/productDescriptionHorizontal"
+                    android:id="@+id/serviceDescriptionHorizontal"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
@@ -134,7 +86,7 @@
                     android:src="@drawable/ic_location" />
 
                 <TextView
-                    android:id="@+id/textViewProductLocationHorizontal"
+                    android:id="@+id/textViewServiceLocationHorizontal"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:drawablePadding="4dp"

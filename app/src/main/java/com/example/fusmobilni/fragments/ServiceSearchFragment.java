@@ -3,47 +3,46 @@ package com.example.fusmobilni.fragments;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 import com.example.fusmobilni.R;
+import com.example.fusmobilni.adapters.ServiceHorizontalAdapter;
+import com.example.fusmobilni.databinding.FragmentServiceSearchBinding;
+import com.example.fusmobilni.interfaces.OnFilterServicesApplyListener;
+import com.example.fusmobilni.model.Service;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.textfield.TextInputLayout;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link ServiceSearchFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ServiceSearchFragment extends Fragment {
+public class ServiceSearchFragment extends Fragment implements OnFilterServicesApplyListener {
+    private FragmentServiceSearchBinding _binding;
+    private TextInputLayout _searchView;
+    private ArrayList<Service> _services;
+    private RecyclerView _listView;
+    private ServiceHorizontalAdapter _servicesAdapter;
+    private Spinner _paginationSpinner;
+    private MaterialButton _prevButton;
+    private MaterialButton _nextButton;
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public ServiceSearchFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ServiceSearchFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static ServiceSearchFragment newInstance(String param1, String param2) {
         ServiceSearchFragment fragment = new ServiceSearchFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+
         fragment.setArguments(args);
         return fragment;
     }
@@ -52,15 +51,141 @@ public class ServiceSearchFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_service_search, container, false);
+
+        _binding = FragmentServiceSearchBinding.inflate(inflater, container, false);
+        View view = _binding.getRoot();
+
+        _listView = _binding.serviceList;
+        _searchView = _binding.searchTextInputLayoutService;
+        initializeButtons();
+
+        _servicesAdapter = new ServiceHorizontalAdapter();
+        _listView.setAdapter(_servicesAdapter);
+
+        _searchView.getEditText().addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                _servicesAdapter.getFilter().filter(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        _binding.serviceFilterButton.setOnClickListener(v -> {
+            _servicesAdapter.resetFilters();
+            ServiceFragmentFilter filterFragment = new ServiceFragmentFilter();
+            filterFragment.set_filterListener(new OnFilterServicesApplyListener() {
+                @Override
+                public void onFilterApply(String category, String location) {
+                    _servicesAdapter.setFilters(_searchView.getEditText().getText().toString(), category, location);
+                }
+            });
+            filterFragment.show(getParentFragmentManager(),filterFragment.getTag());
+
+        });
+        _services = fillServices();
+        _servicesAdapter.setOriginalData(_services);
+        _servicesAdapter.setFilteringData(_services);
+        _servicesAdapter.setData(_services);
+        _servicesAdapter.loadPage(0);
+
+        initalizepaginationspinner();
+
+        return view;
+    }
+
+    private void initalizepaginationspinner() {
+        _paginationSpinner = _binding.paginationSpinnerservice;
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this.getContext(), R.array.paginationPageSizes, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        _paginationSpinner.setAdapter(adapter);
+        _paginationSpinner.setSelection(0);
+        _paginationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                int selectedItem = Integer.parseInt(String.valueOf(parent.getItemAtPosition(position)));
+                _servicesAdapter.setPageSize(selectedItem, _searchView.getEditText().getText().toString());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
+
+    private void initializeButtons() {
+        _prevButton = this._binding.serviceSearchPreviousButton;
+        _nextButton = this._binding.serviceSearchNextButton;
+
+        _prevButton.setOnClickListener(v -> _servicesAdapter.prevPage());
+        _nextButton.setOnClickListener(v -> _servicesAdapter.nextPage());
+    }
+
+    private ArrayList<Service> fillServices() {
+        ArrayList<Service> s = new ArrayList<>();
+        s.add(new Service("Live band for weddings and parties", "Wedding Band", "New York", "Music"));
+        s.add(new Service("Professional photography for events", "Photography Service", "Los Angeles", "Art"));
+        s.add(new Service("Catering services for all occasions", "Catering Service", "Chicago", "Food"));
+        s.add(new Service("Event decoration and setup", "Decoration Service", "San Francisco", "Art"));
+        s.add(new Service("Spacious venue for corporate events", "Venue Rental", "Miami", "Travel"));
+        s.add(new Service("DJ service with customized playlists", "DJ Service", "Las Vegas", "Music"));
+        s.add(new Service("Makeup and styling for events", "Makeup Service", "New York", "Fashion"));
+        s.add(new Service("Mobile food truck service for events", "Food Truck Service", "Austin", "Food"));
+        s.add(new Service("Event photography with instant prints", "Instant Photography", "Orlando", "Art"));
+        s.add(new Service("Luxury limousine rental for special events", "Limo Service", "Atlanta", "Travel"));
+        s.add(new Service("Bartending services with custom cocktails", "Bartending Service", "Houston", "Food"));
+        s.add(new Service("Floral arrangements for events", "Flower Arrangements", "Seattle", "Art"));
+        s.add(new Service("Kids' party entertainment with clowns", "Kids Entertainment", "Dallas", "Sports"));
+        s.add(new Service("Personal chef for private dinners", "Private Chef Service", "San Diego", "Food"));
+        s.add(new Service("Sound and lighting setup for concerts", "Audio & Lighting", "Los Angeles", "Tech"));
+        s.add(new Service("Photo booth rental with props", "Photo Booth", "Miami", "Art"));
+        s.add(new Service("Wedding planning and coordination", "Wedding Planner", "Nashville", "Education"));
+        s.add(new Service("Luxury car rental for events", "Car Rental Service", "Chicago", "Travel"));
+        s.add(new Service("Balloon decorations for parties", "Balloon Decor", "Boston", "Art"));
+        s.add(new Service("Catering for corporate lunches", "Corporate Catering", "New York", "Food"));
+        s.add(new Service("Party tent rentals with seating", "Tent Rental", "Denver", "Travel"));
+        s.add(new Service("Drone photography for outdoor events", "Drone Photography", "Phoenix", "Tech"));
+        s.add(new Service("Live solo guitarist for ceremonies", "Guitarist Service", "San Antonio", "Music"));
+        s.add(new Service("Custom invitation design", "Invitation Design", "Portland", "Art"));
+        s.add(new Service("On-site hair styling for events", "Hair Styling", "Las Vegas", "Fashion"));
+        s.add(new Service("Professional event video production", "Video Production", "New York", "Tech"));
+        s.add(new Service("Corporate event planning and management", "Corporate Planner", "San Francisco", "Education"));
+        s.add(new Service("Children's activity zone with games", "Kids Activity Zone", "Houston", "Sports"));
+        s.add(new Service("Luxury yacht rental for parties", "Yacht Rental", "Miami", "Travel"));
+        s.add(new Service("Event staff and security service", "Event Staffing", "Los Angeles", "Health"));
+        s.add(new Service("Gourmet dessert catering", "Dessert Catering", "Philadelphia", "Food"));
+        s.add(new Service("Karaoke machine rental", "Karaoke Service", "Seattle", "Music"));
+        s.add(new Service("Elegant lighting decoration", "Lighting Decoration", "San Diego", "Art"));
+        s.add(new Service("Corporate gift customization", "Gift Customization", "Chicago", "Art"));
+        s.add(new Service("Photographer specializing in candids", "Candid Photography", "Boston", "Photography"));
+        s.add(new Service("Private beach rental for events", "Beach Venue Rental", "Santa Monica", "Travel"));
+        s.add(new Service("Magician for private events", "Magician Service", "Orlando", "Entertainment"));
+        s.add(new Service("Event signage and branding setup", "Event Branding", "Las Vegas", "Art"));
+        s.add(new Service("Luxury RV rental for glamping", "RV Rental", "Phoenix", "Travel"));
+        s.add(new Service("Fireworks display setup for events", "Fireworks Service", "San Antonio", "Entertainment"));
+        s.add(new Service("Eco-friendly catering with local ingredients", "Eco Catering", "Portland", "Food"));
+        s.add(new Service("3D virtual tour creation for venues", "3D Tour Service", "New York", "Tech"));
+        return s;
+    }
+
+    @Override
+    public void onFilterApply(String category, String location) {
+
     }
 }

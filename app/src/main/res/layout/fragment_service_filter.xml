@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -6,7 +5,7 @@
     android:layout_height="wrap_content"
     android:background="@color/white"
     android:scrollbarSize="16sp"
-    tools:context=".fragments.ProductFilterFragment">
+    tools:context=".fragments.ServiceFragmentFilter">
 
     <!-- TODO: Update blank fragment layout -->
 
@@ -42,7 +41,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/categoryRecyclerViewProducts"
+            android:id="@+id/categoryRecyclerViewServices"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -52,25 +51,6 @@
 
         </androidx.recyclerview.widget.RecyclerView>
 
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1">
-
-            <com.google.android.material.slider.RangeSlider
-                android:id="@+id/priceSliderProducts"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="20dp"
-
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-               />
-        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -95,7 +75,7 @@
             android:layout_weight="1">
 
             <Spinner
-                android:id="@+id/spinnerProductsLOcation"
+                android:id="@+id/spinnerServicesLOcation"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
@@ -139,7 +119,7 @@
                     app:elevation="4dp" />
 
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/productsFilterApplyButton"
+                    android:id="@+id/servicesFilterApplyButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="10dp"
