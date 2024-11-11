@@ -42,6 +42,7 @@ android {
 
 dependencies {
     implementation libs.glide
+    implementation 'androidx.constraintlayout:constraintlayout:2.2.0'
     annotationProcessor libs.compiler
     implementation libs.appcompat
     implementation libs.material

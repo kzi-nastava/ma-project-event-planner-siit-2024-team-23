@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,6 +52,10 @@ public class MultiStepServiceFormOne extends Fragment {
         String[] eventTypes = getResources().getStringArray(R.array.EventTypes);
         ArrayAdapter<String> eventAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, eventTypes);
         binding.eventTypesInputStep1.setAdapter(eventAdapter);
+
+        binding.materialButton.setOnClickListener(v -> {
+            Navigation.findNavController(view).navigate(R.id.action_serviceCreationStepOne_toServiceCreationStepTwo);
+        });
 
         return view;
     }
