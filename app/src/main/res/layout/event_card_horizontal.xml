@@ -95,7 +95,7 @@
                 android:textAlignment="center">
 
                 <TextView
-                    android:id="@+id/textViewEventTitleHorizontal"
+                    android:id="@+id/textViewProductNameHorizontal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:autoSizeMaxTextSize="16sp"
@@ -114,7 +114,7 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <LinearLayout
-                android:id="@+id/eventlocationHorizontal"
+                android:id="@+id/productslocationHorizontal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -127,7 +127,7 @@
                     android:src="@drawable/ic_location" />
 
                 <TextView
-                    android:id="@+id/textViewLocationHorizontal"
+                    android:id="@+id/textViewProductsLocationHorizontal"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:drawablePadding="4dp"

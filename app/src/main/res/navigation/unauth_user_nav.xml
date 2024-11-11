@@ -164,7 +164,14 @@
     <action
         android:id="@+id/action_serviceCreationStepThree_toServiceView"
         app:destination="@id/services_fragment"/>
-
+    <fragment
+        android:id="@+id/products_search_fragment"
+        android:name="com.example.fusmobilni.fragments.ProductSearchFragment"
+        android:label="Browse Products"
+        tools:layout="@layout/fragment_product_search"/>
+    <action
+        android:id="@+id/action_home_fragment_to_product_search"
+        app:destination="@id/products_search_fragment" />
 
 
 </navigation>
