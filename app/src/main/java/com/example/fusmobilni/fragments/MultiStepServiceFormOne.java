@@ -14,7 +14,6 @@ import android.widget.ArrayAdapter;
 
 import com.example.fusmobilni.R;
 import com.example.fusmobilni.databinding.FragmentMultiStepServiceFormOneBinding;
-import com.example.fusmobilni.databinding.FragmentServiceCreationBinding;
 import com.example.fusmobilni.viewModel.ServiceViewModel;
 
 public class MultiStepServiceFormOne extends Fragment {
