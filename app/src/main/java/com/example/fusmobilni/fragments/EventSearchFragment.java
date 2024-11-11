@@ -17,7 +17,7 @@ import android.widget.Spinner;
 import com.example.fusmobilni.R;
 import com.example.fusmobilni.adapters.EventsHorizontalAdapter;
 import com.example.fusmobilni.databinding.EventFragmentSearchBinding;
-import com.example.fusmobilni.interfaces.OnFilterApplyListener;
+import com.example.fusmobilni.interfaces.OnFilterEventsApplyListener;
 import com.example.fusmobilni.model.Event;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.search.SearchBar;
@@ -30,7 +30,7 @@ import java.util.ArrayList;
  * Use the {@link EventSearchFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class EventSearchFragment extends Fragment implements OnFilterApplyListener {
+public class EventSearchFragment extends Fragment implements OnFilterEventsApplyListener {
 
     private EventFragmentSearchBinding _binding;
     private TextInputLayout _searchView;
@@ -114,7 +114,7 @@ public class EventSearchFragment extends Fragment implements OnFilterApplyListen
         _binding.eventsFilterButton.setOnClickListener(v -> {
             eventsHorizontalAdapter.resetFilters();
             EventFilterFragment fragment = new EventFilterFragment();
-            fragment.setFilterListener(new OnFilterApplyListener() {
+            fragment.setFilterListener(new OnFilterEventsApplyListener() {
                 @Override
                 public void onFilterApply(String category, String location, String date) {
                     eventsHorizontalAdapter.setFilters(_searchView.getEditText().getText().toString(),category,location,date);

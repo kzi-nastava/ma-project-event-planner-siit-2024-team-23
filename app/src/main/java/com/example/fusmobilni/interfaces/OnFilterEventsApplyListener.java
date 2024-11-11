@@ -1,5 +1,5 @@
 package com.example.fusmobilni.interfaces;
 
-public interface OnFilterApplyListener {
+public interface OnFilterEventsApplyListener {
     void onFilterApply(String category, String location, String date);
 }
