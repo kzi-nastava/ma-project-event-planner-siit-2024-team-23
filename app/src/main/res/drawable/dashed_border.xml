@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <!-- Set the color for the border -->
+            <solid android:color="@android:color/transparent" />
+
+            <!-- Define the dashed stroke -->
+            <stroke
+                android:width="2dp"
+                android:color="@color/primary_blue_300"
+                android:dashWidth="10dp"
+                android:dashGap="5dp" />
+
+            <!-- Set corner radius if needed -->
+            <corners android:radius="8dp" />
+        </shape>
+    </item>
+</selector>
