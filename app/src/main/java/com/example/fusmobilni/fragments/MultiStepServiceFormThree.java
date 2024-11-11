@@ -8,6 +8,8 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelStore;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -23,15 +25,18 @@ import com.example.fusmobilni.adapters.RecyclerAdapter;
 import com.example.fusmobilni.databinding.FragmentMultiStepServiceFormThreeBinding;
 import com.example.fusmobilni.databinding.FragmentMultiStepServiceFormTwoBinding;
 import com.example.fusmobilni.interfaces.ItemClickListener;
+import com.example.fusmobilni.viewModel.ServiceViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 public class MultiStepServiceFormThree extends Fragment implements ItemClickListener {
 
 
     private FragmentMultiStepServiceFormThreeBinding binding;
+    private ServiceViewModel viewModel;
     private Button imageButton;
     private RecyclerView recyclerView;
 
@@ -59,6 +64,7 @@ public class MultiStepServiceFormThree extends Fragment implements ItemClickList
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentMultiStepServiceFormThreeBinding.inflate(inflater, container, false);
+        viewModel = new ViewModelProvider(requireActivity()).get(ServiceViewModel.class);
         View view = binding.getRoot();
 
         imageButton = binding.imageButton;
@@ -72,15 +78,18 @@ public class MultiStepServiceFormThree extends Fragment implements ItemClickList
                 }
         );
 
+        populateInputs();
         recyclerView = binding.recycler;
         imageAdapter = new RecyclerAdapter(imageUris, this);
         recyclerView.setLayoutManager(new GridLayoutManager(requireContext(), 4));
         recyclerView.setAdapter(imageAdapter);
 
         binding.backwardsButton.setOnClickListener(v -> {
+            setValues();
             Navigation.findNavController(view).navigate(R.id.action_serviceCreationStepThree_toServiceCreationStepTwo);
         });
         binding.forwardButton.setOnClickListener(v -> {
+            //create new service
             Navigation.findNavController(view).navigate(R.id.action_serviceCreationStepThree_toServiceView);
         });
 
@@ -105,6 +114,19 @@ public class MultiStepServiceFormThree extends Fragment implements ItemClickList
             }
             imageAdapter.notifyDataSetChanged();
         }
+    }
+
+    private void setValues() {
+        viewModel.clearImageUris();
+        for(Uri image: imageUris) {
+            viewModel.addImageUri(image);
+        }
+    }
+
+
+    private void populateInputs() {
+        imageUris.clear();
+        imageUris.addAll(Objects.requireNonNull(viewModel.getImageUris().getValue()));
     }
 
     @Override
