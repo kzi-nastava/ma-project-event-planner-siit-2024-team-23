@@ -8,6 +8,8 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelStore;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,39 +17,42 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 import com.example.fusmobilni.R;
 import com.example.fusmobilni.adapters.RecyclerAdapter;
-import com.example.fusmobilni.databinding.FragmentHomeBinding;
-import com.example.fusmobilni.databinding.FragmentServiceCreationBinding;
+import com.example.fusmobilni.databinding.FragmentMultiStepServiceFormThreeBinding;
+import com.example.fusmobilni.databinding.FragmentMultiStepServiceFormTwoBinding;
 import com.example.fusmobilni.interfaces.ItemClickListener;
+import com.example.fusmobilni.viewModel.ServiceViewModel;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 
-public class ServiceCreation extends Fragment implements ItemClickListener {
+public class MultiStepServiceFormThree extends Fragment implements ItemClickListener {
 
-    private FragmentServiceCreationBinding binding;
-    private RecyclerAdapter imageAdapter;
-    private RecyclerView recyclerView;
+
+    private FragmentMultiStepServiceFormThreeBinding binding;
+    private ServiceViewModel viewModel;
     private Button imageButton;
+    private RecyclerView recyclerView;
 
-    private Button submitButton;
+    private RecyclerAdapter imageAdapter;
 
-    private Button cancelButton;
-    int PICK_IMAGE_MULTIPLE = 1;
-    ArrayList<Uri> imageUris = new ArrayList<>();
+    private ArrayList<Uri> imageUris = new ArrayList<>();
 
+    private int PICK_IMAGE_MULTIPLE = 1;
 
-    public ServiceCreation() {
-
+    public MultiStepServiceFormThree() {
+        // Required empty public constructor
     }
 
 
-    public static ServiceCreation newInstance() {
-        return new ServiceCreation();
+    public static MultiStepServiceFormThree newInstance(String param1, String param2) {
+        return new MultiStepServiceFormThree();
     }
 
     @Override
@@ -58,17 +63,9 @@ public class ServiceCreation extends Fragment implements ItemClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        binding = FragmentServiceCreationBinding.inflate(inflater, container, false);
+        binding = FragmentMultiStepServiceFormThreeBinding.inflate(inflater, container, false);
+        viewModel = new ViewModelProvider(requireActivity()).get(ServiceViewModel.class);
         View view = binding.getRoot();
-
-        String[] categories = getResources().getStringArray(R.array.categories);
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, categories);
-        binding.autoCompleteTextview.setAdapter(adapter);
-
-        String[] eventTypes = getResources().getStringArray(R.array.EventTypes);
-        ArrayAdapter<String> eventAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, eventTypes);
-        binding.eventTypesInput.setAdapter(adapter);
-
 
         imageButton = binding.imageButton;
         imageButton.setOnClickListener(
@@ -81,20 +78,25 @@ public class ServiceCreation extends Fragment implements ItemClickListener {
                 }
         );
 
+        populateInputs();
         recyclerView = binding.recycler;
         imageAdapter = new RecyclerAdapter(imageUris, this);
         recyclerView.setLayoutManager(new GridLayoutManager(requireContext(), 4));
         recyclerView.setAdapter(imageAdapter);
 
-        submitButton = binding.submitButton;
-        cancelButton = binding.cancelButton;
+        binding.backwardsButton.setOnClickListener(v -> {
+            setValues();
+            Navigation.findNavController(view).navigate(R.id.action_serviceCreationStepThree_toServiceCreationStepTwo);
+        });
+        binding.forwardButton.setOnClickListener(v -> {
+            //create new service
+            requireActivity().getViewModelStore().clear();
+            Navigation.findNavController(view).navigate(R.id.action_serviceCreationStepThree_toServiceView);
+        });
 
-        submitButton.setOnClickListener(v -> {
-            Navigation.findNavController(view).navigate(R.id.action_serviceCreation_toServiceView);
-        });
-        cancelButton.setOnClickListener(v -> {
-            Navigation.findNavController(view).navigate(R.id.action_serviceCreation_toServiceView);
-        });
+        if (viewModel.getIsUpdating().getValue()) {
+            binding.textView2.setText("Update Service Form");
+        }
 
         return view;
     }
@@ -117,6 +119,19 @@ public class ServiceCreation extends Fragment implements ItemClickListener {
             }
             imageAdapter.notifyDataSetChanged();
         }
+    }
+
+    private void setValues() {
+        viewModel.clearImageUris();
+        for(Uri image: imageUris) {
+            viewModel.addImageUri(image);
+        }
+    }
+
+
+    private void populateInputs() {
+        imageUris.clear();
+        imageUris.addAll(Objects.requireNonNull(viewModel.getImageUris().getValue()));
     }
 
     @Override

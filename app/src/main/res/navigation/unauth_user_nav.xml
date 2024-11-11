@@ -119,20 +119,55 @@
         tools:layout="@layout/activity_register"
         />
 
-    <fragment
-        android:id="@+id/service_creation"
-        android:name="com.example.fusmobilni.fragments.ServiceCreation"
-        android:label="ServiceCreation"
-        tools:layout="@layout/fragment_service_creation">
 
+    <fragment
+        android:id="@+id/service_creation_step_one"
+        android:name="com.example.fusmobilni.fragments.MultiStepServiceFormOne"
+        android:label="ServiceCreationStepOne"
+        android:layout="@layout/fragment_multi_step_service_form_one">
     </fragment>
+
+    <fragment
+        android:id="@+id/service_creation_step_two"
+        android:name="com.example.fusmobilni.fragments.MultiStepServiceFormTwo"
+        android:label="ServiceCreationStepTwo"
+        android:layout="@layout/fragment_multi_step_service_form_two">
+    </fragment>
+
+    <fragment
+        android:id="@+id/service_creation_step_three"
+        android:name="com.example.fusmobilni.fragments.MultiStepServiceFormThree"
+        android:label="ServiceCreationStepThree"
+        android:layout="@layout/fragment_multi_step_service_form_three">
+    </fragment>
+
     <action
-        android:id="@+id/action_serviceView_toServiceCreation"
-        app:destination="@id/service_creation" />
+        android:id="@+id/action_serviceView_toServiceCreationStepOne"
+        app:destination="@id/service_creation_step_one"/>
 
     <action
         android:id="@+id/action_serviceCreation_toServiceView"
         app:destination="@id/services_fragment" />
+
+    <action
+        android:id="@+id/action_serviceCreationStepOne_toServiceCreationStepTwo"
+        app:destination="@id/service_creation_step_two"/>
+
+    <action
+        android:id="@+id/action_serviceCreationStepTwo_toServiceCreationStepOne"
+        app:destination="@id/service_creation_step_one"/>
+
+    <action
+        android:id="@+id/action_serviceCreationStepTwo_toServiceCreationStepThree"
+        app:destination="@id/service_creation_step_three"/>
+
+    <action
+        android:id="@+id/action_serviceCreationStepThree_toServiceCreationStepTwo"
+        app:destination="@id/service_creation_step_two"/>
+
+    <action
+        android:id="@+id/action_serviceCreationStepThree_toServiceView"
+        app:destination="@id/services_fragment"/>
     <fragment
         android:id="@+id/products_search_fragment"
         android:name="com.example.fusmobilni.fragments.ProductSearchFragment"
@@ -141,6 +176,7 @@
     <action
         android:id="@+id/action_home_fragment_to_product_search"
         app:destination="@id/products_search_fragment" />
+
     <action
         android:id="@+id/action_home_fragment_to_service_search"
         app:destination="@id/service_search_fragment"/>
