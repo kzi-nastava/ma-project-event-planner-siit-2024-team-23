@@ -43,6 +43,10 @@ public class MultiStepServiceFormTwo extends Fragment {
             Navigation.findNavController(view).navigate(R.id.action_serviceCreationStepTwo_toServiceCreationStepOne);
         });
 
+        binding.forwardButton.setOnClickListener(v -> {
+            Navigation.findNavController(view).navigate(R.id.action_serviceCreationStepTwo_toServiceCreationStepThree);
+        });
+
         return view;
     }
 }

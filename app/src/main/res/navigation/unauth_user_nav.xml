@@ -137,6 +137,13 @@
         android:layout="@layout/fragment_multi_step_service_form_two">
     </fragment>
 
+    <fragment
+        android:id="@+id/service_creation_step_three"
+        android:name="com.example.fusmobilni.fragments.MultiStepServiceFormThree"
+        android:label="ServiceCreationStepThree"
+        android:layout="@layout/fragment_multi_step_service_form_three">
+    </fragment>
+
     <action
         android:id="@+id/action_serviceView_toServiceCreationStepOne"
         app:destination="@id/service_creation_step_one"/>
@@ -155,6 +162,19 @@
     <action
         android:id="@+id/action_serviceCreationStepTwo_toServiceCreationStepOne"
         app:destination="@id/service_creation_step_one"/>
+
+    <action
+        android:id="@+id/action_serviceCreationStepTwo_toServiceCreationStepThree"
+        app:destination="@id/service_creation_step_three"/>
+
+    <action
+        android:id="@+id/action_serviceCreationStepThree_toServiceCreationStepTwo"
+        app:destination="@id/service_creation_step_two"/>
+
+    <action
+        android:id="@+id/action_serviceCreationStepThree_toServiceView"
+        app:destination="@id/services_fragment"/>
+
 
 
 </navigation>
