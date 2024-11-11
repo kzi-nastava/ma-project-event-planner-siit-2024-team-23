@@ -84,6 +84,13 @@ public class HomeFragment extends Fragment {
         this._binding.homeEventsSeeAllButton.setOnClickListener(v->{
             Navigation.findNavController(view).navigate(R.id.action_homeFragment_to_searchFragment);
         });
+        this._binding.homeServicesSeeAllButton.setOnClickListener(v->{
+
+            Navigation.findNavController(view).navigate(R.id.action_home_fragment_to_product_search);
+        });
+        this._binding.productsSeeAllButton.setOnClickListener(v->{
+            Navigation.findNavController(view).navigate(R.id.action_home_fragment_to_product_search);
+        });
 
         return view;
     }
@@ -110,12 +117,14 @@ public class HomeFragment extends Fragment {
     }
     private  ArrayList<Product> fillProducts(){
         ArrayList<Product> p = new ArrayList<>();
-        p.add(new Product("A delicious blend of flavors", "Gourmet Pizza"));
-        p.add(new Product("Refreshing and invigorating beverage", "Lemonade"));
-        p.add(new Product("Sweet and savory snacks", "Mixed Nuts"));
-        p.add(new Product("Freshly baked pastries", "Croissants"));
-        p.add(new Product("Artisanal chocolates", "Dark Chocolate Truffles"));
+        p.add(new Product("Gourmet Pizza", "A delicious blend of flavors", 15.99, "New York", "Food"));
+        p.add(new Product("Lemonade", "Refreshing and invigorating beverage", 3.49, "California", "Health"));
+        p.add(new Product("Mixed Nuts", "Sweet and savory snacks", 5.99, "Texas", "Sports"));
+        p.add(new Product("Croissants", "Freshly baked pastries", 2.99, "France", "Art"));
+        p.add(new Product("Dark Chocolate Truffles", "Artisanal chocolates", 12.49, "Belgium", "Fashion"));
+
         return p;
+
     }
 
 }

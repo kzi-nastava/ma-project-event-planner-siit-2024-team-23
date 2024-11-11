@@ -15,7 +15,7 @@ import android.widget.Spinner;
 import com.example.fusmobilni.R;
 import com.example.fusmobilni.adapters.CategoryFilterAdapter;
 import com.example.fusmobilni.databinding.FragmentEventFilterBinding;
-import com.example.fusmobilni.interfaces.OnFilterApplyListener;
+import com.example.fusmobilni.interfaces.OnFilterEventsApplyListener;
 import com.example.fusmobilni.model.Category;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.button.MaterialButton;
@@ -39,7 +39,7 @@ public class EventFilterFragment extends BottomSheetDialogFragment {
     private String selectedLocation = "";
     private String selectedDate = "";
 
-    private OnFilterApplyListener filterListener;
+    private OnFilterEventsApplyListener filterListener;
     private RecyclerView categoryRecyclerView;
     private FragmentEventFilterBinding _binding;
     private List<Category> _categories;
@@ -170,7 +170,7 @@ public class EventFilterFragment extends BottomSheetDialogFragment {
         _locationSpinner.setAdapter(adapter);
     }
 
-    public void setFilterListener(OnFilterApplyListener listener) {
+    public void setFilterListener(OnFilterEventsApplyListener listener) {
         this.filterListener = listener;
     }
 

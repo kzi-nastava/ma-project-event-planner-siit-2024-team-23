@@ -55,7 +55,7 @@ public class EventsHorizontalAdapter extends RecyclerView.Adapter<EventsHorizont
         notifyDataSetChanged();
     }
 
-    public void setFilters(String constraint,String category, String location, String date) {
+    public void setFilters(String constraint, String category, String location, String date) {
         _selectedCategory = category.toLowerCase().trim();
         _selectedDate = date.toLowerCase().trim();
         _selectedLocation = location.toLowerCase().trim();
@@ -79,6 +79,10 @@ public class EventsHorizontalAdapter extends RecyclerView.Adapter<EventsHorizont
         int end = start + _itemsPerPage;
         if (end > _eventList.size()) {
             end = _eventList.size();
+        }
+        if (start > end) {
+            _currentPage -= 1;
+            return;
         }
         List<Event> pageCategories = _eventList.subList(start, end);
 
@@ -105,12 +109,12 @@ public class EventsHorizontalAdapter extends RecyclerView.Adapter<EventsHorizont
             protected FilterResults performFiltering(CharSequence constraint) {
                 List<Event> filteredList = new ArrayList<>();
 
-                _constraint  = constraint.toString().toLowerCase().trim();
+                _constraint = constraint.toString().toLowerCase().trim();
                 for (Event event : _eventsFull) {
                     boolean matchesConstraint = _constraint.isEmpty() || event.getTitle().toLowerCase().contains(_constraint);
                     boolean matchesLocation = _selectedLocation.isEmpty() || event.getLocation().toLowerCase().equals(_selectedLocation);
                     boolean matchesCategory = _selectedCategory.isEmpty() || event.getCategory().toLowerCase().equals(_selectedCategory);
-                    boolean matchesDate = _selectedDate.isEmpty()||event.getDate().toLowerCase().equals(_selectedDate);
+                    boolean matchesDate = _selectedDate.isEmpty() || event.getDate().toLowerCase().equals(_selectedDate);
                     if (matchesConstraint && matchesLocation && matchesCategory && matchesDate) {
                         filteredList.add(event);
                     }
@@ -131,12 +135,14 @@ public class EventsHorizontalAdapter extends RecyclerView.Adapter<EventsHorizont
             }
         };
     }
-    public void resetFilters(){
+
+    public void resetFilters() {
         _constraint = "";
         _selectedLocation = "";
         _selectedDate = "";
-        _selectedCategory ="";
+        _selectedCategory = "";
     }
+
     public void setPageSize(int selectedItem, String currentText) {
         _itemsPerPage = selectedItem;
         getFilter().filter(currentText);
@@ -150,10 +156,10 @@ public class EventsHorizontalAdapter extends RecyclerView.Adapter<EventsHorizont
 
         EventHorizontalViewHolder(View itemView) {
             super(itemView);
-            title = itemView.findViewById(R.id.textViewEventTitleHorizontal);
+            title = itemView.findViewById(R.id.textViewProductNameHorizontal);
             day = itemView.findViewById(R.id.textViewDayHorizontal);
             monthYear = itemView.findViewById(R.id.textViewMonthAndYearHorizontal);
-            location = itemView.findViewById(R.id.textViewLocationHorizontal);
+            location = itemView.findViewById(R.id.textViewProductsLocationHorizontal);
         }
     }
 
