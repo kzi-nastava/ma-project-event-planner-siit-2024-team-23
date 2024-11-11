@@ -100,11 +100,11 @@ public class HomeFragment extends Fragment {
 
     private ArrayList<Event> fillEvents() {
         ArrayList<Event> e = new ArrayList<>();
-        e.add(new Event("12", "July", "Food and Wine Tasting Festival", "2024", "Napa Valley Vineyard"));
-        e.add(new Event("15", "August", "Tech Innovators Conference", "2024", "Silicon Valley Expo Center"));
-        e.add(new Event("18", "September", "Autumn Art and Sculpture Exhibition", "2024", "Paris Art Museum"));
-        e.add(new Event("22", "October", "Global Startup Pitch Event", "2024", "Berlin Startup Hub"));
-        e.add(new Event("5", "November", "International Film and Documentary Festival", "2024", "Toronto Film Centre"));
+        e.add(new Event("Food and Wine Tasting", "12-7-2024", "Napa Valley Vineyard", "Food"));
+        e.add(new Event("Tech Innovators Conference", "15-8-2024", "Silicon Valley Expo Center", "Tech"));
+        e.add(new Event("Autumn Art and Sculpture Exhibition", "18-9-2024", "Paris Art Museum", "Art"));
+        e.add(new Event("Global Startup Pitch Event", "22-10-2024", "Berlin Startup Hub", "Tech"));
+        e.add(new Event("International Film and Documentary Festival", "5-11-2024", "Toronto Film Centre", "Art"));
         return e;
 
     }

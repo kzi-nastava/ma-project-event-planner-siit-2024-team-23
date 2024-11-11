@@ -21,7 +21,6 @@
     <color name="text_600">#B8B6BE</color>
     <color name="text_500">#D0CFD4</color>
     <color name="text_400">#E7E7E9</color>
-
     <!--    ACCENT COLORS    -->
     <color name="accent_red">#F0635A</color>
     <color name="accent_orange">#F59762</color>
@@ -34,7 +33,6 @@
     <color name="bg_black">#2D2D3A</color>
     <color name="bg_gray">#858585</color>
     <color name="bg_light_gray">#E5E5E5</color>
-
 
 
 </resources>
