@@ -40,6 +40,8 @@ public class ProductFilterFragment extends BottomSheetDialogFragment {
     private CategoryFilterAdapter _adapter;
     private RangeSlider _slider;
     private OnFilterProductsApplyListener _filterListener;
+    private Double _sliderMinValue;
+    private Double _sliderMaxValue;
 
     public ProductFilterFragment() {
         // Required empty public constructor
@@ -55,7 +57,8 @@ public class ProductFilterFragment extends BottomSheetDialogFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-
+            _sliderMinValue = getArguments().getDouble("min_slider");
+            _sliderMaxValue = getArguments().getDouble("max_slider");
         }
     }
 
@@ -67,6 +70,11 @@ public class ProductFilterFragment extends BottomSheetDialogFragment {
         View view = _binding.getRoot();
         _categoryRecyclerView = _binding.categoryRecyclerViewProducts;
         _slider = _binding.priceSliderProducts;
+
+        _slider.setValueFrom(Float.valueOf(String.valueOf(_sliderMinValue)));
+        _slider.setValueTo(Float.valueOf(String.valueOf(_sliderMaxValue)));
+        _slider.setValues(_sliderMinValue.floatValue(), _sliderMaxValue.floatValue());
+
         this._categories = Arrays.asList(
                 new Category("Sports", R.drawable.ic_category_sports_active, R.drawable.ic_category_sports_inactive),
                 new Category("Music", R.drawable.ic_category_music_active, R.drawable.ic_category_music_inactive),

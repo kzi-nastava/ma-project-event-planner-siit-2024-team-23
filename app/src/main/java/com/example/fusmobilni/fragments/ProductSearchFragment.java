@@ -24,6 +24,7 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -101,6 +102,11 @@ public class ProductSearchFragment extends Fragment implements OnFilterEventsApp
                     _productsAdapter.setFilters(_searchView.getEditText().getText().toString(),category, minPrice,maxPrice, location);
                 }
             });
+            Bundle args = new Bundle();
+            ArrayList<Double> minMax = getMinMaxPrice();
+            args.putDouble("min_slider", minMax.get(0));
+            args.putDouble("max_slider",minMax.get(1));
+            filterFragment.setArguments(args);
             filterFragment.show(getParentFragmentManager(), filterFragment.getTag());
         });
 
@@ -192,7 +198,14 @@ public class ProductSearchFragment extends Fragment implements OnFilterEventsApp
         return p;
     }
 
-
+    private ArrayList<Double> getMinMaxPrice(){
+        ArrayList <Double> resultList = new ArrayList<>();
+        Optional<Double> minPrice = _products.stream().map(Product::getPrice).min(Double::compare);
+        Optional<Double> maxPrice = _products.stream().map(Product::getPrice).max(Double::compare);
+        resultList.add(minPrice.get());
+        resultList.add(maxPrice.get());
+        return  resultList;
+    }
     @Override
     public void onFilterApply(String category, String location, String date) {
 
