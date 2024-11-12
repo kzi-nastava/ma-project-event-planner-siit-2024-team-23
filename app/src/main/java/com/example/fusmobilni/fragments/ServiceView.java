@@ -20,19 +20,16 @@ import com.example.fusmobilni.R;
 import com.example.fusmobilni.adapters.PupServiceAdapter;
 import com.example.fusmobilni.databinding.FragmentServiceViewBinding;
 import com.example.fusmobilni.interfaces.DeleteServiceListener;
-import com.example.fusmobilni.model.DummyService;
 import com.example.fusmobilni.model.PrototypeService;
-import com.example.fusmobilni.viewModel.ServiceViewModel;
+import com.example.fusmobilni.viewModels.ServiceViewModel;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.slider.RangeSlider;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
-import java.net.ServerSocket;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 
 public class ServiceView extends Fragment implements DeleteServiceListener {

@@ -1,4 +1,4 @@
-package com.example.fusmobilni.viewModel;
+package com.example.fusmobilni.viewModels;
 
 import android.net.Uri;
 import androidx.lifecycle.LiveData;
