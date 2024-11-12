@@ -69,7 +69,7 @@ public class EventsHorizontalAdapter extends RecyclerView.Adapter<EventsHorizont
     }
 
     public void loadPage(int page) {
-        if (page < 0) {
+        if (page < 0 || page*_itemsPerPage> _eventList.size()) {
             return;
         }
 
@@ -80,10 +80,7 @@ public class EventsHorizontalAdapter extends RecyclerView.Adapter<EventsHorizont
         if (end > _eventList.size()) {
             end = _eventList.size();
         }
-        if (start > end) {
-            _currentPage -= 1;
-            return;
-        }
+
         List<Event> pageCategories = _eventList.subList(start, end);
 
         this.setData(pageCategories);
