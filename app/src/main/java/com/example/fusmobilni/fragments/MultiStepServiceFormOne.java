@@ -2,7 +2,6 @@ package com.example.fusmobilni.fragments;
 
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -15,7 +14,7 @@ import android.widget.ArrayAdapter;
 
 import com.example.fusmobilni.R;
 import com.example.fusmobilni.databinding.FragmentMultiStepServiceFormOneBinding;
-import com.example.fusmobilni.viewModel.ServiceViewModel;
+import com.example.fusmobilni.viewModels.ServiceViewModel;
 
 import java.util.ArrayList;
 import java.util.List;

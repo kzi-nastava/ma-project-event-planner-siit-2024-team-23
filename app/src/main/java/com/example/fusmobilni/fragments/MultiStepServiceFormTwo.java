@@ -6,15 +6,13 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.fusmobilni.R;
-import com.example.fusmobilni.databinding.FragmentMultiStepServiceFormOneBinding;
 import com.example.fusmobilni.databinding.FragmentMultiStepServiceFormTwoBinding;
-import com.example.fusmobilni.viewModel.ServiceViewModel;
+import com.example.fusmobilni.viewModels.ServiceViewModel;
 
 
 public class MultiStepServiceFormTwo extends Fragment {

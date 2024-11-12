@@ -9,7 +9,6 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelStore;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -18,17 +17,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageButton;
 
 import com.example.fusmobilni.R;
 import com.example.fusmobilni.adapters.RecyclerAdapter;
 import com.example.fusmobilni.databinding.FragmentMultiStepServiceFormThreeBinding;
-import com.example.fusmobilni.databinding.FragmentMultiStepServiceFormTwoBinding;
 import com.example.fusmobilni.interfaces.ItemClickListener;
-import com.example.fusmobilni.viewModel.ServiceViewModel;
+import com.example.fusmobilni.viewModels.ServiceViewModel;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 
