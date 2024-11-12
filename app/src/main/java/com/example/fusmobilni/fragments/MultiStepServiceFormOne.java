@@ -3,6 +3,7 @@ package com.example.fusmobilni.fragments;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
@@ -15,6 +16,9 @@ import android.widget.ArrayAdapter;
 import com.example.fusmobilni.R;
 import com.example.fusmobilni.databinding.FragmentMultiStepServiceFormOneBinding;
 import com.example.fusmobilni.viewModel.ServiceViewModel;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MultiStepServiceFormOne extends Fragment {
 
@@ -46,10 +50,7 @@ public class MultiStepServiceFormOne extends Fragment {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, categories);
         binding.autoCompleteTextviewStep1.setAdapter(adapter);
 
-        String[] eventTypes = getResources().getStringArray(R.array.EventTypes);
-        ArrayAdapter<String> eventAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, eventTypes);
-        binding.eventTypesInputStep1.setAdapter(eventAdapter);
-
+        binding.eventTypesInputStep1.setOnClickListener(v -> showMultiSelectDialog());
         populateInputs();
 
         binding.autoCompleteTextviewStep1.setOnItemClickListener((parent, v, position, id) -> {
@@ -57,10 +58,6 @@ public class MultiStepServiceFormOne extends Fragment {
             viewModel.setCategory(selectedCategory);
         });
 
-        binding.eventTypesInputStep1.setOnItemClickListener((parent, v, position, id) -> {
-            String selectedEvent = (String) parent.getItemAtPosition(position);
-            viewModel.setEventType(selectedEvent);
-        });
 
         binding.materialButton.setOnClickListener(v -> {
             setValues();
@@ -87,8 +84,8 @@ public class MultiStepServiceFormOne extends Fragment {
             binding.autoCompleteTextviewStep1.setText(category, false);
         });
 
-        viewModel.getEventType().observe(getViewLifecycleOwner(), eventType -> {
-            binding.eventTypesInputStep1.setText(eventType, false);
+        viewModel.getEventTypes().observe(getViewLifecycleOwner(), eventTypes -> {
+            binding.eventTypesInputStep1.setText(String.join(", ", eventTypes));
         });
 
         viewModel.getName().observe(getViewLifecycleOwner(), name -> {
@@ -106,5 +103,31 @@ public class MultiStepServiceFormOne extends Fragment {
         viewModel.getDiscount().observe(getViewLifecycleOwner(), discount -> {
             binding.discountText.setText(String.format(String.valueOf(discount)));
         });
+    }
+
+    private void showMultiSelectDialog() {
+        String[] eventTypes = getResources().getStringArray(R.array.EventTypes);
+        boolean[] checkedItems = new boolean[eventTypes.length];
+        List<String> selectedEventTypes = new ArrayList<>(viewModel.getEventTypes().getValue());
+
+        for (int i = 0; i < eventTypes.length; i++) {
+            checkedItems[i] = selectedEventTypes.contains(eventTypes[i]);
+        }
+
+        new AlertDialog.Builder(requireContext())
+                .setTitle("Select Event Types")
+                .setMultiChoiceItems(eventTypes, checkedItems, (dialog, which, isChecked) -> {
+                    if (isChecked) {
+                        selectedEventTypes.add(eventTypes[which]);
+                    } else {
+                        selectedEventTypes.remove(eventTypes[which]);
+                    }
+                })
+                .setPositiveButton("OK", (dialog, which) -> {
+                    viewModel.setEventTypes(selectedEventTypes);
+                    binding.eventTypesInputStep1.setText(String.join(", ", selectedEventTypes));
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
     }
 }
