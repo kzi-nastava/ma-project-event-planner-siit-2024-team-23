@@ -13,7 +13,7 @@ public class PrototypeService {
     private double price;
     private double discount;
     private ArrayList<Uri> imageUris = new ArrayList<>();
-    private String eventType;
+    private ArrayList<String> eventTypes = new ArrayList<>();
     private boolean isVisible;
     private boolean isAvailable;
     private double duration;
@@ -26,7 +26,7 @@ public class PrototypeService {
                             double price, double discount, boolean isVisible, boolean isAvailable,
                             double duration, int cancellationDeadline, int reservationDeadline,
                             boolean isAutomaticReservation, ArrayList<Uri> imageUris,
-                            String eventType) {
+                            ArrayList<String> eventTypes) {
 
         this.category = category;
         this.name = name;
@@ -34,7 +34,6 @@ public class PrototypeService {
         this.specificities = specificities;
         this.price = price;
         this.discount = discount;
-        this.eventType = eventType;
         this.imageUris = imageUris;
         this.isVisible = isVisible;
         this.isAvailable = isAvailable;
@@ -43,6 +42,7 @@ public class PrototypeService {
         this.reservationDeadline = reservationDeadline;
         this.isAutomaticReservation = isAutomaticReservation;
         isDeleted = false;
+        this.eventTypes = eventTypes;
     }
 
 
@@ -158,11 +158,11 @@ public class PrototypeService {
         isDeleted = deleted;
     }
 
-    public String getEventType() {
-        return eventType;
+    public ArrayList<String> getEventTypes() {
+        return eventTypes;
     }
 
-    public void setEventType(String eventType) {
-        this.eventType = eventType;
+    public void setEventTypes(ArrayList<String> eventTypes) {
+        this.eventTypes = eventTypes;
     }
 }

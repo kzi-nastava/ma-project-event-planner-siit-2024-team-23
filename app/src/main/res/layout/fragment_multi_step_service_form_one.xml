@@ -63,7 +63,7 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/event_types_field_step1"
-        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:hint="Event Type"
@@ -72,12 +72,20 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <AutoCompleteTextView
+        <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/event_types_input_step1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="none"/>
+            android:inputType="none"
+            android:focusable="false"
+            android:clickable="true"
+            android:drawableEnd="@drawable/ic_dropdown_arrow"
+            android:drawablePadding="8dp"
+            android:padding="12dp" />
     </com.google.android.material.textfield.TextInputLayout>
+
+
+
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textField_step1"
