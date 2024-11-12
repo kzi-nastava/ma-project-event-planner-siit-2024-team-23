@@ -71,7 +71,7 @@ public class ProductsHorizontalAdapter extends RecyclerView.Adapter<ProductsHori
     }
 
     public void loadPage(int page) {
-        if (page < 0) {
+        if (page < 0 || page*_itemsPerPage> _productsList.size()) {
             return;
         }
 
@@ -82,10 +82,7 @@ public class ProductsHorizontalAdapter extends RecyclerView.Adapter<ProductsHori
         if (end > _productsList.size()) {
             end = _productsList.size();
         }
-        if (start > end) {
-            _currentPage -= 1;
-            return;
-        }
+
         List<Product> pageCategories = _productsList.subList(start, end);
 
         this.setData(pageCategories);

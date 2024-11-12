@@ -112,7 +112,7 @@ public class ServiceHorizontalAdapter  extends RecyclerView.Adapter<ServiceHoriz
     }
 
     public void loadPage(int page) {
-        if (page < 0) {
+        if (page < 0 || page*_itemsPerPage> _serviceList.size()) {
             return;
         }
 
@@ -123,8 +123,8 @@ public class ServiceHorizontalAdapter  extends RecyclerView.Adapter<ServiceHoriz
         if (end > _serviceList.size()) {
             end = _serviceList.size();
         }
-        if (start > end) {
-            _currentPage -= 1;
+        if (start >= end) {
+            _currentPage-=1;
             return;
         }
         List<Service> pageCategories = _serviceList.subList(start, end);
