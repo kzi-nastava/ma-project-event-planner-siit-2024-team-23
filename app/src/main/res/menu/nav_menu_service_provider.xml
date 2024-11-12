@@ -1,23 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <!--
-    u user              auth user
-
-all
-    home                home
-    see events          events
-    products            products
-    services            services
-
-                    notifications
-                        notifications
-                        messages
-profile
-    register            profile
-    login               logout
-
--->
     <group android:checkableBehavior="single">
         <item
             android:title="Home">
