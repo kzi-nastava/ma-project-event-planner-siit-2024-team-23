@@ -79,7 +79,11 @@
             android:id="@+id/action_notifications_fragment_to_home_fragment"
             app:destination="@id/home_fragment" />
     </fragment>
-
+    <fragment
+        android:id="@+id/service_search_fragment"
+        android:name="com.example.fusmobilni.fragments.ServiceSearchFragment"
+        tools:layout="@layout/fragment_service_search"
+        android:label="Browse Services"/>
     <fragment
         android:id="@+id/messages_fragment"
         android:name="com.example.fusmobilni.fragments.MessagesFragment"
@@ -173,5 +177,8 @@
         android:id="@+id/action_home_fragment_to_product_search"
         app:destination="@id/products_search_fragment" />
 
+    <action
+        android:id="@+id/action_home_fragment_to_service_search"
+        app:destination="@id/service_search_fragment"/>
 
 </navigation>

@@ -1,27 +1,46 @@
 package com.example.fusmobilni.model;
 
 public class Service {
-    private String name;
-    private String description;
+    private String _name;
+    private String _description;
+    private String _location;
+    private String _category;
+    public Service(String description, String name,String location,String category) {
+        this._description = description;
+        this._name = name;
+        this._category = category;
+        this._location = location;
+    }
 
-    public Service(String description, String name) {
-        this.description = description;
-        this.name = name;
+    public String getCategory() {
+        return _category;
+    }
+
+    public void setCategory(String _category) {
+        this._category = _category;
+    }
+
+    public String getLocation() {
+        return _location;
+    }
+
+    public void setLocation(String _location) {
+        this._location = _location;
     }
 
     public String getDescription() {
-        return description;
+        return _description;
     }
 
     public void setDescription(String description) {
-        this.description = description;
+        this._description = description;
     }
 
     public String getName() {
-        return name;
+        return _name;
     }
 
     public void setName(String name) {
-        this.name = name;
+        this._name = name;
     }
 }

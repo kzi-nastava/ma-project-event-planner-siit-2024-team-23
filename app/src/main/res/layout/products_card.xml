@@ -158,7 +158,7 @@
                 android:src="@drawable/ic_location" />
 
             <TextView
-                android:id="@+id/textViewLocationProduct"
+                android:id="@+id/textViewLocationService"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:drawablePadding="4dp"

@@ -58,7 +58,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="80sp"
+            android:layout_height="40sp"
             android:textAlignment="center">
 
             <TextView
@@ -82,7 +82,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="100sp">
+            android:layout_height="75sp">
 
             <TextView
                 android:id="@+id/textViewServiceDescription"
@@ -94,6 +94,36 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <LinearLayout
+            android:id="@+id/eventlocationProduct"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:padding="10sp">
+
+            <ImageView
+                android:layout_width="30sp"
+                android:layout_height="30sp"
+                android:layout_marginEnd="4dp"
+                android:src="@drawable/ic_location" />
+
+            <TextView
+                android:id="@+id/textViewLocationService"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:drawablePadding="4dp"
+
+                android:text="36 Guild Street London, UK"
+                android:textAlignment="center"
+                android:textColor="@color/text_700"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/attendeesContainer"
+                app:layout_constraintVertical_bias="0.0" />
+
+        </LinearLayout>
 
     </LinearLayout>
 

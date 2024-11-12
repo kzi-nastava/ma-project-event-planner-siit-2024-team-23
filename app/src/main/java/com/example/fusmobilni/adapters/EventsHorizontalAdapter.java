@@ -156,10 +156,10 @@ public class EventsHorizontalAdapter extends RecyclerView.Adapter<EventsHorizont
 
         EventHorizontalViewHolder(View itemView) {
             super(itemView);
-            title = itemView.findViewById(R.id.textViewProductNameHorizontal);
+            title = itemView.findViewById(R.id.textViewEventNameHorizontal);
             day = itemView.findViewById(R.id.textViewDayHorizontal);
             monthYear = itemView.findViewById(R.id.textViewMonthAndYearHorizontal);
-            location = itemView.findViewById(R.id.textViewProductsLocationHorizontal);
+            location = itemView.findViewById(R.id.textViewEventLocationHorizontal);
         }
     }
 

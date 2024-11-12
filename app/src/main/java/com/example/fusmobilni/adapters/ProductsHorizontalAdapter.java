@@ -11,7 +11,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fusmobilni.R;
-import com.example.fusmobilni.model.Event;
 import com.example.fusmobilni.model.Product;
 
 import java.util.ArrayList;
@@ -25,8 +24,9 @@ public class ProductsHorizontalAdapter extends RecyclerView.Adapter<ProductsHori
     private int _itemsPerPage = 5;
     private String _constraint = "";
     private String _selectedCategory = "";
-    private double _minSelectedPrice = 0;
-    private double _maxSelectedPrice = 100;
+    private double _minSelectedPrice = Double.MIN_VALUE;
+    private double _maxSelectedPrice = Double.MAX_VALUE;
+
     private String _selectedLocation = "";
 
     public ProductsHorizontalAdapter() {
@@ -56,7 +56,7 @@ public class ProductsHorizontalAdapter extends RecyclerView.Adapter<ProductsHori
         notifyDataSetChanged();
     }
 
-    public void setFilters(@NonNull String constraint, String category, double minPrice,double maxPrice, String location) {
+    public void setFilters(@NonNull String constraint, String category, double minPrice, double maxPrice, String location) {
         _minSelectedPrice = minPrice;
         _maxSelectedPrice = maxPrice;
         _selectedLocation = location.toLowerCase().trim();
@@ -82,8 +82,8 @@ public class ProductsHorizontalAdapter extends RecyclerView.Adapter<ProductsHori
         if (end > _productsList.size()) {
             end = _productsList.size();
         }
-        if (start >= end) {
-            _currentPage -=1;
+        if (start > end) {
+            _currentPage -= 1;
             return;
         }
         List<Product> pageCategories = _productsList.subList(start, end);
@@ -113,10 +113,10 @@ public class ProductsHorizontalAdapter extends RecyclerView.Adapter<ProductsHori
 
                 _constraint = constraint.toString().toLowerCase().trim();
                 for (Product product : _productsFull) {
-                    boolean matchesConstraint = _constraint.isEmpty() || product.getName().toLowerCase().contains(_constraint);
-                    boolean matchesLocation = _selectedLocation.isEmpty() || product.getLocation().toLowerCase().equals(_selectedLocation);
+                    boolean matchesConstraint = _constraint.isEmpty() || product.getName().toLowerCase().trim().contains(_constraint);
+                    boolean matchesLocation = _selectedLocation.isEmpty() || product.getLocation().toLowerCase().trim().equals(_selectedLocation);
                     boolean matchesPrice = product.getPrice() >= _minSelectedPrice && product.getPrice() <= _maxSelectedPrice;
-                    boolean matchesCategory = _selectedCategory.isEmpty() || product.getCategory().equals(_selectedCategory);
+                    boolean matchesCategory = _selectedCategory.isEmpty() || product.getCategory().toLowerCase().trim().equals(_selectedCategory);
                     if (matchesConstraint && matchesLocation && matchesPrice && matchesCategory) {
                         filteredList.add(product);
                     }
@@ -141,7 +141,9 @@ public class ProductsHorizontalAdapter extends RecyclerView.Adapter<ProductsHori
     public void resetFilters() {
         _constraint = "";
         _selectedLocation = "";
-        _minSelectedPrice = -1;
+        _selectedCategory = "";
+        _minSelectedPrice = Double.MIN_VALUE;
+        _maxSelectedPrice = Double.MAX_VALUE;
     }
 
     public void setPageSize(int selectedItem, String currentText) {
@@ -161,7 +163,7 @@ public class ProductsHorizontalAdapter extends RecyclerView.Adapter<ProductsHori
             _name = itemView.findViewById(R.id.textViewProductNameHorizontal);
             _description = itemView.findViewById(R.id.productDescriptionHorizontal);
             _price = itemView.findViewById(R.id.productsHorizontalPrice);
-            _location = itemView.findViewById(R.id.textViewProductsLocationHorizontal);
+            _location = itemView.findViewById(R.id.textViewProductLocationHorizontal);
         }
     }
 

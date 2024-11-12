@@ -86,7 +86,7 @@ public class HomeFragment extends Fragment {
         });
         this._binding.homeServicesSeeAllButton.setOnClickListener(v->{
 
-            Navigation.findNavController(view).navigate(R.id.action_home_fragment_to_product_search);
+            Navigation.findNavController(view).navigate(R.id.action_home_fragment_to_service_search);
         });
         this._binding.productsSeeAllButton.setOnClickListener(v->{
             Navigation.findNavController(view).navigate(R.id.action_home_fragment_to_product_search);
@@ -97,11 +97,11 @@ public class HomeFragment extends Fragment {
 
     private ArrayList<Service> fillServices() {
         ArrayList<Service> s = new ArrayList<>();
-        s.add(new Service("Live band for weddings and parties", "Wedding Band"));
-        s.add(new Service("Professional photography for events", "Photography Service"));
-        s.add(new Service("Catering services for all occasions", "Catering Service"));
-        s.add(new Service("Event decoration and setup", "Decoration Service"));
-        s.add(new Service("Spacious venue for corporate events", "Venue Rental"));
+        s.add(new Service("Live band for weddings and parties", "Wedding Band", "New York", "Music"));
+        s.add(new Service("Professional photography for events", "Photography Service", "Los Angeles", "Art"));
+        s.add(new Service("Catering services for all occasions", "Catering Service", "Chicago", "Food"));
+        s.add(new Service("Event decoration and setup", "Decoration Service", "San Francisco", "Art"));
+        s.add(new Service("Spacious venue for corporate events", "Venue Rental", "Miami", "Travel"));
         return s;
     }
 
