@@ -46,25 +46,26 @@
             android:id="@+id/emailInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/email_placeholder"
+            app:placeholderText="@string/email_placeholder"
+            android:hint="@string/email_label"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            app:startIconDrawable="@drawable/ic_home_small_black"
+            app:startIconDrawable="@drawable/outline_email_24"
             app:startIconTint="@color/text_500"
             android:layout_marginBottom="10sp"> <!-- Optional: Customize icon tint -->
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textPassword" />
+                android:inputType="textEmailAddress" />
 
         </com.google.android.material.textfield.TextInputLayout>
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/passwordInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Your password"
+            android:hint="@string/your_password"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            app:startIconDrawable="@drawable/ic_home_small_black"
+            app:startIconDrawable="@drawable/outline_lock_24"
             app:startIconTint="@color/text_500"
             app:endIconMode="password_toggle"
             android:layout_marginBottom="20sp"
@@ -73,7 +74,7 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="text" />
+                android:inputType="textPassword" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -94,8 +95,19 @@
             android:id="@+id/registerText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10sp"
             android:text="@string/don_t_have_an_account"
             android:textAlignment="center" />
+
+        <ProgressBar
+            android:id="@+id/loading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:indeterminate="true"
+            android:indeterminateTintMode="src_atop"
+            android:indeterminateTint="@color/primary_blue_900"
+            android:visibility="gone" />
 
     </LinearLayout>
 
