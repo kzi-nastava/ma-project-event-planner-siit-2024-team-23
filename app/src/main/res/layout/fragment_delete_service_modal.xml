@@ -14,7 +14,7 @@
 <com.google.android.material.textview.MaterialTextView
 android:layout_width="wrap_content"
 android:layout_height="wrap_content"
-android:text="Are you sure you want to delete service?"
+android:text="@string/are_you_sure_you_want_to_delete_service"
 android:textColor="?attr/colorOnBackground"
 android:textSize="18sp"
 android:gravity="center"
@@ -33,7 +33,7 @@ android:layout_marginTop="8dp">
     android:id="@+id/cancelButton"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:text="Cancel"
+    android:text="@string/cancel"
     style="@style/Widget.MaterialComponents.Button.TextButton"
     android:layout_marginEnd="8dp" />
 
@@ -41,7 +41,7 @@ android:layout_marginTop="8dp">
     android:id="@+id/confirmButton"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:text="Confirm"
+    android:text="@string/confirm"
     style="@style/Widget.MaterialComponents.Button.OutlinedButton"
     android:layout_marginStart="8dp"
     android:textColor="@color/accent_red" />

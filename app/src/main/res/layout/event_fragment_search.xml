@@ -41,7 +41,7 @@
                         android:id="@+id/search_edit_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Search"
+                        android:hint="@string/search"
                         android:inputType="text" />
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -57,7 +57,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
                     android:layout_marginEnd="20dp"
-                    android:text="Filter"
+                    android:text="@string/filter"
                     android:textColor="@color/white"
                     app:backgroundTint="@color/primary_blue_900"
                     app:icon="@drawable/ic_filter"
@@ -93,7 +93,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Items per page" />
+                    android:text="@string/items_per_page" />
 
                 <Spinner
                     android:id="@+id/paginationSpinner"
@@ -107,9 +107,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:minWidth="0dp"
-                    android:text="&lt;"
+                    android:text="@string/lt"
                     android:textColor="@color/bg_gray"
-                    android:textSize="22dp"
+                    android:textSize="22sp"
                     app:backgroundTint="@color/white"
                     app:cornerRadius="0dp"
                     app:iconPadding="0dp"

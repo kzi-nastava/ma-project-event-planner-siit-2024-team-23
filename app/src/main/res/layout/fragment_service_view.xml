@@ -39,7 +39,7 @@
                     android:id="@+id/searchView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Search"
+                    android:hint="@string/search"
                     android:inputType="text" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -55,7 +55,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="20dp"
-                android:text="Filter"
+                android:text="@string/filter"
                 android:textColor="@color/white"
                 app:backgroundTint="@color/primary_blue_900"
                 app:icon="@drawable/ic_filter"
@@ -93,8 +93,9 @@
         android:layout_marginTop="600dp"
         android:layout_marginEnd="25dp"
         android:layout_marginBottom="25dp"
+        android:contentDescription="@string/floating_action_button"
         android:src="@drawable/plus_icon"
-        android:text="Button"
+        android:text="@string/button"
         app:backgroundTint="@color/primary_blue_900"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
