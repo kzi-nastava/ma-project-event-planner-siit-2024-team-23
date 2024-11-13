@@ -24,18 +24,21 @@ import com.example.fusmobilni.model.Service;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PupServiceAdapter extends RecyclerView.Adapter<PupServiceAdapter.ServiceViewHolder> implements Filterable {
+public class PupServiceAdapter extends RecyclerView.Adapter<PupServiceAdapter.ServiceViewHolder> {
 
     private List<PrototypeService> serviceList;
 
-    private List<PrototypeService> filterableServices;
 
     private DeleteServiceListener clickListener;
 
     public PupServiceAdapter(List<PrototypeService> serviceList, DeleteServiceListener clickListener) {
         this.serviceList = serviceList;
-        this.filterableServices = new ArrayList<>(serviceList);
         this.clickListener = clickListener;
+    }
+
+    public void setData(List<PrototypeService> list) {
+        this.serviceList = new ArrayList<>(list);
+        notifyDataSetChanged();
     }
 
     @NonNull
@@ -63,36 +66,6 @@ public class PupServiceAdapter extends RecyclerView.Adapter<PupServiceAdapter.Se
     public void updateServiceList(List<PrototypeService> newServiceList) {
         this.serviceList = new ArrayList<>(newServiceList);
         notifyDataSetChanged();
-    }
-
-    @Override
-    public Filter getFilter() {
-        return new Filter() {
-            @Override
-            protected FilterResults performFiltering(CharSequence constraint) {
-                List<PrototypeService> filteredList = new ArrayList<>();
-                if (constraint == null || constraint.length() == 0) {
-                    filteredList.addAll(filterableServices);
-                } else {
-                    String filterPatter = constraint.toString().toLowerCase().trim();
-                    for (PrototypeService service : filterableServices) {
-                        if (service.getName().toLowerCase().contains(filterPatter)) {
-                            filteredList.add(service);
-                        }
-                    }
-                }
-                FilterResults results = new FilterResults();
-                results.values = filteredList;
-                return results;
-            }
-
-            @Override
-            protected void publishResults(CharSequence constraint, FilterResults results) {
-                serviceList.clear();
-                serviceList.addAll((List) results.values);
-                notifyDataSetChanged();
-            }
-        };
     }
 
     public static class ServiceViewHolder extends RecyclerView.ViewHolder {
