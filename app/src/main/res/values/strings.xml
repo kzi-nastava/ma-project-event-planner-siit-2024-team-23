@@ -207,6 +207,8 @@
     <string name="button">Button</string>
     <string name="floating_action_button">floating action button</string>
     <string name="service_category">Service Category</string>
-    <string name="available_only">Available Only</string>
+    <string name="available_only">Available Services Only</string>
     <string name="apply_filters">Apply Filters</string>
+    <string name="reset">Reset</string>
+    <string name="enable_availability_switch">Enable Availability Switch</string>
 </resources>
