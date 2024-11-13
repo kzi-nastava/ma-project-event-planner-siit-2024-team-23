@@ -115,6 +115,7 @@ public class ServiceView extends Fragment implements DeleteServiceListener {
 
         confirmButton.setOnClickListener(v -> {
             this.services.remove(position);
+            viewModel.setData(this.services);
             serviceAdapter.notifyItemRemoved(position);
             serviceAdapter.notifyItemRangeChanged(position, services.size());
             binding.modalBackground.setVisibility(View.INVISIBLE);
