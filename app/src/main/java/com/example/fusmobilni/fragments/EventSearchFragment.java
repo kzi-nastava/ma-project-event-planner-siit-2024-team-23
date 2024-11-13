@@ -3,6 +3,7 @@ package com.example.fusmobilni.fragments;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.Editable;
@@ -17,8 +18,8 @@ import android.widget.Spinner;
 import com.example.fusmobilni.R;
 import com.example.fusmobilni.adapters.EventsHorizontalAdapter;
 import com.example.fusmobilni.databinding.EventFragmentSearchBinding;
-import com.example.fusmobilni.interfaces.OnFilterEventsApplyListener;
 import com.example.fusmobilni.model.Event;
+import com.example.fusmobilni.viewModels.EventSearchViewModel;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.search.SearchBar;
 import com.google.android.material.textfield.TextInputLayout;
@@ -30,8 +31,9 @@ import java.util.ArrayList;
  * Use the {@link EventSearchFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class EventSearchFragment extends Fragment implements OnFilterEventsApplyListener {
+public class EventSearchFragment extends Fragment {
 
+    private EventSearchViewModel _viewModel;
     private EventFragmentSearchBinding _binding;
     private TextInputLayout _searchView;
     private ArrayList<Event> events;
@@ -40,30 +42,12 @@ public class EventSearchFragment extends Fragment implements OnFilterEventsApply
     private Spinner paginationSpinner;
     private MaterialButton prevButton;
     private MaterialButton nextButton;
-    private SearchBar _searchBar;
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     public EventSearchFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment SearchFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static EventSearchFragment newInstance(String param1, String param2) {
         EventSearchFragment fragment = new EventSearchFragment();
 
@@ -74,8 +58,7 @@ public class EventSearchFragment extends Fragment implements OnFilterEventsApply
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+
         }
     }
 
@@ -94,6 +77,7 @@ public class EventSearchFragment extends Fragment implements OnFilterEventsApply
         eventsHorizontalAdapter = new EventsHorizontalAdapter();
         listView.setAdapter(eventsHorizontalAdapter);
 
+        _viewModel = new ViewModelProvider(requireActivity()).get(EventSearchViewModel.class);
 
         this._searchView.getEditText().addTextChangedListener(new TextWatcher() {
             @Override
@@ -103,7 +87,7 @@ public class EventSearchFragment extends Fragment implements OnFilterEventsApply
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                eventsHorizontalAdapter.getFilter().filter(s);
+                _viewModel.setConstraint(s.toString());
             }
 
             @Override
@@ -112,27 +96,32 @@ public class EventSearchFragment extends Fragment implements OnFilterEventsApply
             }
         });
         _binding.eventsFilterButton.setOnClickListener(v -> {
-            eventsHorizontalAdapter.resetFilters();
-            EventFilterFragment fragment = new EventFilterFragment();
-            fragment.setFilterListener(new OnFilterEventsApplyListener() {
-                @Override
-                public void onFilterApply(String category, String location, String date) {
-                    eventsHorizontalAdapter.setFilters(_searchView.getEditText().getText().toString(),category,location,date);
-                }
-            });
-            fragment.show(getParentFragmentManager(), fragment.getTag());
+            openFilterFragment();
         });
         events = fillEvents();
-        eventsHorizontalAdapter.setOriginalData(events);
-        eventsHorizontalAdapter.setFilteringData(events);
-        eventsHorizontalAdapter.setData(events);
-        eventsHorizontalAdapter.loadPage(0);
+        _viewModel.setData(events);
+        eventsHorizontalAdapter.setData(_viewModel.getPagedEvents().getValue());
+
+        _viewModel.getConstraint().observe(getViewLifecycleOwner(), observer -> {
+            eventsHorizontalAdapter.setData(_viewModel.getPagedEvents().getValue());
+        });
+        _viewModel.getPagedEvents().observe(getViewLifecycleOwner(), observer -> {
+            eventsHorizontalAdapter.setData(_viewModel.getPagedEvents().getValue());
+        });
+
 
         initializePaginationSpinner();
 
         return view;
     }
-    private void initializePaginationSpinner(){
+
+    private void openFilterFragment() {
+        EventFilterFragment fragment = new EventFilterFragment();
+
+        fragment.show(getParentFragmentManager(), fragment.getTag());
+    }
+
+    private void initializePaginationSpinner() {
         paginationSpinner = _binding.paginationSpinner;
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this.getContext(), R.array.paginationPageSizes, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -142,7 +131,7 @@ public class EventSearchFragment extends Fragment implements OnFilterEventsApply
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 int selectedItem = Integer.parseInt(String.valueOf(parent.getItemAtPosition(position)));
-                eventsHorizontalAdapter.setPageSize(selectedItem, _searchView.getEditText().getText().toString());
+                _viewModel.setPageSize(selectedItem);
             }
 
             @Override
@@ -151,77 +140,76 @@ public class EventSearchFragment extends Fragment implements OnFilterEventsApply
             }
         });
     }
-    private void initializeButtons(){
+
+    private void initializeButtons() {
 
         prevButton = this._binding.eventSearchPreviousButton;
         nextButton = this._binding.eventSearchNextButton;
 
-        prevButton.setOnClickListener(v -> eventsHorizontalAdapter.prevPage());
-        nextButton.setOnClickListener(v -> eventsHorizontalAdapter.nextPage());
+        prevButton.setOnClickListener(v -> _viewModel.prevPage());
+        nextButton.setOnClickListener(v -> _viewModel.nextPage());
     }
+
     private ArrayList<Event> fillEvents() {
         ArrayList<Event> e = new ArrayList<>();
-        e.add(new Event("Food and Wine Tasting", "12-7-2024", "Napa Valley Vineyard", "Food"));
-        e.add(new Event("Tech Innovators Conference", "15-8-2024", "Silicon Valley Expo Center", "Tech"));
-        e.add(new Event("Autumn Art and Sculpture Exhibition", "18-9-2024", "Paris Art Museum", "Art"));
+        e.add(new Event("Food and Wine Tasting", "12-07-2024", "Napa Valley Vineyard", "Food"));
+        e.add(new Event("Tech Innovators Conference", "15-08-2024", "Silicon Valley Expo Center", "Tech"));
+        e.add(new Event("Autumn Art and Sculpture Exhibition", "18-09-2024", "Paris Art Museum", "Art"));
         e.add(new Event("Global Startup Pitch Event", "22-11-2024", "Berlin Startup Hub", "Tech"));
-        e.add(new Event("International Film and Documentary Festival", "5-11-2024", "Toronto Film Centre", "Art"));
+        e.add(new Event("International Film and Documentary Festival", "05-11-2024", "Toronto Film Centre", "Art"));
 
-        e.add(new Event("New Year Gala", "1-1-2024", "Times Square", "Travel"));
-        e.add(new Event("Valentine's Day Dance", "10-2-2024", "City Hall Ballroom", "Music"));
-        e.add(new Event("Winter Sports Championship", "20-2-2024", "Aspen Ski Resort", "Sports"));
-        e.add(new Event("Spring Fashion Week", "15-3-2024", "New York City", "Fashion"));
-        e.add(new Event("Cherry Blossom Festival", "30-3-2024", "Washington D.C.", "Travel"));
+        e.add(new Event("New Year Gala", "01-01-2024", "Times Square", "Travel"));
+        e.add(new Event("Valentine's Day Dance", "10-02-2024", "City Hall Ballroom", "Music"));
+        e.add(new Event("Winter Sports Championship", "20-02-2024", "Aspen Ski Resort", "Sports"));
+        e.add(new Event("Spring Fashion Week", "15-03-2024", "New York City", "Fashion"));
+        e.add(new Event("Cherry Blossom Festival", "30-03-2024", "Washington D.C.", "Travel"));
 
-        e.add(new Event("Earth Day Celebration", "22-4-2024", "Central Park", "Health"));
-        e.add(new Event("Music Festival", "10-5-2024", "Coachella Valley", "Music"));
-        e.add(new Event("Memorial Day Parade", "24-5-2024", "Chicago", "Travel"));
-        e.add(new Event("Summer Food Festival", "7-6-2024", "Los Angeles", "Food"));
-        e.add(new Event("Pride Parade", "15-6-2024", "San Francisco", "Travel"));
+        e.add(new Event("Earth Day Celebration", "22-04-2024", "Central Park", "Health"));
+        e.add(new Event("Music Festival", "10-05-2024", "Coachella Valley", "Music"));
+        e.add(new Event("Memorial Day Parade", "24-05-2024", "Chicago", "Travel"));
+        e.add(new Event("Summer Food Festival", "07-06-2024", "Los Angeles", "Food"));
+        e.add(new Event("Pride Parade", "15-06-2024", "San Francisco", "Travel"));
 
-        e.add(new Event("Independence Day Fireworks", "4-7-2024", "Washington D.C.", "Travel"));
-        e.add(new Event("Bastille Day Celebration", "14-7-2024", "Paris", "Travel"));
-        e.add(new Event("International Comic Con", "30-7-2024", "San Diego", "Art"));
-        e.add(new Event("Outdoor Yoga Festival", "10-8-2024", "Bali", "Health"));
-        e.add(new Event("Gastronomy Festival", "20-8-2024", "Barcelona", "Food"));
+        e.add(new Event("Independence Day Fireworks", "04-07-2024", "Washington D.C.", "Travel"));
+        e.add(new Event("Bastille Day Celebration", "14-07-2024", "Paris", "Travel"));
+        e.add(new Event("International Comic Con", "30-07-2024", "San Diego", "Art"));
+        e.add(new Event("Outdoor Yoga Festival", "10-08-2024", "Bali", "Health"));
+        e.add(new Event("Gastronomy Festival", "20-08-2024", "Barcelona", "Food"));
 
-        e.add(new Event("Labor Day Weekend", "1-9-2024", "New York", "Travel"));
-        e.add(new Event("Tech Startups Expo", "10-9-2024", "Austin", "Tech"));
-        e.add(new Event("International Film Festival", "25-9-2024", "Venice", "Art"));
-        e.add(new Event("Oktoberfest", "8-10-2024", "Munich", "Food"));
+        e.add(new Event("Labor Day Weekend", "01-09-2024", "New York", "Travel"));
+        e.add(new Event("Tech Startups Expo", "10-09-2024", "Austin", "Tech"));
+        e.add(new Event("International Film Festival", "25-09-2024", "Venice", "Art"));
+        e.add(new Event("Oktoberfest", "08-10-2024", "Munich", "Food"));
         e.add(new Event("Halloween Spooktacular", "31-10-2024", "New Orleans", "Travel"));
 
         e.add(new Event("Thanksgiving Parade", "10-11-2024", "New York", "Travel"));
         e.add(new Event("Black Friday Shopping Event", "22-11-2024", "Mall of America", "Fashion"));
-        e.add(new Event("Christmas Market", "5-12-2024", "Prague", "Food"));
+        e.add(new Event("Christmas Market", "05-12-2024", "Prague", "Food"));
         e.add(new Event("Winter Wonderland Festival", "20-12-2024", "London", "Travel"));
         e.add(new Event("New Year's Eve Countdown", "31-12-2024", "Sydney", "Travel"));
 
-        e.add(new Event("Chocolate Festival", "14-2-2024", "Zurich", "Food"));
-        e.add(new Event("St. Patrick's Day Parade", "5-3-2024", "Dublin", "Travel"));
-        e.add(new Event("International Women’s Day Conference", "17-3-2024", "Los Angeles", "Education"));
-        e.add(new Event("May Day Celebration", "29-4-2024", "Berlin", "Travel"));
-        e.add(new Event("Flower Festival", "12-5-2024", "Amsterdam", "Travel"));
+        e.add(new Event("Chocolate Festival", "14-02-2024", "Zurich", "Food"));
+        e.add(new Event("St. Patrick's Day Parade", "05-03-2024", "Dublin", "Travel"));
+        e.add(new Event("International Women’s Day Conference", "17-03-2024", "Los Angeles", "Education"));
+        e.add(new Event("May Day Celebration", "29-04-2024", "Berlin", "Travel"));
+        e.add(new Event("Flower Festival", "12-05-2024", "Amsterdam", "Travel"));
 
-        e.add(new Event("Midsummer Festival", "19-6-2024", "Stockholm", "Travel"));
-        e.add(new Event("World Music Festival", "24-7-2024", "Austin", "Music"));
-        e.add(new Event("National Book Festival", "13-8-2024", "Washington D.C.", "Education"));
-        e.add(new Event("Sustainable Living Expo", "21-9-2024", "San Francisco", "Health"));
+        e.add(new Event("Midsummer Festival", "19-06-2024", "Stockholm", "Travel"));
+        e.add(new Event("World Music Festival", "24-07-2024", "Austin", "Music"));
+        e.add(new Event("National Book Festival", "13-08-2024", "Washington D.C.", "Education"));
+        e.add(new Event("Sustainable Living Expo", "21-09-2024", "San Francisco", "Health"));
         e.add(new Event("Haunted House Experience", "18-10-2024", "Los Angeles", "Travel"));
 
-        e.add(new Event("Dia de los Muertos Festival", "2-11-2024", "Mexico City", "Travel"));
-        e.add(new Event("Winter Solstice Celebration", "6-12-2024", "Reykjavik", "Travel"));
+        e.add(new Event("Dia de los Muertos Festival", "02-11-2024", "Mexico City", "Travel"));
+        e.add(new Event("Winter Solstice Celebration", "06-12-2024", "Reykjavik", "Travel"));
         e.add(new Event("Christmas Concert", "25-12-2024", "London", "Music"));
         e.add(new Event("Boxing Day Sales", "28-12-2024", "Toronto", "Fashion"));
-        e.add(new Event("Epiphany Celebration", "3-1-2024", "Madrid", "Education"));
+        e.add(new Event("Epiphany Celebration", "03-01-2024", "Madrid", "Education"));
 
-        e.add(new Event("Winter Carnival", "10-2-2024", "Quebec", "Travel"));
-        e.add(new Event("Wi Art and Design Fair", "15-3-2024", "Tokyo", "Art"));
+        e.add(new Event("Winter Carnival", "10-02-2024", "Quebec", "Travel"));
+        e.add(new Event("Wi Art and Design Fair", "15-03-2024", "Tokyo", "Art"));
+
         return e;
     }
 
-    @Override
-    public void onFilterApply(String category, String location, String date) {
-
-    }
 }

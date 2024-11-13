@@ -3,6 +3,7 @@ package com.example.fusmobilni.fragments;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
@@ -14,8 +15,8 @@ import android.widget.Spinner;
 import com.example.fusmobilni.R;
 import com.example.fusmobilni.adapters.CategoryFilterAdapter;
 import com.example.fusmobilni.databinding.FragmentProductFilterBinding;
-import com.example.fusmobilni.interfaces.OnFilterProductsApplyListener;
 import com.example.fusmobilni.model.Category;
+import com.example.fusmobilni.viewModels.ProductSearchViewModel;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.slider.RangeSlider;
 
@@ -28,18 +29,14 @@ import java.util.List;
  * create an instance of this fragment.
  */
 public class ProductFilterFragment extends BottomSheetDialogFragment {
+    private ProductSearchViewModel _viewModel;
 
-    private String _selectedCategory = "";
-    private String _selectedLocation = "";
-    private double _minPrice = 0.0;
-    private double _maxPrice = 100.0;
     private RecyclerView _categoryRecyclerView;
     private List<Category> _categories;
     private FragmentProductFilterBinding _binding;
     private Spinner _locationSpinner;
     private CategoryFilterAdapter _adapter;
     private RangeSlider _slider;
-    private OnFilterProductsApplyListener _filterListener;
     private Double _sliderMinValue;
     private Double _sliderMaxValue;
 
@@ -69,54 +66,89 @@ public class ProductFilterFragment extends BottomSheetDialogFragment {
         _binding = FragmentProductFilterBinding.inflate(inflater, container, false);
         View view = _binding.getRoot();
         _categoryRecyclerView = _binding.categoryRecyclerViewProducts;
+
+        initializeSlider();
+
+        _viewModel = new ViewModelProvider(requireActivity()).get(ProductSearchViewModel.class);
+
+        this._categories = fillCategories();
+
+        _adapter = new CategoryFilterAdapter(_categories);
+        _categoryRecyclerView.setAdapter(_adapter);
+
+        _binding.productsFilterApplyButton.setOnClickListener(v -> {
+            initializeApplyButton();
+        });
+        _binding.servicesFilterResetButton.setOnClickListener(v->{
+            _viewModel.resetFilters();dismiss();
+        });
+
+        _locationSpinner = _binding.spinnerProductsLOcation;
+        initializeSpinner();
+        initializeFields();
+        return view;
+    }
+
+    private List<Category> fillCategories() {
+        return Arrays.asList(
+                new Category(1, "Sports", R.drawable.ic_category_sports_active, R.drawable.ic_category_sports_inactive),
+                new Category(2, "Music", R.drawable.ic_category_music_active, R.drawable.ic_category_music_inactive),
+                new Category(3, "Art", R.drawable.ic_category_arts_active, R.drawable.ic_category_arts_inactive),
+                new Category(4, "Food", R.drawable.ic_category_food_active, R.drawable.ic_category_food_inactive),
+                new Category(5, "Tech", R.drawable.ic_category_sports_active, R.drawable.ic_category_sports_inactive),
+                new Category(6, "Travel", R.drawable.ic_category_music_active, R.drawable.ic_category_music_inactive),
+                new Category(7, "Education", R.drawable.ic_category_arts_active, R.drawable.ic_category_arts_inactive),
+                new Category(8, "Health", R.drawable.ic_category_sports_active, R.drawable.ic_category_sports_inactive),
+                new Category(9, "Fashion", R.drawable.ic_category_music_active, R.drawable.ic_category_music_inactive)
+        );
+    }
+    private void initializeSlider(){
         _slider = _binding.priceSliderProducts;
 
         _slider.setValueFrom(Float.valueOf(String.valueOf(_sliderMinValue)));
         _slider.setValueTo(Float.valueOf(String.valueOf(_sliderMaxValue)));
         _slider.setValues(_sliderMinValue.floatValue(), _sliderMaxValue.floatValue());
-
-        this._categories = Arrays.asList(
-                new Category("Sports", R.drawable.ic_category_sports_active, R.drawable.ic_category_sports_inactive),
-                new Category("Music", R.drawable.ic_category_music_active, R.drawable.ic_category_music_inactive),
-                new Category("Art", R.drawable.ic_category_arts_active, R.drawable.ic_category_arts_inactive),
-                new Category("Food", R.drawable.ic_category_food_active, R.drawable.ic_category_food_inactive),
-                new Category("Tech", R.drawable.ic_category_sports_active, R.drawable.ic_category_sports_inactive),
-                new Category("Travel", R.drawable.ic_category_music_active, R.drawable.ic_category_music_inactive),
-                new Category("Education", R.drawable.ic_category_arts_active, R.drawable.ic_category_arts_inactive),
-                new Category("Health", R.drawable.ic_category_sports_active, R.drawable.ic_category_sports_inactive),
-                new Category("Fashion", R.drawable.ic_category_music_active, R.drawable.ic_category_music_inactive)
-        );
-        _adapter = new CategoryFilterAdapter(_categories);
-        _categoryRecyclerView.setAdapter(_adapter);
-
-        _binding.productsFilterApplyButton.setOnClickListener(v -> {
-            Category category = _adapter.getSelectedCategory();
-            _selectedCategory = (category != null) ? category.getName() : "";
+    }
+    private void initializeApplyButton() {
+        Category category = _adapter.getSelectedCategory();
+        _viewModel.setCategory(category);
 
 
-            _selectedLocation = String.valueOf(_locationSpinner.getSelectedItem());
-            List<Float> valueList = _slider.getValues();
-            _minPrice = valueList.get(0);
-            _maxPrice = valueList.get(1);
+        _viewModel.setLocation(String.valueOf(_locationSpinner.getSelectedItem()));
+        List<Float> valueList = _slider.getValues();
+        _viewModel.setMaxSelectedPrice(Double.valueOf(valueList.get(1)));
 
-            if (_filterListener != null) {
-                _filterListener.onFilterApply(_selectedCategory, _minPrice,_maxPrice, _selectedLocation);
+        _viewModel.setMinSelectedPrice(Double.valueOf(valueList.get(0)));
+
+        dismiss();
+    }
+
+    private void initializeFields() {
+        if (_viewModel.getCategory().getValue() != null) {
+            _adapter.setSelectedCategory(_viewModel.getCategory().getValue().getId());
+        }
+        _slider.setValues(Float.valueOf(String.valueOf(_viewModel.getMinSelectedPrice().getValue())), Float.valueOf(String.valueOf(_viewModel.getMaxSelectedPrice().getValue())));
+
+        _locationSpinner.setSelection(extractLocationPosition(_viewModel.getLocation().getValue()));
+    }
+
+    private int extractLocationPosition(String location) {
+        String[] locations = extractLocations();
+        for (int i = 0; i < locations.length; ++i) {
+            if (locations[i].equals(location)) {
+                return i;
             }
-            dismiss();
-        });
+        }
+        return -1;
+    }
 
-        _locationSpinner = _binding.spinnerProductsLOcation;
-        initializeSpinner();
-        return view;
+    private String[] extractLocations() {
+        return getResources().getStringArray(R.array.product_locations);
     }
 
     private void initializeSpinner() {
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this.getContext(), R.array.event_locations, android.R.layout.simple_spinner_item);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this.getContext(), R.array.product_locations, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         _locationSpinner.setAdapter(adapter);
-    }
-
-    public void set_filterListener(OnFilterProductsApplyListener listener) {
-        this._filterListener = listener;
     }
 }

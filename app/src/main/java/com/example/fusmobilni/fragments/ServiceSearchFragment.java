@@ -3,6 +3,7 @@ package com.example.fusmobilni.fragments;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.Editable;
@@ -17,8 +18,8 @@ import android.widget.Spinner;
 import com.example.fusmobilni.R;
 import com.example.fusmobilni.adapters.ServiceHorizontalAdapter;
 import com.example.fusmobilni.databinding.FragmentServiceSearchBinding;
-import com.example.fusmobilni.interfaces.OnFilterServicesApplyListener;
 import com.example.fusmobilni.model.Service;
+import com.example.fusmobilni.viewModels.ServiceSearchViewModel;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -29,7 +30,8 @@ import java.util.ArrayList;
  * Use the {@link ServiceSearchFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ServiceSearchFragment extends Fragment implements OnFilterServicesApplyListener {
+public class ServiceSearchFragment extends Fragment {
+    private ServiceSearchViewModel _viewModel;
     private FragmentServiceSearchBinding _binding;
     private TextInputLayout _searchView;
     private ArrayList<Service> _services;
@@ -69,6 +71,8 @@ public class ServiceSearchFragment extends Fragment implements OnFilterServicesA
         _servicesAdapter = new ServiceHorizontalAdapter();
         _listView.setAdapter(_servicesAdapter);
 
+        _viewModel = new ViewModelProvider(requireActivity()).get(ServiceSearchViewModel.class);
+
         _searchView.getEditText().addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -77,7 +81,7 @@ public class ServiceSearchFragment extends Fragment implements OnFilterServicesA
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                _servicesAdapter.getFilter().filter(s.toString());
+                _viewModel.setConstraint(s.toString());
             }
 
             @Override
@@ -87,22 +91,19 @@ public class ServiceSearchFragment extends Fragment implements OnFilterServicesA
         });
 
         _binding.serviceFilterButton.setOnClickListener(v -> {
-            _servicesAdapter.resetFilters();
-            ServiceFragmentFilter filterFragment = new ServiceFragmentFilter();
-            filterFragment.set_filterListener(new OnFilterServicesApplyListener() {
-                @Override
-                public void onFilterApply(String category, String location) {
-                    _servicesAdapter.setFilters(_searchView.getEditText().getText().toString(), category, location);
-                }
-            });
-            filterFragment.show(getParentFragmentManager(),filterFragment.getTag());
-
+            openFilterFragment();
         });
         _services = fillServices();
-        _servicesAdapter.setOriginalData(_services);
-        _servicesAdapter.setFilteringData(_services);
-        _servicesAdapter.setData(_services);
-        _servicesAdapter.loadPage(0);
+        _viewModel.setData(_services);
+        _servicesAdapter.setData(_viewModel.getPagedServices().getValue());
+
+        _viewModel.getConstraint().observe(getViewLifecycleOwner(),observer->{
+            _servicesAdapter.setData(_viewModel.getPagedServices().getValue());
+        });
+
+        _viewModel.getPagedServices().observe(getViewLifecycleOwner(),observer->{
+            _servicesAdapter.setData(_viewModel.getPagedServices().getValue());
+        });
 
         initalizepaginationspinner();
 
@@ -119,7 +120,7 @@ public class ServiceSearchFragment extends Fragment implements OnFilterServicesA
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 int selectedItem = Integer.parseInt(String.valueOf(parent.getItemAtPosition(position)));
-                _servicesAdapter.setPageSize(selectedItem, _searchView.getEditText().getText().toString());
+                _viewModel.setPageSize(selectedItem);
             }
 
             @Override
@@ -129,12 +130,18 @@ public class ServiceSearchFragment extends Fragment implements OnFilterServicesA
         });
     }
 
+    private void openFilterFragment() {
+        ServiceFragmentFilter filterFragment = new ServiceFragmentFilter();
+
+        filterFragment.show(getParentFragmentManager(), filterFragment.getTag());
+    }
+
     private void initializeButtons() {
         _prevButton = this._binding.serviceSearchPreviousButton;
         _nextButton = this._binding.serviceSearchNextButton;
 
-        _prevButton.setOnClickListener(v -> _servicesAdapter.prevPage());
-        _nextButton.setOnClickListener(v -> _servicesAdapter.nextPage());
+        _prevButton.setOnClickListener(v -> _viewModel.prevPage());
+        _nextButton.setOnClickListener(v -> _viewModel.nextPage());
     }
 
     private ArrayList<Service> fillServices() {
@@ -184,8 +191,4 @@ public class ServiceSearchFragment extends Fragment implements OnFilterServicesA
         return s;
     }
 
-    @Override
-    public void onFilterApply(String category, String location) {
-
-    }
 }
