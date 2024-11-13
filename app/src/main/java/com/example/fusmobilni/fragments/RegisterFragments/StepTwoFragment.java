@@ -1,6 +1,5 @@
 package com.example.fusmobilni.fragments.RegisterFragments;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -31,20 +30,6 @@ import java.util.Objects;
 
 public class StepTwoFragment extends Fragment implements FragmentValidation {
     private RegisterViewModel _registerViewModel;
-
-    // request for permissions
-    ActivityResultLauncher<String[]> requestMultiplePermissions = registerForActivityResult(
-            new ActivityResultContracts.RequestMultiplePermissions(),
-            permissions -> {
-                // Check for specific permissions:
-                Boolean a = permissions.get(Manifest.permission.CAMERA);
-                Boolean b = permissions.get(Manifest.permission.READ_EXTERNAL_STORAGE);
-                if (Boolean.TRUE.equals(a) && Boolean.TRUE.equals(b)) {
-                    Log.d("EventPlanner", "Has permissions");
-                    pickImage();
-                }
-            }
-    );
 
     // get the chosen image
     ActivityResultLauncher<Intent> startForProfileImageResult = registerForActivityResult(
@@ -102,10 +87,7 @@ public class StepTwoFragment extends Fragment implements FragmentValidation {
 
         _registerViewModel = new ViewModelProvider(this).get(RegisterViewModel.class);
 
-        cardView.setOnClickListener(v -> requestMultiplePermissions.launch(new String[]{
-                Manifest.permission.CAMERA,
-                Manifest.permission.READ_EXTERNAL_STORAGE,
-        }));
+        cardView.setOnClickListener(v -> pickImage());
         return view;
 
     }
