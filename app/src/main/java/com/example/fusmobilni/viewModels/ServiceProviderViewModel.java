@@ -12,14 +12,16 @@ import java.util.List;
 
 public class ServiceProviderViewModel extends ViewModel {
 
-    private MutableLiveData<List<PrototypeService>> allServices = new MutableLiveData<List<PrototypeService>>();
-    private MutableLiveData<List<PrototypeService>> filteredServices = new MutableLiveData<>();
-    private MutableLiveData<String> category = new MutableLiveData<>("");
-    private MutableLiveData<String> eventType = new MutableLiveData<>("");
-    private MutableLiveData<Double> lowerBoundaryPrice = new MutableLiveData<>(0.0);
-    private MutableLiveData<Double> upperBoundaryPrice = new MutableLiveData<>(8000.0);
-    private MutableLiveData<Boolean> availability = new MutableLiveData<>(true);
-    private MutableLiveData<String> searchConstraint = new MutableLiveData<>("");
+    private final MutableLiveData<List<PrototypeService>> allServices = new MutableLiveData<List<PrototypeService>>();
+    private final MutableLiveData<List<PrototypeService>> filteredServices = new MutableLiveData<>();
+    private final MutableLiveData<String> category = new MutableLiveData<>("");
+    private final MutableLiveData<String> eventType = new MutableLiveData<>("");
+    private final MutableLiveData<Double> lowerBoundaryPrice = new MutableLiveData<>(0.0);
+    private final MutableLiveData<Double> upperBoundaryPrice = new MutableLiveData<>(8000.0);
+    private final MutableLiveData<Boolean> availability = new MutableLiveData<>(true);
+    private final MutableLiveData<String> searchConstraint = new MutableLiveData<>("");
+
+    private final MutableLiveData<Boolean> isAvailabilityEnabled = new MutableLiveData<>(false);
 
 
     public void applyFilters() {
@@ -34,7 +36,7 @@ public class ServiceProviderViewModel extends ViewModel {
                     || eventType.getValue().isEmpty();
             boolean matchesPrice = service.getPrice() >= lowerBoundaryPrice.getValue()
                     && service.getPrice() <= upperBoundaryPrice.getValue();
-            boolean matchesAvailability = service.isAvailable() == availability.getValue();
+            boolean matchesAvailability = !isAvailabilityEnabled.getValue() || service.isAvailable() == availability.getValue();
 
             if(matchesConstraint && matchesCategory && matchesEventType && matchesPrice && matchesAvailability)
                 filteredList.add(service);
@@ -48,7 +50,9 @@ public class ServiceProviderViewModel extends ViewModel {
         this.eventType.setValue("");
         this.lowerBoundaryPrice.setValue(0.0);
         this.upperBoundaryPrice.setValue(8000.0);
+        this.setIsAvailabilityEnabled(false);
         this.availability.setValue(true);
+        applyFilters();
     }
 
     public void setData(List<PrototypeService> services) {
@@ -56,27 +60,9 @@ public class ServiceProviderViewModel extends ViewModel {
         this.filteredServices.setValue(new ArrayList<>(services));
     }
 
-    public MutableLiveData<List<PrototypeService>> getAllServices() {
-        return allServices;
-    }
-
-    public void setAllServices(List<PrototypeService> _allServices) {
-        this.allServices.setValue(_allServices);
-        applyFilters();
-    }
-
-
-
-
     public MutableLiveData<List<PrototypeService>> getFilteredServices() {
         return filteredServices;
     }
-
-    public void setFilteredServices(List<PrototypeService> filteredServices) {
-        this.filteredServices.setValue(filteredServices);
-        applyFilters();
-  }
-
 
     public MutableLiveData<String> getCategory() {
         return category;
@@ -131,5 +117,13 @@ public class ServiceProviderViewModel extends ViewModel {
     public void setUpperBoundaryPrice(Double upperBoundaryPrice) {
         this.upperBoundaryPrice.setValue(upperBoundaryPrice);
         applyFilters();
+    }
+
+    public MutableLiveData<Boolean> getIsAvailabilityEnabled() {
+        return isAvailabilityEnabled;
+    }
+
+    public void setIsAvailabilityEnabled(Boolean isAvailabilityEnabled) {
+        this.isAvailabilityEnabled.setValue(isAvailabilityEnabled);
     }
 }

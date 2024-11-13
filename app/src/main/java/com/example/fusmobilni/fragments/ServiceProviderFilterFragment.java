@@ -33,6 +33,7 @@ public class ServiceProviderFilterFragment extends BottomSheetDialogFragment {
     private AutoCompleteTextView eventTypeDropdown;
     private RangeSlider priceRangeSlider;
     private SwitchMaterial availabilitySwitch;
+    private SwitchMaterial enableAvailabilitySwitch;
 
 
     public ServiceProviderFilterFragment() {
@@ -54,12 +55,20 @@ public class ServiceProviderFilterFragment extends BottomSheetDialogFragment {
         View view =  inflater.inflate(R.layout.fragment_service_provider_filter, container, false);
         viewModel = new ViewModelProvider(requireActivity()).get(ServiceProviderViewModel.class);
         initializeInputs(view);
+        setupSwitchListeners();
         setupPriceRangeSlider();
         setupDropdowns();
         setupDialogButtons(view);
         initializeFields();
         return view;
     }
+
+    private void setupSwitchListeners() {
+        enableAvailabilitySwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            availabilitySwitch.setEnabled(isChecked);
+        });
+    }
+
 
     private void initializeFields() {
         viewModel.getCategory().observe(getViewLifecycleOwner(), category -> {
@@ -79,6 +88,10 @@ public class ServiceProviderFilterFragment extends BottomSheetDialogFragment {
         priceRangeSlider.setValues(viewModel.getLowerBoundaryPrice().getValue().floatValue(),
                 viewModel.getUpperBoundaryPrice().getValue().floatValue());
 
+        viewModel.getIsAvailabilityEnabled().observe(getViewLifecycleOwner(), isAvailabilityEnabled -> {
+            enableAvailabilitySwitch.setChecked(isAvailabilityEnabled);
+        });
+
         viewModel.getAvailability().observe(getViewLifecycleOwner(), availability -> {
             availabilitySwitch.setChecked(availability);
         });
@@ -86,10 +99,13 @@ public class ServiceProviderFilterFragment extends BottomSheetDialogFragment {
 
 
     private void setupDialogButtons(View dialogView) {
-        Button cancelBtn = dialogView.findViewById(R.id.cancelButton);
+        Button resetBtn = dialogView.findViewById(R.id.resetButton);
         Button applyBtn = dialogView.findViewById(R.id.applyButton);
 
-        cancelBtn.setOnClickListener(v -> dismiss());
+        resetBtn.setOnClickListener(v -> {
+            viewModel.resetFilters();
+            dismiss();
+        });
 
         applyBtn.setOnClickListener(v -> {
             initializeFilterValues();
@@ -102,6 +118,9 @@ public class ServiceProviderFilterFragment extends BottomSheetDialogFragment {
         eventTypeDropdown = dialogView.findViewById(R.id.text_event_type);
         priceRangeSlider = dialogView.findViewById(R.id.range_slider_price);
         availabilitySwitch = dialogView.findViewById(R.id.switch_availability);
+        availabilitySwitch.setEnabled(false);
+        enableAvailabilitySwitch = dialogView.findViewById(R.id.enable_availability_switch);
+        enableAvailabilitySwitch.setChecked(false);
     }
 
     private void initializeFilterValues() {
@@ -110,6 +129,7 @@ public class ServiceProviderFilterFragment extends BottomSheetDialogFragment {
         List<Float> priceRangeValues = priceRangeSlider.getValues();
         viewModel.setLowerBoundaryPrice(Double.valueOf(priceRangeValues.get(0)));
         viewModel.setUpperBoundaryPrice(Double.valueOf(priceRangeValues.get(1)));
+        viewModel.setIsAvailabilityEnabled(enableAvailabilitySwitch.isChecked());
         viewModel.setAvailability(availabilitySwitch.isChecked());
     }
 
