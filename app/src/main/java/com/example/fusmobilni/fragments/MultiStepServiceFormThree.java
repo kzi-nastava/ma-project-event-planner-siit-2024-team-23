@@ -47,7 +47,7 @@ public class MultiStepServiceFormThree extends Fragment implements ItemClickList
     }
 
 
-    public static MultiStepServiceFormThree newInstance(String param1, String param2) {
+    public static MultiStepServiceFormThree newInstance() {
         return new MultiStepServiceFormThree();
     }
 

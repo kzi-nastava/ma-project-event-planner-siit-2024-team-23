@@ -3,17 +3,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_margin="8dp"
+    android:background="@color/white"
     app:cardCornerRadius="8dp"
-    app:cardElevation="4dp">
+    app:cardElevation="10dp"
+    tools:layout_editor_absoluteX="8dp"
+    tools:layout_editor_absoluteY="8dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="16dp">
+        android:padding="16dp"
+        android:background="@color/white">
 
-        <!-- Left side: Image -->
         <ImageView
             android:id="@+id/cardImage"
             android:layout_width="100dp"
@@ -23,7 +27,6 @@
             android:scaleType="centerCrop"
             android:layout_marginEnd="8dp" />
 
-        <!-- Right side: Title, description, and buttons -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -31,7 +34,6 @@
             android:orientation="vertical"
             android:layout_gravity="center_vertical">
 
-            <!-- Title -->
             <TextView
                 android:id="@+id/cardTitle"
                 android:layout_width="wrap_content"
@@ -40,7 +42,6 @@
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
                 android:textColor="@color/black" />
 
-            <!-- Description -->
             <TextView
                 android:id="@+id/cardDescription"
                 android:layout_width="wrap_content"
@@ -50,7 +51,6 @@
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
                 android:textColor="@color/black" />
 
-            <!-- Buttons: Edit and Delete -->
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
