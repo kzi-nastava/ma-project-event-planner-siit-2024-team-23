@@ -102,18 +102,15 @@ public class EventFilterFragment extends BottomSheetDialogFragment {
         categoryRecyclerView.setAdapter(_adapter);
 
         _binding.eventFilterChipToday.setOnClickListener(v -> {
-            updateChipStyles(_binding.eventFilterChipToday, _binding.eventFilterChipThisWeek, _binding.eventFilterChipTomorrow);
+            updateChipStyles(_binding.eventFilterChipToday, _binding.eventFilterChipTomorrow);
 
         });
         _binding.eventFilterChipTomorrow.setOnClickListener(v -> {
-            updateChipStyles(_binding.eventFilterChipTomorrow, _binding.eventFilterChipToday, _binding.eventFilterChipThisWeek);
-        });
-        _binding.eventFilterChipThisWeek.setOnClickListener(v -> {
-            updateChipStyles(_binding.eventFilterChipThisWeek, _binding.eventFilterChipToday, _binding.eventFilterChipTomorrow);
+            updateChipStyles(_binding.eventFilterChipTomorrow, _binding.eventFilterChipToday);
         });
 
         _binding.eventFilterResetButton.setOnClickListener(v -> {
-            invalidateAllChips(_binding.eventFilterChipThisWeek, _binding.eventFilterChipToday, _binding.eventFilterChipTomorrow);
+            invalidateAllChips(_binding.eventFilterChipToday, _binding.eventFilterChipTomorrow);
             _binding.textViewSelectedDateDisplay.setText("");
             resetDatePicker();
             _adapter.resetCategories();
@@ -123,7 +120,7 @@ public class EventFilterFragment extends BottomSheetDialogFragment {
             initializeApplyButton();
         });
 
-        _binding.eventFilterResetButton.setOnClickListener(v->{
+        _binding.eventFilterResetButton.setOnClickListener(v -> {
             _viewModel.resetFilters();
             dismiss();
         });
@@ -136,18 +133,18 @@ public class EventFilterFragment extends BottomSheetDialogFragment {
         initializeFields();
         return view;
     }
-    private void initializeApplyButton(){
+
+    private void initializeApplyButton() {
         Category fetchedCategory = _adapter.getSelectedCategory();
 
         _viewModel.setCategory(fetchedCategory);
         _viewModel.setLocation(String.valueOf(_locationSpinner.getSelectedItem()));
 
         String date = convertDateToString(datePicker.getSelection());
-        if(date.equals("")){
-            if(_binding.eventFilterChipToday.isChecked()){
+        if (date.equals("")) {
+            if (_binding.eventFilterChipToday.isChecked()) {
                 date = getTodayDate();
-            }
-            else if(_binding.eventFilterChipTomorrow.isChecked()){
+            } else if (_binding.eventFilterChipTomorrow.isChecked()) {
                 date = getTomorrowDate();
             }
         }
@@ -155,16 +152,19 @@ public class EventFilterFragment extends BottomSheetDialogFragment {
 
         dismiss();
     }
+
     private String getTomorrowDate() {
         LocalDate tomorrow = LocalDate.now().plusDays(1);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         return tomorrow.format(formatter);
     }
+
     private String getTodayDate() {
         LocalDate today = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         return today.format(formatter);
     }
+
     private void initializeDatePicker() {
         datePickerButton.setOnClickListener(
                 new View.OnClickListener() {
@@ -182,7 +182,7 @@ public class EventFilterFragment extends BottomSheetDialogFragment {
                     @Override
                     public void onPositiveButtonClick(Object selection) {
 
-                        invalidateAllChips(_binding.eventFilterChipToday, _binding.eventFilterChipThisWeek, _binding.eventFilterChipTomorrow);
+                        invalidateAllChips(_binding.eventFilterChipToday, _binding.eventFilterChipTomorrow);
 
                         _binding.textViewSelectedDateDisplay.setText(convertDateToString(datePicker.getSelection()));
 
@@ -195,7 +195,7 @@ public class EventFilterFragment extends BottomSheetDialogFragment {
         if (_viewModel.getCategory().getValue() != null) {
             _adapter.setSelectedCategory(_viewModel.getCategory().getValue().getId());
         }
-        if (!_viewModel.getDate().getValue().equals("")) {
+        if (!_viewModel.getDate().getValue().isEmpty()) {
             datePicker = MaterialDatePicker.Builder.datePicker().setTitleText(_viewModel.getDate().getValue()).setSelection(convertStringToDate(_viewModel.getDate().getValue())).build();
             _binding.textViewSelectedDateDisplay.setText(_viewModel.getDate().getValue());
             initializeDatePicker();
@@ -267,7 +267,7 @@ public class EventFilterFragment extends BottomSheetDialogFragment {
                     @SuppressLint("SetTextI18n")
                     @Override
                     public void onPositiveButtonClick(Long selection) {
-                        invalidateAllChips(_binding.eventFilterChipToday, _binding.eventFilterChipThisWeek, _binding.eventFilterChipTomorrow);
+                        invalidateAllChips(_binding.eventFilterChipToday, _binding.eventFilterChipTomorrow);
                         _binding.textViewSelectedDateDisplay.setText(convertDateToString(convertStringToDate(datePicker.getHeaderText())));
                         resetDatePicker(); // Reset picker after selection
                     }

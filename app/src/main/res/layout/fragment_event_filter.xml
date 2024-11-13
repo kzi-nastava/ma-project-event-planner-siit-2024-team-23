@@ -103,15 +103,6 @@
                     android:textColor="@color/bg_gray"
                     app:chipBackgroundColor="@color/white" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/event_filter_chip_this_week"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@color/white"
-                    android:text="This week"
-                    android:textColor="@color/bg_gray"
-                    app:chipBackgroundColor="@color/white" />
-
             </com.google.android.material.chip.ChipGroup>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
