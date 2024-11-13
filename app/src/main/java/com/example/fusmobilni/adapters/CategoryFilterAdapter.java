@@ -1,10 +1,12 @@
 package com.example.fusmobilni.adapters;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -28,9 +30,16 @@ public class CategoryFilterAdapter extends RecyclerView.Adapter<CategoryFilterAd
        if(selectedCategory == -1){
            return null;
        }
-       return _categories.get(selectedCategory);
+       return _categories.get(getCategoryById(this.selectedCategory));
     }
-
+    private int getCategoryById(int id){
+        for(int i = 0; i < _categories.size();++i){
+            if(_categories.get(i).getId() == id){
+                return i;
+            }
+        }
+        return -1;
+    }
     public void setSelectedCategory(int selectedCategory) {
         this.selectedCategory = selectedCategory;
     }
@@ -45,18 +54,20 @@ public class CategoryFilterAdapter extends RecyclerView.Adapter<CategoryFilterAd
     @Override
     public void onBindViewHolder(@NonNull CategoryFilterAdapter.CategoryFilterViewHolder holder, int position) {
         Category category = _categories.get(position);
-        holder.categoryIcon.setImageResource(position == selectedCategory ? category.getActiveIconResId() : category.getInactiveIconResId());
+        holder.categoryIcon.setImageResource(category.getId() == selectedCategory ? category.getActiveIconResId() : category.getInactiveIconResId());
         holder.categoryName.setText(category.getName());
 
-        holder.backGround.setBackgroundResource(position == selectedCategory ? R.drawable.circle_background_primary : R.drawable.circle_background_secondary);
-        holder.backGround.setElevation(position == selectedCategory ? 0f : 10f);
+        holder.backGround.setBackgroundResource(category.getId() == selectedCategory ? R.drawable.circle_background_primary : R.drawable.circle_background_secondary);
+        holder.backGround.setElevation(category.getId() == selectedCategory ? 0f : 10f);
         holder.itemView.setOnClickListener(v -> {
-            if(selectedCategory==position){
+
+            Log.d("Selected:" + String.valueOf(selectedCategory) + " Actual:" + category.getId(),"Selected:" + String.valueOf(selectedCategory) + " Actual:" + category.getId());
+
+            if(selectedCategory==category.getId()){
                 selectedCategory = -1;
             }else{
-                selectedCategory = position;
+                selectedCategory = category.getId();
             }
-            //it is not a mistake, do not correct it
             notifyDataSetChanged();
         });
 

@@ -6,15 +6,15 @@ public class Event {
     private static HashMap MonthMap = new HashMap<String,String>();
 
     static {
-        MonthMap.put("1", "Jan");
-        MonthMap.put("2", "Feb");
-        MonthMap.put("3", "Mar");
-        MonthMap.put("4", "Apr");
-        MonthMap.put("5", "May");
-        MonthMap.put("6", "Jun");
-        MonthMap.put("7", "Jul");
-        MonthMap.put("8", "Aug");
-        MonthMap.put("9", "Sept");
+        MonthMap.put("01", "Jan");
+        MonthMap.put("02", "Feb");
+        MonthMap.put("03", "Mar");
+        MonthMap.put("04", "Apr");
+        MonthMap.put("05", "May");
+        MonthMap.put("06", "Jun");
+        MonthMap.put("07", "Jul");
+        MonthMap.put("08", "Aug");
+        MonthMap.put("09", "Sept");
         MonthMap.put("10", "Oct");
         MonthMap.put("11", "Nov");
         MonthMap.put("12", "Dec");

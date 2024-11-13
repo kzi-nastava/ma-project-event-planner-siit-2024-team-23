@@ -1,14 +1,24 @@
 package com.example.fusmobilni.model;
 
 public class Category {
+    private int _id;
     private int _activeIconResId;
     private  int _inactiveIconResId;
     private String _name;
 
-    public Category(String name, int activeIconResId, int inactiveIconResId) {
+    public Category(int id,String name, int activeIconResId, int inactiveIconResId) {
+        this._id = id;
         this._activeIconResId = activeIconResId;
         this._name = name;
         this._inactiveIconResId = inactiveIconResId;
+    }
+
+    public int getId() {
+        return _id;
+    }
+
+    public void setId(int _id) {
+        this._id = _id;
     }
 
     public int getInactiveIconResId() {

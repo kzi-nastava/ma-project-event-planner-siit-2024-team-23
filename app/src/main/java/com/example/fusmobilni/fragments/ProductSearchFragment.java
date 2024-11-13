@@ -3,6 +3,7 @@ package com.example.fusmobilni.fragments;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.Editable;
@@ -17,9 +18,8 @@ import android.widget.Spinner;
 import com.example.fusmobilni.R;
 import com.example.fusmobilni.adapters.ProductsHorizontalAdapter;
 import com.example.fusmobilni.databinding.FragmentProductSearchBinding;
-import com.example.fusmobilni.interfaces.OnFilterEventsApplyListener;
-import com.example.fusmobilni.interfaces.OnFilterProductsApplyListener;
 import com.example.fusmobilni.model.Product;
+import com.example.fusmobilni.viewModels.ProductSearchViewModel;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -31,8 +31,9 @@ import java.util.Optional;
  * Use the {@link ProductSearchFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ProductSearchFragment extends Fragment implements OnFilterEventsApplyListener {
+public class ProductSearchFragment extends Fragment {
 
+    private ProductSearchViewModel _viewModel;
     private FragmentProductSearchBinding _binding;
     private TextInputLayout _searchView;
     private ArrayList<Product> _products;
@@ -75,6 +76,8 @@ public class ProductSearchFragment extends Fragment implements OnFilterEventsApp
         _productsAdapter = new ProductsHorizontalAdapter();
         _listView.setAdapter(_productsAdapter);
 
+        _viewModel = new ViewModelProvider(requireActivity()).get(ProductSearchViewModel.class);
+
         _searchView.getEditText().addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -83,7 +86,7 @@ public class ProductSearchFragment extends Fragment implements OnFilterEventsApp
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                _productsAdapter.getFilter().filter(s);
+                _viewModel.setConstraint(s.toString());
             }
 
             @Override
@@ -91,45 +94,55 @@ public class ProductSearchFragment extends Fragment implements OnFilterEventsApp
 
             }
         });
-
         _binding.productsFilterButton.setOnClickListener(v -> {
-            _productsAdapter.resetFilters();
-            ProductFilterFragment filterFragment = new ProductFilterFragment();
-            filterFragment.set_filterListener(new OnFilterProductsApplyListener() {
-
-                @Override
-                public void onFilterApply(String category, double minPrice,double maxPrice, String location) {
-                    _productsAdapter.setFilters(_searchView.getEditText().getText().toString(),category, minPrice,maxPrice, location);
-                }
-            });
-            Bundle args = new Bundle();
-            ArrayList<Double> minMax = getMinMaxPrice();
-            args.putDouble("min_slider", minMax.get(0));
-            args.putDouble("max_slider",minMax.get(1));
-            filterFragment.setArguments(args);
-            filterFragment.show(getParentFragmentManager(), filterFragment.getTag());
+            openFilterFragment();
         });
 
         _products = fillProducts();
-        _productsAdapter.setOriginalData(_products);
-        _productsAdapter.setFilteringData(_products);
-        _productsAdapter.setData(_products);
-        _productsAdapter.loadPage(0);
+        _viewModel.setData(_products);
 
+        _productsAdapter.setData(_viewModel.getPagedProducts().getValue());
+        _viewModel.getConstraint().observe(getViewLifecycleOwner(), observer -> {
+            _productsAdapter.setData(_viewModel.getPagedProducts().getValue());
+        });
+        _viewModel.getPagedProducts().observe(getViewLifecycleOwner(), observer -> {
+            _productsAdapter.setData(_viewModel.getPagedProducts().getValue());
+        });
         initializePaginationSpinner();
 
+        initializeMaxMinValue();
         return view;
     }
 
+    private void openFilterFragment(){
+
+        ProductFilterFragment filterFragment = new ProductFilterFragment();
+        Bundle bundle = new Bundle();
+        ArrayList<Double> minMaxValue = getMinMaxPrice();
+
+        bundle.putDouble("min_slider",minMaxValue.get(0));
+        bundle.putDouble("max_slider",minMaxValue.get(1));
+        filterFragment.setArguments(bundle);
+
+
+        filterFragment.show(getParentFragmentManager(), filterFragment.getTag());
+    }
     private void initializeButtons() {
 
         _prevButton = this._binding.productSearchPreviousButton;
         _nextButton = this._binding.productSearchNextButton;
 
-        _prevButton.setOnClickListener(v -> _productsAdapter.prevPage());
-        _nextButton.setOnClickListener(v -> _productsAdapter.nextPage());
-    }
+        _prevButton.setOnClickListener(v ->
+                _viewModel.prevPage());
+        _nextButton.setOnClickListener(v -> _viewModel.nextPage());
 
+
+    }
+    private void initializeMaxMinValue(){
+        ArrayList<Double> minMaxValue = getMinMaxPrice();
+        _viewModel.setMaxSelectedPrice(minMaxValue.get(1));
+        _viewModel.setMinSelectedPrice(minMaxValue.get(0));
+    }
     private void initializePaginationSpinner() {
         _paginationSpinner = _binding.paginationSpinnerProducts;
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this.getContext(), R.array.paginationPageSizes, android.R.layout.simple_spinner_item);
@@ -140,7 +153,8 @@ public class ProductSearchFragment extends Fragment implements OnFilterEventsApp
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 int selectedItem = Integer.parseInt(String.valueOf(parent.getItemAtPosition(position)));
-                _productsAdapter.setPageSize(selectedItem, _searchView.getEditText().getText().toString());
+                _viewModel.setPageSize(selectedItem);
+                // _productsAdapter.setData(_viewModel.getPagedProducts().getValue());
             }
 
             @Override
@@ -198,16 +212,12 @@ public class ProductSearchFragment extends Fragment implements OnFilterEventsApp
         return p;
     }
 
-    private ArrayList<Double> getMinMaxPrice(){
-        ArrayList <Double> resultList = new ArrayList<>();
+    private ArrayList<Double> getMinMaxPrice() {
+        ArrayList<Double> resultList = new ArrayList<>();
         Optional<Double> minPrice = _products.stream().map(Product::getPrice).min(Double::compare);
         Optional<Double> maxPrice = _products.stream().map(Product::getPrice).max(Double::compare);
         resultList.add(minPrice.get());
         resultList.add(maxPrice.get());
-        return  resultList;
-    }
-    @Override
-    public void onFilterApply(String category, String location, String date) {
-
+        return resultList;
     }
 }
