@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:background="@drawable/rounded_background"
+    android:padding="16dp">
+
+    <!-- Centered Title Text -->
+<com.google.android.material.textview.MaterialTextView
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:text="@string/are_you_sure_you_want_to_delete_service"
+android:textColor="?attr/colorOnBackground"
+android:textSize="18sp"
+android:gravity="center"
+android:layout_gravity="center_horizontal"
+android:layout_marginBottom="16dp" />
+
+
+<LinearLayout
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:orientation="horizontal"
+android:gravity="center"
+android:layout_marginTop="8dp">
+
+<Button
+    android:id="@+id/cancelButton"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="@string/cancel"
+    style="@style/Widget.MaterialComponents.Button.TextButton"
+    android:layout_marginEnd="8dp" />
+
+<Button
+    android:id="@+id/confirmButton"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="@string/confirm"
+    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+    android:layout_marginStart="8dp"
+    android:textColor="@color/accent_red" />
+
+</LinearLayout>
+
+    </LinearLayout>

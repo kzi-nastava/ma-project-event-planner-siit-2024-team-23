@@ -1,0 +1,214 @@
+<resources>
+    <string name="app_name">EventHub</string>
+    <string name="navigation_drawer_open">Open drawer</string>
+    <string name="navigation_drawer_close">Closed Drawer</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="label">Name</string>
+    <string-array name="categories">
+        <item>Music</item>
+        <item>Food</item>
+        <item>Beverages</item>
+        <item>Sport</item>
+    </string-array>
+    <string-array name="paginationPageSizes">
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+    </string-array>
+    <string-array name="service_locations">
+        <item></item>
+        <item>New York</item>
+        <item>Los Angeles</item>
+        <item>Chicago</item>
+        <item>San Francisco</item>
+        <item>Miami</item>
+        <item>Las Vegas</item>
+        <item>New York</item>
+        <item>Austin</item>
+        <item>Orlando</item>
+        <item>Atlanta</item>
+        <item>Houston</item>
+        <item>Seattle</item>
+        <item>Dallas</item>
+        <item>San Diego</item>
+        <item>Los Angeles</item>
+        <item>Miami</item>
+        <item>Nashville</item>
+        <item>Chicago</item>
+        <item>Boston</item>
+        <item>New York</item>
+        <item>Denver</item>
+        <item>Phoenix</item>
+        <item>San Antonio</item>
+        <item>Portland</item>
+        <item>Las Vegas</item>
+        <item>New York</item>
+        <item>San Francisco</item>
+        <item>Houston</item>
+        <item>Miami</item>
+        <item>Los Angeles</item>
+        <item>Philadelphia</item>
+        <item>Seattle</item>
+        <item>San Diego</item>
+        <item>Chicago</item>
+        <item>Boston</item>
+        <item>Santa Monica</item>
+        <item>Orlando</item>
+        <item>Las Vegas</item>
+        <item>Phoenix</item>
+        <item>San Antonio</item>
+        <item>Portland</item>
+        <item>New York</item>
+    </string-array>
+    <string-array name="product_locations">
+        <item></item>
+        <item>New York</item>
+        <item>California</item>
+        <item>Texas</item>
+        <item>France</item>
+        <item>Belgium</item>
+        <item>Japan</item>
+        <item>Italy</item>
+        <item>USA</item>
+        <item>Mexico</item>
+        <item>Middle East</item>
+        <item>Greece</item>
+        <item>Los Angeles</item>
+        <item>Florida</item>
+        <item>London</item>
+        <item>Chicago</item>
+        <item>South Korea</item>
+        <item>Canada</item>
+        <item>Spain</item>
+        <item>Vietnam</item>
+        <item>Kentucky</item>
+        <item>China</item>
+        <item>England</item>
+        <item>India</item>
+    </string-array>
+    <string-array name="event_locations">
+        <item></item>
+        <item>Napa Valley Vineyard</item>
+        <item>Silicon Valley Expo Center</item>
+        <item>Paris Art Museum</item>
+        <item>Berlin Startup Hub</item>
+        <item>Toronto Film Centre</item>
+        <item>Times Square</item>
+        <item>City Hall Ballroom</item>
+        <item>Aspen Ski Resort</item>
+        <item>New York City</item>
+        <item>Washington D.C.</item>
+        <item>Central Park</item>
+        <item>Coachella Valley</item>
+        <item>Chicago</item>
+        <item>Los Angeles</item>
+        <item>San Francisco</item>
+        <item>Washington D.C.</item>
+        <item>Paris</item>
+        <item>San Diego</item>
+        <item>Bali</item>
+        <item>Barcelona</item>
+        <item>New York</item>
+        <item>Austin</item>
+        <item>Venice</item>
+        <item>Munich</item>
+        <item>New Orleans</item>
+        <item>New York</item>
+        <item>Mall of America</item>
+        <item>Prague</item>
+        <item>London</item>
+        <item>Sydney</item>
+        <item>Zurich</item>
+        <item>Dublin</item>
+        <item>Los Angeles</item>
+        <item>Berlin</item>
+        <item>Amsterdam</item>
+        <item>Stockholm</item>
+        <item>Austin</item>
+        <item>Washington D.C.</item>
+        <item>San Francisco</item>
+        <item>Los Angeles</item>
+        <item>Mexico City</item>
+        <item>Reykjavik</item>
+        <item>London</item>
+        <item>Toronto</item>
+        <item>Madrid</item>
+        <item>Quebec</item>
+        <item>Tokyo</item>
+    </string-array>
+
+    <string-array name="EventTypes">
+        <item>Svadba</item>
+        <item>SLavlje</item>
+        <item>Veselje</item>
+        <item>Rodjendan</item>
+    </string-array>
+    <string name="email_placeholder">abc@email.com</string>
+    <string name="sign_in">Sign in</string>
+    <string name="don_t_have_an_account">Don\'t have an account? <font color="#5669FF">Sign up</font></string>
+    <string name="sign_up">Sign up\n</string>
+    <string name="name_placeholder">Milan</string>
+    <string name="repeat_password">Repeat password</string>
+    <string name="your_password">Your password</string>
+    <string name="have_an_account">Already have an account?<font color="#5669FF">Sign in</font></string>
+    <string name="next">Next</string>
+    <string name="back">Back</string>
+    <string name="eventOrganizer">Event Organizer</string>
+    <string name="serviceProvider">Service Provider</string>
+    <string name="choose_role">Please select a role:</string>
+    <string name="name_label">First name</string>
+    <string name="lastname_label">Last name</string>
+    <string name="lastname_hint">Lazarevic</string>
+    <string name="profile_picture">Profile picture</string>
+    <string name="living_address">Street Address</string>
+    <string name="telephone_input">Telephone Number</string>
+    <string name="phone_placeholder">065/222–333</string>
+    <string name="address_placeholder">Street 45</string>
+    <string name="upload_image">Upload profile image (Optional)</string>
+    <string name="profile_image">Profile Image</string>
+    <string name="city_placeholder">New York</string>
+    <string name="City">City</string>
+    <string name="email_verification_success">Success!</string>
+    <string name="check_your_email">Your account is created. Please check your email to verify your account!</string>
+    <string name="login_page">login page</string>
+    <string name="success_image">Success image</string>
+    <string name="company_description">Company description</string>
+    <string name="company_name">Company name</string>
+    <string name="email_label">Email</string>
+    <string name="search">Search</string>
+    <string name="filter">Filter</string>
+    <string name="items_per_page">Items per page</string>
+    <string name="lt"><![CDATA[<]]></string>
+    <string name="are_you_sure_you_want_to_delete_service">Are you sure you want to delete service?</string>
+    <string name="cancel">Cancel</string>
+    <string name="confirm">Confirm</string>
+    <string name="service_creation_form">Service Creation Form</string>
+    <string name="category">Category</string>
+    <string name="event_type">Event Type</string>
+    <string name="name">Name</string>
+    <string name="description">Description</string>
+    <string name="price">Price</string>
+    <string name="discount">Discount</string>
+    <string name="stepper">stepper</string>
+    <string name="choose_images">Choose Images</string>
+    <string name="finish">Finish</string>
+    <string name="specificities">Specificities</string>
+    <string name="service_duration">Service Duration (Hours)</string>
+    <string name="reservation_deadline">Reservation Deadline (Days)</string>
+    <string name="cancellation_deadline">Cancellation Deadline (Days)</string>
+    <string name="visibility">Visibility</string>
+    <string name="availability">Availability</string>
+    <string name="reservation_confirmation">Reservation Confirmation</string>
+    <string name="automatic">Automatic</string>
+    <string name="manual">Manual</string>
+    <string name="button">Button</string>
+    <string name="floating_action_button">floating action button</string>
+    <string name="service_category">Service Category</string>
+    <string name="available_only">Available Services Only</string>
+    <string name="apply_filters">Apply Filters</string>
+    <string name="reset">Reset</string>
+    <string name="enable_availability_switch">Enable Availability Switch</string>
+</resources>
