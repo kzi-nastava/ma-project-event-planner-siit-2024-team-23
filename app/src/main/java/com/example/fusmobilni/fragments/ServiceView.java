@@ -158,8 +158,10 @@ public class ServiceView extends Fragment implements DeleteServiceListener {
     public void addDummyData() {
         services.add(new PrototypeService("Music", "Orkestar", "Jako dobar orekstar", "Ovo je zaista jako specificno", 500, 25, true, false, 3.5, 3, 3, true, new ArrayList<>(), new ArrayList<>(Arrays.asList("Veselje"))));
         services.add(new PrototypeService("Food", "Ketering", "Jako dobra hrana", "Ovo je zaista jako specificno", 500, 25, false, true, 2.5, 5, 5, false, new ArrayList<>(), new ArrayList<>(Arrays.asList("Svadba"))));
-        services.add(new PrototypeService("Beverages", "Hranilica", "Jako dobra hranilica", "Ovo je zaista jako specificno", 250, 25, true, true, 5, 1, 1, true, new ArrayList<>(), new ArrayList<>(Arrays.asList("SLavlje"))));
+        services.add(new PrototypeService("Beverages", "Hrana", "Jako dobra hrana", "Ovo je zaista jako specificno", 250, 25, true, true, 5, 1, 1, true, new ArrayList<>(), new ArrayList<>(Arrays.asList("SLavlje"))));
         services.add(new PrototypeService("Sport", "Kosarka", "Jako dobar sport", "Ovo je zaista jako specificno", 560, 25, false, false, 4, 2, 2, false, new ArrayList<>(), new ArrayList<>(Arrays.asList("Rodjendan"))));
+        services.add(new PrototypeService("Beverages", "Gulas", "Jako dobra hrana", "Ovo je zaista jako specificno", 250, 25, true, true, 5, 1, 1, true, new ArrayList<>(), new ArrayList<>(Arrays.asList("Svadba"))));
+        services.add(new PrototypeService("Sport", "Fudbal", "Jako dobar sport", "Ovo je zaista jako specificno", 560, 25, false, false, 4, 2, 2, false, new ArrayList<>(), new ArrayList<>(Arrays.asList("Veselje"))));
     }
 
 }

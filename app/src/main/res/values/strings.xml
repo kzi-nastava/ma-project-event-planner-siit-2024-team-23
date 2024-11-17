@@ -196,9 +196,9 @@
     <string name="choose_images">Choose Images</string>
     <string name="finish">Finish</string>
     <string name="specificities">Specificities</string>
-    <string name="service_duration">Service Duration</string>
-    <string name="reservation_deadline">Reservation Deadline</string>
-    <string name="cancelation_deadline">Cancelation Deadline</string>
+    <string name="service_duration">Service Duration (Hours)</string>
+    <string name="reservation_deadline">Reservation Deadline (Days)</string>
+    <string name="cancellation_deadline">Cancellation Deadline (Days)</string>
     <string name="visibility">Visibility</string>
     <string name="availability">Availability</string>
     <string name="reservation_confirmation">Reservation Confirmation</string>
