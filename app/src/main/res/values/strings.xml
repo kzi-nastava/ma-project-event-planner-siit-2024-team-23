@@ -211,4 +211,10 @@
     <string name="apply_filters">Apply Filters</string>
     <string name="reset">Reset</string>
     <string name="enable_availability_switch">Enable Availability Switch</string>
+    <string name="create">Create</string>
+    <string name="check_proposals">Check Proposals</string>
+    <string name="this_is_a_description_of_the_card_item">This is a description of the card item.</string>
+    <string name="card_title">Card Title</string>
+    <string name="delete">Delete</string>
+    <string name="edit">Edit</string>
 </resources>
