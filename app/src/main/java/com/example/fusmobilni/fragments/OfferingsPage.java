@@ -3,6 +3,7 @@ package com.example.fusmobilni.fragments;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -52,6 +53,9 @@ public class OfferingsPage extends Fragment implements CategoryListener {
         dummyData();
         this.adapter = new CategoryAdapter(this.categories, this);
         recycler.setAdapter(adapter);
+        binding.floatingActionButton.setOnClickListener(v -> {
+            Navigation.findNavController(view).navigate(R.id.categories_toCreationForm);
+        });
 
         return view;
     }
