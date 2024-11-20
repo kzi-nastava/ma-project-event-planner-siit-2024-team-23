@@ -22,10 +22,15 @@
                     android:icon="@drawable/ic_notification"
                     android:title="Services" />
                 <item
+
                     android:id="@+id/categories_page"
                     android:icon="@drawable/ic_notification"
                     android:title="Categories" />
 
+                <item
+                    android:id="@+id/event_invitations_fragment"
+                    android:icon="@drawable/plus_icon"
+                    android:title="Event Invitations"/>
             </menu>
 
         </item>
