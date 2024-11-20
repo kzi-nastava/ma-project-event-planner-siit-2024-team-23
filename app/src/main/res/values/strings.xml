@@ -217,4 +217,10 @@
     <string name="card_title">Card Title</string>
     <string name="delete">Delete</string>
     <string name="edit">Edit</string>
+    <string name="category_creation_form">CATEGORY CREATION FORM</string>
+    <string name="cname">Name</string>
+    <string name="cdescription">Description</string>
+    <string name="submit">submit</string>
+    <string name="category_update_form">CATEGORY UPDATE FORM</string>
+    <string name="update_category">CATEGORY UPDATE FORM</string>
 </resources>
