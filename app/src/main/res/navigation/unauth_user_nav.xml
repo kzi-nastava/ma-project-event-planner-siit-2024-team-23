@@ -180,5 +180,9 @@
     <action
         android:id="@+id/action_home_fragment_to_service_search"
         app:destination="@id/service_search_fragment"/>
-
+    <fragment
+        android:id="@+id/event_invitations_fragment"
+        android:name="com.example.fusmobilni.fragments.InvitationsFragment"
+        android:label="Invitations"
+        tools:layout="@layout/fragment_invitations"/>
 </navigation>
