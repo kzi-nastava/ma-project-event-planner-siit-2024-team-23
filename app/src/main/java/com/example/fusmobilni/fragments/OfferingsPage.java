@@ -3,6 +3,7 @@ package com.example.fusmobilni.fragments;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -18,6 +19,7 @@ import com.example.fusmobilni.databinding.FragmentOfferingsPageBinding;
 import com.example.fusmobilni.databinding.FragmentServiceViewBinding;
 import com.example.fusmobilni.interfaces.CategoryListener;
 import com.example.fusmobilni.model.OfferingsCategory;
+import com.example.fusmobilni.viewModels.CategoryViewModel;
 
 import java.util.ArrayList;
 
@@ -26,6 +28,7 @@ public class OfferingsPage extends Fragment implements CategoryListener {
 
     private ArrayList<OfferingsCategory> categories = new ArrayList<>();
     private CategoryAdapter adapter;
+    private CategoryViewModel viewModel;
     private FragmentOfferingsPageBinding binding;
 
 
@@ -48,6 +51,7 @@ public class OfferingsPage extends Fragment implements CategoryListener {
                              Bundle savedInstanceState) {
         binding = FragmentOfferingsPageBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
+        viewModel = new ViewModelProvider(requireActivity()).get(CategoryViewModel.class);
         RecyclerView recycler = binding.categoryRecyclerView;
         recycler.setLayoutManager(new LinearLayoutManager(getActivity()));
         dummyData();
@@ -76,6 +80,8 @@ public class OfferingsPage extends Fragment implements CategoryListener {
 
     @Override
     public void onUpdateCategory(int position) {
-
+        OfferingsCategory category = this.categories.get(position);
+        this.viewModel.populate(category);
+        Navigation.findNavController(binding.getRoot()).navigate(R.id.categories_toCreationForm);
     }
 }
