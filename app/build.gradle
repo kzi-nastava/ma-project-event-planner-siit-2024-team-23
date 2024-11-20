@@ -55,4 +55,6 @@ dependencies {
     androidTestImplementation libs.espresso.core
     implementation libs.ucrop
     implementation libs.imagepicker
+    implementation libs.datastore.preferences
+    implementation libs.gson
 }

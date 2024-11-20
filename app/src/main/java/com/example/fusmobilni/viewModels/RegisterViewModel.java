@@ -9,7 +9,7 @@ import com.example.fusmobilni.fragments.RegisterFragments.StepOneFragment;
 import com.example.fusmobilni.fragments.RegisterFragments.StepThreeFragment;
 import com.example.fusmobilni.fragments.RegisterFragments.StepTwoFragment;
 import com.example.fusmobilni.fragments.RegisterFragments.VerifyEmailFragment;
-import com.example.fusmobilni.model.enums.RegisterUserRole;
+import com.example.fusmobilni.model.enums.UserType;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -18,7 +18,7 @@ public class RegisterViewModel extends ViewModel {
 
     private final MutableLiveData<List<Fragment>> _fragments = new MutableLiveData<>();
     public LiveData<List<Fragment>> fragments = _fragments;
-    private final MutableLiveData<RegisterUserRole> _role = new MutableLiveData<>();
+    private final MutableLiveData<UserType> _role = new MutableLiveData<>();
 
     private final  MutableLiveData<String> _name = new MutableLiveData<>();
     private final  MutableLiveData<String> _lastName = new MutableLiveData<>();
@@ -33,9 +33,9 @@ public class RegisterViewModel extends ViewModel {
 
 
 
-    public void setRole(RegisterUserRole role){
+    public void setRole(UserType role){
         _role.setValue(role);
-        if(role.equals(RegisterUserRole.EVENT_ORGANIZER)){
+        if(role.equals(UserType.EVENT_ORGANIZER)){
             _fragments.setValue(new ArrayList<>(
                     Arrays.asList(
                             new RoleSelectionFragment(),

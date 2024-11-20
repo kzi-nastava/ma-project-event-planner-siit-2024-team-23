@@ -209,4 +209,17 @@
     <string name="service_category">Service Category</string>
     <string name="available_only">Available Only</string>
     <string name="apply_filters">Apply Filters</string>
+    <string name="home">Home</string>
+    <string name="events">Events</string>
+    <string name="products">Products</string>
+    <string name="services">Services</string>
+    <string name="notifications">Notifications</string>
+    <string name="categories">Categories</string>
+    <string name="event_types">Event types</string>
+    <string name="stats">Stats</string>
+    <string name="comments">Comments</string>
+    <string name="grades">Grades</string>
+    <string name="registrations">Registrations</string>
+    <string name="profile">Profile</string>
+    <string name="logout">Logout</string>
 </resources>

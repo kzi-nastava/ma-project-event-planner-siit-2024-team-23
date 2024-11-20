@@ -33,6 +33,9 @@
         <action
             android:id="@+id/action_home_fragment_to_register_activity"
             app:destination="@id/register_activity" />
+        <action
+            android:id="@+id/action_home_fragment_to_viewProfileFragment"
+            app:destination="@id/viewProfileFragment" />
     </fragment>
 
     <fragment
@@ -180,5 +183,17 @@
     <action
         android:id="@+id/action_home_fragment_to_service_search"
         app:destination="@id/service_search_fragment"/>
+    <fragment
+        android:id="@+id/viewProfileFragment"
+        android:name="com.example.fusmobilni.fragments.ViewProfileFragment"
+        android:label="fragment_view_profile"
+        tools:layout="@layout/fragment_view_profile" >
+        <action
+            android:id="@+id/action_viewProfileFragment_to_home_fragment"
+            app:destination="@id/home_fragment" />
+        <action
+            android:id="@+id/action_viewProfileFragment_to_home_fragment2"
+            app:destination="@id/home_fragment" />
+    </fragment>
 
 </navigation>
