@@ -47,7 +47,7 @@
             >
             <menu>
                 <item
-                    android:id="@+id/messages_fragment"
+                    android:id="@+id/categories_fragment"
                     android:icon="@drawable/outline_message_24"
                     android:title="@string/categories" />
                 <item
@@ -91,10 +91,6 @@
                     android:id="@+id/viewProfileFragment"
                     android:icon="@drawable/outline_person_24"
                     android:title="@string/profile" />
-                <item
-                    android:id="@+id/logout"
-                    android:icon="@drawable/outline_logout_24"
-                    android:title="@string/logout" />
             </menu>
         </item>
     </group>

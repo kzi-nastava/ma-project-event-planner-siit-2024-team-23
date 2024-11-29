@@ -235,4 +235,11 @@
     <string name="additional_info">Additional info</string>
     <string name="profile_data">Profile data</string>
     <string name="full_name_placeholder">Milan Lazarevic</string>
+    <string name="messages">Messages</string>
+    <string name="calendar">Calendar</string>
+    <string name="my_events">My events</string>
+    <string name="my_products">My products</string>
+    <string name="my_services">My services</string>
+    <string name="pricelist">Pricelist</string>
+    <string name="my_reservations">My reservations</string>
 </resources>
