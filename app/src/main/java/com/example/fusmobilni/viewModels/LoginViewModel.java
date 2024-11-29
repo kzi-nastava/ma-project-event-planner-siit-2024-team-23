@@ -6,7 +6,6 @@ import android.content.Context;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
 
 import com.example.fusmobilni.core.CustomSharedPrefs;
 import com.example.fusmobilni.model.User;
@@ -21,25 +20,21 @@ public class LoginViewModel extends AndroidViewModel {
 
     public MutableLiveData<String> getEmail() {return _email;}
     public MutableLiveData<String> getPassword() {return _password;}
-    public MutableLiveData<UserType> getRole(){return _role;};
+    public MutableLiveData<UserType> getRole(){return _role;}
     public MutableLiveData<Boolean> getIsLoading() {return _isLoading;}
     public MutableLiveData<Boolean> getLoginSuccess() {return _loginSuccess;}
-
-    public void setEmail(String email){_email.postValue(email);}
-    public void setPassword(String password){_password.postValue(password);}
-    public void setRole(UserType role){_role.postValue(role);}
-    public void setIsLoading(Boolean isLoading){_isLoading.postValue(isLoading);}
-    public void setLoginSuccess(Boolean loginSuccess){_loginSuccess.postValue(loginSuccess);}
+    public void setEmail(String email){_email.setValue(email);}
+    public void setPassword(String password){_password.setValue(password);}
+    public void setRole(UserType role){_role.setValue(role);}
+    public void setIsLoading(Boolean isLoading){_isLoading.setValue(isLoading);}
+    public void setLoginSuccess(Boolean loginSuccess){_loginSuccess.setValue(loginSuccess);}
     public LoginViewModel(@NonNull Application application) {
         super(application);
     }
     public void login() {
-        _isLoading.postValue(true);
+        _isLoading.setValue(true);
 
         // TODO: Call backend here
-        new Thread(() -> {
-            try {
-                Thread.sleep(2000);
                 if ("admin@gmail.com".equals(_email.getValue()) && "123".equals(_password.getValue())) {
                     setRole(UserType.ADMIN);
                     writeUserToPref();
@@ -57,17 +52,9 @@ public class LoginViewModel extends AndroidViewModel {
                     writeUserToPref();
                     setLoginSuccess(true);
                 } else {
-                    throw new InterruptedException();
+                    _loginSuccess.setValue(false);
                 }
-
-
-
-            } catch (InterruptedException e) {
-                _loginSuccess.postValue(false);
-            } finally {
-                _isLoading.postValue(false);
-            }
-        }).start();
+                _isLoading.setValue(false);
     }
 
     private void writeUserToPref() {

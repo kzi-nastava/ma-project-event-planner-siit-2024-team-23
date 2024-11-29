@@ -222,4 +222,17 @@
     <string name="registrations">Registrations</string>
     <string name="profile">Profile</string>
     <string name="logout">Logout</string>
+    <string name="about">About</string>
+    <string name="events_favourite">Favorite Events</string>
+    <string name="item_favourite">Favorite Items</string>
+    <string name="my_calendar">My calendar</string>
+    <string name="edit_profile">Edit profile</string>
+    <string name="update_profile">Update your profile</string>
+    <string name="repeat_new_password">Repeat new password</string>
+    <string name="update_password">Update password</string>
+    <string name="old_password">Old password</string>
+    <string name="new_password">New password</string>
+    <string name="additional_info">Additional info</string>
+    <string name="profile_data">Profile data</string>
+    <string name="full_name_placeholder">Milan Lazarevic</string>
 </resources>

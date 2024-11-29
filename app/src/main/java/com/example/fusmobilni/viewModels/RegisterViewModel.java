@@ -11,7 +11,6 @@ import com.example.fusmobilni.fragments.RegisterFragments.StepTwoFragment;
 import com.example.fusmobilni.fragments.RegisterFragments.VerifyEmailFragment;
 import com.example.fusmobilni.model.enums.UserType;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class RegisterViewModel extends ViewModel {
@@ -35,28 +34,22 @@ public class RegisterViewModel extends ViewModel {
 
     public void setRole(UserType role){
         _role.setValue(role);
-        if(role.equals(UserType.EVENT_ORGANIZER)){
-            _fragments.setValue(new ArrayList<>(
-                    Arrays.asList(
-                            new RoleSelectionFragment(),
-                            new StepOneFragment(),
-                            new StepTwoFragment(),
-                            new VerifyEmailFragment()
-                    )
-            ));
-            return;
+        fillFragments(role);
+    }
+
+    private void fillFragments( UserType role) {
+        List<Fragment> fragments = new ArrayList<>();
+        fragments.add(new RoleSelectionFragment());
+        fragments.add(new StepOneFragment());
+        fragments.add(new StepTwoFragment());
+
+        if (role.equals(UserType.EVENT_ORGANIZER)) {
+            fragments.add(new VerifyEmailFragment());
+        } else {
+            fragments.add(new StepThreeFragment());
+            fragments.add(new VerifyEmailFragment());
         }
-        _fragments.setValue(new ArrayList<>(
-                Arrays.asList(
-                        new RoleSelectionFragment(),
-                        new StepOneFragment(),
-                        new StepTwoFragment(),
-                        new StepThreeFragment(),
-                        new VerifyEmailFragment()
-                )
-        ));
-
-
+        _fragments.setValue(fragments);
     }
 
     public void setName(String name) {

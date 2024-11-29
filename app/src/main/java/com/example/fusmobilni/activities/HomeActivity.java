@@ -1,8 +1,6 @@
 package com.example.fusmobilni.activities;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -22,7 +20,6 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
-
 import com.example.fusmobilni.R;
 import com.example.fusmobilni.core.CustomSharedPrefs;
 import com.example.fusmobilni.databinding.ActivityHomeBinding;
@@ -32,8 +29,7 @@ import com.google.android.material.navigation.NavigationView;
 import androidx.activity.OnBackPressedCallback;
 
 import java.io.File;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Objects;
 
 public class HomeActivity extends AppCompatActivity {
     private ActivityHomeBinding _binding;
@@ -44,8 +40,6 @@ public class HomeActivity extends AppCompatActivity {
     private Toolbar _topToolbar;
     private ActionBar _actionBar;
     private ActionBarDrawerToggle _actionBarDrawerToggle;
-
-    private Set<Integer> topLevelDestinations = new HashSet<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,10 +54,7 @@ public class HomeActivity extends AppCompatActivity {
         CustomSharedPrefs sharedPrefs = new CustomSharedPrefs(this);
         User user = sharedPrefs.getUser();
 
-
-        setupDrawerMenu(user != null ? user.getRole() : UserType.UNAUTHENTICATED_USER);
-
-
+        setupDrawerMenu(user != null && user.getRole() != null ? user.getRole() : UserType.UNAUTHENTICATED_USER);
         setSupportActionBar(_topToolbar);
         if (_actionBar != null) {
             _actionBar.setDisplayHomeAsUpEnabled(false);
@@ -86,7 +77,7 @@ public class HomeActivity extends AppCompatActivity {
                     return;
                 }
                 // If the NavController has fragments in the back stack, pop the back stack
-                if (_navController.getCurrentDestination().getId() != R.id.home_fragment) {
+                if (Objects.requireNonNull(_navController.getCurrentDestination()).getId() != R.id.home_fragment) {
                     _navController.popBackStack();
                     return;
                 }
@@ -103,7 +94,7 @@ public class HomeActivity extends AppCompatActivity {
         super.onResume();
         CustomSharedPrefs sharedPrefs = new CustomSharedPrefs(this);
         User user = sharedPrefs.getUser();
-        setupDrawerMenu(user != null ? user.getRole() : UserType.UNAUTHENTICATED_USER);
+        setupDrawerMenu(user != null && user.getRole() != null ? user.getRole() : UserType.UNAUTHENTICATED_USER);
     }
 
     @Override
@@ -112,8 +103,6 @@ public class HomeActivity extends AppCompatActivity {
         _navController = Navigation.findNavController(this, R.id.fragment_nav_content_main);
         _navController.addOnDestinationChangedListener((navController, navDestination, bundle) -> {
             int id = navDestination.getId();
-            boolean isTopLevelDestination = topLevelDestinations.contains(id);
-
             _drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
             if (id == R.id.home_fragment) {
                 // Show drawer toggle only on the home fragment
@@ -157,7 +146,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         } else {
             // If not logged in, use a default icon
-            profileItem.setIcon(R.drawable.ic_person_white); // Default profile icon
+            profileItem.setIcon(R.drawable.ic_person_white);
         }
 
         return true;
@@ -172,15 +161,13 @@ public class HomeActivity extends AppCompatActivity {
             User user = sharedPrefs.getUser();
             if (user != null) {
                 // If logged in, navigate to the profile fragment
-                _navController.navigate(R.id.viewProfileFragment); // Replace with your profile fragment's ID
+                _navController.navigate(R.id.viewProfileFragment);
             } else {
                 // If not logged in, navigate to the login page
                 Intent loginIntent = new Intent(this, LoginActivity.class);
-                startActivity(loginIntent); // Start the login activity
+                startActivity(loginIntent);
             }
             return true;
-
-            // Handle other menu items if necessary
         }
         return NavigationUI.onNavDestinationSelected(item, _navController) || super.onOptionsItemSelected(item);
     }
