@@ -57,6 +57,16 @@
         app:layout_constraintTop_toBottomOf="@id/dropdown_event_type" />
 
     <com.google.android.material.switchmaterial.SwitchMaterial
+        android:id="@+id/enable_availability_switch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="@string/enable_availability_switch"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/range_slider_price" />
+
+    <com.google.android.material.switchmaterial.SwitchMaterial
         android:id="@+id/switch_availability"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -64,7 +74,7 @@
         android:text="@string/available_only"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/range_slider_price" />
+        app:layout_constraintTop_toBottomOf="@id/enable_availability_switch" />
 
     <LinearLayout
         android:id="@+id/bottom_buttons"
@@ -80,11 +90,11 @@
         app:layout_constraintVertical_bias="0.19">
 
         <Button
-            android:id="@+id/cancelButton"
+            android:id="@+id/resetButton"
             style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/cancel"
+            android:text="@string/reset"
             android:textColor="@color/accent_red" />
 
         <Button

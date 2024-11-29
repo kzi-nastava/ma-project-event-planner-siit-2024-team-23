@@ -196,9 +196,9 @@
     <string name="choose_images">Choose Images</string>
     <string name="finish">Finish</string>
     <string name="specificities">Specificities</string>
-    <string name="service_duration">Service Duration</string>
-    <string name="reservation_deadline">Reservation Deadline</string>
-    <string name="cancelation_deadline">Cancelation Deadline</string>
+    <string name="service_duration">Service Duration (Hours)</string>
+    <string name="reservation_deadline">Reservation Deadline (Days)</string>
+    <string name="cancellation_deadline">Cancellation Deadline (Days)</string>
     <string name="visibility">Visibility</string>
     <string name="availability">Availability</string>
     <string name="reservation_confirmation">Reservation Confirmation</string>
@@ -207,7 +207,7 @@
     <string name="button">Button</string>
     <string name="floating_action_button">floating action button</string>
     <string name="service_category">Service Category</string>
-    <string name="available_only">Available Only</string>
+    <string name="available_only">Available Services Only</string>
     <string name="apply_filters">Apply Filters</string>
     <string name="home">Home</string>
     <string name="events">Events</string>
@@ -235,4 +235,19 @@
     <string name="additional_info">Additional info</string>
     <string name="profile_data">Profile data</string>
     <string name="full_name_placeholder">Milan Lazarevic</string>
+    <string name="reset">Reset</string>
+    <string name="enable_availability_switch">Enable Availability Switch</string>
+    <string name="create">Create</string>
+    <string name="check_proposals">Check Proposals</string>
+    <string name="this_is_a_description_of_the_card_item">This is a description of the card item.</string>
+    <string name="card_title">Card Title</string>
+    <string name="delete">Delete</string>
+    <string name="edit">Edit</string>
+    <string name="category_creation_form">CATEGORY CREATION FORM</string>
+    <string name="cname">Name</string>
+    <string name="cdescription">Description</string>
+    <string name="submit">submit</string>
+    <string name="category_update_form">CATEGORY UPDATE FORM</string>
+    <string name="update_category">CATEGORY UPDATE FORM</string>
+
 </resources>
