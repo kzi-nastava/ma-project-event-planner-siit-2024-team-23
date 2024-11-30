@@ -64,11 +64,11 @@ public class CategoryProposalsPage extends Fragment implements CategoryProposalL
     }
 
     private void dummyData() {
-        proposals.add(new CategoryProposal(1, "Sport", "Sport je jako zanimljiv i zabavan"));
-        proposals.add(new CategoryProposal(2, "Food", "Sport je jako zanimljiv i zabavan"));
-        proposals.add(new CategoryProposal(3, "Slavlje", "Sport je jako zanimljiv i zabavan"));
-        proposals.add(new CategoryProposal(4, "Hronologija", "Sport je jako zanimljiv i zabavan"));
-        proposals.add(new CategoryProposal(5, "Jelo", "Sport je jako zanimljiv i zabavan"));
+        proposals.add(new CategoryProposal(1, "kanta", "Sport je jako zanimljiv i zabavan", "Kosarka", "kosarka je sport u kojem se igra"));
+        proposals.add(new CategoryProposal(2, "keleraba", "Sport je jako zanimljiv i zabavan", "Ketering", "Ketering je jako dobra stvar"));
+        proposals.add(new CategoryProposal(3, "Slavlje", "Sport je jako zanimljiv i zabavan", "Svadba", "Svadba je jako cool"));
+        proposals.add(new CategoryProposal(4, "Hronologija", "Sport je jako zanimljiv i zabavan", "istorijaPisama", "Istorija je jako kul"));
+        proposals.add(new CategoryProposal(5, "dunston", "Sport je jako zanimljiv i zabavan", "Sarma", "Sarma je jako dobra"));
     }
 
     @Override
@@ -76,12 +76,5 @@ public class CategoryProposalsPage extends Fragment implements CategoryProposalL
         CategoryProposal proposal = this.proposals.get(position);
         this.viewModel.populate(proposal);
         Navigation.findNavController(binding.getRoot()).navigate(R.id.categoryProposals_toModificationForm);
-    }
-
-    @Override
-    public void onApproveCategory(int position) {
-        this.proposals.remove(position);
-        adapter.notifyItemRemoved(position);
-        adapter.notifyItemRangeChanged(position, proposals.size());
     }
 }
