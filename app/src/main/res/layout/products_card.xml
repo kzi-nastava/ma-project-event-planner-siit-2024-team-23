@@ -67,16 +67,19 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
+                android:layout_marginEnd="5dp"
                 android:autoSizeMaxTextSize="16sp"
                 android:autoSizeMinTextSize="8sp"
                 android:autoSizeStepGranularity="2sp"
                 android:autoSizeTextType="uniform"
                 android:ellipsize="end"
+                android:fontFamily="@font/poppins"
                 android:padding="10dp"
                 android:text="International Band Music festiva"
                 android:textColor="@android:color/black"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -119,6 +122,7 @@
                     android:layout_marginStart="10dp"
                     android:layout_weight="1"
 
+                    android:fontFamily="@font/poppins"
                     android:padding="5dp"
                     android:text="TextView"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -138,6 +142,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
+                android:fontFamily="@font/poppins"
                 android:text="TextView"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -163,6 +168,7 @@
                 android:layout_height="match_parent"
                 android:drawablePadding="4dp"
 
+                android:fontFamily="@font/poppins"
                 android:text="36 Guild Street London, UK"
                 android:textAlignment="center"
                 android:textColor="@color/text_700"

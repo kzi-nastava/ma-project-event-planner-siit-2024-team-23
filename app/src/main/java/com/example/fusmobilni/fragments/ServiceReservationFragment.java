@@ -8,7 +8,6 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
-import android.text.InputFilter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,12 +20,15 @@ import com.example.fusmobilni.adapters.EventSelectionSpinnerAdapter;
 import com.example.fusmobilni.databinding.FragmentServiceReservationBinding;
 import com.example.fusmobilni.model.Event;
 import com.example.fusmobilni.model.Service;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.datepicker.CalendarConstraints;
 import com.google.android.material.datepicker.DateValidatorPointForward;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.timepicker.MaterialTimePicker;
+import com.google.android.material.timepicker.TimeFormat;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -46,16 +48,8 @@ public class ServiceReservationFragment extends Fragment {
 
     private MaterialDatePicker _datePicker;
 
-    private Chip _amChipFrom;
-    private Chip _pmChipFrom;
-    private boolean _amSelectedFrom;
-    private boolean _pmSelectedFrom;
     private EditText _hoursInputFrom;
     private EditText _minutesInputFrom;
-    private boolean _amSelectedTo;
-    private boolean _pmSelectedTo;
-    private Chip _amChipTo;
-    private Chip _pmChipTo;
     private TextInputEditText _hoursInputTo;
     private TextInputEditText _minutesInputTo;
 
@@ -95,29 +89,46 @@ public class ServiceReservationFragment extends Fragment {
             _binding.buttonOpenDatePicker.setEnabled(false);
         });
 
-        initializeHoursAndMinutesFilter();
+        initializeHoursAndMinutes();
 
+        initializeTimePicker(_hoursInputFrom, _minutesInputFrom, _binding.buttonPickTimeFrom);
+        initializeTimePicker(_hoursInputTo, _minutesInputTo, _binding.buttonPickTimeTo);
         initializeSpinner();
         initializeDatePicker();
-        initializeChips();
 
-        if (true) {
-            disabledToInputs();
-        }
+
+        disabledToInputs();
+
         return root;
 
     }
 
-    private void initializeHoursAndMinutesFilter() {
+    private void initializeTimePicker(EditText inputHours, EditText inputMinutes, MaterialButton activator) {
+        MaterialTimePicker timePicker = new MaterialTimePicker.Builder().setTimeFormat(TimeFormat.CLOCK_12H).setHour(0).setMinute(0)
+                .setTitleText("Select time").build();
+        MaterialTimePicker finalTimePicker = timePicker;
+        timePicker.addOnPositiveButtonClickListener(v -> {
+            int hour = finalTimePicker.getHour();
+            int minute =
+                    Math.round(finalTimePicker.getMinute() / 5.0f) * 5;
+            inputHours.setText(String.valueOf(hour));
+            inputMinutes.setText(String.valueOf(minute));
+        });
+        activator.setOnClickListener(v -> {
+            finalTimePicker.show(getParentFragmentManager(), finalTimePicker.toString());
+        });
+    }
+
+    private void initializeHoursAndMinutes() {
         _hoursInputFrom = _binding.hoursInputFrom;
         _minutesInputFrom = _binding.minutesInputFrom;
         _hoursInputTo = _binding.hoursInputTo;
         _minutesInputTo = _binding.minutesInputTo;
+        _hoursInputTo.setEnabled(false);
+        _minutesInputTo.setEnabled(false);
+        _hoursInputFrom.setEnabled(false);
+        _minutesInputFrom.setEnabled(false);
 
-        setHoursInputFilter(_hoursInputFrom);
-        setMinutesInputFilter(_minutesInputFrom);
-        setHoursInputFilter(_hoursInputTo);
-        setMinutesInputFilter(_minutesInputTo);
     }
 
     private void initializeSpinner() {
@@ -140,17 +151,13 @@ public class ServiceReservationFragment extends Fragment {
     }
 
     private void disabledToInputs() {
+        if (!toInputsDisabled) {
+            return;
+        }
         _binding.cardViewToInputs.setStrokeColor(getResources().getColor(R.color.bg_gray));
-        _hoursInputTo.setEnabled(false);
-        _minutesInputTo.setEnabled(false);
-        _amChipTo.setClickable(false);
-        _amChipTo.setEnabled(false);
-        _pmChipTo.setClickable(false);
-        _pmChipTo.setClickable(false);
-        animateChipBackgroundColor(_pmChipTo, R.color.white, R.color.white);
-        animateTextColorChange(_pmChipTo, R.color.bg_gray);
-        animateChipBackgroundColor(_amChipTo, R.color.white, R.color.white);
-        animateTextColorChange(_amChipTo, R.color.bg_gray);
+        _binding.buttonPickTimeTo.setEnabled(false);
+        _binding.buttonPickTimeTo.setBackgroundTintList(getResources().getColorStateList(R.color.bg_gray));
+        _binding.buttonPickTimeTo.setTextColor(getResources().getColor(R.color.white));
     }
 
     private void initializeDatePicker() {
@@ -183,130 +190,6 @@ public class ServiceReservationFragment extends Fragment {
 
     }
 
-    private void setHoursInputFilter(EditText inputField) {
-        InputFilter hoursInputFilter = (source, start, end, dest, dstart, dend) -> {
-            try {
-
-                String hoursString = dest.subSequence(0, dstart) + source.toString() + dest.subSequence(dend, dest.length());
-                Integer hours = Integer.parseInt(hoursString);
-                if (_amSelectedFrom) {
-                    if (!isInAmRange(hours)) {
-                        inputField.setText("11");
-                    }
-                    return null;
-                } else if (_pmSelectedFrom) {
-                    if (!isInPmRange(hours)) {
-                        inputField.setText("12");
-                    }
-                    return null;
-                }
-                ;
-                return "";
-            } catch (NumberFormatException e) {
-
-                return "";
-            }
-        };
-        inputField.setFilters(new InputFilter[]{hoursInputFilter});
-
-    }
-
-    private void setMinutesInputFilter(EditText inputField) {
-        InputFilter minutesInputFilter = (source, start, end, dest, dstart, dend) -> {
-            try {
-
-                String minutesString = dest.subSequence(0, dstart) + source.toString() + dest.subSequence(dend, dest.length());
-                Integer minutes = Integer.parseInt(minutesString);
-                if (minutes < 0 || minutes > 59) {
-                    inputField.setText("59");
-                    return null;
-                }
-                return null;
-            } catch (NumberFormatException e) {
-                return "";
-            }
-        };
-        inputField.setFilters(new InputFilter[]{minutesInputFilter});
-    }
-
-    private boolean isInAmRange(Integer hours) {
-        return hours >= 0 && hours <= 11;
-    }
-
-    private boolean isInPmRange(Integer hours) {
-        return hours <= 23;
-    }
-
-    private void initializeChips() {
-        _amChipFrom = _binding.amChipFrom;
-        _pmChipFrom = _binding.pmChipFrom;
-        _amChipTo = _binding.amChipTo;
-        _pmChipTo = _binding.pmChipTo;
-        _amSelectedFrom = true;
-        _pmSelectedFrom = false;
-        _amSelectedTo = true;
-        _pmSelectedTo = false;
-        setChipState(_amChipFrom, _pmChipFrom);
-        setChipState(_amChipTo, _pmChipTo);
-        _amChipFrom.setOnClickListener(v -> {
-            setChipState(_amChipFrom, _pmChipFrom);
-            _amSelectedFrom = true;
-            _pmSelectedFrom = false;
-
-        });
-        _pmChipFrom.setOnClickListener(v -> {
-            setChipState(_pmChipFrom, _amChipFrom);
-            _amSelectedFrom = false;
-            _pmSelectedFrom = true;
-
-        });
-        _amChipTo.setOnClickListener(v -> {
-            setChipState(_amChipTo, _pmChipTo);
-            _amSelectedTo = true;
-            _pmSelectedTo = false;
-        });
-        _pmChipTo.setOnClickListener(v -> {
-            setChipState(_pmChipTo, _amChipTo);
-            _amSelectedTo = false;
-            _pmSelectedTo = true;
-        });
-
-    }
-
-    private void setChipState(Chip selectedChip, Chip other) {
-        selectedChip.setCheckable(true);
-        selectedChip.setChecked(true);
-
-        animateChipBackgroundColor(selectedChip, R.color.white, R.color.primary_blue_900);
-        animateTextColorChange(selectedChip, R.color.white);
-
-        animateChipBackgroundColor(other, R.color.primary_blue_900, R.color.white);
-        animateTextColorChange(other, R.color.bg_gray);
-    }
-
-    private void animateChipBackgroundColor(Chip chip, int startColorRes, int endColorRes) {
-        int startColor = getResources().getColor(startColorRes);
-        int endColor = getResources().getColor(endColorRes);
-
-        // Create a ValueAnimator to animate the background color
-        ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), startColor, endColor);
-        colorAnimation.setDuration(200); // Set the duration for the transition (in milliseconds)
-        colorAnimation.addUpdateListener(animation -> {
-            // Update the chip's background color as the animation progresses
-            chip.setChipBackgroundColor(ColorStateList.valueOf((Integer) animation.getAnimatedValue()));
-        });
-        colorAnimation.start();
-    }
-
-    private void animateTextColorChange(Chip chip, int textColorRes) {
-        int textColor = getResources().getColor(textColorRes);
-
-        // Animate the text color using ObjectAnimator
-        ObjectAnimator textColorAnimation = ObjectAnimator.ofInt(chip, "textColor", textColor);
-        textColorAnimation.setDuration(100); // Set the duration for the text color transition
-        textColorAnimation.setEvaluator(new ArgbEvaluator());
-        textColorAnimation.start();
-    }
 
     private ArrayList<Event> fillEvents() {
         ArrayList<Event> e = new ArrayList<>();

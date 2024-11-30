@@ -46,6 +46,7 @@
                     android:autoSizeStepGranularity="2sp"
                     android:autoSizeTextType="uniform"
                     android:ellipsize="end"
+                    android:fontFamily="@font/poppins"
                     android:padding="10dp"
                     android:text="International Band Music festiva"
                     android:textColor="@android:color/black"
@@ -65,6 +66,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
+                    android:fontFamily="@font/poppins"
                     android:text="TextView"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -92,6 +94,7 @@
                     android:layout_height="match_parent"
                     android:drawablePadding="4dp"
 
+                    android:fontFamily="@font/poppins"
                     android:text="36 Guild Street London, UK"
                     android:textAlignment="center"
                     android:textColor="@color/text_700"
