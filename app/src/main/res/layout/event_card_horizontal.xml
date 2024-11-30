@@ -59,9 +59,10 @@
                         android:layout_height="wrap_content"
                         android:alpha="70"
                         android:background="#00FFFFFF"
+                        android:fontFamily="@font/poppins"
                         android:padding="8dp"
-                        android:text="10"
 
+                        android:text="10"
                         android:textAlignment="center"
                         android:textColor="@color/accent_red"
                         android:textSize="16sp"
@@ -74,6 +75,7 @@
                         android:layout_height="wrap_content"
                         android:alpha="70"
                         android:background="#00FFFFFF"
+                        android:fontFamily="@font/poppins"
                         android:padding="8dp"
                         android:text="Jun. 204"
                         android:textAlignment="center"
@@ -99,14 +101,16 @@
                     android:id="@+id/textViewEventNameHorizontal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:autoSizeMaxTextSize="16sp"
+                    android:autoSizeMaxTextSize="14sp"
                     android:autoSizeMinTextSize="8sp"
                     android:autoSizeStepGranularity="2sp"
                     android:autoSizeTextType="uniform"
                     android:ellipsize="end"
+                    android:fontFamily="@font/poppins"
                     android:padding="10dp"
                     android:text="International Band Music festiva"
                     android:textColor="@android:color/black"
+                    android:textSize="14sp"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -122,8 +126,8 @@
                 android:padding="10sp">
 
                 <ImageView
-                    android:layout_width="30sp"
-                    android:layout_height="30sp"
+                    android:layout_width="20sp"
+                    android:layout_height="20sp"
                     android:layout_marginEnd="4dp"
                     android:src="@drawable/ic_location" />
 
@@ -133,6 +137,7 @@
                     android:layout_height="match_parent"
                     android:drawablePadding="4dp"
 
+                    android:fontFamily="@font/poppins"
                     android:text="36 Guild Street London, UK"
                     android:textAlignment="center"
                     android:textColor="@color/text_700"
@@ -173,6 +178,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
+                    android:fontFamily="@font/poppins"
                     android:text="+20 Going"
                     android:textColor="@color/black"
                     android:textSize="14sp" />

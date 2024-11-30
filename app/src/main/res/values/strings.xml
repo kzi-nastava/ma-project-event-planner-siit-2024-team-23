@@ -261,4 +261,9 @@
     <string name="check_categories">Check categories</string>
     <string name="modify">Modify</string>
     <string name="approve">Approve</string>
+    <string name="modify_category_proposal">Modify category proposal</string>
+    <string name="or_choose_existing">Or choose existing</string>
+    <string name="item_descpription">Item Descpription</string>
+    <string name="item_name">Item Name</string>
+    <string name="for_this_item">For this item</string>
 </resources>

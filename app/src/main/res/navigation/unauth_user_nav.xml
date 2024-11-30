@@ -243,7 +243,12 @@
         android:name="com.example.fusmobilni.fragments.InvitationsFragment"
         android:label="Invitations"
         tools:layout="@layout/fragment_invitations"/>
-
+    <action
+        android:id="@+id/action_service_card_to_service_details"
+        app:destination="@id/serviceDetailsFragment"/>
+    <action
+        android:id="@+id/action_service_details_to_service_reservation"
+        app:destination="@id/serviceReservationFragment"/>
     <fragment
         android:id="@+id/categories_creation_form"
         android:name="com.example.fusmobilni.fragments.CategoryCreationForm"
@@ -260,6 +265,23 @@
         android:id="@+id/creationForm_toCategories"
         app:destination="@id/categories_page"
         />
+    <fragment
+        android:id="@+id/serviceDetailsFragment"
+        android:name="com.example.fusmobilni.fragments.ServiceDetailsFragment"
+        android:label="">
+        <argument
+            android:name="product"
+            app:argType="com.example.fusmobilni.model.Service"/>
+    </fragment>
+    <fragment
+        android:id="@+id/serviceReservationFragment"
+        android:name="com.example.fusmobilni.fragments.ServiceReservationFragment"
+        android:label="">
+        <argument
+            android:name="product"
+            app:argType="com.example.fusmobilni.model.Service"/>
+    </fragment>
+
 
     <fragment
         android:id="@+id/categories_proposal_page"
@@ -278,5 +300,20 @@
         app:destination="@id/categories_page"
         />
 
+    <fragment
+        android:id="@+id/categories_proposal_modification_page"
+        android:name="com.example.fusmobilni.fragments.ModifyCategoryProposalFragment"
+        android:label="CategoryProposals"
+        android:layout="@layout/fragment_modify_category_proposal">
+    </fragment>
 
+    <action
+        android:id="@+id/categoryProposals_toModificationForm"
+        app:destination="@id/categories_proposal_modification_page"
+        />
+
+    <action
+        android:id="@+id/categoryModificationForm_toCategoryProposals"
+        app:destination="@id/categories_proposal_page"
+        />
 </navigation>

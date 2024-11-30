@@ -20,8 +20,6 @@ import java.util.List;
 public class CategoryProposalAdapter extends  RecyclerView.Adapter<CategoryProposalAdapter.CategoryViewHolder>{
 
     private List<CategoryProposal> proposals;
-
-
     private CategoryProposalListener clickListener;
 
     public CategoryProposalAdapter(List<CategoryProposal> proposals, CategoryProposalListener clickListener) {
@@ -40,10 +38,9 @@ public class CategoryProposalAdapter extends  RecyclerView.Adapter<CategoryPropo
 
     @Override
     public void onBindViewHolder(@NonNull CategoryProposalAdapter.CategoryViewHolder holder, int position) {
-        CategoryProposal category = proposals.get(position);
-        holder.title.setText(category.getName());
-        holder.description.setText(category.getDescription());
-        holder.approveButton.setOnClickListener(v -> clickListener.onApproveCategory(position));
+        CategoryProposal proposal = proposals.get(position);
+        holder.title.setText(proposal.getItemName());
+        holder.description.setText(proposal.getItemDescription());
         holder.modifyButton.setOnClickListener(v -> clickListener.onModifyCategory(position));
     }
 
@@ -63,7 +60,6 @@ public class CategoryProposalAdapter extends  RecyclerView.Adapter<CategoryPropo
             title = itemView.findViewById(R.id.cardTitle);
             description = itemView.findViewById(R.id.cardDescription);
             modifyButton = itemView.findViewById(R.id.modifyButton);
-            approveButton = itemView.findViewById(R.id.approveButton);
 
         }
     }
