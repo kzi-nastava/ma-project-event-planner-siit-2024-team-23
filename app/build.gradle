@@ -43,6 +43,7 @@ android {
 dependencies {
     implementation libs.glide
     implementation 'androidx.constraintlayout:constraintlayout:2.2.0'
+    implementation libs.car.ui.lib
     annotationProcessor libs.compiler
     implementation libs.appcompat
     implementation libs.material
@@ -55,4 +56,6 @@ dependencies {
     androidTestImplementation libs.espresso.core
     implementation libs.ucrop
     implementation libs.imagepicker
+    implementation libs.datastore.preferences
+    implementation libs.gson
 }

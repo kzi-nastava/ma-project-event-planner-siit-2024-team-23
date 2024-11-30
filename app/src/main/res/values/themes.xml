@@ -43,6 +43,16 @@
         <item name="android:windowMinWidthMinor">100%</item>
     </style>
 
+    <style name="CustomToggleButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="strokeWidth">2dp</item>
+        <item name="strokeColor">@color/primary_blue_900</item>
+        <item name="android:textColor">@color/primary_blue_900</item>
+        <item name="cornerRadius">20dp</item>
+        <item name="textAllCaps">false</item>
+        <item name="android:padding">8dp</item>
+    </style>
+
+
 
 
     <style name="Theme.FusMobilni" parent="Base.Theme.FusMobilni" />

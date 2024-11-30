@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import com.example.fusmobilni.activities.RegisterActivity;
 import com.example.fusmobilni.databinding.FragmentRoleSelectionBinding;
-import com.example.fusmobilni.model.enums.RegisterUserRole;
+import com.example.fusmobilni.model.enums.UserType;
 
 
 public class RoleSelectionFragment extends Fragment {
@@ -41,10 +41,10 @@ public class RoleSelectionFragment extends Fragment {
         Button serviceProvider = _binding.serviceProvider;
 
         eventOrganizer.setOnClickListener(v->
-                ((RegisterActivity) requireActivity()).onIntroFinished(RegisterUserRole.EVENT_ORGANIZER));
+                ((RegisterActivity) requireActivity()).onIntroFinished(UserType.EVENT_ORGANIZER));
 
         serviceProvider.setOnClickListener(v->
-                ((RegisterActivity) requireActivity()).onIntroFinished(RegisterUserRole.SERVICE_PROVIDER));
+                ((RegisterActivity) requireActivity()).onIntroFinished(UserType.SERVICE_PROVIDER));
 
         return view;
 

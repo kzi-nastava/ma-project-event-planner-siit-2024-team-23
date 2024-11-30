@@ -17,7 +17,7 @@ import com.example.fusmobilni.adapters.RegistrationAdapter;
 import com.example.fusmobilni.databinding.ActivityRegisterBinding;
 import com.example.fusmobilni.fragments.RegisterFragments.RoleSelectionFragment;
 import com.example.fusmobilni.interfaces.FragmentValidation;
-import com.example.fusmobilni.model.enums.RegisterUserRole;
+import com.example.fusmobilni.model.enums.UserType;
 import com.example.fusmobilni.viewModels.RegisterViewModel;
 import com.google.android.material.button.MaterialButton;
 
@@ -104,7 +104,7 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
 
-    public void onIntroFinished(RegisterUserRole selectedRole) {
+    public void onIntroFinished(UserType selectedRole) {
         _registerViewModel.setRole(selectedRole);
     }
 
