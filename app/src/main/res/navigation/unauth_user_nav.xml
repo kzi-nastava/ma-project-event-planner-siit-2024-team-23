@@ -269,4 +269,22 @@
             android:name="product"
             app:argType="com.example.fusmobilni.model.Service"/>
     </fragment>
+
+
+    <fragment
+        android:id="@+id/categories_proposal_page"
+        android:name="com.example.fusmobilni.fragments.CategoryProposalsPage"
+        android:label="CategoryProposals"
+        android:layout="@layout/fragment_category_proposals_page">
+    </fragment>
+
+    <action
+        android:id="@+id/categoriesPage_toCategoryProposals"
+        app:destination="@id/categories_proposal_page"
+        />
+
+    <action
+        android:id="@+id/categoryProposals_toCategoriesPage"
+        app:destination="@id/categories_page"
+        />
 </navigation>
