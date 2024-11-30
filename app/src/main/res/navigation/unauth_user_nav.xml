@@ -33,6 +33,9 @@
         <action
             android:id="@+id/action_home_fragment_to_register_activity"
             app:destination="@id/register_activity" />
+        <action
+            android:id="@+id/action_home_fragment_to_viewProfileFragment"
+            app:destination="@id/viewProfileFragment" />
     </fragment>
 
     <fragment
@@ -191,6 +194,36 @@
         <action
             android:id="@+id/action_viewProfileFragment_to_updateProfileFragment"
             app:destination="@id/updateProfileFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/updateProfileFragment"
+        android:name="com.example.fusmobilni.fragments.UserProfileFragments.UpdateProfileFragment"
+        android:label=""
+        tools:layout="@layout/fragment_update_profile" >
+        <action
+            android:id="@+id/action_updateProfileFragment_to_viewProfileFragment"
+            app:destination="@id/viewProfileFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/stepOneUpdateFragment"
+        android:name="com.example.fusmobilni.fragments.UserProfileFragments.StepOneUpdateFragment"
+        android:label="fragment_step_one_update"
+        tools:layout="@layout/fragment_step_one_update" >
+        <action
+            android:id="@+id/action_stepOneUpdateFragment_to_updateProfileFragment"
+            app:destination="@id/updateProfileFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/viewProfileFragment"
+        android:name="com.example.fusmobilni.fragments.UserProfileFragments.ViewProfileFragment"
+        android:label="My profile"
+        tools:layout="@layout/fragment_view_profile" >
+        <action
+            android:id="@+id/action_viewProfileFragment_to_home_fragment"
+            app:destination="@id/home_fragment" />
+        <action
+            android:id="@+id/action_viewProfileFragment_to_updateProfileFragment"
+            app:destination="@id/updateProfileFragment" />
         <action
             android:id="@+id/action_viewProfileFragment_to_userCalendarFragment"
             app:destination="@id/userCalendarFragment" />
@@ -257,4 +290,23 @@
         android:id="@+id/creationForm_toCategories"
         app:destination="@id/categories_page"
         />
+
+    <fragment
+        android:id="@+id/categories_proposal_page"
+        android:name="com.example.fusmobilni.fragments.CategoryProposalsPage"
+        android:label="CategoryProposals"
+        android:layout="@layout/fragment_category_proposals_page">
+    </fragment>
+
+    <action
+        android:id="@+id/categoriesPage_toCategoryProposals"
+        app:destination="@id/categories_proposal_page"
+        />
+
+    <action
+        android:id="@+id/categoryProposals_toCategoriesPage"
+        app:destination="@id/categories_page"
+        />
+
+
 </navigation>

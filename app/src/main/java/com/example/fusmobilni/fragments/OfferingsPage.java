@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.example.fusmobilni.R;
 import com.example.fusmobilni.adapters.CategoryAdapter;
@@ -29,6 +30,7 @@ public class OfferingsPage extends Fragment implements CategoryListener {
     private ArrayList<OfferingsCategory> categories = new ArrayList<>();
     private CategoryAdapter adapter;
     private CategoryViewModel viewModel;
+    private View deleteModal;
     private FragmentOfferingsPageBinding binding;
 
 
@@ -60,6 +62,9 @@ public class OfferingsPage extends Fragment implements CategoryListener {
         binding.floatingActionButton.setOnClickListener(v -> {
             Navigation.findNavController(view).navigate(R.id.categories_toCreationForm);
         });
+        binding.containedButton.setOnClickListener(v -> {
+            Navigation.findNavController(view).navigate(R.id.categoriesPage_toCategoryProposals);
+        });
 
         return view;
     }
@@ -75,7 +80,24 @@ public class OfferingsPage extends Fragment implements CategoryListener {
 
     @Override
     public void onDeleteCategory(int position) {
+        deleteModal = binding.getRoot().findViewById(R.id.nigger);
+        binding.modalBackground.setVisibility(View.VISIBLE);
+        deleteModal.setVisibility(View.VISIBLE);
+        Button cancelButton = deleteModal.findViewById(R.id.cancelButton);
+        Button confirmButton = deleteModal.findViewById(R.id.confirmButton);
 
+        cancelButton.setOnClickListener(v -> {
+            binding.modalBackground.setVisibility(View.INVISIBLE);
+            deleteModal.setVisibility(View.INVISIBLE);
+        });
+
+        confirmButton.setOnClickListener(v -> {
+            this.categories.remove(position);
+            adapter.notifyItemRemoved(position);
+            adapter.notifyItemRangeChanged(position, categories.size());
+            binding.modalBackground.setVisibility(View.INVISIBLE);
+            deleteModal.setVisibility(View.INVISIBLE);
+        });
     }
 
     @Override

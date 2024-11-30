@@ -1,11 +1,13 @@
 package com.example.fusmobilni.activities;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
-import android.window.OnBackInvokedDispatcher;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -18,14 +20,16 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
-
 import com.example.fusmobilni.R;
+import com.example.fusmobilni.core.CustomSharedPrefs;
 import com.example.fusmobilni.databinding.ActivityHomeBinding;
+import com.example.fusmobilni.model.User;
+import com.example.fusmobilni.model.enums.UserType;
 import com.google.android.material.navigation.NavigationView;
 import androidx.activity.OnBackPressedCallback;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.io.File;
+import java.util.Objects;
 
 public class HomeActivity extends AppCompatActivity {
     private ActivityHomeBinding _binding;
@@ -37,18 +41,20 @@ public class HomeActivity extends AppCompatActivity {
     private ActionBar _actionBar;
     private ActionBarDrawerToggle _actionBarDrawerToggle;
 
-    private Set<Integer> topLevelDestinations = new HashSet<>();
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         _binding = ActivityHomeBinding.inflate(getLayoutInflater());
         setContentView(_binding.getRoot());
-
         _drawer = _binding.drawerLayout;
         _navigationView = _binding.navView;
         _topToolbar = _binding.activityHomeBase.topAppBar;
 
+        // get logged in user
+        CustomSharedPrefs sharedPrefs = new CustomSharedPrefs(this);
+        User user = sharedPrefs.getUser();
+
+        setupDrawerMenu(user != null && user.getRole() != null ? user.getRole() : UserType.UNAUTHENTICATED_USER);
         setSupportActionBar(_topToolbar);
         if (_actionBar != null) {
             _actionBar.setDisplayHomeAsUpEnabled(false);
@@ -61,14 +67,6 @@ public class HomeActivity extends AppCompatActivity {
         _drawer.addDrawerListener(_actionBarDrawerToggle);
         _actionBarDrawerToggle.syncState();
 
-
-        // This line will now correctly reference the NavHostFragment
-
-        // Hide or show items based on the user login status and role
-//        Menu menu = _navigationView.getMenu();
-//        menu.findItem(R.id.third_dummy_fragment).setVisible(false);
-
-
         //    when the drawer is opened and user clicks the back btn we want to close
         //    the drawer not to go back to main activity
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
@@ -79,7 +77,7 @@ public class HomeActivity extends AppCompatActivity {
                     return;
                 }
                 // If the NavController has fragments in the back stack, pop the back stack
-                if (_navController.getCurrentDestination().getId() != R.id.home_fragment) {
+                if (Objects.requireNonNull(_navController.getCurrentDestination()).getId() != R.id.home_fragment) {
                     _navController.popBackStack();
                     return;
                 }
@@ -89,14 +87,22 @@ public class HomeActivity extends AppCompatActivity {
 
 
     }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        CustomSharedPrefs sharedPrefs = new CustomSharedPrefs(this);
+        User user = sharedPrefs.getUser();
+        setupDrawerMenu(user != null && user.getRole() != null ? user.getRole() : UserType.UNAUTHENTICATED_USER);
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
         _navController = Navigation.findNavController(this, R.id.fragment_nav_content_main);
         _navController.addOnDestinationChangedListener((navController, navDestination, bundle) -> {
             int id = navDestination.getId();
-            boolean isTopLevelDestination = topLevelDestinations.contains(id);
-
             _drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
             if (id == R.id.home_fragment) {
                 // Show drawer toggle only on the home fragment
@@ -123,11 +129,46 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.toolbar_menu, menu);
+
+        MenuItem profileItem = menu.findItem(R.id.login_activity);
+        CustomSharedPrefs sharedPrefs = new CustomSharedPrefs(this);
+        User user = sharedPrefs.getUser();
+
+        if (user != null) {
+            // If the user is logged in, load their profile image
+            if (user.getAvatar() != null) {
+                File imgFile = new File(user.getAvatar());
+                if (imgFile.exists()) {
+                    Bitmap bitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+                    Drawable drawable = new BitmapDrawable(getResources(), bitmap);
+                    profileItem.setIcon(drawable); // Set the user's profile image
+                }
+            }
+        } else {
+            // If not logged in, use a default icon
+            profileItem.setIcon(R.drawable.ic_person_white);
+        }
+
         return true;
     }
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         _navController = Navigation.findNavController(this, R.id.fragment_nav_content_main);
+        int id = item.getItemId();
+
+        if (id == R.id.login_activity) {// Retrieve the login status from SharedPreferences
+            CustomSharedPrefs sharedPrefs = new CustomSharedPrefs(this);
+            User user = sharedPrefs.getUser();
+            if (user != null) {
+                // If logged in, navigate to the profile fragment
+                _navController.navigate(R.id.viewProfileFragment);
+            } else {
+                // If not logged in, navigate to the login page
+                Intent loginIntent = new Intent(this, LoginActivity.class);
+                startActivity(loginIntent);
+            }
+            return true;
+        }
         return NavigationUI.onNavDestinationSelected(item, _navController) || super.onOptionsItemSelected(item);
     }
 
@@ -137,6 +178,24 @@ public class HomeActivity extends AppCompatActivity {
         return NavigationUI.navigateUp(_navController, _topAppBarConfiguration) || super.onSupportNavigateUp();
     }
 
-
-
+    private void setupDrawerMenu(UserType userRole) {
+        Menu menu = _navigationView.getMenu();
+        menu.clear();
+        switch (userRole){
+            case ADMIN:
+                _navigationView.inflateMenu(R.menu.nav_menu_admin);
+                break;
+            case EVENT_ORGANIZER:
+                _navigationView.inflateMenu(R.menu.nav_menu_event_organizer);
+                break;
+            case SERVICE_PROVIDER:
+                _navigationView.inflateMenu(R.menu.nav_menu_service_provider);
+                break;
+            case AUTHENTICATED_USER:
+                _navigationView.inflateMenu(R.menu.nav_menu_auth_user);
+                break;
+            default:
+                _navigationView.inflateMenu(R.menu.nav_menu_unauth_user);
+        }
+    }
 }
