@@ -1,0 +1,384 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.ServiceDetailsFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="300dp">
+
+            <ImageView
+                android:id="@+id/imageView4"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/service_placeholder"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipChildren="false"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="20dp"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="10dp"
+                    app:cardMaxElevation="10dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/favoriteButton"
+                        style="@style/Widget.MaterialComponents.Button.Icon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="@color/white"
+                        android:contentDescription="@string/City"
+                        android:elevation="4dp"
+                        android:padding="6dp"
+                        android:scaleType="center"
+                        app:cornerRadius="16dp"
+                        app:icon="@drawable/ic_heart"
+                        app:iconGravity="textStart"
+                        app:iconPadding="0dp"
+                        app:iconSize="40dp"
+                        app:iconTint="@color/accent_red" />
+
+
+                </androidx.cardview.widget.CardView>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <com.google.android.material.card.MaterialCardView
+
+                android:id="@+id/bookAServiceCard"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="40dp"
+                android:layout_marginEnd="50dp"
+                android:background="@color/white"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="10dp"
+                app:cardMaxElevation="10dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="parent"
+                app:layout_constraintVertical_bias="1.0"
+                app:strokeWidth="0dp">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <Button
+                        android:id="@+id/bookServiceButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="16dp"
+                        android:fontFamily="@font/poppins"
+                        android:paddingTop="12dp"
+                        android:paddingBottom="12dp"
+                        android:text="book a service"
+                        android:textAlignment="center"
+                        android:textAllCaps="true"
+                        android:textFontWeight="600"
+                        app:cornerRadius="6dp"
+                        app:icon="@drawable/ic_arrow_right_white"
+                        app:iconGravity="end"
+                        app:iconSize="24dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginBottom="32dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/serviceDetailsText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="64dp"
+                    android:layout_marginBottom="16dp"
+                    android:fontFamily="@font/poppins"
+                    android:text="Service title"
+                    android:textFontWeight="?attr/motionDurationLong4"
+                    android:textSize="24sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginHorizontal="8dp"
+                    android:layout_weight="0"
+                    android:orientation="horizontal">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginEnd="12dp">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/price_tag"
+                            android:orientation="horizontal"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent">
+
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1">
+
+                                <ImageView
+                                    android:id="@+id/imageView3"
+                                    android:layout_width="25dp"
+                                    android:layout_height="0dp"
+                                    android:layout_weight="1"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    app:srcCompat="@drawable/ic_dolar" />
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+
+                            <TextView
+                                android:id="@+id/serviceHorizontalPrice"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="10dp"
+                                android:layout_weight="1"
+
+                                android:padding="5dp"
+                                android:text="500"
+                                android:textFontWeight="?attr/motionDurationLong4"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                        </LinearLayout>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginHorizontal="10dp"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/imageView7"
+                            android:layout_width="70dp"
+                            android:layout_height="70dp"
+                            android:background="@drawable/circle_background_primary"
+                            android:padding="12dp"
+                            android:src="@drawable/ic_category_arts_active" />
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent">
+
+                            <TextView
+                                android:id="@+id/textViewServiceCategory"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginHorizontal="8dp"
+                                android:layout_weight="1"
+                                android:fontFamily="@font/poppins"
+                                android:text="Arts"
+                                android:textSize="18sp"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/serviceLocationHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginVertical="4dp"
+                    android:layout_weight="1"
+                    android:orientation="horizontal"
+                    android:padding="10sp">
+
+                    <ImageView
+                        android:layout_width="30sp"
+                        android:layout_height="30sp"
+                        android:layout_marginEnd="4dp"
+                        android:src="@drawable/ic_location" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1">
+
+                        <TextView
+                            android:id="@+id/textViewServiceLocationHorizontal"
+                            android:layout_width="wrap_content"
+                            android:layout_height="0dp"
+
+                            android:drawablePadding="4dp"
+                            android:fontFamily="@font/poppins"
+                            android:text="36 Guild Street London, UK"
+                            android:textAlignment="center"
+                            android:textColor="@color/text_700"
+                            android:textFontWeight="@android:integer/config_longAnimTime"
+                            android:textSize="14sp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintVertical_bias="0.0" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:clipChildren="false"
+                    android:clipToPadding="false"
+                    android:orientation="horizontal"
+                    android:padding="10dp">
+
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:id="@+id/imageView5"
+                        android:layout_width="75dp"
+                        android:layout_height="75dp"
+                        android:scaleType="centerCrop"
+                        android:visibility="visible"
+                        app:shapeAppearance="@style/CircleImage"
+                        tools:src="@drawable/person"
+                        tools:visibility="visible" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="10dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:padding="8dp">
+
+                        <TextView
+                            android:id="@+id/textViewOrganizerNameServiceDetails"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/poppins"
+                            android:text="Ibrahim"
+                            android:textFontWeight="?attr/motionDurationLong3"
+                            android:textSize="18sp" />
+
+                        <TextView
+                            android:id="@+id/textViewOrganizerServiceDetails"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/poppins"
+                            android:text="Provider"
+                            android:textColor="@color/bg_gray"
+                            android:textSize="16sp" />
+                    </LinearLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0">
+
+                        <Button
+                            android:id="@+id/button2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:backgroundTint="@color/white"
+                            android:fontFamily="@font/poppins"
+                            android:text="Message"
+                            android:textAlignment="center"
+                            android:textColor="@color/primary_blue_900"
+                            app:iconPadding="@null"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:strokeColor="@color/primary_blue_900"
+                            app:strokeWidth="2dp" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginVertical="16dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/textViewAboutServiceTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/poppins"
+                        android:text="About service"
+                        android:textFontWeight="?attr/motionDurationLong4"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:id="@+id/textViewServiceDescriptionDetails"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/poppins"
+                        android:text="TextView" />
+                </LinearLayout>
+
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+
+
+    </LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

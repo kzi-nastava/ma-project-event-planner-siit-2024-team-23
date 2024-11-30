@@ -231,7 +231,9 @@
         android:name="com.example.fusmobilni.fragments.InvitationsFragment"
         android:label="Invitations"
         tools:layout="@layout/fragment_invitations"/>
-
+    <action
+        android:id="@+id/action_service_card_to_service_details"
+        app:destination="@id/serviceDetailsFragment"/>
     <fragment
         android:id="@+id/categories_creation_form"
         android:name="com.example.fusmobilni.fragments.CategoryCreationForm"
@@ -248,4 +250,12 @@
         android:id="@+id/creationForm_toCategories"
         app:destination="@id/categories_page"
         />
+    <fragment
+        android:id="@+id/serviceDetailsFragment"
+        android:name="com.example.fusmobilni.fragments.ServiceDetailsFragment"
+        android:label="">
+        <argument
+            android:name="product"
+            app:argType="com.example.fusmobilni.model.Service"/>
+    </fragment>
 </navigation>
