@@ -24,7 +24,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="150dp"
-            android:layout_height="match_parent"
+            android:layout_height="100dp"
             android:background="@color/white">
 
             <ImageView
@@ -37,8 +37,6 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
-
-            <!-- Bookmark Icon -->
 
             <androidx.cardview.widget.CardView
                 android:layout_width="wrap_content"
@@ -63,9 +61,10 @@
                         android:layout_height="wrap_content"
                         android:alpha="70"
                         android:background="#00FFFFFF"
+                        android:fontFamily="@font/poppins"
                         android:padding="8dp"
-                        android:text="10"
 
+                        android:text="10"
                         android:textAlignment="center"
                         android:textColor="@color/accent_red"
                         android:textSize="16sp"
@@ -78,6 +77,7 @@
                         android:layout_height="wrap_content"
                         android:alpha="70"
                         android:background="#00FFFFFF"
+                        android:fontFamily="@font/poppins"
                         android:padding="8dp"
                         android:text="Jun. 204"
                         android:textAlignment="center"
@@ -89,89 +89,76 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="80sp"
-                android:textAlignment="center">
-
-                <TextView
-                    android:id="@+id/textViewEventNameHorizontal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:autoSizeMaxTextSize="16sp"
-                    android:autoSizeMinTextSize="8sp"
-                    android:autoSizeStepGranularity="2sp"
-                    android:autoSizeTextType="uniform"
-                    android:ellipsize="end"
-                    android:padding="10dp"
-                    android:text="International Band Music festiva"
-                    android:textColor="@android:color/black"
-                    android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            android:layout_height="match_parent">
 
             <LinearLayout
-                android:id="@+id/eventslocationHorizontal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="10sp">
-
-                <ImageView
-                    android:layout_width="30sp"
-                    android:layout_height="30sp"
-                    android:layout_marginEnd="4dp"
-                    android:src="@drawable/ic_location" />
-
-                <TextView
-                    android:id="@+id/textViewEventLocationHorizontal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:drawablePadding="4dp"
-
-                    android:text="36 Guild Street London, UK"
-                    android:textAlignment="center"
-                    android:textColor="@color/text_700"
-                    android:textSize="14sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/attendeesContainerHorizontal"
-                    app:layout_constraintVertical_bias="0.0" />
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-                <androidx.cardview.widget.CardView
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="40sp"
+                    android:textAlignment="center">
+
+                    <TextView
+                        android:id="@+id/textViewEventNameHorizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:autoSizeStepGranularity="2sp"
+                        android:autoSizeTextType="uniform"
+                        android:ellipsize="end"
+                        android:fontFamily="@font/poppins"
+                        android:padding="10dp"
+                        android:text="International Band Music festiva"
+                        android:textColor="@android:color/black"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <LinearLayout
+                    android:id="@+id/eventslocationHorizontal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:alpha="0.9"
-                    android:background="#80FFFFFF"
-                    app:cardCornerRadius="14dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                    android:orientation="horizontal"
+                    android:padding="10sp">
 
-        </LinearLayout>
+                    <ImageView
+                        android:layout_width="20sp"
+                        android:layout_height="20sp"
+                        android:layout_marginEnd="4dp"
+                        android:src="@drawable/ic_location" />
+
+                    <TextView
+                        android:id="@+id/textViewEventLocationHorizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:drawablePadding="4dp"
+
+                        android:fontFamily="@font/poppins"
+                        android:text="36 Guild Street London, UK"
+                        android:textAlignment="center"
+                        android:textColor="@color/text_700"
+                        android:textSize="12sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/attendeesContainerHorizontal"
+                        app:layout_constraintVertical_bias="0.0" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

@@ -1,39 +1,44 @@
 package com.example.fusmobilni.fragments;
 
+import android.animation.ArgbEvaluator;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.text.InputFilter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.Spinner;
 
+import com.example.fusmobilni.R;
 import com.example.fusmobilni.adapters.EventSelectionSpinnerAdapter;
 import com.example.fusmobilni.databinding.FragmentServiceReservationBinding;
 import com.example.fusmobilni.model.Event;
 import com.example.fusmobilni.model.Service;
+import com.google.android.material.chip.Chip;
 import com.google.android.material.datepicker.CalendarConstraints;
 import com.google.android.material.datepicker.DateValidatorPointForward;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
+import com.google.android.material.textfield.TextInputEditText;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashSet;
+import java.util.Date;
 import java.util.List;
-import java.util.Set;
+import java.util.Locale;
+import java.util.Random;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link ServiceReservationFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class ServiceReservationFragment extends Fragment {
 
     private FragmentServiceReservationBinding _binding;
-
+    private boolean toInputsDisabled = new Random(System.currentTimeMillis()).nextBoolean();
     private Spinner _eventSelectionSpinner;
     private EventSelectionSpinnerAdapter _adapter;
     private List<Event> _events;
@@ -41,6 +46,18 @@ public class ServiceReservationFragment extends Fragment {
 
     private MaterialDatePicker _datePicker;
 
+    private Chip _amChipFrom;
+    private Chip _pmChipFrom;
+    private boolean _amSelectedFrom;
+    private boolean _pmSelectedFrom;
+    private EditText _hoursInputFrom;
+    private EditText _minutesInputFrom;
+    private boolean _amSelectedTo;
+    private boolean _pmSelectedTo;
+    private Chip _amChipTo;
+    private Chip _pmChipTo;
+    private TextInputEditText _hoursInputTo;
+    private TextInputEditText _minutesInputTo;
 
     public ServiceReservationFragment() {
         // Required empty public constructor
@@ -69,19 +86,38 @@ public class ServiceReservationFragment extends Fragment {
         _service = getArguments().getParcelable("service");
         _events = fillEvents();
 
+
         _binding.textViewServiceDetailsTitleReservation.setText(_service.getName());
 
         _binding.textViewSelectedDate.setText("");
-        _binding.buttonOpenDatePicker.setOnClickListener(v->{
-            _datePicker.show(getParentFragmentManager(),"Pick a date");
+        _binding.buttonOpenDatePicker.setOnClickListener(v -> {
+            _datePicker.show(getParentFragmentManager(), "Pick a date");
+            _binding.buttonOpenDatePicker.setEnabled(false);
         });
 
+        initializeHoursAndMinutesFilter();
 
         initializeSpinner();
         initializeDatePicker();
+        initializeChips();
 
+        if (true) {
+            disabledToInputs();
+        }
         return root;
 
+    }
+
+    private void initializeHoursAndMinutesFilter() {
+        _hoursInputFrom = _binding.hoursInputFrom;
+        _minutesInputFrom = _binding.minutesInputFrom;
+        _hoursInputTo = _binding.hoursInputTo;
+        _minutesInputTo = _binding.minutesInputTo;
+
+        setHoursInputFilter(_hoursInputFrom);
+        setMinutesInputFilter(_minutesInputFrom);
+        setHoursInputFilter(_hoursInputTo);
+        setMinutesInputFilter(_minutesInputTo);
     }
 
     private void initializeSpinner() {
@@ -103,19 +139,22 @@ public class ServiceReservationFragment extends Fragment {
         });
     }
 
+    private void disabledToInputs() {
+        _binding.cardViewToInputs.setStrokeColor(getResources().getColor(R.color.bg_gray));
+        _hoursInputTo.setEnabled(false);
+        _minutesInputTo.setEnabled(false);
+        _amChipTo.setClickable(false);
+        _amChipTo.setEnabled(false);
+        _pmChipTo.setClickable(false);
+        _pmChipTo.setClickable(false);
+        animateChipBackgroundColor(_pmChipTo, R.color.white, R.color.white);
+        animateTextColorChange(_pmChipTo, R.color.bg_gray);
+        animateChipBackgroundColor(_amChipTo, R.color.white, R.color.white);
+        animateTextColorChange(_amChipTo, R.color.bg_gray);
+    }
+
     private void initializeDatePicker() {
         MaterialDatePicker.Builder<Long> builder = MaterialDatePicker.Builder.datePicker();
-
-        Set<Long> takenDates = new HashSet<>();
-        Calendar calendar = Calendar.getInstance();
-
-        calendar.set(2024, Calendar.DECEMBER, 5);
-        takenDates.add(calendar.getTimeInMillis());
-
-        calendar.set(2024, Calendar.DECEMBER, 10);
-        takenDates.add(calendar.getTimeInMillis());
-
-        // Set up the custom validator
 
         CalendarConstraints.Builder constraintsBuilder = new CalendarConstraints.Builder();
         constraintsBuilder.setValidator(DateValidatorPointForward.now());
@@ -129,10 +168,144 @@ public class ServiceReservationFragment extends Fragment {
         _datePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener() {
             @Override
             public void onPositiveButtonClick(Object selection) {
+                Date selectedDate = new Date((Long) selection);
+
+                // Format the date
+                SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
+                String formattedDate = dateFormat.format(selectedDate);
+
+                // Display the selected date
+                _binding.textViewSelectedDate.setText(formattedDate);
+                _binding.buttonOpenDatePicker.setEnabled(true);
 
             }
         });
 
+    }
+
+    private void setHoursInputFilter(EditText inputField) {
+        InputFilter hoursInputFilter = (source, start, end, dest, dstart, dend) -> {
+            try {
+
+                String hoursString = dest.subSequence(0, dstart) + source.toString() + dest.subSequence(dend, dest.length());
+                Integer hours = Integer.parseInt(hoursString);
+                if (_amSelectedFrom) {
+                    if (!isInAmRange(hours)) {
+                        inputField.setText("11");
+                    }
+                    return null;
+                } else if (_pmSelectedFrom) {
+                    if (!isInPmRange(hours)) {
+                        inputField.setText("12");
+                    }
+                    return null;
+                }
+                ;
+                return "";
+            } catch (NumberFormatException e) {
+
+                return "";
+            }
+        };
+        inputField.setFilters(new InputFilter[]{hoursInputFilter});
+
+    }
+
+    private void setMinutesInputFilter(EditText inputField) {
+        InputFilter minutesInputFilter = (source, start, end, dest, dstart, dend) -> {
+            try {
+
+                String minutesString = dest.subSequence(0, dstart) + source.toString() + dest.subSequence(dend, dest.length());
+                Integer minutes = Integer.parseInt(minutesString);
+                if (minutes < 0 || minutes > 59) {
+                    inputField.setText("59");
+                    return null;
+                }
+                return null;
+            } catch (NumberFormatException e) {
+                return "";
+            }
+        };
+        inputField.setFilters(new InputFilter[]{minutesInputFilter});
+    }
+
+    private boolean isInAmRange(Integer hours) {
+        return hours >= 0 && hours <= 11;
+    }
+
+    private boolean isInPmRange(Integer hours) {
+        return hours <= 23;
+    }
+
+    private void initializeChips() {
+        _amChipFrom = _binding.amChipFrom;
+        _pmChipFrom = _binding.pmChipFrom;
+        _amChipTo = _binding.amChipTo;
+        _pmChipTo = _binding.pmChipTo;
+        _amSelectedFrom = true;
+        _pmSelectedFrom = false;
+        _amSelectedTo = true;
+        _pmSelectedTo = false;
+        setChipState(_amChipFrom, _pmChipFrom);
+        setChipState(_amChipTo, _pmChipTo);
+        _amChipFrom.setOnClickListener(v -> {
+            setChipState(_amChipFrom, _pmChipFrom);
+            _amSelectedFrom = true;
+            _pmSelectedFrom = false;
+
+        });
+        _pmChipFrom.setOnClickListener(v -> {
+            setChipState(_pmChipFrom, _amChipFrom);
+            _amSelectedFrom = false;
+            _pmSelectedFrom = true;
+
+        });
+        _amChipTo.setOnClickListener(v -> {
+            setChipState(_amChipTo, _pmChipTo);
+            _amSelectedTo = true;
+            _pmSelectedTo = false;
+        });
+        _pmChipTo.setOnClickListener(v -> {
+            setChipState(_pmChipTo, _amChipTo);
+            _amSelectedTo = false;
+            _pmSelectedTo = true;
+        });
+
+    }
+
+    private void setChipState(Chip selectedChip, Chip other) {
+        selectedChip.setCheckable(true);
+        selectedChip.setChecked(true);
+
+        animateChipBackgroundColor(selectedChip, R.color.white, R.color.primary_blue_900);
+        animateTextColorChange(selectedChip, R.color.white);
+
+        animateChipBackgroundColor(other, R.color.primary_blue_900, R.color.white);
+        animateTextColorChange(other, R.color.bg_gray);
+    }
+
+    private void animateChipBackgroundColor(Chip chip, int startColorRes, int endColorRes) {
+        int startColor = getResources().getColor(startColorRes);
+        int endColor = getResources().getColor(endColorRes);
+
+        // Create a ValueAnimator to animate the background color
+        ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), startColor, endColor);
+        colorAnimation.setDuration(200); // Set the duration for the transition (in milliseconds)
+        colorAnimation.addUpdateListener(animation -> {
+            // Update the chip's background color as the animation progresses
+            chip.setChipBackgroundColor(ColorStateList.valueOf((Integer) animation.getAnimatedValue()));
+        });
+        colorAnimation.start();
+    }
+
+    private void animateTextColorChange(Chip chip, int textColorRes) {
+        int textColor = getResources().getColor(textColorRes);
+
+        // Animate the text color using ObjectAnimator
+        ObjectAnimator textColorAnimation = ObjectAnimator.ofInt(chip, "textColor", textColor);
+        textColorAnimation.setDuration(100); // Set the duration for the text color transition
+        textColorAnimation.setEvaluator(new ArgbEvaluator());
+        textColorAnimation.start();
     }
 
     private ArrayList<Event> fillEvents() {
