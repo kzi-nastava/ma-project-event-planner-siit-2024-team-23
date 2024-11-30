@@ -73,11 +73,15 @@ public class CategoryProposalsPage extends Fragment implements CategoryProposalL
 
     @Override
     public void onModifyCategory(int position) {
-
+        CategoryProposal proposal = this.proposals.get(position);
+        this.viewModel.populate(proposal);
+        Navigation.findNavController(binding.getRoot()).navigate(R.id.categoryProposals_toModificationForm);
     }
 
     @Override
     public void onApproveCategory(int position) {
-
+        this.proposals.remove(position);
+        adapter.notifyItemRemoved(position);
+        adapter.notifyItemRangeChanged(position, proposals.size());
     }
 }

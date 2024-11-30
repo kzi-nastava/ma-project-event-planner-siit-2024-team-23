@@ -260,4 +260,5 @@
     <string name="check_categories">Check categories</string>
     <string name="modify">Modify</string>
     <string name="approve">Approve</string>
+    <string name="modify_category_proposal">Modify category proposal</string>
 </resources>
