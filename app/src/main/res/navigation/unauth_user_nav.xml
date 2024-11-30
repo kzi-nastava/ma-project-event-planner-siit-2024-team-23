@@ -184,18 +184,6 @@
         android:id="@+id/action_home_fragment_to_service_search"
         app:destination="@id/service_search_fragment"/>
     <fragment
-        android:id="@+id/viewProfileFragment"
-        android:name="com.example.fusmobilni.fragments.UserProfileFragments.ViewProfileFragment"
-        android:label="My profile"
-        tools:layout="@layout/fragment_view_profile" >
-        <action
-            android:id="@+id/action_viewProfileFragment_to_home_fragment"
-            app:destination="@id/home_fragment" />
-        <action
-            android:id="@+id/action_viewProfileFragment_to_updateProfileFragment"
-            app:destination="@id/updateProfileFragment" />
-    </fragment>
-    <fragment
         android:id="@+id/updateProfileFragment"
         android:name="com.example.fusmobilni.fragments.UserProfileFragments.UpdateProfileFragment"
         android:label=""
@@ -227,24 +215,6 @@
         <action
             android:id="@+id/action_viewProfileFragment_to_userCalendarFragment"
             app:destination="@id/userCalendarFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/updateProfileFragment"
-        android:name="com.example.fusmobilni.fragments.UserProfileFragments.UpdateProfileFragment"
-        android:label=""
-        tools:layout="@layout/fragment_update_profile" >
-        <action
-            android:id="@+id/action_updateProfileFragment_to_viewProfileFragment"
-            app:destination="@id/viewProfileFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/stepOneUpdateFragment"
-        android:name="com.example.fusmobilni.fragments.UserProfileFragments.StepOneUpdateFragment"
-        android:label="fragment_step_one_update"
-        tools:layout="@layout/fragment_step_one_update" >
-        <action
-            android:id="@+id/action_calendarFragment_to_viewProfileFragment"
-            app:destination="@id/updateProfileFragment" />
     </fragment>
     <fragment
         android:id="@+id/userCalendarFragment"
