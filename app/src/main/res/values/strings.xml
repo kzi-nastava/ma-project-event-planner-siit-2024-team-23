@@ -223,4 +223,5 @@
     <string name="submit">submit</string>
     <string name="category_update_form">CATEGORY UPDATE FORM</string>
     <string name="update_category">CATEGORY UPDATE FORM</string>
+    <string name="going_on">Going on:</string>
 </resources>
