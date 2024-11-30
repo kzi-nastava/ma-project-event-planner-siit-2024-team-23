@@ -223,4 +223,8 @@
     <string name="submit">submit</string>
     <string name="category_update_form">CATEGORY UPDATE FORM</string>
     <string name="update_category">CATEGORY UPDATE FORM</string>
+    <string name="are_you_sure_you_want_to_delete_category">Are you sure you want to delete category</string>
+    <string name="check_categories">Check categories</string>
+    <string name="modify">Modify</string>
+    <string name="approve">Approve</string>
 </resources>

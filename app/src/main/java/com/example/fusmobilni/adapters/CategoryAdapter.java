@@ -51,7 +51,6 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
 
 
     public static class CategoryViewHolder extends RecyclerView.ViewHolder {
-
         TextView title, description;
         Button editButton, deleteButton;
 
