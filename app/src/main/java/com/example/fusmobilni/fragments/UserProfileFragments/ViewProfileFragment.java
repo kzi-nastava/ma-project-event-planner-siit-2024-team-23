@@ -73,6 +73,7 @@ public class ViewProfileFragment extends Fragment {
         });
         _binding.logout.setOnClickListener(v -> logout());
         _binding.updateProfile.setOnClickListener(v-> onUpdateClick());
+        _binding.calendarButton.setOnClickListener(v->onCalendarClick());
         return  view;
     }
     private void logout() {
@@ -92,5 +93,8 @@ public class ViewProfileFragment extends Fragment {
 
     private void onUpdateClick() {
         Navigation.findNavController(_binding.getRoot()).navigate(R.id.action_viewProfileFragment_to_updateProfileFragment);
+    }
+    private void onCalendarClick(){
+        Navigation.findNavController(_binding.getRoot()).navigate(R.id.action_viewProfileFragment_to_userCalendarFragment);
     }
 }

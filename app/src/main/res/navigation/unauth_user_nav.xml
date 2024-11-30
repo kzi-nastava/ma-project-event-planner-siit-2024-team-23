@@ -184,18 +184,6 @@
         android:id="@+id/action_home_fragment_to_service_search"
         app:destination="@id/service_search_fragment"/>
     <fragment
-        android:id="@+id/viewProfileFragment"
-        android:name="com.example.fusmobilni.fragments.UserProfileFragments.ViewProfileFragment"
-        android:label="My profile"
-        tools:layout="@layout/fragment_view_profile" >
-        <action
-            android:id="@+id/action_viewProfileFragment_to_home_fragment"
-            app:destination="@id/home_fragment" />
-        <action
-            android:id="@+id/action_viewProfileFragment_to_updateProfileFragment"
-            app:destination="@id/updateProfileFragment" />
-    </fragment>
-    <fragment
         android:id="@+id/updateProfileFragment"
         android:name="com.example.fusmobilni.fragments.UserProfileFragments.UpdateProfileFragment"
         android:label=""
@@ -212,6 +200,30 @@
         <action
             android:id="@+id/action_stepOneUpdateFragment_to_updateProfileFragment"
             app:destination="@id/updateProfileFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/viewProfileFragment"
+        android:name="com.example.fusmobilni.fragments.UserProfileFragments.ViewProfileFragment"
+        android:label="My profile"
+        tools:layout="@layout/fragment_view_profile" >
+        <action
+            android:id="@+id/action_viewProfileFragment_to_home_fragment"
+            app:destination="@id/home_fragment" />
+        <action
+            android:id="@+id/action_viewProfileFragment_to_updateProfileFragment"
+            app:destination="@id/updateProfileFragment" />
+        <action
+            android:id="@+id/action_viewProfileFragment_to_userCalendarFragment"
+            app:destination="@id/userCalendarFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/userCalendarFragment"
+        android:name="com.example.fusmobilni.fragments.UserProfileFragments.UserCalendarFragment"
+        android:label="My calendar"
+        tools:layout="@layout/fragment_user_calendar" >
+        <action
+            android:id="@+id/action_userCalendarFragment_to_viewProfileFragment"
+            app:destination="@id/viewProfileFragment" />
     </fragment>
 
 
