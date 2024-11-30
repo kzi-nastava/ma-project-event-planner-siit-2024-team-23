@@ -55,14 +55,6 @@
                     android:text="@string/modify"
                     style="@style/Widget.MaterialComponents.Button.TextButton"
                     android:textColor="@color/accent_red" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/approveButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/approve"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                    android:layout_marginEnd="8dp" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

@@ -287,4 +287,21 @@
         android:id="@+id/categoryProposals_toCategoriesPage"
         app:destination="@id/categories_page"
         />
+
+    <fragment
+        android:id="@+id/categories_proposal_modification_page"
+        android:name="com.example.fusmobilni.fragments.ModifyCategoryProposalFragment"
+        android:label="CategoryProposals"
+        android:layout="@layout/fragment_modify_category_proposal">
+    </fragment>
+
+    <action
+        android:id="@+id/categoryProposals_toModificationForm"
+        app:destination="@id/categories_proposal_modification_page"
+        />
+
+    <action
+        android:id="@+id/categoryModificationForm_toCategoryProposals"
+        app:destination="@id/categories_proposal_page"
+        />
 </navigation>
