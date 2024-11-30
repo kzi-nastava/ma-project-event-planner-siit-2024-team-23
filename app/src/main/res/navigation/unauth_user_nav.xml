@@ -234,6 +234,9 @@
     <action
         android:id="@+id/action_service_card_to_service_details"
         app:destination="@id/serviceDetailsFragment"/>
+    <action
+        android:id="@+id/action_service_details_to_service_reservation"
+        app:destination="@id/serviceReservationFragment"/>
     <fragment
         android:id="@+id/categories_creation_form"
         android:name="com.example.fusmobilni.fragments.CategoryCreationForm"
@@ -253,6 +256,14 @@
     <fragment
         android:id="@+id/serviceDetailsFragment"
         android:name="com.example.fusmobilni.fragments.ServiceDetailsFragment"
+        android:label="">
+        <argument
+            android:name="product"
+            app:argType="com.example.fusmobilni.model.Service"/>
+    </fragment>
+    <fragment
+        android:id="@+id/serviceReservationFragment"
+        android:name="com.example.fusmobilni.fragments.ServiceReservationFragment"
         android:label="">
         <argument
             android:name="product"

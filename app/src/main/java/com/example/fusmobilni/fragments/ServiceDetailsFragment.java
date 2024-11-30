@@ -3,6 +3,7 @@ package com.example.fusmobilni.fragments;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +21,7 @@ import com.example.fusmobilni.model.Service;
 public class ServiceDetailsFragment extends Fragment {
 
     private FragmentServiceDetailsBinding _binding;
+    private Service _service;
 
     public ServiceDetailsFragment() {
         // Required empty public constructor
@@ -48,19 +50,31 @@ public class ServiceDetailsFragment extends Fragment {
         _binding = FragmentServiceDetailsBinding.inflate(inflater, container, false);
         View view = _binding.getRoot();
 
-        Service service = getArguments().getParcelable("service");
+        _service = getArguments().getParcelable("service");
 
-        _binding.serviceDetailsText.setText(service.getName());
-        _binding.textViewServiceLocationHorizontal.setText(service.getLocation());
-        _binding.textViewServiceCategory.setText(service.getCategory());
-        _binding.textViewOrganizerNameServiceDetails.setText("Ibrahimovic");
-        _binding.textViewServiceDescriptionDetails.setText(service.getDescription());
+        _binding.serviceDetailsText.setText(_service.getName());
+        _binding.textViewServiceLocationHorizontal.setText(_service.getLocation());
+        _binding.textViewServiceCategory.setText(_service.getCategory());
+        _binding.textViewOrganizerNameServiceDetails.setText("Abramovich");
+        _binding.textViewServiceDescriptionDetails.setText(_service.getDescription());
         _binding.imageView5.setImageResource(R.drawable.person);
+
+        _binding.bookServiceButton.setOnClickListener(v -> {
+            Navigation.findNavController(v).navigate(R.id.action_service_details_to_service_reservation, createBundle(_service));
+        });
 
         initializeFavoriteButton();
         return view;
 
     }
+
+    private Bundle createBundle(Service service) {
+
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("service", service);
+        return bundle;
+    }
+
     private void initializeFavoriteButton() {
         _binding.favoriteButton.setOnClickListener(v -> {
             favorite = !favorite;
