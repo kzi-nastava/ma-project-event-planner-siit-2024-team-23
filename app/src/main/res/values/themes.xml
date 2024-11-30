@@ -1,6 +1,8 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Base.Theme.FusMobilni" parent="Theme.Material3.Light.NoActionBar">
+        <item name="fontFamily">@font/poppins</item>
+        <item name="android:fontFamily">@font/poppins</item>
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
         <!-- Original AppCompat attributes. -->
@@ -42,7 +44,10 @@
         <item name="android:windowMinWidthMajor">100%</item>
         <item name="android:windowMinWidthMinor">100%</item>
     </style>
-
+    <style name="CircleImage">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
     <style name="CustomToggleButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
         <item name="strokeWidth">2dp</item>
         <item name="strokeColor">@color/primary_blue_900</item>

@@ -1,16 +1,20 @@
 package com.example.fusmobilni.adapters;
 
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fusmobilni.R;
 import com.example.fusmobilni.model.Event;
+import com.example.fusmobilni.model.Product;
 import com.example.fusmobilni.model.Service;
+import com.google.android.material.card.MaterialCardView;
 
 import java.util.List;
 
@@ -30,6 +34,16 @@ public class ServicesAdapter extends RecyclerView.Adapter<ServicesAdapter.Servic
         holder.name.setText(service.getName());
         holder.description.setText(service.getDescription());
         holder.location.setText(service.getLocation());
+        holder._card.setOnClickListener(v->{
+            Navigation.findNavController(v).navigate(R.id.action_service_card_to_service_details,createBundle(service));
+        });
+    }
+
+    private Bundle createBundle(Service service) {
+
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("service", service);
+        return bundle;
     }
 
     @Override
@@ -42,13 +56,13 @@ public class ServicesAdapter extends RecyclerView.Adapter<ServicesAdapter.Servic
         public TextView name;
         public TextView description;
         public TextView location;
-
+        MaterialCardView _card;
         public ServicesViewHolder(@NonNull View view) {
             super(view);
             this.name = view.findViewById(R.id.textViewServiceTitle);
             this.description = view.findViewById(R.id.textViewServiceDescription);
             this.location = view.findViewById(R.id.textViewLocationService);
-
+            this._card = view.findViewById(R.id.serviceVerticalCard);
         }
     }
 
