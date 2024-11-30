@@ -181,4 +181,38 @@
         android:id="@+id/action_home_fragment_to_service_search"
         app:destination="@id/service_search_fragment"/>
 
+
+    <fragment
+        android:id="@+id/categories_page"
+        android:name="com.example.fusmobilni.fragments.OfferingsPage"
+        android:label="OfferingOverview"
+        android:layout="@layout/fragment_offerings_page">
+    </fragment>
+
+    <action
+        android:id="@+id/home_toOfferingsPage"
+        app:destination="@id/categories_page"
+        />
+    <fragment
+        android:id="@+id/event_invitations_fragment"
+        android:name="com.example.fusmobilni.fragments.InvitationsFragment"
+        android:label="Invitations"
+        tools:layout="@layout/fragment_invitations"/>
+
+    <fragment
+        android:id="@+id/categories_creation_form"
+        android:name="com.example.fusmobilni.fragments.CategoryCreationForm"
+        android:label="OfferingCreation"
+        android:layout="@layout/fragment_category_creation_form">
+    </fragment>
+
+    <action
+        android:id="@+id/categories_toCreationForm"
+        app:destination="@id/categories_creation_form"
+        />
+
+    <action
+        android:id="@+id/creationForm_toCategories"
+        app:destination="@id/categories_page"
+        />
 </navigation>
