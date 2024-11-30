@@ -36,6 +36,9 @@
         <action
             android:id="@+id/action_home_fragment_to_viewProfileFragment"
             app:destination="@id/viewProfileFragment" />
+        <action
+            android:id="@+id/action_home_fragment_to_eventTypeFragment"
+            app:destination="@id/event_types_fragment" />
     </fragment>
 
     <fragment
@@ -316,4 +319,9 @@
         android:id="@+id/categoryModificationForm_toCategoryProposals"
         app:destination="@id/categories_proposal_page"
         />
+    <fragment
+        android:id="@+id/event_types_fragment"
+        android:name="com.example.fusmobilni.fragments.EventTypeFragments.EventTypeFragment"
+        android:label="Event type"
+        tools:layout="@layout/fragment_event_type" />
 </navigation>
