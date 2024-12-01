@@ -47,7 +47,7 @@
             >
             <menu>
                 <item
-                    android:id="@+id/categories_fragment"
+                    android:id="@+id/categories_page"
                     android:icon="@drawable/outline_message_24"
                     android:title="@string/categories" />
                 <item
