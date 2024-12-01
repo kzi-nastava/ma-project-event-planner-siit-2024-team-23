@@ -36,8 +36,8 @@ public class EventTypeViewModel extends ViewModel {
     }
     public LiveData<Boolean> getIsUpdating() {return isUpdating; }
     public MutableLiveData<List<OfferingsCategory>> getSuggestedCategories() {return suggestedCategories;}
-    public void setSuggestedCategories(MutableLiveData<List<OfferingsCategory>> suggestedCategories) {
-        this.suggestedCategories = suggestedCategories;
+    public void setSuggestedCategories(List<OfferingsCategory> suggestedCategories) {
+        this.suggestedCategories.setValue(suggestedCategories);
     }
 
     public void populate(EventType eventType) {

@@ -56,7 +56,7 @@ public class EventTypeFragment extends Fragment implements EventTypeListener {
         this._eventTypeAdapter = new EventTypeAdapter(this._eventTypes, this);
         recyclerView.setAdapter(_eventTypeAdapter);
         _binding.floatingActionButton.setOnClickListener(v-> {
-            Navigation.findNavController(view).navigate(R.id.categories_toCreationForm);
+            Navigation.findNavController(view).navigate(R.id.eventTypeCreationForm);
         });
         return view;
     }
@@ -105,7 +105,9 @@ public class EventTypeFragment extends Fragment implements EventTypeListener {
 
     @Override
     public void onUpdateEventType(int position) {
-
+        EventType eventType = this._eventTypes.get(position);
+        this._eventTypeViewModel.populate(eventType);
+        Navigation.findNavController(_binding.getRoot()).navigate(R.id.eventType_to_eventTypeUpdate);
     }
 }
 
