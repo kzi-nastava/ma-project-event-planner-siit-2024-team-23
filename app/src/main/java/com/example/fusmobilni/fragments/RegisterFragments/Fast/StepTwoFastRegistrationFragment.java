@@ -1,4 +1,4 @@
-package com.example.fusmobilni.fragments.RegisterFragments;
+package com.example.fusmobilni.fragments.RegisterFragments.Fast;
 
 import android.app.Activity;
 import android.content.Context;
@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.ImageDecoder;
 import android.net.Uri;
 import android.os.Bundle;
+
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
@@ -15,23 +16,69 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+
+import com.example.fusmobilni.R;
 import com.example.fusmobilni.databinding.FragmentStepTwoBinding;
+import com.example.fusmobilni.databinding.FragmentStepTwoFastRegistrationBinding;
+import com.example.fusmobilni.fragments.RegisterFragments.Regular.StepTwoFragment;
 import com.example.fusmobilni.interfaces.FragmentValidation;
+import com.example.fusmobilni.viewModels.FastRegisterViewModel;
 import com.example.fusmobilni.viewModels.RegisterViewModel;
 import com.github.dhaval2404.imagepicker.ImagePicker;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Objects;
 
-public class StepTwoFragment extends Fragment implements FragmentValidation {
-    private RegisterViewModel _registerViewModel;
+/**
+ * A simple {@link Fragment} subclass.
+ * Use the {@link StepTwoFastRegistrationFragment#newInstance} factory method to
+ * create an instance of this fragment.
+ */
+public class StepTwoFastRegistrationFragment extends Fragment implements FragmentValidation {
 
-    // get the chosen image
+    private FastRegisterViewModel _viewModel;
+
+    private FragmentStepTwoFastRegistrationBinding _binding;
+
+    public StepTwoFastRegistrationFragment() {
+        // Required empty public constructor
+    }
+
+    public static StepTwoFastRegistrationFragment newInstance() {
+        StepTwoFastRegistrationFragment fragment = new StepTwoFastRegistrationFragment();
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+    }
+
+
+    private ImageView _captureImage;
+
+
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        _binding = FragmentStepTwoFastRegistrationBinding.inflate(inflater,container,false);
+        View view = _binding.getRoot();
+        _captureImage = _binding.profileImg;
+        CardView cardView = _binding.cardView;
+
+        _viewModel = new ViewModelProvider(this).get(FastRegisterViewModel.class);
+
+        cardView.setOnClickListener(v -> pickImage());
+        return view;
+
+    }
     ActivityResultLauncher<Intent> startForProfileImageResult = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<>() {
@@ -47,7 +94,7 @@ public class StepTwoFragment extends Fragment implements FragmentValidation {
                             try {
                                 Bitmap image = getBitmapFromUri(requireContext(), uri);
                                 _captureImage.setImageBitmap(image);
-                                _registerViewModel.setProfileImage(convertBitmapToByteArray(image));
+                                _viewModel.setProfileImage(convertBitmapToByteArray(image));
                             } catch (IOException e) {
                                 throw new RuntimeException(e);
                             }
@@ -60,37 +107,6 @@ public class StepTwoFragment extends Fragment implements FragmentValidation {
             }
     );
 
-    private ImageView _captureImage;
-
-    private FragmentStepTwoBinding _binding;
-
-    public StepTwoFragment() {
-        // Required empty public constructor
-    }
-
-    public static StepTwoFragment newInstance() {
-        return new StepTwoFragment();
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        _binding = FragmentStepTwoBinding.inflate(getLayoutInflater());
-        View view = _binding.getRoot();
-        _captureImage = _binding.profileImg;
-        CardView cardView = _binding.cardView;
-
-        _registerViewModel = new ViewModelProvider(this).get(RegisterViewModel.class);
-
-        cardView.setOnClickListener(v -> pickImage());
-        return view;
-
-    }
     @Override
     public boolean validate() {
         String city = Objects.requireNonNull(_binding.cityInput.getEditText()).getText().toString().trim();
@@ -123,9 +139,9 @@ public class StepTwoFragment extends Fragment implements FragmentValidation {
             _binding.phoneInput.setError(null);
             _binding.phoneInput.setErrorEnabled(false);
         }
-        _registerViewModel.setCity(city);
-        _registerViewModel.setAddress(address);
-        _registerViewModel.setPhone(phone);
+        _viewModel.setCity(city);
+        _viewModel.setAddress(address);
+        _viewModel.setPhone(phone);
 
         return true;
     }
@@ -147,10 +163,9 @@ public class StepTwoFragment extends Fragment implements FragmentValidation {
                 .crop(1f, 1f)
                 .maxResultSize(240,240)
                 .createIntent(intent->{
-                        startForProfileImageResult.launch(intent);
-                        return null;
-                }
-        );
+                            startForProfileImageResult.launch(intent);
+                            return null;
+                        }
+                );
     }
-
 }

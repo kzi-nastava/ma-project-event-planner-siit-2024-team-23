@@ -1,4 +1,4 @@
-package com.example.fusmobilni.fragments.RegisterFragments;
+package com.example.fusmobilni.fragments.RegisterFragments.Regular;
 
 import android.os.Bundle;
 import androidx.annotation.NonNull;
