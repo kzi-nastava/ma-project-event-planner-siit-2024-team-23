@@ -270,4 +270,5 @@
     <string name="create_event_type">Create event type</string>
     <string name="add_category">Add category +</string>
     <string name="update_event_type">Update event type</string>
+    <string name="active">Active</string>
 </resources>

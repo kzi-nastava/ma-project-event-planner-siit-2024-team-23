@@ -28,8 +28,8 @@ import java.util.Collections;
 public class EventTypeFragment extends Fragment implements EventTypeListener {
     private FragmentEventTypeBinding _binding;
     private EventTypeViewModel _eventTypeViewModel;
-    private ArrayList<EventType> _eventTypes = new ArrayList<>();
-    private ArrayList<OfferingsCategory> _offeringCategory = new ArrayList<>();
+    private final ArrayList<EventType> _eventTypes = new ArrayList<>();
+    private final ArrayList<OfferingsCategory> _offeringCategory = new ArrayList<>();
     private EventTypeAdapter _eventTypeAdapter;
 
     public EventTypeFragment() {
@@ -56,6 +56,7 @@ public class EventTypeFragment extends Fragment implements EventTypeListener {
         this._eventTypeAdapter = new EventTypeAdapter(this._eventTypes, this);
         recyclerView.setAdapter(_eventTypeAdapter);
         _binding.floatingActionButton.setOnClickListener(v-> {
+            _eventTypeViewModel.cleanUp();
             Navigation.findNavController(view).navigate(R.id.eventTypeCreationForm);
         });
         return view;
@@ -100,7 +101,11 @@ public class EventTypeFragment extends Fragment implements EventTypeListener {
 
     @Override
     public void onDeleteEventType(int position) {
-
+        EventType eventType = this._eventTypes.get(position);
+        boolean isActive = !eventType.getActive();
+        eventType.setActive(isActive);
+        _eventTypeViewModel.setIsUpdating(isActive);
+        _eventTypeAdapter.updateItem(position, eventType);
     }
 
     @Override

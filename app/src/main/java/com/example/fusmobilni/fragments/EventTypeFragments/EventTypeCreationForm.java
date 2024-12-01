@@ -54,6 +54,7 @@ public class EventTypeCreationForm extends Fragment {
         populateInputs();
         if(Boolean.TRUE.equals(_eventTypeViewModel.getIsUpdating().getValue())) {
             _binding.eventTitle.setText(R.string.update_event_type);
+            _binding.nameInput.setEnabled(false);
         }
 
         _selectedCategoriesChipGroup = _binding.selectedCategoriesChipGroup;
@@ -82,7 +83,23 @@ public class EventTypeCreationForm extends Fragment {
                 _binding.descriptionInput.setText(String.valueOf(description));
             });
             _eventTypeViewModel.getSuggestedCategories().observe(getViewLifecycleOwner(), suggestedCategories -> {
-                //TODO
+                _selectedCategoriesChipGroup.removeAllViews();
+                _selectedCategories.clear();
+                for (OfferingsCategory category : suggestedCategories) {
+                    _selectedCategories.add(category);
+
+                    Chip chip = new Chip(getContext());
+                    chip.setText(category.getName());
+                    chip.setChipBackgroundColorResource(R.color.white);
+                    chip.setCloseIconVisible(true);
+
+                    chip.setOnCloseIconClickListener(v -> {
+                        _selectedCategories.remove(category);
+                        _selectedCategoriesChipGroup.removeView(chip);
+                    });
+
+                    _selectedCategoriesChipGroup.addView(chip);
+                }
             });
     }
 
@@ -134,4 +151,5 @@ public class EventTypeCreationForm extends Fragment {
             Toast.makeText(getContext(), "Category already added", Toast.LENGTH_SHORT).show();
         }
     }
+
 }

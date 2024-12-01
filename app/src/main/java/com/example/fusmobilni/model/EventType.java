@@ -51,4 +51,5 @@ public class EventType {
     public void setActive(boolean active) {
         isActive = active;
     }
+    public boolean getActive(){ return isActive ;}
 }

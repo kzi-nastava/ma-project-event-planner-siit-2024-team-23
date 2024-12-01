@@ -1,6 +1,5 @@
 package com.example.fusmobilni.adapters;
 
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,8 +21,8 @@ import java.util.List;
 
 public class EventTypeAdapter extends RecyclerView.Adapter<EventTypeAdapter.EventTypeViewHolder> {
 
-    private List<EventType> eventTypes;
-    private EventTypeListener eventTypeListener;
+    private final List<EventType> eventTypes;
+    private final EventTypeListener eventTypeListener;
 
     public EventTypeAdapter(List<EventType> eventTypes, EventTypeListener eventTypeListener){
         this.eventTypes = eventTypes;
@@ -43,8 +42,19 @@ public class EventTypeAdapter extends RecyclerView.Adapter<EventTypeAdapter.Even
         EventType eventType = eventTypes.get(position);
         holder.title.setText(eventType.getName());
         holder.description.setText(eventType.getDescription());
+        holder.isActiveIndicator.setText(eventType.getActive() ? "Active" : "Deactivated");
+        holder.isActiveIndicator.setTextColor(ContextCompat.getColor(
+                holder.itemView.getContext(),
+                eventType.getActive() ? R.color.accent_green : R.color.accent_red
+        ));
+        holder.deleteButton.setText(eventType.getActive() ? "Disable" : "Enable");
+        holder.deleteButton.setTextColor(ContextCompat.getColor(
+                holder.itemView.getContext(),
+                eventType.getActive() ? R.color.accent_red : R.color.accent_green
+        ));
         holder.deleteButton.setOnClickListener(v -> eventTypeListener.onDeleteEventType(position));
         holder.editButton.setOnClickListener(v -> eventTypeListener.onUpdateEventType(position));
+        holder.chipGroup.removeAllViews();
         for(OfferingsCategory category: eventType.getSuggestedCategories()){
             Chip chip = new Chip(holder.title.getContext());
             chip.setText(category.getName());
@@ -61,13 +71,18 @@ public class EventTypeAdapter extends RecyclerView.Adapter<EventTypeAdapter.Even
     public int getItemCount() {
         return eventTypes != null ? eventTypes.size() : 0;
     }
+    public void updateItem(int position, EventType updatedEventType) {
+        eventTypes.set(position, updatedEventType);
+        notifyItemChanged(position);
+    }
     public static class EventTypeViewHolder extends RecyclerView.ViewHolder {
-        TextView title, description;
+        TextView title, description, isActiveIndicator;
         Button editButton, deleteButton;
         ChipGroup chipGroup;
 
         public EventTypeViewHolder(@NonNull View itemView) {
             super(itemView);
+            isActiveIndicator = itemView.findViewById(R.id.activeIndicator);
             title = itemView.findViewById(R.id.cardTitle);
             description = itemView.findViewById(R.id.cardDescription);
             editButton = itemView.findViewById(R.id.editButton);
