@@ -124,6 +124,11 @@
         android:label="Register"
         tools:layout="@layout/activity_register"
         />
+    <activity
+        android:id="@+id/fast_register_activity"
+        android:name="com.example.fusmobilni.activities.FastRegisterActivity"
+        android:label="Fast Register"
+        tools:layout="@layout/activity_fast_register"/>
 
 
     <fragment
@@ -319,6 +324,9 @@
         android:id="@+id/categoryModificationForm_toCategoryProposals"
         app:destination="@id/categories_proposal_page"
         />
+    <action
+        android:id="@+id/action_to_fast_register_activity"
+        app:destination="@id/fast_register_activity"/>
     <fragment
         android:id="@+id/event_types_fragment"
         android:name="com.example.fusmobilni.fragments.EventTypeFragments.EventTypeFragment"

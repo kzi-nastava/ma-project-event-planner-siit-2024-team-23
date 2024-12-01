@@ -15,7 +15,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.example.fusmobilni.R;
 import com.example.fusmobilni.adapters.RegistrationAdapter;
 import com.example.fusmobilni.databinding.ActivityRegisterBinding;
-import com.example.fusmobilni.fragments.RegisterFragments.RoleSelectionFragment;
+import com.example.fusmobilni.fragments.RegisterFragments.Regular.RoleSelectionFragment;
 import com.example.fusmobilni.interfaces.FragmentValidation;
 import com.example.fusmobilni.model.enums.UserType;
 import com.example.fusmobilni.viewModels.RegisterViewModel;
