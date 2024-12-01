@@ -4,11 +4,16 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
+
 import java.util.List;
 
 public class RegistrationAdapter extends FragmentStateAdapter {
 
     private final List<Fragment> _fragmentList;
+
+    private RegistrationAdapter _adapter;
+    private List<Fragment> _fragments;
+
 
     public RegistrationAdapter(@NonNull FragmentActivity fragmentActivity, List<Fragment> fragments) {
         super(fragmentActivity);
