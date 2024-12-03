@@ -36,6 +36,12 @@
         <action
             android:id="@+id/action_home_fragment_to_viewProfileFragment"
             app:destination="@id/viewProfileFragment" />
+        <action
+            android:id="@+id/action_home_fragment_to_eventTypeFragment"
+            app:destination="@id/event_types_fragment" />
+        <action
+            android:id="@+id/action_home_fragment_to_eventOrganizerEventDetailsFragment"
+            app:destination="@id/eventOrganizerEventDetailsFragment" />
     </fragment>
 
     <fragment
@@ -47,6 +53,9 @@
         <action
             android:id="@+id/action_event_to_home"
             app:destination="@id/home_fragment" />
+        <action
+            android:id="@+id/action_event_fragment_to_eventDetailsFragment"
+            app:destination="@id/eventDetailsFragment" />
     </fragment>
 
     <fragment
@@ -215,6 +224,10 @@
         <action
             android:id="@+id/action_viewProfileFragment_to_userCalendarFragment"
             app:destination="@id/userCalendarFragment" />
+        <action
+            android:id="@+id/action_viewProfileFragment_to_eventDetailsFragment"
+            app:destination="@id/eventDetailsFragment"
+            />
     </fragment>
     <fragment
         android:id="@+id/userCalendarFragment"
@@ -224,6 +237,9 @@
         <action
             android:id="@+id/action_userCalendarFragment_to_viewProfileFragment"
             app:destination="@id/viewProfileFragment" />
+        <action
+            android:id="@+id/action_userCalendarFragment_to_eventDetailsFragment"
+            app:destination="@id/eventDetailsFragment" />
     </fragment>
 
 
@@ -316,4 +332,38 @@
         android:id="@+id/categoryModificationForm_toCategoryProposals"
         app:destination="@id/categories_proposal_page"
         />
+    <action
+        android:id="@+id/action_to_fast_register_activity"
+        app:destination="@id/fast_register_activity"/>
+    <fragment
+        android:id="@+id/event_types_fragment"
+        android:name="com.example.fusmobilni.fragments.EventTypeFragments.EventTypeFragment"
+        android:label="Event type"
+        tools:layout="@layout/fragment_event_type" >
+        <action
+            android:id="@+id/eventType_to_eventTypeUpdate"
+            app:destination="@id/eventTypeCreationForm"
+            />
+
+    </fragment>
+    <fragment
+        android:id="@+id/eventTypeCreationForm"
+        android:name="com.example.fusmobilni.fragments.EventTypeFragments.EventTypeCreationForm"
+        android:label=""
+        tools:layout="@layout/fragment_event_type_creation_form" >
+        <action
+            android:id="@+id/eventTypeCreation_to_eventType"
+            app:destination="@id/event_types_fragment"
+            />
+
+    </fragment>
+    <fragment
+        android:id="@+id/eventDetailsFragment"
+        android:name="com.example.fusmobilni.fragments.EventFragments.EventDetailsFragment"
+        android:label="Details" />
+    <fragment
+        android:id="@+id/eventOrganizerEventDetailsFragment"
+        android:name="com.example.fusmobilni.fragments.EventFragments.EventOrganizerEventFragment"
+        android:label="My events"
+        tools:layout="@layout/fragment_event_organizer_event_details" />
 </navigation>

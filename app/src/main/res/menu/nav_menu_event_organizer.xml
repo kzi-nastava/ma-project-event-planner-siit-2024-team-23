@@ -43,7 +43,7 @@
                     android:title="@string/notifications" />
                 <!--todo -->
                 <item
-                    android:id="@+id/calendar_fragment"
+                    android:id="@+id/eventOrganizerEventDetailsFragment"
                     android:icon="@drawable/ic_notification"
                     android:title="@string/my_events" />
             </menu>

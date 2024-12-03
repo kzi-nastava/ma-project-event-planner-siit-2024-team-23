@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/white"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="4dp"
+    tools:layout_editor_absoluteX="8dp"
+    tools:layout_editor_absoluteY="8dp"
+    app:strokeColor="@color/primary_blue_300"
+    app:strokeWidth="2dp"
+    android:layout_marginTop="8sp"
+    app:cardBackgroundColor="@color/white">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/agendaTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textColor="@color/text_800"
+            android:textSize="14sp"
+            android:paddingBottom="4dp"
+            android:text="Agenda Title" />
+
+        <TextView
+            android:id="@+id/agendaTimeRange"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:paddingBottom="4dp"
+            android:textColor="@color/primary_blue_700"
+            android:text="09:00 - 10:00" />
+
+        <TextView
+            android:id="@+id/agendaDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textColor="@color/text_700"
+            android:text="Agenda description goes here." />
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>
