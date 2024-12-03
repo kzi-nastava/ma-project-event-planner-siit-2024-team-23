@@ -279,4 +279,17 @@
     <string name="add_category">Add category +</string>
     <string name="update_event_type">Update event type</string>
     <string name="active">Active</string>
+    <string name="create_event">Create Event</string>
+    <string name="update_event">Update event</string>
+    <string name="event_title_label">Event Title</string>
+    <string name="event_date">Event Date</string>
+    <string name="event_time">Event Time</string>
+    <string name="location">Location</string>
+    <string name="event_type_label">Event Type</string>
+    <string name="max_visitors">Max Visitors</string>
+    <string name="privacy_type">Privacy Type</string>
+    <string-array name="privacy_type_options">
+        <item>Private</item>
+        <item>Public</item>
+    </string-array>
 </resources>

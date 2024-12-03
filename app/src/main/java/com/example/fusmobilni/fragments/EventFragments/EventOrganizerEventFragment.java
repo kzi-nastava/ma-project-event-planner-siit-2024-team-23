@@ -56,7 +56,7 @@ public class EventOrganizerEventFragment extends Fragment implements EOEventClic
         recyclerView.setAdapter(_eventAdapter);
         _binding.floatingActionButton.setOnClickListener(v-> {
             _eventViewModel.cleanUp();
-            Navigation.findNavController(view).navigate(R.id.eventTypeCreationForm);
+            Navigation.findNavController(view).navigate(R.id.action_eventOrganizerEventDetailsFragment_to_createEventFragment);
         });
         return view;
     }
@@ -80,17 +80,21 @@ public class EventOrganizerEventFragment extends Fragment implements EOEventClic
         Toast.makeText(getContext(), event.getTitle(), Toast.LENGTH_SHORT).show();
         Bundle bundle = new Bundle();
         bundle.putParcelable("event", event);
-//        Navigation.findNavController(_binding.getRoot()).navigate(R.id.action_viewProfileFragment_to_eventDetailsFragment, bundle);
-
+        Navigation.findNavController(_binding.getRoot()).navigate(R.id.action_eventOrganizerEventDetailsFragment_to_eventDetailsFragment, bundle);
     }
 
     @Override
     public void onStatsClick(int position) {
-
+        Event event = _events.get(position);
+        Toast.makeText(getContext(), event.getTitle(), Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onEditClick(int position) {
+        Event event = _events.get(position);
+        Toast.makeText(getContext(), event.getTitle(), Toast.LENGTH_SHORT).show();
+        this._eventViewModel.populate(event);
+        Navigation.findNavController(_binding.getRoot()).navigate(R.id.action_eventOrganizerEventDetailsFragment_to_createEventFragment);
 
     }
 }

@@ -1,15 +1,17 @@
 package com.example.fusmobilni.model;
 
+import androidx.annotation.NonNull;
+
 import java.util.List;
 
 public class EventType {
-    private final int id;
+    private final Integer id;
     private String name;
     private String description;
     private List<OfferingsCategory> suggestedCategories;
 
     private boolean isActive=true;
-    public EventType(int id,String name, String description, List<OfferingsCategory> categories) {
+    public EventType(Integer id,String name, String description, List<OfferingsCategory> categories) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -52,4 +54,10 @@ public class EventType {
         isActive = active;
     }
     public boolean getActive(){ return isActive ;}
+
+    @NonNull
+    @Override
+    public String toString() {
+        return this.name;
+    }
 }

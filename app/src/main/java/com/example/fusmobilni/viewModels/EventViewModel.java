@@ -1,12 +1,17 @@
 package com.example.fusmobilni.viewModels;
 
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.fusmobilni.model.Event;
 
+import java.util.List;
+
 public class EventViewModel extends ViewModel {
+    private final MutableLiveData<List<Fragment>> _fragments = new MutableLiveData<>();
+    public LiveData<List<Fragment>> fragments = _fragments;
     private MutableLiveData<String> title = new MutableLiveData<>("");
     private MutableLiveData<String> description = new MutableLiveData<>("");
     private MutableLiveData<String> date = new MutableLiveData<>("");

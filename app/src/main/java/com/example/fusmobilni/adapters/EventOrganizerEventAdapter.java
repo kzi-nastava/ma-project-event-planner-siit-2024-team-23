@@ -49,7 +49,7 @@ public class EventOrganizerEventAdapter extends RecyclerView.Adapter<EventOrgani
             holder.monthYear.setText(event.getMonth() + " " + event.getYear());
             holder.location.setText(event.getLocation());
             holder.eventCard.setOnClickListener(v -> eventClickListener.onEventClick(position));
-            holder.statsButton.setOnClickListener(v-> eventClickListener.onEditClick(position));
+            holder.editButton.setOnClickListener(v-> eventClickListener.onEditClick(position));
             holder.statsButton.setOnClickListener(v-> eventClickListener.onStatsClick(position));
         }
 
