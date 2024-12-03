@@ -42,6 +42,9 @@
         <action
             android:id="@+id/action_home_fragment_to_eventOrganizerEventDetailsFragment"
             app:destination="@id/eventOrganizerEventDetailsFragment" />
+        <action
+            android:id="@+id/action_home_fragment_to_eventTypeFragment"
+            app:destination="@id/event_types_fragment" />
     </fragment>
 
     <fragment
@@ -53,9 +56,6 @@
         <action
             android:id="@+id/action_event_to_home"
             app:destination="@id/home_fragment" />
-        <action
-            android:id="@+id/action_event_fragment_to_eventDetailsFragment"
-            app:destination="@id/eventDetailsFragment" />
     </fragment>
 
     <fragment
@@ -130,6 +130,11 @@
         android:label="Register"
         tools:layout="@layout/activity_register"
         />
+    <activity
+        android:id="@+id/fast_register_activity"
+        android:name="com.example.fusmobilni.activities.FastRegisterActivity"
+        android:label="Fast Register"
+        tools:layout="@layout/activity_fast_register"/>
 
 
     <fragment
@@ -366,4 +371,29 @@
         android:name="com.example.fusmobilni.fragments.EventFragments.EventOrganizerEventFragment"
         android:label="My events"
         tools:layout="@layout/fragment_event_organizer_event_details" />
+    <action
+        android:id="@+id/action_to_fast_register_activity"
+        app:destination="@id/fast_register_activity"/>
+    <fragment
+        android:id="@+id/event_types_fragment"
+        android:name="com.example.fusmobilni.fragments.EventTypeFragments.EventTypeFragment"
+        android:label="Event type"
+        tools:layout="@layout/fragment_event_type" >
+        <action
+            android:id="@+id/eventType_to_eventTypeUpdate"
+            app:destination="@id/eventTypeCreationForm"
+            />
+
+    </fragment>
+    <fragment
+        android:id="@+id/eventTypeCreationForm"
+        android:name="com.example.fusmobilni.fragments.EventTypeFragments.EventTypeCreationForm"
+        android:label=""
+        tools:layout="@layout/fragment_event_type_creation_form" >
+        <action
+            android:id="@+id/eventTypeCreation_to_eventType"
+            app:destination="@id/event_types_fragment"
+            />
+
+    </fragment>
 </navigation>

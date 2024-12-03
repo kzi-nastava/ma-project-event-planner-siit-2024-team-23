@@ -266,11 +266,6 @@
     <string name="item_descpription">Item Descpription</string>
     <string name="item_name">Item Name</string>
     <string name="for_this_item">For this item</string>
-    <string name="disable">Disable</string>
-    <string name="create_event_type">Create event type</string>
-    <string name="add_category">Add category +</string>
-    <string name="update_event_type">Update event type</string>
-    <string name="active">Active</string>
     <string name="about_event">About event</string>
     <string name="message">Message</string>
     <string name="provider">Provider</string>
@@ -279,4 +274,9 @@
     <string name="event_agenda">Event agenda:</string>
     <string name="event_title">Event title</string>
     <string name="book_an_event">Book event</string>
+    <string name="disable">Disable</string>
+    <string name="create_event_type">Create event type</string>
+    <string name="add_category">Add category +</string>
+    <string name="update_event_type">Update event type</string>
+    <string name="active">Active</string>
 </resources>
