@@ -1,6 +1,11 @@
 package com.example.fusmobilni.model;
 
-public class Product {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import androidx.annotation.NonNull;
+
+public class Product implements Parcelable {
     private String _name;
     private String _description;
     private double _price;
@@ -13,6 +18,18 @@ public class Product {
         this._location = location;
         this._category = category;
     }
+
+    public static final Creator<Product> CREATOR = new Creator<Product>() {
+        @Override
+        public Product createFromParcel(Parcel in) {
+            return new Product(in);
+        }
+
+        @Override
+        public Product[] newArray(int size) {
+            return new Product[size];
+        }
+    };
 
     public String getCategory() {
         return _category;
@@ -52,5 +69,26 @@ public class Product {
 
     public void setName(String _name) {
         this._name = _name;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    protected Product(Parcel in){
+        _name = in.readString();
+        _description = in.readString();
+        _price = in.readDouble();
+        _location = in.readString();
+        _category = in.readString();
+    }
+    @Override
+    public void writeToParcel(@NonNull Parcel dest, int flags) {
+        dest.writeString(_name);
+        dest.writeString(_description);
+        dest.writeDouble(_price);
+        dest.writeString(_category);
+        dest.writeString(_location);
     }
 }
