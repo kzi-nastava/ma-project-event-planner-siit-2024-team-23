@@ -2,6 +2,7 @@ package com.example.fusmobilni.fragments.EventFragments.CreateEventSteps;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -26,7 +27,7 @@ public class InvitationsFragment extends Fragment implements FragmentValidation 
     private static final Pattern EMAIL_PATTERN = Pattern.compile("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$");
 
 
-    public static InvitationsFragment newInstance(String param1, String param2) {
+    public static InvitationsFragment newInstance() {
         InvitationsFragment fragment = new InvitationsFragment();
         Bundle args = new Bundle();
 
@@ -38,14 +39,11 @@ public class InvitationsFragment extends Fragment implements FragmentValidation 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-        }
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         _binding = FragmentInvitationsBinding.inflate(inflater, container, false);
         View view = _binding.getRoot();
 

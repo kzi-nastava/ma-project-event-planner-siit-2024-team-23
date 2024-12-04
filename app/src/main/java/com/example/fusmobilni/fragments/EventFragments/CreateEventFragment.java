@@ -11,13 +11,10 @@ import androidx.viewpager2.widget.ViewPager2;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.fusmobilni.R;
 import com.example.fusmobilni.adapters.CreateEventAdapter;
-import com.example.fusmobilni.adapters.EventOrganizerEventAdapter;
-import com.example.fusmobilni.adapters.RegistrationAdapter;
 import com.example.fusmobilni.databinding.FragmentCreateEventBinding;
 import com.example.fusmobilni.fragments.EventFragments.CreateEventSteps.CreateEventStepOne;
 import com.example.fusmobilni.fragments.EventFragments.CreateEventSteps.CreateEventStepThree;
@@ -35,7 +32,6 @@ public class CreateEventFragment extends Fragment {
     private CreateEventAdapter _eventAdapter;
     private EventViewModel _eventViewModel;
     private ViewPager2 _viewPager;
-    private LinearLayout _signUpLayout;
     private List<Fragment> _fragments;
     private MaterialButton _nextButton;
     private MaterialButton _backButton;
@@ -55,7 +51,6 @@ public class CreateEventFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         _binding = FragmentCreateEventBinding.inflate(getLayoutInflater());
         View view = _binding.getRoot();
 
@@ -66,7 +61,6 @@ public class CreateEventFragment extends Fragment {
             _binding.eventTitle.setText(R.string.update_event);
         }
 
-        _signUpLayout = _binding.signUpLayout;
         _nextButton = _binding.nextButton;
         _backButton = _binding.backButton;
         _viewPager = _binding.viewPager;

@@ -26,13 +26,10 @@ import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.textfield.TextInputEditText;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -207,10 +204,7 @@ public class CreateEventStepOne extends Fragment  implements FragmentValidation 
         } else {
             _binding.eventType.setError(null);
         }
-        if(eventType != null){
-            return true;
-        }
-        return false;
+        return eventType != null;
 //        // Retrieve values from input fields
 //        String eventTitle = Objects.requireNonNull(_binding.eventTitleInput.getEditText()).getText().toString().trim();
 //        String eventDescription = Objects.requireNonNull(_binding.eventDescriptionInput.getEditText()).getText().toString().trim();

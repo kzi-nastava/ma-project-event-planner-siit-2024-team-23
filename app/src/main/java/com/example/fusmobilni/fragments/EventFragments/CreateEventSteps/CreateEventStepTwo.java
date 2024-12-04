@@ -4,12 +4,9 @@ import android.app.AlertDialog;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -19,14 +16,11 @@ import android.view.ViewGroup;
 
 import com.example.fusmobilni.R;
 import com.example.fusmobilni.adapters.BudgetPlaningItemAdapter;
-import com.example.fusmobilni.adapters.EventTypeAdapter;
 import com.example.fusmobilni.databinding.FragmentCreateEventStepTwoBinding;
 import com.example.fusmobilni.interfaces.FragmentValidation;
 import com.example.fusmobilni.model.EventType;
 import com.example.fusmobilni.model.OfferingsCategory;
-import com.example.fusmobilni.viewModels.EventTypeViewModel;
 import com.example.fusmobilni.viewModels.EventViewModel;
-import com.example.fusmobilni.viewModels.RegisterViewModel;
 import com.google.android.material.button.MaterialButton;
 
 import java.util.ArrayList;
@@ -37,8 +31,7 @@ public class CreateEventStepTwo extends Fragment  implements FragmentValidation 
     private EventViewModel _eventViewModel;
     private BudgetPlaningItemAdapter _budgetPlaningAdapter;
     private final List<OfferingsCategory> _suggestedCategoryOfferings = new ArrayList<>();
-    private ArrayList<OfferingsCategory> _allcategories = new ArrayList<>();
-    private NavController _navController;
+    private final ArrayList<OfferingsCategory> _allcategories = new ArrayList<>();
 
     public CreateEventStepTwo() {
         // Required empty public constructor

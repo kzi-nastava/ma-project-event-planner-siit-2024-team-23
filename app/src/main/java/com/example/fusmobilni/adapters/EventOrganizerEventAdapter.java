@@ -12,14 +12,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fusmobilni.R;
 import com.example.fusmobilni.interfaces.EOEventClickListener;
-import com.example.fusmobilni.interfaces.EventClickListener;
 import com.example.fusmobilni.model.Event;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class EventOrganizerEventAdapter extends RecyclerView.Adapter<EventOrganizerEventAdapter.EventViewHolder>{
-        private EOEventClickListener eventClickListener;
+        private final EOEventClickListener eventClickListener;
         private List<Event> eventList;
 
 
@@ -46,7 +45,7 @@ public class EventOrganizerEventAdapter extends RecyclerView.Adapter<EventOrgani
             Event event = eventList.get(position);
             holder.title.setText(event.getTitle());
             holder.day.setText(event.getDay());
-            holder.monthYear.setText(event.getMonth() + " " + event.getYear());
+            holder.monthYear.setText(String.format("%s %s", event.getMonth(), event.getYear()));
             holder.location.setText(event.getLocation());
             holder.eventCard.setOnClickListener(v -> eventClickListener.onEventClick(position));
             holder.editButton.setOnClickListener(v-> eventClickListener.onEditClick(position));

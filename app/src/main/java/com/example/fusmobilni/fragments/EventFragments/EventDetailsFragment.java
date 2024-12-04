@@ -28,7 +28,7 @@ public class EventDetailsFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static EventDetailsFragment newInstance(String param1, String param2) {
+    public static EventDetailsFragment newInstance() {
         EventDetailsFragment fragment = new EventDetailsFragment();
         Bundle args = new Bundle();
 
@@ -39,8 +39,6 @@ public class EventDetailsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-        }
     }
 
     @Override
@@ -53,7 +51,7 @@ public class EventDetailsFragment extends Fragment {
         Event event = getArguments().getParcelable("event");
         _binding.eventDetailsText.setText(event.getTitle());
         _binding.textViewEventLocationHorizontal.setText(event.getLocation());
-        _binding.textViewOrganizerEventDetails.setText("Ibrahimovic");
+        _binding.textViewOrganizerEventDetails.setText(R.string.ibrahimovic);
         _binding.imageView5.setImageResource(R.drawable.person);
         _binding.textViewEventDescriptionDetails.setText(event.getDescription());
         initializeFavoriteButton();

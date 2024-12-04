@@ -16,10 +16,8 @@ import android.widget.Toast;
 
 import com.example.fusmobilni.R;
 import com.example.fusmobilni.adapters.EventOrganizerEventAdapter;
-import com.example.fusmobilni.adapters.ViewProfileEventAdapter;
 import com.example.fusmobilni.databinding.FragmentEventOrganizerEventDetailsBinding;
 import com.example.fusmobilni.interfaces.EOEventClickListener;
-import com.example.fusmobilni.interfaces.EventClickListener;
 import com.example.fusmobilni.model.Event;
 import com.example.fusmobilni.viewModels.EventViewModel;
 
@@ -28,7 +26,7 @@ import java.util.ArrayList;
 public class EventOrganizerEventFragment extends Fragment implements EOEventClickListener {
     private FragmentEventOrganizerEventDetailsBinding _binding;
     private EventViewModel _eventViewModel;
-    private ArrayList<Event> _events = new ArrayList<>();
+    private final ArrayList<Event> _events = new ArrayList<>();
     private EventOrganizerEventAdapter _eventAdapter;
 
     public EventOrganizerEventFragment() {

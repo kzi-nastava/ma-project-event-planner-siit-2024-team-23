@@ -1,13 +1,11 @@
 package com.example.fusmobilni.adapters;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -18,14 +16,13 @@ import com.example.fusmobilni.interfaces.OnCategoryClickListener;
 import com.example.fusmobilni.model.OfferingsCategory;
 import com.google.android.material.button.MaterialButton;
 
-import java.text.ParseException;
 import java.util.List;
 
 public class BudgetPlaningItemAdapter extends RecyclerView.Adapter<BudgetPlaningItemAdapter.ViewHolder> {
-    private List<OfferingsCategory> categories;
-    private Context context;
+    private final List<OfferingsCategory> categories;
+    private final Context context;
 
-    private OnCategoryClickListener categoryClickListener;
+    private final OnCategoryClickListener categoryClickListener;
     public BudgetPlaningItemAdapter(Context context, List<OfferingsCategory> categories, OnCategoryClickListener categoryClickListener) {
         this.context = context;
         this.categories = categories;
@@ -39,8 +36,8 @@ public class BudgetPlaningItemAdapter extends RecyclerView.Adapter<BudgetPlaning
         return new ViewHolder(view);
     }
     public void addCategory(OfferingsCategory category) {
-        categories.add(category); // Add the new category to the list
-        notifyItemInserted(categories.size() - 1); // Notify the adapter to refresh the view
+        categories.add(category);
+        notifyItemInserted(categories.size() - 1);
     }
 
     @Override
@@ -48,9 +45,6 @@ public class BudgetPlaningItemAdapter extends RecyclerView.Adapter<BudgetPlaning
         OfferingsCategory category = categories.get(position);
 
         holder.categoryName.setText(category.getName());
-//        holder.plannedBudget.setText(String.valueOf(category.getPlannedBudget()));
-//        holder.priceInput.setText(String.valueOf(category.getSelectedProductPrice()));
-
         holder.seeProductsButton.setOnClickListener(v -> {
             if(categoryClickListener != null){
                 try {
@@ -65,7 +59,6 @@ public class BudgetPlaningItemAdapter extends RecyclerView.Adapter<BudgetPlaning
         });
 
         holder.deleteButton.setOnClickListener(v -> {
-            // Handle card deletion (remove category from the list)
             categories.remove(position);
             notifyDataSetChanged();
         });

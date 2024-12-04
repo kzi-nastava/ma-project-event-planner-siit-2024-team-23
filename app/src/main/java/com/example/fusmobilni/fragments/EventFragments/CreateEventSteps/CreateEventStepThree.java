@@ -1,8 +1,5 @@
 package com.example.fusmobilni.fragments.EventFragments.CreateEventSteps;
 
-import android.app.AlertDialog;
-import android.app.DatePickerDialog;
-import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
 
@@ -12,19 +9,14 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.fusmobilni.R;
-import com.example.fusmobilni.adapters.AgendaActivityAdapter;
 import com.example.fusmobilni.adapters.AgendaActivityEditableAdapter;
 import com.example.fusmobilni.databinding.FragmentCreateEventStepThreeBinding;
 import com.example.fusmobilni.interfaces.FragmentValidation;
 import com.example.fusmobilni.model.AgendaActivity;
-import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.sql.Time;
@@ -78,7 +70,6 @@ public class CreateEventStepThree extends Fragment implements FragmentValidation
         String startTimeStr = Objects.requireNonNull(_startTime.getText()).toString();
         String endTimeStr = Objects.requireNonNull(_endTime.getText()).toString();
         if(activityTitle.isEmpty() || activityDescription.isEmpty() || startTimeStr.isEmpty() || endTimeStr.isEmpty()){
-            boolean e = activityTitle.isEmpty();
             _binding.eventTitleInput.setEndIconVisible(activityTitle.isEmpty());
             _binding.eventDescriptionInput.setEndIconVisible(activityDescription.isEmpty());
             _binding.etEndTimeInput.setEndIconVisible(activityDescription.isEmpty());

@@ -296,6 +296,7 @@
     <string name="add">Add</string>
     <string name="start_time">Start time</string>
     <string name="end_time">End time</string>
+    <string name="ibrahimovic">Ibrahimovic</string>
     <string-array name="privacy_type_options">
         <item>Private</item>
         <item>Public</item>

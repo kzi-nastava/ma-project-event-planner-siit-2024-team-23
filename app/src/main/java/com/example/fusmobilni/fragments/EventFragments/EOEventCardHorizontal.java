@@ -27,7 +27,6 @@ public class EOEventCardHorizontal extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_e_o_event_card_horizontal, container, false);
     }
 }
