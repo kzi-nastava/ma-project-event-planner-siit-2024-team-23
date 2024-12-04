@@ -15,6 +15,9 @@ public class ServiceViewModel extends ViewModel {
     private final MutableLiveData<String> category = new MutableLiveData<>();
     private final MutableLiveData<String> name = new MutableLiveData<>();
     private final MutableLiveData<String> description = new MutableLiveData<>();
+
+    private final MutableLiveData<String> customCategoryName = new MutableLiveData<>();
+    private final MutableLiveData<String> customCategoryDescription = new MutableLiveData<>();
     private final MutableLiveData<String> specificities = new MutableLiveData<>();
     private final MutableLiveData<Double> price = new MutableLiveData<>(0.0);
     private final MutableLiveData<Double> discount = new MutableLiveData<>(0.0);
@@ -95,5 +98,15 @@ public class ServiceViewModel extends ViewModel {
     }
 
 
+    public MutableLiveData<String> getCustomCategoryName() {
+        return customCategoryName;
+    }
+
+    public MutableLiveData<String> getCustomCategoryDescription() {
+        return customCategoryDescription;
+    }
+
+    public void setCustomCategoryName(String value) { customCategoryName.setValue(value); }
+    public void setCustomCategoryDescription(String value) { customCategoryDescription.setValue(value); }
 }
 
