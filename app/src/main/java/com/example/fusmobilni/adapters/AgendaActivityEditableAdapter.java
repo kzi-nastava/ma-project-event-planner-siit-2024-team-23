@@ -49,7 +49,6 @@ public void onBindViewHolder(@NonNull AgendaActivityEditableAdapter.AgendaViewHo
     String timeRange = timeFormat.format(activity.getStartTime()) + " - " + timeFormat.format(activity.getEndTime());
     holder.timeRange.setText(timeRange);
     holder.deleteView.setOnClickListener(v->{
-            Toast.makeText(holder.title.getContext(), "Delete", Toast.LENGTH_SHORT).show();
             agendaActivities.remove(position);
             notifyDataSetChanged();
         });

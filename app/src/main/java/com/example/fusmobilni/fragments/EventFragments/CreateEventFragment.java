@@ -22,6 +22,7 @@ import com.example.fusmobilni.databinding.FragmentCreateEventBinding;
 import com.example.fusmobilni.fragments.EventFragments.CreateEventSteps.CreateEventStepOne;
 import com.example.fusmobilni.fragments.EventFragments.CreateEventSteps.CreateEventStepThree;
 import com.example.fusmobilni.fragments.EventFragments.CreateEventSteps.CreateEventStepTwo;
+import com.example.fusmobilni.fragments.EventFragments.CreateEventSteps.InvitationsFragment;
 import com.example.fusmobilni.interfaces.FragmentValidation;
 import com.example.fusmobilni.viewModels.EventViewModel;
 import com.google.android.material.button.MaterialButton;
@@ -70,7 +71,7 @@ public class CreateEventFragment extends Fragment {
         _backButton = _binding.backButton;
         _viewPager = _binding.viewPager;
 
-        _fragments = new ArrayList<>(List.of(new CreateEventStepOne(), new CreateEventStepTwo(), new CreateEventStepThree()));
+        _fragments = new ArrayList<>(List.of(new CreateEventStepOne(), new CreateEventStepTwo(), new CreateEventStepThree(), new InvitationsFragment()));
         _eventAdapter = new CreateEventAdapter(requireActivity(), _fragments);
         _viewPager.setAdapter(_eventAdapter);
         if (getArguments() != null) {

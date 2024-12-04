@@ -95,6 +95,7 @@ public class CreateEventStepThree extends Fragment implements FragmentValidation
         _binding.eventDescriptionInput.setEndIconVisible(false);
         _binding.etEndTimeInput.setEndIconVisible(false);
         _binding.etStartTimeInput.setEndIconVisible(false);
+        Toast.makeText(requireContext(), "Added successfully!", Toast.LENGTH_SHORT).show();
         _adapter.addAgendaActivity(newActivity);
     }
 

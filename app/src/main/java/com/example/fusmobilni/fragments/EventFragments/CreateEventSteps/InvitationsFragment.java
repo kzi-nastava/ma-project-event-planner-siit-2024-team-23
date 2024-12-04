@@ -1,4 +1,4 @@
-package com.example.fusmobilni.fragments;
+package com.example.fusmobilni.fragments.EventFragments.CreateEventSteps;
 
 import android.os.Bundle;
 
@@ -9,15 +9,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.fusmobilni.R;
 import com.example.fusmobilni.adapters.EmailInvitationAdapter;
 import com.example.fusmobilni.databinding.FragmentInvitationsBinding;
+import com.example.fusmobilni.interfaces.FragmentValidation;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.regex.Pattern;
 
 
-public class InvitationsFragment extends Fragment {
+public class InvitationsFragment extends Fragment implements FragmentValidation {
 
     private FragmentInvitationsBinding _binding;
     private EmailInvitationAdapter _invitationAdapter;
@@ -68,5 +68,10 @@ public class InvitationsFragment extends Fragment {
     }
     private boolean validateEmail(String email){
         return !email.isEmpty() && EMAIL_PATTERN.matcher(email).matches();
+    }
+
+    @Override
+    public boolean validate() {
+        return true;
     }
 }

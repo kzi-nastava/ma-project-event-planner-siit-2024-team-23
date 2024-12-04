@@ -258,7 +258,7 @@
         />
     <fragment
         android:id="@+id/event_invitations_fragment"
-        android:name="com.example.fusmobilni.fragments.InvitationsFragment"
+        android:name="com.example.fusmobilni.fragments.EventFragments.CreateEventSteps.InvitationsFragment"
         android:label="Invitations"
         tools:layout="@layout/fragment_invitations"/>
     <action
