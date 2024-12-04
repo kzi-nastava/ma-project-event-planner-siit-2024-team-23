@@ -378,10 +378,49 @@
     <fragment
         android:id="@+id/createEventFragment"
         android:name="com.example.fusmobilni.fragments.EventFragments.CreateEventFragment"
-        android:label="fragment_create_event"
+        android:label="Create event"
         tools:layout="@layout/fragment_create_event" >
         <action
             android:id="@+id/action_createEventFragment_to_eventOrganizerEventDetailsFragment"
             app:destination="@id/eventOrganizerEventDetailsFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/viewProductsFragment"
+        android:name="com.example.fusmobilni.fragments.EventFragments.CreateEventSteps.ChooseProductFragment"
+        android:label="View Products"
+        tools:layout="@layout/fragment_choose_product">
+        <!--        <action-->
+        <!--            android:id="@+id/action_viewProductsFragment_to_productDetailsFragment"-->
+        <!--            app:destination="@id/productDetailsFragment" -->
+        <!--            />-->
+        <action
+            android:id="@+id/action_viewProductsFragment_to_stepTwoFragment"
+            app:destination="@id/createEventFragment" />
+    </fragment>
+
+    <!-- Product Details Fragment -->
+    <!--    <fragment-->
+    <!--        android:id="@+id/productDetailsFragment"-->
+    <!--        android:name="com.example.fusmobilni.fragments.ProductDetailsFragment"-->
+    <!--        android:label="Product Details"-->
+    <!--        tools:layout="@layout/fragment_product_details">-->
+    <!--        <action-->
+    <!--            android:id="@+id/action_productDetailsFragment_to_stepTwoFragment"-->
+    <!--            app:popUpTo="@id/viewProductsFragment"-->
+    <!--            app:destination="@id/stepTwoFragment" />-->
+    <!--    </fragment>-->
+
+    <!-- Step Two Fragment (Return Point) -->
+    <fragment
+        android:id="@+id/stepTwoFragment"
+        android:name="com.example.fusmobilni.fragments.EventFragments.CreateEventFragment"
+        android:label="Step Two"
+        tools:layout="@layout/fragment_create_event" >
+
+    </fragment>
+    <action
+        android:id="@+id/action_stepTwoFragment_to_viewProductsFragment"
+        app:destination="@id/viewProductsFragment"
+        />
+
 </navigation>

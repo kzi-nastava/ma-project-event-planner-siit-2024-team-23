@@ -288,6 +288,12 @@
     <string name="event_type_label">Event Type</string>
     <string name="max_visitors">Max Visitors</string>
     <string name="privacy_type">Privacy Type</string>
+    <string name="budget_planing">Budget planing</string>
+    <string name="plan_agenda">Plan event agenda</string>
+    <string name="planned_budget">Planned Budget</string>
+    <string name="no_item_selected">No item selected</string>
+    <string name="actual_price">Actual price</string>
+    <string name="add">Add</string>
     <string-array name="privacy_type_options">
         <item>Private</item>
         <item>Public</item>

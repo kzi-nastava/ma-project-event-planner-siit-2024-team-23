@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.fusmobilni.model.Event;
+import com.example.fusmobilni.model.EventType;
 
 import java.util.List;
 
@@ -17,6 +18,7 @@ public class EventViewModel extends ViewModel {
     private MutableLiveData<String> date = new MutableLiveData<>("");
     private MutableLiveData<String> location = new MutableLiveData<>("");
     private MutableLiveData<String> category = new MutableLiveData<>("");
+    private MutableLiveData<EventType> eventType = new MutableLiveData<>(null);
     private final MutableLiveData<Boolean> isUpdating = new MutableLiveData<>(false);
 
     // Setters for the fields
@@ -67,6 +69,14 @@ public class EventViewModel extends ViewModel {
 
     public LiveData<Boolean> getIsUpdating() {
         return isUpdating;
+    }
+
+    public LiveData<EventType> getEventType() {
+        return eventType;
+    }
+
+    public void setEventType(EventType eventType) {
+        this.eventType.setValue(eventType);
     }
 
     // Method to populate the ViewModel with an Event object

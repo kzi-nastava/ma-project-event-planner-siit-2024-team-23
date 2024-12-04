@@ -20,6 +20,7 @@ import com.example.fusmobilni.adapters.EventOrganizerEventAdapter;
 import com.example.fusmobilni.adapters.RegistrationAdapter;
 import com.example.fusmobilni.databinding.FragmentCreateEventBinding;
 import com.example.fusmobilni.fragments.EventFragments.CreateEventSteps.CreateEventStepOne;
+import com.example.fusmobilni.fragments.EventFragments.CreateEventSteps.CreateEventStepThree;
 import com.example.fusmobilni.fragments.EventFragments.CreateEventSteps.CreateEventStepTwo;
 import com.example.fusmobilni.interfaces.FragmentValidation;
 import com.example.fusmobilni.viewModels.EventViewModel;
@@ -67,7 +68,7 @@ public class CreateEventFragment extends Fragment {
         _nextButton = _binding.nextButton;
         _backButton = _binding.backButton;
 
-        _fragments = new ArrayList<>(List.of(new CreateEventStepOne(), new CreateEventStepTwo()));
+        _fragments = new ArrayList<>(List.of(new CreateEventStepOne(), new CreateEventStepTwo(), new CreateEventStepThree()));
         _eventAdapter = new CreateEventAdapter(requireActivity(), _fragments);
         _viewPager.setAdapter(_eventAdapter);
 
