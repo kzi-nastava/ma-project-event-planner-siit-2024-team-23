@@ -410,7 +410,7 @@
     <fragment
         android:id="@+id/stepTwoFragment"
         android:name="com.example.fusmobilni.fragments.EventFragments.CreateEventFragment"
-        android:label="Step Two"
+        android:label=""
         tools:layout="@layout/fragment_create_event" >
 
     </fragment>
