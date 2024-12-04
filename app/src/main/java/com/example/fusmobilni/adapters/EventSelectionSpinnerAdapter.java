@@ -17,8 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EventSelectionSpinnerAdapter extends ArrayAdapter<Event> {
-    private Context _context;
-    private List<Event> _events;
+    private final Context _context;
+    private final List<Event> _events;
 
     public EventSelectionSpinnerAdapter(Context context, List<Event> events) {
         super(context, R.layout.event_dropdown_item, new ArrayList<>(events));
@@ -33,7 +33,7 @@ public class EventSelectionSpinnerAdapter extends ArrayAdapter<Event> {
     }
 
     @Override
-    public View getDropDownView(int position, View convertView, ViewGroup parent) {
+    public View getDropDownView(int position, View convertView, @NonNull ViewGroup parent) {
         return createItemView(position, convertView, parent);
     }
 
@@ -47,7 +47,7 @@ public class EventSelectionSpinnerAdapter extends ArrayAdapter<Event> {
         Event event = _events.get(position);
         name.setText(event.getTitle());
         day.setText(event.getDay());
-        monthYear.setText(event.getMonth() + " " + event.getYear());
+        monthYear.setText(String.format("%s %s", event.getMonth(), event.getYear()));
         location.setText(event.getLocation());
 
 

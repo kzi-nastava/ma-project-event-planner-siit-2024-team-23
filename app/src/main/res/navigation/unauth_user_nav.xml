@@ -39,6 +39,9 @@
         <action
             android:id="@+id/action_home_fragment_to_eventTypeFragment"
             app:destination="@id/event_types_fragment" />
+        <action
+            android:id="@+id/action_home_fragment_to_eventOrganizerEventDetailsFragment"
+            app:destination="@id/eventOrganizerEventDetailsFragment" />
     </fragment>
 
     <fragment
@@ -223,6 +226,10 @@
         <action
             android:id="@+id/action_viewProfileFragment_to_userCalendarFragment"
             app:destination="@id/userCalendarFragment" />
+        <action
+            android:id="@+id/action_viewProfileFragment_to_eventDetailsFragment"
+            app:destination="@id/eventDetailsFragment"
+            />
     </fragment>
     <fragment
         android:id="@+id/userCalendarFragment"
@@ -232,6 +239,9 @@
         <action
             android:id="@+id/action_userCalendarFragment_to_viewProfileFragment"
             app:destination="@id/viewProfileFragment" />
+        <action
+            android:id="@+id/action_userCalendarFragment_to_eventDetailsFragment"
+            app:destination="@id/eventDetailsFragment" />
     </fragment>
 
 
@@ -248,7 +258,7 @@
         />
     <fragment
         android:id="@+id/event_invitations_fragment"
-        android:name="com.example.fusmobilni.fragments.InvitationsFragment"
+        android:name="com.example.fusmobilni.fragments.EventFragments.CreateEventSteps.InvitationsFragment"
         android:label="Invitations"
         tools:layout="@layout/fragment_invitations"/>
     <action
@@ -330,6 +340,22 @@
         android:id="@+id/action_to_fast_register_activity"
         app:destination="@id/fast_register_activity"/>
     <fragment
+        android:id="@+id/eventDetailsFragment"
+        android:name="com.example.fusmobilni.fragments.EventFragments.EventDetailsFragment"
+        android:label="Details" />
+    <fragment
+        android:id="@+id/eventOrganizerEventDetailsFragment"
+        android:name="com.example.fusmobilni.fragments.EventFragments.EventOrganizerEventFragment"
+        android:label="My events"
+        tools:layout="@layout/fragment_event_organizer_event_details" >
+        <action
+            android:id="@+id/action_eventOrganizerEventDetailsFragment_to_createEventFragment"
+            app:destination="@id/createEventFragment" />
+        <action
+            android:id="@+id/action_eventOrganizerEventDetailsFragment_to_eventDetailsFragment"
+            app:destination="@id/eventDetailsFragment" />
+    </fragment>
+    <fragment
         android:id="@+id/event_types_fragment"
         android:name="com.example.fusmobilni.fragments.EventTypeFragments.EventTypeFragment"
         android:label="Event type"
@@ -359,4 +385,37 @@
             android:name="product"
             app:argType="com.example.fusmobilni.model.Product"/>
     </fragment>
+    <fragment
+        android:id="@+id/createEventFragment"
+        android:name="com.example.fusmobilni.fragments.EventFragments.CreateEventFragment"
+        android:label="Create event"
+        tools:layout="@layout/fragment_create_event" >
+    </fragment>
+    <action
+        android:id="@+id/action_createEventFragment_to_eventOrganizerEventDetailsFragment"
+        app:destination="@id/eventOrganizerEventDetailsFragment" />
+    <fragment
+        android:id="@+id/viewProductsFragment"
+        android:name="com.example.fusmobilni.fragments.EventFragments.CreateEventSteps.ChooseProductFragment"
+        android:label="View Products"
+        tools:layout="@layout/fragment_choose_product">
+        <!--        <action-->
+        <!--            android:id="@+id/action_viewProductsFragment_to_productDetailsFragment"-->
+        <!--            app:destination="@id/productDetailsFragment" -->
+        <!--            />-->
+    </fragment>
+    <action
+        android:id="@+id/action_viewProductsFragment_to_stepTwoFragment"
+        app:destination="@id/stepTwoFragment" />
+    <fragment
+        android:id="@+id/stepTwoFragment"
+        android:name="com.example.fusmobilni.fragments.EventFragments.CreateEventFragment"
+        android:label=""
+        tools:layout="@layout/fragment_create_event" >
+
+    </fragment>
+    <action
+        android:id="@+id/action_stepTwoFragment_to_viewProductsFragment"
+        app:destination="@id/viewProductsFragment"
+        />
 </navigation>

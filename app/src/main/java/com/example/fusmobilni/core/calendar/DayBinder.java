@@ -3,12 +3,14 @@ package com.example.fusmobilni.core.calendar;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
+import androidx.navigation.Navigation;
 
 import com.example.fusmobilni.R;
 import com.example.fusmobilni.model.Event;
@@ -47,9 +49,13 @@ public class DayBinder implements MonthDayBinder<DayViewContainer> {
             container.textView.setBackgroundResource(R.drawable.circle_today);
             container.textView.setTextColor(Color.WHITE);
             // TODO here redirect to the concrete event page!
-            container.textView.setOnClickListener(v ->
-                    Toast.makeText(container.textView.getContext(),
-                    event.getTitle(), Toast.LENGTH_SHORT).show());
+            container.textView.setOnClickListener(v -> {
+                Toast.makeText(container.textView.getContext(),
+                        event.getTitle(), Toast.LENGTH_SHORT).show();
+                Bundle bundle = new Bundle();
+                bundle.putParcelable("event", event);
+                Navigation.findNavController(container.textView).navigate(R.id.action_userCalendarFragment_to_eventDetailsFragment, bundle);
+            });
         }else{
             container.textView.setBackground(null);
             if (day.getPosition() == DayPosition.MonthDate) {

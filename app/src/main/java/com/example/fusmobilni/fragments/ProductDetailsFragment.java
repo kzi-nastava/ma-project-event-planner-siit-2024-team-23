@@ -3,6 +3,7 @@ package com.example.fusmobilni.fragments;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -64,6 +65,12 @@ public class ProductDetailsFragment extends Fragment {
         _binding.textViewOrganizerNameProductDetails.setText("Ibrahimovic");
         _binding.textViewProductDescriptionDetails.setText(product.getDescription());
         _binding.imageView5.setImageResource(R.drawable.person);
+        _binding.buyProductButton.setOnClickListener(v->{
+            Toast.makeText(requireContext(), "Product bought successfully", Toast.LENGTH_SHORT).show();
+            Bundle bundle = new Bundle();
+            bundle.putInt("currFragment", 1);
+            Navigation.findNavController(_binding.getRoot()).navigate(R.id.action_viewProductsFragment_to_stepTwoFragment, bundle);
+        });
 
         initializeFavoriteButton();
         return view;
