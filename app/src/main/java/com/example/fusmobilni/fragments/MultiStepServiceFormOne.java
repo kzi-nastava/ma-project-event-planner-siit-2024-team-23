@@ -18,6 +18,7 @@ import com.example.fusmobilni.viewModels.ServiceViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class MultiStepServiceFormOne extends Fragment {
 
@@ -52,9 +53,22 @@ public class MultiStepServiceFormOne extends Fragment {
         binding.eventTypesInputStep1.setOnClickListener(v -> showMultiSelectDialog());
         populateInputs();
 
+        viewModel.getIsUpdating().observe(getViewLifecycleOwner(), isUpdating -> {
+            if (!isUpdating)
+                binding.dropdownMenuStep1.setVisibility(View.VISIBLE);
+        });
+
         binding.autoCompleteTextviewStep1.setOnItemClickListener((parent, v, position, id) -> {
             String selectedCategory = (String) parent.getItemAtPosition(position);
             viewModel.setCategory(selectedCategory);
+
+            if (Objects.equals(selectedCategory, "Custom")) {
+                binding.customCategoryNameLabel.setVisibility(View.VISIBLE);
+                binding.customCategoryDescriptionLabel.setVisibility(View.VISIBLE);
+            } else {
+                binding.customCategoryNameLabel.setVisibility(View.INVISIBLE);
+                binding.customCategoryDescriptionLabel.setVisibility(View.INVISIBLE);
+            }
         });
 
 
@@ -75,6 +89,8 @@ public class MultiStepServiceFormOne extends Fragment {
         viewModel.setDescription(String.valueOf(binding.descriptionText.getText()));
         viewModel.setPrice(Double.valueOf(String.valueOf(binding.priceText.getText())));
         viewModel.setDiscount(Double.valueOf(String.valueOf(binding.discountText.getText())));
+        viewModel.setCustomCategoryName(String.valueOf(binding.customCategoryName.getText()));
+        viewModel.setCustomCategoryDescription(String.valueOf(binding.customCategoryDescription.getText()));
     }
 
 

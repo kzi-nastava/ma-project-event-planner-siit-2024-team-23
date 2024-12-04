@@ -6,6 +6,7 @@
     <string name="label">Name</string>
     <string-array name="categories">
         <item>Music</item>
+        <item>Custom</item>
         <item>Food</item>
         <item>Beverages</item>
         <item>Sport</item>
@@ -185,6 +186,8 @@
     <string name="are_you_sure_you_want_to_delete_service">Are you sure you want to delete service?</string>
     <string name="cancel">Cancel</string>
     <string name="confirm">Confirm</string>
+    <string name="customCategoryName">Custom Category Name</string>
+    <string name="customCategoryDescription">Custom Category Description</string>
     <string name="service_creation_form">Service Creation Form</string>
     <string name="category">Category</string>
     <string name="event_type">Event Type</string>
