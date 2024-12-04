@@ -294,6 +294,8 @@
     <string name="no_item_selected">No item selected</string>
     <string name="actual_price">Actual price</string>
     <string name="add">Add</string>
+    <string name="start_time">Start time</string>
+    <string name="end_time">End time</string>
     <string-array name="privacy_type_options">
         <item>Private</item>
         <item>Public</item>

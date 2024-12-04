@@ -57,21 +57,27 @@ public class CreateEventFragment extends Fragment {
         // Inflate the layout for this fragment
         _binding = FragmentCreateEventBinding.inflate(getLayoutInflater());
         View view = _binding.getRoot();
+
         _eventViewModel = new ViewModelProvider(requireActivity()).get(EventViewModel.class);
         populateData();
         populateInputs();
         if(Boolean.TRUE.equals(_eventViewModel.getIsUpdating().getValue())) {
             _binding.eventTitle.setText(R.string.update_event);
         }
-        _viewPager = _binding.viewPager;
+
         _signUpLayout = _binding.signUpLayout;
         _nextButton = _binding.nextButton;
         _backButton = _binding.backButton;
+        _viewPager = _binding.viewPager;
 
         _fragments = new ArrayList<>(List.of(new CreateEventStepOne(), new CreateEventStepTwo(), new CreateEventStepThree()));
         _eventAdapter = new CreateEventAdapter(requireActivity(), _fragments);
         _viewPager.setAdapter(_eventAdapter);
-
+        if (getArguments() != null) {
+            int currFragment = getArguments().getInt("currFragment");
+            _backButton.setVisibility(View.VISIBLE);
+            _viewPager.setCurrentItem(currFragment);
+        }
         _nextButton.setOnClickListener(v -> nextButtonClick());
 
         _backButton.setOnClickListener(v -> {
