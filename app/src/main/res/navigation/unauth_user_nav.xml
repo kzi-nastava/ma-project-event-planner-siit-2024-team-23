@@ -297,7 +297,9 @@
         android:label="CategoryProposals"
         android:layout="@layout/fragment_category_proposals_page">
     </fragment>
-
+    <action
+        android:id="@+id/action_product_card_to_product_details"
+        app:destination="@id/productDetailsFragment"/>
     <action
         android:id="@+id/categoriesPage_toCategoryProposals"
         app:destination="@id/categories_proposal_page"
@@ -348,5 +350,13 @@
             app:destination="@id/event_types_fragment"
             />
 
+    </fragment>
+    <fragment
+        android:id="@+id/productDetailsFragment"
+        android:name="com.example.fusmobilni.fragments.ProductDetailsFragment"
+        android:label="Product Details">
+        <argument
+            android:name="product"
+            app:argType="com.example.fusmobilni.model.Product"/>
     </fragment>
 </navigation>
