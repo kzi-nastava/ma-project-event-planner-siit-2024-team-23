@@ -2,6 +2,12 @@ plugins {
     alias(libs.plugins.android.application)
 }
 
+def getIpAddress() {
+    Properties properties = new Properties()
+    properties.load(project.rootProject.file('local.properties').newDataInputStream())
+    return properties.getProperty("ip_addr");
+}
+
 android {
     namespace 'com.example.fusmobilni'
     compileSdk 34
@@ -12,8 +18,9 @@ android {
         targetSdk 34
         versionCode 1
         versionName "1.0"
-
+        buildConfigField "String", "IP_ADDR", "\""+getIpAddress()+"\""
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
     }
 
     buildTypes {
@@ -28,6 +35,7 @@ android {
     }
     buildFeatures{
         viewBinding true
+        buildConfig true
     }
 
     task wrapper(type: Wrapper){
@@ -59,4 +67,8 @@ dependencies {
     implementation libs.datastore.preferences
     implementation libs.gson
     implementation libs.view
+    implementation 'com.squareup.retrofit2:retrofit:2.4.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
+    implementation 'com.google.code.gson:gson:2.10.1'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.11.0'
 }

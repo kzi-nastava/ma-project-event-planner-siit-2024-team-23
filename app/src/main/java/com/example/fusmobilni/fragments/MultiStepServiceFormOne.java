@@ -7,24 +7,36 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
 import com.example.fusmobilni.R;
+import com.example.fusmobilni.clients.ClientUtils;
 import com.example.fusmobilni.databinding.FragmentMultiStepServiceFormOneBinding;
+import com.example.fusmobilni.requests.categories.GetCategoriesResponse;
+import com.example.fusmobilni.requests.categories.GetCategoryResponse;
+import com.example.fusmobilni.requests.eventTypes.GetEventTypesResponse;
 import com.example.fusmobilni.viewModels.ServiceViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class MultiStepServiceFormOne extends Fragment {
 
 
     private FragmentMultiStepServiceFormOneBinding binding;
     private ServiceViewModel viewModel;
+
+    private GetCategoriesResponse categories;
+    private GetEventTypesResponse eventTypes;
 
     public MultiStepServiceFormOne() {
     }
@@ -45,6 +57,35 @@ public class MultiStepServiceFormOne extends Fragment {
         binding = FragmentMultiStepServiceFormOneBinding.inflate(inflater, container, false);
         viewModel = new ViewModelProvider(requireActivity()).get(ServiceViewModel.class);
         View view = binding.getRoot();
+
+        Call<GetCategoriesResponse> categoriesCall = ClientUtils.categoryService.findAll();
+        categoriesCall.enqueue(new Callback<GetCategoriesResponse>() {
+            @Override
+            public void onResponse(Call<GetCategoriesResponse> call, Response<GetCategoriesResponse> response) {
+                categories = response.body();
+                for(GetCategoryResponse category: categories.categories) {
+                    Log.d("tag", category.name);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<GetCategoriesResponse> call, Throwable t) {
+                Log.d("tag", t.getMessage());
+            }
+        });
+
+        Call<GetEventTypesResponse> eventTypesCall = ClientUtils.eventTypeService.findAll();
+        eventTypesCall.enqueue(new Callback<GetEventTypesResponse>() {
+            @Override
+            public void onResponse(Call<GetEventTypesResponse> call, Response<GetEventTypesResponse> response) {
+                eventTypes = response.body();
+            }
+
+            @Override
+            public void onFailure(Call<GetEventTypesResponse> call, Throwable t) {
+
+            }
+        });
 
         String[] categories = getResources().getStringArray(R.array.categories);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, categories);
