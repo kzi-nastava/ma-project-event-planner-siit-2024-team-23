@@ -24,6 +24,7 @@ import com.example.fusmobilni.viewModels.ServiceViewModel;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -63,14 +64,15 @@ public class MultiStepServiceFormOne extends Fragment {
             @Override
             public void onResponse(Call<GetCategoriesResponse> call, Response<GetCategoriesResponse> response) {
                 categories = response.body();
-                for(GetCategoryResponse category: categories.categories) {
-                    Log.d("tag", category.name);
-                }
+                ArrayList<String> categoryNames = categories.categories.stream()
+                        .map(category -> category.name)
+                        .collect(Collectors.toCollection(ArrayList::new));
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, categoryNames);
+                binding.autoCompleteTextviewStep1.setAdapter(adapter);
             }
 
             @Override
             public void onFailure(Call<GetCategoriesResponse> call, Throwable t) {
-                Log.d("tag", t.getMessage());
             }
         });
 
@@ -86,10 +88,6 @@ public class MultiStepServiceFormOne extends Fragment {
 
             }
         });
-
-        String[] categories = getResources().getStringArray(R.array.categories);
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, categories);
-        binding.autoCompleteTextviewStep1.setAdapter(adapter);
 
         binding.eventTypesInputStep1.setOnClickListener(v -> showMultiSelectDialog());
         populateInputs();
@@ -162,21 +160,26 @@ public class MultiStepServiceFormOne extends Fragment {
     }
 
     private void showMultiSelectDialog() {
-        String[] eventTypes = getResources().getStringArray(R.array.EventTypes);
-        boolean[] checkedItems = new boolean[eventTypes.length];
+        boolean[] checkedItems = new boolean[eventTypes.eventTypes.size()];
         List<String> selectedEventTypes = new ArrayList<>(viewModel.getEventTypes().getValue());
 
-        for (int i = 0; i < eventTypes.length; i++) {
-            checkedItems[i] = selectedEventTypes.contains(eventTypes[i]);
+        for (int i = 0; i < eventTypes.eventTypes.size(); i++) {
+            Log.d("tag", String.valueOf(checkedItems[i]) );
+            checkedItems[i] = selectedEventTypes.contains(eventTypes.eventTypes.get(i).name);
         }
+
+        String[] eventTypeNames = eventTypes.eventTypes.stream()
+                .map(eventType -> eventType.name)
+                .toArray(String[]::new);
 
         new AlertDialog.Builder(requireContext())
                 .setTitle("Select Event Types")
-                .setMultiChoiceItems(eventTypes, checkedItems, (dialog, which, isChecked) -> {
+                .setMultiChoiceItems(eventTypeNames, checkedItems, (dialog, which, isChecked) -> {
                     if (isChecked) {
-                        selectedEventTypes.add(eventTypes[which]);
+                        selectedEventTypes.add(eventTypeNames[which]);
+                        Log.d("tag", "d");
                     } else {
-                        selectedEventTypes.remove(eventTypes[which]);
+                        selectedEventTypes.remove(eventTypeNames[which]);
                     }
                 })
                 .setPositiveButton("OK", (dialog, which) -> {
