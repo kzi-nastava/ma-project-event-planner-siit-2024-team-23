@@ -18,6 +18,7 @@ import com.example.fusmobilni.requests.categories.GetCategoriesResponse;
 import com.example.fusmobilni.requests.eventTypes.GetEventTypesResponse;
 import com.example.fusmobilni.requests.services.CreateServiceRequest;
 import com.example.fusmobilni.requests.services.GetServiceResponse;
+import com.example.fusmobilni.requests.services.UpdateServiceRequest;
 import com.google.gson.Gson;
 
 import java.io.File;
@@ -68,6 +69,7 @@ public class ServiceViewModel extends ViewModel {
     private final MutableLiveData<ArrayList<MultipartBody.Part>> sendImages = new MutableLiveData<>();
 
     private GetEventTypesResponse eventTypeResponses;
+    private Long serviceId;
 
 
     // Getters for LiveData
@@ -96,7 +98,7 @@ public class ServiceViewModel extends ViewModel {
     public void setPrice(Double value) { price.setValue(value); }
     public void setDiscount(Double value) { discount.setValue(value); }
     public void addImageUri(Uri uri) {
-        ArrayList<Uri> currentUris = imageUris.getValue();
+        ArrayList<Uri> currentUris = new ArrayList<>(imageUris.getValue());
         currentUris.add(uri);
         imageUris.setValue(currentUris);
     }
@@ -117,12 +119,39 @@ public class ServiceViewModel extends ViewModel {
 
 
     public void populate(GetServiceResponse service, Context context) {
-
+        isUpdating.setValue(true);
+        serviceId = service.getId();
         Call<GetEventTypesResponse> eventTypesCall = ClientUtils.eventTypeService.findAll();
         eventTypesCall.enqueue(new Callback<GetEventTypesResponse>() {
             @Override
             public void onResponse(Call<GetEventTypesResponse> call, Response<GetEventTypesResponse> response) {
                 eventTypeResponses = response.body();
+                eventTypeIds.setValue(String.join(",", service.getEventTypeIds().stream()
+                        .map(String::valueOf)
+                        .toArray(String[]::new)));
+                eventTypes.setValue(eventTypeResponses.eventTypes.stream().
+                        filter(et -> service.getEventTypeIds().contains(et.id)).
+                        map(et -> et.name).collect(Collectors.toList()));
+                categoryId.setValue(service.getCategoryId());
+                name.setValue(service.getName());
+                description.setValue(service.getDescription());
+                specificities.setValue(service.getSpecificities());
+                price.setValue(service.getPrice());
+                discount.setValue(service.getDiscount());
+                try {
+                    imageUris.setValue(convertToUrisFromBase64(context, service.getImages()));
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                isVisible.setValue(service.isVisible());
+                isAvailable.setValue(service.isAvailable());
+                duration.setValue(service.getDuration());
+                cancellationDeadline.setValue(service.getCancellationDeadline());
+                reservationDeadline.setValue(service.getReservationDeadline());
+                isAutomaticReservation.setValue(
+                        service.getReservationConfirmation() == ReservationConfirmation.AUTOMATIC);
+                reservationConfirmation.setValue(service.getReservationConfirmation());
+                isDeleted.setValue(false);
             }
 
             @Override
@@ -130,36 +159,7 @@ public class ServiceViewModel extends ViewModel {
 
             }
         });
-        eventTypeIds.setValue(String.join(",", service.getEventTypeIds().stream()
-                .map(String::valueOf)
-                .toArray(String[]::new)));
-        this.eventTypes.setValue(this.eventTypeResponses.eventTypes.stream().
-                filter(et -> service.getEventTypeIds().contains(et.id)).
-                map(et -> et.name).collect(Collectors.toList()));
-        this.categoryId.setValue(service.getCategoryId());
-        this.name.setValue(service.getName());
-        this.description.setValue(service.getDescription());
-        this.specificities.setValue(service.getSpecificities());
-        this.price.setValue(service.getPrice());
-        this.discount.setValue(service.getDiscount());
-        try {
-            this.imageUris.setValue(convertToUrisFromBase64(context, service.getImages()));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        this.isVisible.setValue(service.isVisible());
-        this.isAvailable.setValue(service.isAvailable());
-        this.duration.setValue(service.getDuration());
-        this.cancellationDeadline.setValue(service.getCancellationDeadline());
-        this.reservationDeadline.setValue(service.getReservationDeadline());
-        this.isAutomaticReservation.setValue(
-                service.getReservationConfirmation() == ReservationConfirmation.AUTOMATIC);
-        this.reservationConfirmation.setValue(service.getReservationConfirmation());
-        this.isDeleted.setValue(false);
-        this.isUpdating.setValue(true);
     }
-
-
     public static ArrayList<Uri> convertToUrisFromBase64(Context context, List<String> base64List) throws IOException {
         ArrayList<Uri> uriList = new ArrayList<>();
 
@@ -230,7 +230,55 @@ public class ServiceViewModel extends ViewModel {
 
 
     public void submit(Context context) {
-        // Serialize the object to JSON
+        if (isUpdating.getValue()) {
+            updateService(context);
+        } else {
+            createService(context);
+        }
+    }
+
+    private void updateService(Context context) {
+        Gson gson = new Gson();
+        UpdateServiceRequest request = new UpdateServiceRequest(
+                name.getValue(), description.getValue(), eventTypeIds.getValue(),
+                price.getValue(), discount.getValue(), 1L, specificities.getValue(),
+                isVisible.getValue(), isAvailable.getValue(), duration.getValue(), reservationDeadline.getValue(),
+                cancellationDeadline.getValue(), reservationConfirmation.getValue()
+        );
+        String json = gson.toJson(request);
+        RequestBody jsonRequestBody = RequestBody.create(MediaType.parse("application/json"), json);
+        try {
+            setSendImages(context);
+        } catch (IOException e) {
+            return;
+        }
+        for (MultipartBody.Part image : sendImages.getValue()) {
+            Log.d("tag", image.toString());
+        }
+        try {
+            Call<GetServiceResponse> call = ClientUtils.serviceOfferingService.update(jsonRequestBody, sendImages.getValue(), serviceId);
+            call.enqueue(new Callback<GetServiceResponse>() {
+                @Override
+                public void onResponse(Call<GetServiceResponse> call, Response<GetServiceResponse> response) {
+                    if (response.isSuccessful()) {
+                        Log.d("tag", "Response: " + response.body().getName());
+                    } else {
+                        Log.d("tag", String.valueOf(response.code()));
+                        Log.d("tag", String.valueOf(response.headers()));
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<GetServiceResponse> call, Throwable t) {
+                    Log.e("tag", "Request failed", t);
+                }
+            });
+        } catch (Exception e) {
+            Log.d("tag", "Exception during Retrofit call"+ e.getMessage());
+        }
+    }
+
+    public void createService(Context context) {
         Gson gson = new Gson();
         CreateServiceRequest request = new CreateServiceRequest(
                 name.getValue(), description.getValue(), categoryId.getValue(), eventTypeIds.getValue(),
@@ -239,22 +287,6 @@ public class ServiceViewModel extends ViewModel {
                 cancellationDeadline.getValue(), reservationConfirmation.getValue()
         );
         String json = gson.toJson(request);
-        Log.d("CreateServiceRequest", "Name: " + request.getName());
-        Log.d("CreateServiceRequest", "Description: " + request.getDescription());
-        Log.d("CreateServiceRequest", "Category ID: " + request.getCategoryId());
-        Log.d("CreateServiceRequest", "Event Type IDs: " + request.getEventTypeIds());
-        Log.d("CreateServiceRequest", "Price: " + request.getPrice());
-        Log.d("CreateServiceRequest", "Discount: " + request.getDiscount());
-        Log.d("CreateServiceRequest", "Service Provider ID: " + request.getServiceProviderId());
-        Log.d("CreateServiceRequest", "Specificities: " + request.getSpecificities());
-        Log.d("CreateServiceRequest", "Is Visible: " + request.isVisible());
-        Log.d("CreateServiceRequest", "Is Available: " + request.isAvailable());
-        Log.d("CreateServiceRequest", "Duration: " + request.getDuration());
-        Log.d("CreateServiceRequest", "Reservation Deadline: " + request.getReservationDeadline());
-        Log.d("CreateServiceRequest", "Cancellation Deadline: " + request.getCancellationDeadline());
-        Log.d("CreateServiceRequest", "Reservation Confirmation: " + request.getReservationConfirmation());
-
-
         // Create RequestBody for the JSON
         RequestBody jsonRequestBody = RequestBody.create(MediaType.parse("application/json"), json);
 
@@ -268,15 +300,14 @@ public class ServiceViewModel extends ViewModel {
         call.enqueue(new Callback<GetServiceResponse>() {
             @Override
             public void onResponse(Call<GetServiceResponse> call, Response<GetServiceResponse> response) {
-                Log.d("tag", "Service created successfully");
             }
 
             @Override
             public void onFailure(Call<GetServiceResponse> call, Throwable t) {
-                Log.d("tag", "Error: " + t.getMessage());
             }
         });
     }
+
 
 
 }

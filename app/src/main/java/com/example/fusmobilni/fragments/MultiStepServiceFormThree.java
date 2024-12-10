@@ -136,6 +136,12 @@ public class MultiStepServiceFormThree extends Fragment implements ItemClickList
 
     @Override
     public void onItemRemove(int position) {
-        imageAdapter.removeItem(position);
+        ArrayList<Uri> updatedUris = new ArrayList<>(imageUris);
+        updatedUris.remove(position);
+        imageUris = updatedUris;
+        imageAdapter.setData(updatedUris);
+        imageAdapter.notifyItemRemoved(position);
+        setValues();
     }
+
 }

@@ -33,12 +33,9 @@ public interface ServiceOfferingService {
             @Part List<MultipartBody.Part> images
     );
 
-    @Headers({
-            "User-Agent: Mobile-Android",
-            "Content-Type:multipart/form-data"
-    })
-    @PUT("services/{id}")
-    Call<GetServiceResponse> update(@PartMap Map<String, RequestBody> params,
+    @Multipart
+    @PUT("services/{id}/mobile")
+    Call<GetServiceResponse> update(@Part("data") RequestBody body,
                                     @Part List<MultipartBody.Part> images,
                                     @Path("id") Long id);
 
