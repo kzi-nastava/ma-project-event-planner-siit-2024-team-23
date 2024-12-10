@@ -13,6 +13,7 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -86,6 +87,7 @@ public class MultiStepServiceFormThree extends Fragment implements ItemClickList
         });
         binding.forwardButton.setOnClickListener(v -> {
             //create new service
+            viewModel.submit(getContext());
             requireActivity().getViewModelStore().clear();
             Navigation.findNavController(view).navigate(R.id.action_serviceCreationStepThree_toServiceView);
         });
@@ -108,10 +110,12 @@ public class MultiStepServiceFormThree extends Fragment implements ItemClickList
                     ClipData.Item item = clipData.getItemAt(i);
                     Uri uri = item.getUri();
                     imageUris.add(uri);
+                    viewModel.addImageUri(uri);
                 }
             } else if (data.getData() != null) {
                 Uri uri = data.getData();
                 imageUris.add(uri);
+                viewModel.addImageUri(uri);
             }
             imageAdapter.notifyDataSetChanged();
         }

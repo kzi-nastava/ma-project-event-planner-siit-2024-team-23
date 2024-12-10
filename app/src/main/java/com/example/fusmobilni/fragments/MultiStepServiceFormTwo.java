@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 
 import com.example.fusmobilni.R;
 import com.example.fusmobilni.databinding.FragmentMultiStepServiceFormTwoBinding;
+import com.example.fusmobilni.model.enums.ReservationConfirmation;
 import com.example.fusmobilni.viewModels.ServiceViewModel;
 
 
@@ -63,15 +64,17 @@ public class MultiStepServiceFormTwo extends Fragment {
 
     private void setValues() {
         viewModel.setSpecificities(String.valueOf(binding.specificitiesText.getText()));
-        viewModel.setDuration(Double.valueOf(String.valueOf(binding.serviceDurationInput.getText())));
+        viewModel.setDuration(Integer.valueOf(String.valueOf(binding.serviceDurationInput.getText())));
         viewModel.setReservationDeadline(Integer.valueOf(String.valueOf(binding.reservationDeadlineInput.getText())));
         viewModel.setCancellationDeadline(Integer.valueOf(String.valueOf(binding.cancellationDeadlineInput.getText())));
         viewModel.setIsVisible(binding.visibilityCheckbox.isChecked());
         viewModel.setIsAvailable(binding.availabilityCheckbox.isChecked());
         if (binding.confirmationAutomatic.isChecked())
             viewModel.setIsAutomaticReservation(true);
+        viewModel.setReservationConfirmation(ReservationConfirmation.AUTOMATIC);
         if(binding.confirmationManual.isChecked())
             viewModel.setIsAutomaticReservation(false);
+        viewModel.setReservationConfirmation(ReservationConfirmation.MANUAL);
     }
 
 

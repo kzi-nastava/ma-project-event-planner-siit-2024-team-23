@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +15,10 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 
 import com.example.fusmobilni.R;
+import com.example.fusmobilni.clients.ClientUtils;
 import com.example.fusmobilni.model.PrototypeService;
+import com.example.fusmobilni.requests.categories.GetCategoriesResponse;
+import com.example.fusmobilni.requests.eventTypes.GetEventTypesResponse;
 import com.example.fusmobilni.viewModels.ServiceProviderViewModel;
 import com.example.fusmobilni.viewModels.ServiceSearchViewModel;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -25,10 +29,18 @@ import com.google.android.material.switchmaterial.SwitchMaterial;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ServiceProviderFilterFragment extends BottomSheetDialogFragment {
 
     private ServiceProviderViewModel viewModel;
+
+    private GetCategoriesResponse categories;
+    private GetEventTypesResponse eventTypes;
     private AutoCompleteTextView categoryDropdown;
     private AutoCompleteTextView eventTypeDropdown;
     private RangeSlider priceRangeSlider;
@@ -54,13 +66,55 @@ public class ServiceProviderFilterFragment extends BottomSheetDialogFragment {
                              Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.fragment_service_provider_filter, container, false);
         viewModel = new ViewModelProvider(requireActivity()).get(ServiceProviderViewModel.class);
+        Call<GetCategoriesResponse> categoriesCall = ClientUtils.categoryService.findAll();
+        categoriesCall.enqueue(new Callback<GetCategoriesResponse>() {
+            @Override
+            public void onResponse(Call<GetCategoriesResponse> call, Response<GetCategoriesResponse> response) {
+                categories = response.body();
+                ArrayList<String> categoryNames = categories.categories.stream()
+                        .map(category -> category.name)
+                        .collect(Collectors.toCollection(ArrayList::new));
+                ArrayAdapter<String> categoryAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, categoryNames);
+                categoryDropdown.setAdapter(categoryAdapter);
+            }
+
+            @Override
+            public void onFailure(Call<GetCategoriesResponse> call, Throwable t) {
+            }
+        });
+
+        Call<GetEventTypesResponse> eventTypesCall = ClientUtils.eventTypeService.findAll();
+        eventTypesCall.enqueue(new Callback<GetEventTypesResponse>() {
+            @Override
+            public void onResponse(Call<GetEventTypesResponse> call, Response<GetEventTypesResponse> response) {
+                eventTypes = response.body();
+                ArrayList<String> eventTypeNames = eventTypes.eventTypes.stream()
+                        .map(category -> category.name)
+                        .collect(Collectors.toCollection(ArrayList::new));
+                ArrayAdapter<String> eventTypeAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, eventTypeNames);
+                eventTypeDropdown.setAdapter(eventTypeAdapter);
+            }
+
+            @Override
+            public void onFailure(Call<GetEventTypesResponse> call, Throwable t) {
+            }
+        });
         initializeInputs(view);
         setupSwitchListeners();
         setupPriceRangeSlider();
-        setupDropdowns();
         setupDialogButtons(view);
         initializeFields();
+        setUpDropdownListeners();
         return view;
+    }
+
+    private void setUpDropdownListeners() {
+        categoryDropdown.setOnItemClickListener((parent, v, position, id) -> {
+            viewModel.setCategoryId(categories.categories.get(position).id);
+        });
+        eventTypeDropdown.setOnItemClickListener((parent, v, position, id) -> {
+            viewModel.setEventTypeId(eventTypes.eventTypes.get(position).id);
+        });
     }
 
     private void setupSwitchListeners() {
@@ -109,6 +163,7 @@ public class ServiceProviderFilterFragment extends BottomSheetDialogFragment {
 
         applyBtn.setOnClickListener(v -> {
             initializeFilterValues();
+            viewModel.applyFilters();
             dismiss();
         });
     }
@@ -136,18 +191,8 @@ public class ServiceProviderFilterFragment extends BottomSheetDialogFragment {
     @SuppressLint("DefaultLocale")
     private void setupPriceRangeSlider() {
         priceRangeSlider.setValueFrom(0f);
-        priceRangeSlider.setValueTo(10000f);
+        priceRangeSlider.setValueTo(100000f);
         priceRangeSlider.setStepSize(1f);
         priceRangeSlider.setLabelFormatter(value -> "$" + String.format("%.0f", value));
-    }
-
-    private void setupDropdowns() {
-        String[] categories = getResources().getStringArray(R.array.categories);
-        ArrayAdapter<String> categoryAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, categories);
-        categoryDropdown.setAdapter(categoryAdapter);
-
-        String[] eventTypes = getResources().getStringArray(R.array.EventTypes);
-        ArrayAdapter<String> eventTypeAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, eventTypes);
-        eventTypeDropdown.setAdapter(eventTypeAdapter);
     }
 }

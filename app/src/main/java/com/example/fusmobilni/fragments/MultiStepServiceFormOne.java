@@ -67,12 +67,14 @@ public class MultiStepServiceFormOne extends Fragment {
                 ArrayList<String> categoryNames = categories.categories.stream()
                         .map(category -> category.name)
                         .collect(Collectors.toCollection(ArrayList::new));
+                categoryNames.add("Custom");
                 ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, categoryNames);
                 binding.autoCompleteTextviewStep1.setAdapter(adapter);
             }
 
             @Override
             public void onFailure(Call<GetCategoriesResponse> call, Throwable t) {
+
             }
         });
 
@@ -100,7 +102,9 @@ public class MultiStepServiceFormOne extends Fragment {
         binding.autoCompleteTextviewStep1.setOnItemClickListener((parent, v, position, id) -> {
             String selectedCategory = (String) parent.getItemAtPosition(position);
             viewModel.setCategory(selectedCategory);
-
+            if (position < categories.categories.size()) {
+                viewModel.setCategoryId(categories.categories.get(position).id);
+            }
             if (Objects.equals(selectedCategory, "Custom")) {
                 binding.customCategoryNameLabel.setVisibility(View.VISIBLE);
                 binding.customCategoryDescriptionLabel.setVisibility(View.VISIBLE);
@@ -162,9 +166,9 @@ public class MultiStepServiceFormOne extends Fragment {
     private void showMultiSelectDialog() {
         boolean[] checkedItems = new boolean[eventTypes.eventTypes.size()];
         List<String> selectedEventTypes = new ArrayList<>(viewModel.getEventTypes().getValue());
+        ArrayList<Long> eventTypeIds = new ArrayList<>();
 
         for (int i = 0; i < eventTypes.eventTypes.size(); i++) {
-            Log.d("tag", String.valueOf(checkedItems[i]) );
             checkedItems[i] = selectedEventTypes.contains(eventTypes.eventTypes.get(i).name);
         }
 
@@ -177,13 +181,21 @@ public class MultiStepServiceFormOne extends Fragment {
                 .setMultiChoiceItems(eventTypeNames, checkedItems, (dialog, which, isChecked) -> {
                     if (isChecked) {
                         selectedEventTypes.add(eventTypeNames[which]);
-                        Log.d("tag", "d");
                     } else {
                         selectedEventTypes.remove(eventTypeNames[which]);
                     }
                 })
                 .setPositiveButton("OK", (dialog, which) -> {
                     viewModel.setEventTypes(selectedEventTypes);
+                    for(int i = 0; i < checkedItems.length; i++) {
+                        if(checkedItems[i]) {
+                            eventTypeIds.add(eventTypes.eventTypes.get(i).id);
+                        }
+                    }
+                    String concatEventTypeIds = String.join(",", eventTypeIds.stream()
+                            .map(String::valueOf)
+                            .toArray(String[]::new));
+                    viewModel.setEventTypeIds(concatEventTypeIds);
                     binding.eventTypesInputStep1.setText(String.join(", ", selectedEventTypes));
                 })
                 .setNegativeButton("Cancel", null)
