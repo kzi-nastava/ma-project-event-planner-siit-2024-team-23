@@ -79,7 +79,6 @@ public class ServiceView extends Fragment implements DeleteServiceListener {
 
             @Override
             public void onFailure(Call<GetServicesResponse> call, Throwable t) {
-                Log.d("Tag", t.getMessage());
             }
         });
         setUpAdapter();
@@ -122,12 +121,24 @@ public class ServiceView extends Fragment implements DeleteServiceListener {
         });
 
         confirmButton.setOnClickListener(v -> {
-            this.services.remove(position);
-            viewModel.setData(this.services);
-            serviceAdapter.notifyItemRemoved(position);
-            serviceAdapter.notifyItemRangeChanged(position, services.size());
-            binding.modalBackground.setVisibility(View.INVISIBLE);
-            deleteModal.setVisibility(View.INVISIBLE);
+            Long id = this.services.get(position).getId();
+            Call<Void> response = ClientUtils.serviceOfferingService.delete(id);
+            response.enqueue(new Callback<Void>() {
+                @Override
+                public void onResponse(Call<Void> call, Response<Void> response) {
+                    services.remove(position);
+                    viewModel.setData(services);
+                    serviceAdapter.notifyItemRemoved(position);
+                    serviceAdapter.notifyItemRangeChanged(position, services.size());
+                    binding.modalBackground.setVisibility(View.INVISIBLE);
+                    deleteModal.setVisibility(View.INVISIBLE);
+                }
+
+                @Override
+                public void onFailure(Call<Void> call, Throwable t) {
+
+                }
+            });
         });
     }
 

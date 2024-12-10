@@ -153,4 +153,23 @@ public class ServiceProviderViewModel extends ViewModel {
         this.eventTypeId.setValue(eventTypeId);
     }
 
+    public void delete(int position) {
+        Long id = this.services.getValue().get(position).getId();
+        Call<Void> response = ClientUtils.serviceOfferingService.delete(id);
+        response.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                List<GetServiceResponse> serviceResponses = services.getValue();
+                serviceResponses.remove(position);
+                services.setValue(serviceResponses);
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+
+            }
+        });
+    }
+
+
 }
