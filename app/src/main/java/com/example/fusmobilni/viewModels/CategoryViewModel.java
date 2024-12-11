@@ -1,11 +1,22 @@
 package com.example.fusmobilni.viewModels;
 
+import android.util.Log;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.fusmobilni.clients.ClientUtils;
 import com.example.fusmobilni.fragments.OfferingsPage;
 import com.example.fusmobilni.model.OfferingsCategory;
+import com.example.fusmobilni.requests.categories.CreateCategoryRequest;
+import com.example.fusmobilni.requests.categories.GetCategoryResponse;
+import com.example.fusmobilni.requests.categories.UpdateCategoryRequest;
+import com.google.gson.Gson;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class CategoryViewModel extends ViewModel {
 
@@ -34,15 +45,61 @@ public class CategoryViewModel extends ViewModel {
     }
     public LiveData<Boolean> getIsUpdating() {return isUpdating; }
 
-    public void populate(OfferingsCategory category) {
-        this.name.setValue(category.getName());
-        this.description.setValue(category.getDescription());
+    private Long categoryId;
+
+    public void populate(GetCategoryResponse category) {
+        categoryId = category.id;
+        this.name.setValue(category.name);
+        this.description.setValue(category.description);
         this.isUpdating.setValue(true);
     }
 
     public void cleanUp() {
+        this.categoryId = null;
         this.name.setValue("");
         this.description.setValue("");
         this.isUpdating.setValue(false);
+    }
+
+    public void submit() {
+        if (!isUpdating.getValue()) {
+            createCategory();
+        } else {
+            updateCategory();
+        }
+        cleanUp();
+    }
+
+    private void createCategory() {
+        CreateCategoryRequest request = new CreateCategoryRequest(name.getValue(), description.getValue());
+        Call<GetCategoryResponse> response = ClientUtils.categoryService.create(request);
+        response.enqueue(new Callback<GetCategoryResponse>() {
+            @Override
+            public void onResponse(Call<GetCategoryResponse> call, Response<GetCategoryResponse> response) {
+                Log.d("tag", String.valueOf(response.code()));
+            }
+
+            @Override
+            public void onFailure(Call<GetCategoryResponse> call, Throwable t) {
+
+            }
+        });
+    }
+
+
+    private void updateCategory() {
+        UpdateCategoryRequest request = new UpdateCategoryRequest(name.getValue(), description.getValue());
+        Call<GetCategoryResponse> response = ClientUtils.categoryService.update(request, categoryId);
+        response.enqueue(new Callback<GetCategoryResponse>() {
+            @Override
+            public void onResponse(Call<GetCategoryResponse> call, Response<GetCategoryResponse> response) {
+                Log.d("tag", String.valueOf(response.code()));
+            }
+
+            @Override
+            public void onFailure(Call<GetCategoryResponse> call, Throwable t) {
+
+            }
+        });
     }
 }

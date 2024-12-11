@@ -16,18 +16,25 @@ import android.widget.Button;
 import com.example.fusmobilni.R;
 import com.example.fusmobilni.adapters.CategoryAdapter;
 import com.example.fusmobilni.adapters.PupServiceAdapter;
+import com.example.fusmobilni.clients.ClientUtils;
 import com.example.fusmobilni.databinding.FragmentOfferingsPageBinding;
 import com.example.fusmobilni.databinding.FragmentServiceViewBinding;
 import com.example.fusmobilni.interfaces.CategoryListener;
 import com.example.fusmobilni.model.OfferingsCategory;
+import com.example.fusmobilni.requests.categories.GetCategoriesResponse;
+import com.example.fusmobilni.requests.categories.GetCategoryResponse;
 import com.example.fusmobilni.viewModels.CategoryViewModel;
 
 import java.util.ArrayList;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 
 public class OfferingsPage extends Fragment implements CategoryListener {
 
-    private ArrayList<OfferingsCategory> categories = new ArrayList<>();
+    private ArrayList<GetCategoryResponse> categories = new ArrayList<>();
     private CategoryAdapter adapter;
     private CategoryViewModel viewModel;
     private View deleteModal;
@@ -54,11 +61,27 @@ public class OfferingsPage extends Fragment implements CategoryListener {
         binding = FragmentOfferingsPageBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
         viewModel = new ViewModelProvider(requireActivity()).get(CategoryViewModel.class);
+
         RecyclerView recycler = binding.categoryRecyclerView;
         recycler.setLayoutManager(new LinearLayoutManager(getActivity()));
-        dummyData();
         this.adapter = new CategoryAdapter(this.categories, this);
         recycler.setAdapter(adapter);
+
+        Call<GetCategoriesResponse> request = ClientUtils.categoryService.findAll();
+        request.enqueue(new Callback<GetCategoriesResponse>() {
+            @Override
+            public void onResponse(Call<GetCategoriesResponse> call, Response<GetCategoriesResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    categories.clear();
+                    categories.addAll(response.body().categories);
+                    adapter.notifyDataSetChanged();
+                }
+            }
+            @Override
+            public void onFailure(Call<GetCategoriesResponse> call, Throwable t) {
+            }
+        });
+
         binding.floatingActionButton.setOnClickListener(v -> {
             Navigation.findNavController(view).navigate(R.id.categories_toCreationForm);
         });
@@ -67,15 +90,6 @@ public class OfferingsPage extends Fragment implements CategoryListener {
         });
 
         return view;
-    }
-
-
-    private void dummyData() {
-        categories.add(new OfferingsCategory(1, "Sport", "Sport je jako zanimljiv i zabavan"));
-        categories.add(new OfferingsCategory(2, "Food", "Sport je jako zanimljiv i zabavan"));
-        categories.add(new OfferingsCategory(3, "Slavlje", "Sport je jako zanimljiv i zabavan"));
-        categories.add(new OfferingsCategory(4, "Hronologija", "Sport je jako zanimljiv i zabavan"));
-        categories.add(new OfferingsCategory(5, "Jelo", "Sport je jako zanimljiv i zabavan"));
     }
 
     @Override
@@ -92,17 +106,33 @@ public class OfferingsPage extends Fragment implements CategoryListener {
         });
 
         confirmButton.setOnClickListener(v -> {
-            this.categories.remove(position);
-            adapter.notifyItemRemoved(position);
-            adapter.notifyItemRangeChanged(position, categories.size());
-            binding.modalBackground.setVisibility(View.INVISIBLE);
-            deleteModal.setVisibility(View.INVISIBLE);
+            Long id = this.categories.get(position).id;
+            Call<Void> request = ClientUtils.categoryService.delete(id);
+            request.enqueue(new Callback<Void>() {
+                @Override
+                public void onResponse(Call<Void> call, Response<Void> response) {
+                    if (response.isSuccessful()) {
+                        categories.remove(position);
+                        adapter.notifyItemRemoved(position);
+                        adapter.notifyItemRangeChanged(position, categories.size());
+                    } else {
+
+                    }
+                    binding.modalBackground.setVisibility(View.INVISIBLE);
+                    deleteModal.setVisibility(View.INVISIBLE);
+                }
+
+                @Override
+                public void onFailure(Call<Void> call, Throwable t) {
+
+                }
+            });
         });
     }
 
     @Override
     public void onUpdateCategory(int position) {
-        OfferingsCategory category = this.categories.get(position);
+        GetCategoryResponse category = this.categories.get(position);
         this.viewModel.populate(category);
         Navigation.findNavController(binding.getRoot()).navigate(R.id.categories_toCreationForm);
     }

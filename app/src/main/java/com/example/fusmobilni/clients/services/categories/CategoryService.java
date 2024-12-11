@@ -28,11 +28,11 @@ public interface CategoryService {
             "User-Agent: Mobile-Android",
             "Content-Type:application/json"
     })
-    @POST("categories/")
-    Call<GetCategoriesResponse> create(@Body CreateCategoryRequest request);
+    @POST("categories")
+    Call<GetCategoryResponse> create(@Body CreateCategoryRequest request);
 
     @PUT("categories/{id}")
-    Call<GetCategoryResponse> update(@Body UpdateCategoryRequest request);
+    Call<GetCategoryResponse> update(@Body UpdateCategoryRequest request, @Path("id") Long id);
 
     @DELETE("categories/{id}")
     Call<Void> delete(@Path("id") Long id);
