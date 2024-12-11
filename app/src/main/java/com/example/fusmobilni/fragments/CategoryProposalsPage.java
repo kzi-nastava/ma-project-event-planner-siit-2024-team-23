@@ -15,20 +15,27 @@ import android.view.ViewGroup;
 import com.example.fusmobilni.R;
 import com.example.fusmobilni.adapters.CategoryAdapter;
 import com.example.fusmobilni.adapters.CategoryProposalAdapter;
+import com.example.fusmobilni.clients.ClientUtils;
 import com.example.fusmobilni.databinding.FragmentCategoryProposalsPageBinding;
 import com.example.fusmobilni.databinding.FragmentOfferingsPageBinding;
 import com.example.fusmobilni.interfaces.CategoryProposalListener;
 import com.example.fusmobilni.model.CategoryProposal;
 import com.example.fusmobilni.model.OfferingsCategory;
+import com.example.fusmobilni.requests.proposals.GetProposalResponse;
+import com.example.fusmobilni.requests.proposals.GetProposalsResponse;
 import com.example.fusmobilni.viewModels.CategoryProposalViewModel;
 import com.example.fusmobilni.viewModels.CategoryViewModel;
 
 import java.util.ArrayList;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 
 public class CategoryProposalsPage extends Fragment implements CategoryProposalListener {
 
-    private ArrayList<CategoryProposal> proposals = new ArrayList<>();
+    private ArrayList<GetProposalResponse> proposals = new ArrayList<>();
     private CategoryProposalAdapter adapter;
     private CategoryProposalViewModel viewModel;
     private FragmentCategoryProposalsPageBinding binding;
@@ -53,9 +60,24 @@ public class CategoryProposalsPage extends Fragment implements CategoryProposalL
         viewModel = new ViewModelProvider(requireActivity()).get(CategoryProposalViewModel.class);
         RecyclerView recycler = binding.categoryRecyclerView;
         recycler.setLayoutManager(new LinearLayoutManager(getActivity()));
-        dummyData();
         this.adapter = new CategoryProposalAdapter(this.proposals, this);
         recycler.setAdapter(adapter);
+        Call<GetProposalsResponse> request = ClientUtils.proposalService.findAll();
+        request.enqueue(new Callback<GetProposalsResponse>() {
+            @Override
+            public void onResponse(Call<GetProposalsResponse> call, Response<GetProposalsResponse> response) {
+                if (response.isSuccessful()) {
+                    proposals.clear();
+                    proposals.addAll(response.body().proposals);
+                    adapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<GetProposalsResponse> call, Throwable t) {
+
+            }
+        });
         binding.containedButton.setOnClickListener(v -> {
             Navigation.findNavController(view).navigate(R.id.categoryProposals_toCategoriesPage);
         });
@@ -63,17 +85,9 @@ public class CategoryProposalsPage extends Fragment implements CategoryProposalL
         return view;
     }
 
-    private void dummyData() {
-        proposals.add(new CategoryProposal(1, "kanta", "Sport je jako zanimljiv i zabavan", "Kosarka", "kosarka je sport u kojem se igra"));
-        proposals.add(new CategoryProposal(2, "keleraba", "Sport je jako zanimljiv i zabavan", "Ketering", "Ketering je jako dobra stvar"));
-        proposals.add(new CategoryProposal(3, "Slavlje", "Sport je jako zanimljiv i zabavan", "Svadba", "Svadba je jako cool"));
-        proposals.add(new CategoryProposal(4, "Hronologija", "Sport je jako zanimljiv i zabavan", "istorijaPisama", "Istorija je jako kul"));
-        proposals.add(new CategoryProposal(5, "dunston", "Sport je jako zanimljiv i zabavan", "Sarma", "Sarma je jako dobra"));
-    }
-
     @Override
     public void onModifyCategory(int position) {
-        CategoryProposal proposal = this.proposals.get(position);
+        GetProposalResponse proposal = this.proposals.get(position);
         this.viewModel.populate(proposal);
         Navigation.findNavController(binding.getRoot()).navigate(R.id.categoryProposals_toModificationForm);
     }

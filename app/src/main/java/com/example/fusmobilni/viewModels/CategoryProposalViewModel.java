@@ -1,10 +1,19 @@
 package com.example.fusmobilni.viewModels;
 
+import android.util.Log;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.fusmobilni.clients.ClientUtils;
 import com.example.fusmobilni.model.CategoryProposal;
+import com.example.fusmobilni.requests.proposals.GetProposalResponse;
+import com.example.fusmobilni.requests.proposals.ModifyItemProposalRequest;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class CategoryProposalViewModel extends ViewModel {
 
@@ -14,6 +23,10 @@ public class CategoryProposalViewModel extends ViewModel {
     private MutableLiveData<String> itemDescription = new MutableLiveData<>("");
 
     private MutableLiveData<String> existingCategory = new MutableLiveData<>("");
+
+    public Long existingCategoryId;
+
+    private Long proposalId;
 
     private MutableLiveData<Boolean> isExistingCategoryChosen = new MutableLiveData<>(false);
 
@@ -55,7 +68,8 @@ public class CategoryProposalViewModel extends ViewModel {
 
     public MutableLiveData<Boolean> getIsExistingCategoryChosen() {return this.isExistingCategoryChosen; }
 
-    public void populate(CategoryProposal proposal) {
+    public void populate(GetProposalResponse proposal) {
+        proposalId = proposal.getId();
         this.name.setValue(proposal.getName());
         this.description.setValue(proposal.getDescription());
         this.itemName.setValue(proposal.getItemName());
@@ -69,6 +83,7 @@ public class CategoryProposalViewModel extends ViewModel {
         this.itemName.setValue("");
         this.isExistingCategoryChosen.setValue(false);
         this.existingCategory.setValue("");
+        proposalId = null;
     }
 
     public MutableLiveData<String> getExistingCategory() {
@@ -77,5 +92,23 @@ public class CategoryProposalViewModel extends ViewModel {
 
     public void setExistingCategory(String existingCategory) {
         this.existingCategory.setValue(existingCategory);
+    }
+
+    public void submit() {
+        ModifyItemProposalRequest request = new ModifyItemProposalRequest(
+                name.getValue(), description.getValue(), isExistingCategoryChosen.getValue(),
+                existingCategoryId
+        );
+
+        Call<Void> call = ClientUtils.proposalService.modify(proposalId, request);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+            }
+        });
     }
 }

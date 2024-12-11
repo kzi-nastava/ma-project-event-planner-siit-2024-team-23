@@ -2,8 +2,10 @@ package com.example.fusmobilni.clients;
 
 import com.example.fusmobilni.BuildConfig;
 import com.example.fusmobilni.clients.services.categories.CategoryService;
+import com.example.fusmobilni.clients.services.categories.proposals.ProposalService;
 import com.example.fusmobilni.clients.services.eventTypes.EventTypeService;
 import com.example.fusmobilni.clients.services.serviceOfferings.ServiceOfferingService;
+import com.example.fusmobilni.model.CategoryProposal;
 import com.example.fusmobilni.model.EventType;
 
 import java.util.concurrent.TimeUnit;
@@ -40,4 +42,6 @@ public class ClientUtils {
     public static ServiceOfferingService serviceOfferingService = retrofit.create(ServiceOfferingService.class);
     public static CategoryService categoryService = retrofit.create(CategoryService.class);
     public static EventTypeService eventTypeService = retrofit.create(EventTypeService.class);
+
+    public static ProposalService proposalService = retrofit.create(ProposalService.class);
 }
