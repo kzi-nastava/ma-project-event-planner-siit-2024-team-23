@@ -39,6 +39,13 @@ public interface ServiceOfferingService {
                                     @Part List<MultipartBody.Part> images,
                                     @Path("id") Long id);
 
+    @Multipart
+    @POST("services/proposals/mobile")
+    Call<Void> createProposal(
+            @Part("data") RequestBody request,
+            @Part List<MultipartBody.Part> images
+    );
+
     @DELETE("services/{id}")
     Call<Void> delete(@Path("id") Long id);
 

@@ -16,6 +16,7 @@ import com.example.fusmobilni.model.PrototypeService;
 import com.example.fusmobilni.model.enums.ReservationConfirmation;
 import com.example.fusmobilni.requests.categories.GetCategoriesResponse;
 import com.example.fusmobilni.requests.eventTypes.GetEventTypesResponse;
+import com.example.fusmobilni.requests.services.CreateProposalRequest;
 import com.example.fusmobilni.requests.services.CreateServiceRequest;
 import com.example.fusmobilni.requests.services.GetServiceResponse;
 import com.example.fusmobilni.requests.services.UpdateServiceRequest;
@@ -28,6 +29,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import okhttp3.MediaType;
@@ -230,6 +232,10 @@ public class ServiceViewModel extends ViewModel {
 
 
     public void submit(Context context) {
+        if(Objects.equals(category.getValue(), "Custom")) {
+            createProposal(context);
+            return;
+        }
         if (isUpdating.getValue()) {
             updateService(context);
         } else {
@@ -260,17 +266,10 @@ public class ServiceViewModel extends ViewModel {
             call.enqueue(new Callback<GetServiceResponse>() {
                 @Override
                 public void onResponse(Call<GetServiceResponse> call, Response<GetServiceResponse> response) {
-                    if (response.isSuccessful()) {
-                        Log.d("tag", "Response: " + response.body().getName());
-                    } else {
-                        Log.d("tag", String.valueOf(response.code()));
-                        Log.d("tag", String.valueOf(response.headers()));
-                    }
                 }
 
                 @Override
                 public void onFailure(Call<GetServiceResponse> call, Throwable t) {
-                    Log.e("tag", "Request failed", t);
                 }
             });
         } catch (Exception e) {
@@ -308,7 +307,38 @@ public class ServiceViewModel extends ViewModel {
         });
     }
 
+    private void createProposal(Context context) {
+        Gson gson = new Gson();
+        CreateProposalRequest request = new CreateProposalRequest(
+                customCategoryName.getValue(), customCategoryDescription.getValue(),
+                name.getValue(), description.getValue(), eventTypeIds.getValue(),
+                price.getValue(), discount.getValue(), 1L, specificities.getValue(),
+                isVisible.getValue(), isAvailable.getValue(), duration.getValue(), reservationDeadline.getValue(),
+                cancellationDeadline.getValue(), reservationConfirmation.getValue()
+        );
+        String json = gson.toJson(request);
+        // Create RequestBody for the JSON
+        RequestBody jsonRequestBody = RequestBody.create(MediaType.parse("application/json"), json);
 
+        try {
+            setSendImages(context);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        Call<Void> call = ClientUtils.serviceOfferingService.createProposal(jsonRequestBody, sendImages.getValue());
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                Log.d("Tag", String.valueOf(response.code()));
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+
+            }
+        });
+    }
 
 }
 
