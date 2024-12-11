@@ -14,15 +14,16 @@ import com.example.fusmobilni.interfaces.CategoryListener;
 import com.example.fusmobilni.interfaces.CategoryProposalListener;
 import com.example.fusmobilni.model.CategoryProposal;
 import com.example.fusmobilni.model.OfferingsCategory;
+import com.example.fusmobilni.requests.proposals.GetProposalResponse;
 
 import java.util.List;
 
 public class CategoryProposalAdapter extends  RecyclerView.Adapter<CategoryProposalAdapter.CategoryViewHolder>{
 
-    private List<CategoryProposal> proposals;
+    private List<GetProposalResponse> proposals;
     private CategoryProposalListener clickListener;
 
-    public CategoryProposalAdapter(List<CategoryProposal> proposals, CategoryProposalListener clickListener) {
+    public CategoryProposalAdapter(List<GetProposalResponse> proposals, CategoryProposalListener clickListener) {
         this.proposals = proposals;
         this.clickListener = clickListener;
     }
@@ -38,7 +39,7 @@ public class CategoryProposalAdapter extends  RecyclerView.Adapter<CategoryPropo
 
     @Override
     public void onBindViewHolder(@NonNull CategoryProposalAdapter.CategoryViewHolder holder, int position) {
-        CategoryProposal proposal = proposals.get(position);
+        GetProposalResponse proposal = proposals.get(position);
         holder.title.setText(proposal.getItemName());
         holder.description.setText(proposal.getItemDescription());
         holder.modifyButton.setOnClickListener(v -> clickListener.onModifyCategory(position));

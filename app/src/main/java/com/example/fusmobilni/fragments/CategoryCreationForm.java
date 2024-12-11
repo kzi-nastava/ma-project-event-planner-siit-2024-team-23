@@ -52,7 +52,7 @@ public class CategoryCreationForm extends Fragment {
 
         binding.submitButton.setOnClickListener(v -> {
             setValues();
-            //create and clean up the viewModel
+            viewModel.submit();
             Navigation.findNavController(view).navigate(R.id.creationForm_toCategories);
         });
 

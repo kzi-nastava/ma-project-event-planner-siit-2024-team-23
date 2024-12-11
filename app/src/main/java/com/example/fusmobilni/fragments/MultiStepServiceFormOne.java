@@ -7,24 +7,37 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
 import com.example.fusmobilni.R;
+import com.example.fusmobilni.clients.ClientUtils;
 import com.example.fusmobilni.databinding.FragmentMultiStepServiceFormOneBinding;
+import com.example.fusmobilni.requests.categories.GetCategoriesResponse;
+import com.example.fusmobilni.requests.categories.GetCategoryResponse;
+import com.example.fusmobilni.requests.eventTypes.GetEventTypesResponse;
 import com.example.fusmobilni.viewModels.ServiceViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MultiStepServiceFormOne extends Fragment {
 
 
     private FragmentMultiStepServiceFormOneBinding binding;
     private ServiceViewModel viewModel;
+
+    private GetCategoriesResponse categories;
+    private GetEventTypesResponse eventTypes;
 
     public MultiStepServiceFormOne() {
     }
@@ -46,9 +59,37 @@ public class MultiStepServiceFormOne extends Fragment {
         viewModel = new ViewModelProvider(requireActivity()).get(ServiceViewModel.class);
         View view = binding.getRoot();
 
-        String[] categories = getResources().getStringArray(R.array.categories);
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, categories);
-        binding.autoCompleteTextviewStep1.setAdapter(adapter);
+        Call<GetCategoriesResponse> categoriesCall = ClientUtils.categoryService.findAll();
+        categoriesCall.enqueue(new Callback<GetCategoriesResponse>() {
+            @Override
+            public void onResponse(Call<GetCategoriesResponse> call, Response<GetCategoriesResponse> response) {
+                categories = response.body();
+                ArrayList<String> categoryNames = categories.categories.stream()
+                        .map(category -> category.name)
+                        .collect(Collectors.toCollection(ArrayList::new));
+                categoryNames.add("Custom");
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, categoryNames);
+                binding.autoCompleteTextviewStep1.setAdapter(adapter);
+            }
+
+            @Override
+            public void onFailure(Call<GetCategoriesResponse> call, Throwable t) {
+
+            }
+        });
+
+        Call<GetEventTypesResponse> eventTypesCall = ClientUtils.eventTypeService.findAll();
+        eventTypesCall.enqueue(new Callback<GetEventTypesResponse>() {
+            @Override
+            public void onResponse(Call<GetEventTypesResponse> call, Response<GetEventTypesResponse> response) {
+                eventTypes = response.body();
+            }
+
+            @Override
+            public void onFailure(Call<GetEventTypesResponse> call, Throwable t) {
+
+            }
+        });
 
         binding.eventTypesInputStep1.setOnClickListener(v -> showMultiSelectDialog());
         populateInputs();
@@ -61,7 +102,9 @@ public class MultiStepServiceFormOne extends Fragment {
         binding.autoCompleteTextviewStep1.setOnItemClickListener((parent, v, position, id) -> {
             String selectedCategory = (String) parent.getItemAtPosition(position);
             viewModel.setCategory(selectedCategory);
-
+            if (position < categories.categories.size()) {
+                viewModel.setCategoryId(categories.categories.get(position).id);
+            }
             if (Objects.equals(selectedCategory, "Custom")) {
                 binding.customCategoryNameLabel.setVisibility(View.VISIBLE);
                 binding.customCategoryDescriptionLabel.setVisibility(View.VISIBLE);
@@ -121,25 +164,38 @@ public class MultiStepServiceFormOne extends Fragment {
     }
 
     private void showMultiSelectDialog() {
-        String[] eventTypes = getResources().getStringArray(R.array.EventTypes);
-        boolean[] checkedItems = new boolean[eventTypes.length];
+        boolean[] checkedItems = new boolean[eventTypes.eventTypes.size()];
         List<String> selectedEventTypes = new ArrayList<>(viewModel.getEventTypes().getValue());
+        ArrayList<Long> eventTypeIds = new ArrayList<>();
 
-        for (int i = 0; i < eventTypes.length; i++) {
-            checkedItems[i] = selectedEventTypes.contains(eventTypes[i]);
+        for (int i = 0; i < eventTypes.eventTypes.size(); i++) {
+            checkedItems[i] = selectedEventTypes.contains(eventTypes.eventTypes.get(i).name);
         }
+
+        String[] eventTypeNames = eventTypes.eventTypes.stream()
+                .map(eventType -> eventType.name)
+                .toArray(String[]::new);
 
         new AlertDialog.Builder(requireContext())
                 .setTitle("Select Event Types")
-                .setMultiChoiceItems(eventTypes, checkedItems, (dialog, which, isChecked) -> {
+                .setMultiChoiceItems(eventTypeNames, checkedItems, (dialog, which, isChecked) -> {
                     if (isChecked) {
-                        selectedEventTypes.add(eventTypes[which]);
+                        selectedEventTypes.add(eventTypeNames[which]);
                     } else {
-                        selectedEventTypes.remove(eventTypes[which]);
+                        selectedEventTypes.remove(eventTypeNames[which]);
                     }
                 })
                 .setPositiveButton("OK", (dialog, which) -> {
                     viewModel.setEventTypes(selectedEventTypes);
+                    for(int i = 0; i < checkedItems.length; i++) {
+                        if(checkedItems[i]) {
+                            eventTypeIds.add(eventTypes.eventTypes.get(i).id);
+                        }
+                    }
+                    String concatEventTypeIds = String.join(",", eventTypeIds.stream()
+                            .map(String::valueOf)
+                            .toArray(String[]::new));
+                    viewModel.setEventTypeIds(concatEventTypeIds);
                     binding.eventTypesInputStep1.setText(String.join(", ", selectedEventTypes));
                 })
                 .setNegativeButton("Cancel", null)

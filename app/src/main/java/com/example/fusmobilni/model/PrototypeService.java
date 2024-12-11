@@ -16,7 +16,7 @@ public class PrototypeService {
     private ArrayList<String> eventTypes = new ArrayList<>();
     private boolean isVisible;
     private boolean isAvailable;
-    private double duration;
+    private Integer duration;
     private int cancellationDeadline;
     private int reservationDeadline;
     private boolean isAutomaticReservation;
@@ -24,7 +24,7 @@ public class PrototypeService {
 
     public PrototypeService(String category, String name, String description, String specificities,
                             double price, double discount, boolean isVisible, boolean isAvailable,
-                            double duration, int cancellationDeadline, int reservationDeadline,
+                            Integer duration, int cancellationDeadline, int reservationDeadline,
                             boolean isAutomaticReservation, ArrayList<Uri> imageUris,
                             ArrayList<String> eventTypes) {
 
@@ -118,11 +118,11 @@ public class PrototypeService {
         isAvailable = available;
     }
 
-    public double getDuration() {
+    public Integer getDuration() {
         return duration;
     }
 
-    public void setDuration(double duration) {
+    public void setDuration(Integer duration) {
         this.duration = duration;
     }
 

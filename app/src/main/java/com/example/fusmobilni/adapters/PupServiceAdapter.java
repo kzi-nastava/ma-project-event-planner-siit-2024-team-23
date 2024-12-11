@@ -20,23 +20,25 @@ import com.example.fusmobilni.model.DummyService;
 import com.example.fusmobilni.model.Event;
 import com.example.fusmobilni.model.PrototypeService;
 import com.example.fusmobilni.model.Service;
+import com.example.fusmobilni.requests.services.GetServiceResponse;
+import com.example.fusmobilni.requests.services.GetServicesResponse;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class PupServiceAdapter extends RecyclerView.Adapter<PupServiceAdapter.ServiceViewHolder> {
 
-    private List<PrototypeService> serviceList;
+    private List<GetServiceResponse> serviceList;
 
 
     private DeleteServiceListener clickListener;
 
-    public PupServiceAdapter(List<PrototypeService> serviceList, DeleteServiceListener clickListener) {
-        this.serviceList = serviceList;
+    public PupServiceAdapter(List<GetServiceResponse> services, DeleteServiceListener clickListener) {
+        this.serviceList = services;
         this.clickListener = clickListener;
     }
 
-    public void setData(List<PrototypeService> list) {
+    public void setData(List<GetServiceResponse> list) {
         this.serviceList = new ArrayList<>(list);
         notifyDataSetChanged();
     }
@@ -51,7 +53,7 @@ public class PupServiceAdapter extends RecyclerView.Adapter<PupServiceAdapter.Se
 
     @Override
     public void onBindViewHolder(@NonNull ServiceViewHolder holder, int position) {
-        PrototypeService service = serviceList.get(position);
+        GetServiceResponse service = serviceList.get(position);
         holder.title.setText(service.getName());
         holder.description.setText(service.getDescription());
         holder.deleteButton.setOnClickListener(v -> clickListener.onDeleteService(position));
@@ -63,7 +65,7 @@ public class PupServiceAdapter extends RecyclerView.Adapter<PupServiceAdapter.Se
         return serviceList.size();
     }
 
-    public void updateServiceList(List<PrototypeService> newServiceList) {
+    public void updateServiceList(List<GetServiceResponse> newServiceList) {
         this.serviceList = new ArrayList<>(newServiceList);
         notifyDataSetChanged();
     }

@@ -3,19 +3,30 @@ package com.example.fusmobilni.viewModels;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.fusmobilni.clients.ClientUtils;
 import com.example.fusmobilni.model.Category;
 import com.example.fusmobilni.model.PrototypeService;
 import com.example.fusmobilni.model.Service;
+import com.example.fusmobilni.requests.services.GetServiceResponse;
+import com.example.fusmobilni.requests.services.GetServicesResponse;
+import com.example.fusmobilni.requests.services.ServiceFilterRequest;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class ServiceProviderViewModel extends ViewModel {
 
-    private final MutableLiveData<List<PrototypeService>> allServices = new MutableLiveData<List<PrototypeService>>();
-    private final MutableLiveData<List<PrototypeService>> filteredServices = new MutableLiveData<>();
+    private final MutableLiveData<List<GetServiceResponse>> services = new MutableLiveData<List<GetServiceResponse>>();
     private final MutableLiveData<String> category = new MutableLiveData<>("");
     private final MutableLiveData<String> eventType = new MutableLiveData<>("");
+
+    private final MutableLiveData<Long> categoryId = new MutableLiveData<>(null);
+    private final MutableLiveData<Long> eventTypeId = new MutableLiveData<>(null);
     private final MutableLiveData<Double> lowerBoundaryPrice = new MutableLiveData<>(0.0);
     private final MutableLiveData<Double> upperBoundaryPrice = new MutableLiveData<>(8000.0);
     private final MutableLiveData<Boolean> availability = new MutableLiveData<>(true);
@@ -23,46 +34,50 @@ public class ServiceProviderViewModel extends ViewModel {
 
     private final MutableLiveData<Boolean> isAvailabilityEnabled = new MutableLiveData<>(false);
 
+    public MutableLiveData<List<GetServiceResponse>> getServices() {
+        return services;
+    }
+
 
     public void applyFilters() {
-        List<PrototypeService> filteredList = new ArrayList<>();
-
-        for (PrototypeService service : allServices.getValue()) {
-            boolean matchesConstraint = service.getName().toLowerCase().trim().contains(searchConstraint.getValue().toLowerCase().trim())
-                    || searchConstraint.getValue().isEmpty();
-            boolean matchesCategory = service.getCategory().equalsIgnoreCase(category.getValue())
-                    || category.getValue().isEmpty();
-            boolean matchesEventType = service.getEventTypes().contains(eventType.getValue())
-                    || eventType.getValue().isEmpty();
-            boolean matchesPrice = service.getPrice() >= lowerBoundaryPrice.getValue()
-                    && service.getPrice() <= upperBoundaryPrice.getValue();
-            boolean matchesAvailability = !isAvailabilityEnabled.getValue() || service.isAvailable() == availability.getValue();
-
-            if(matchesConstraint && matchesCategory && matchesEventType && matchesPrice && matchesAvailability)
-                filteredList.add(service);
+        ArrayList<Long> eventTypeIds = new ArrayList<>();
+        if (eventTypeId.getValue() != null) {
+            eventTypeIds.add(eventTypeId.getValue());
         }
-        filteredServices.getValue().clear();
-        filteredServices.setValue(filteredList);
+        ServiceFilterRequest request = new ServiceFilterRequest(
+                searchConstraint.getValue(), lowerBoundaryPrice.getValue(), upperBoundaryPrice.getValue(),
+                categoryId.getValue(), eventTypeIds, isAvailabilityEnabled.getValue(), availability.getValue()
+        );
+        Call<GetServicesResponse> response = ClientUtils.serviceOfferingService.findAllByServiceProvider(1L, request);
+        response.enqueue(new Callback<GetServicesResponse>() {
+            @Override
+            public void onResponse(Call<GetServicesResponse> call, Response<GetServicesResponse> response) {
+                services.setValue(response.body().services);
+            }
+
+            @Override
+            public void onFailure(Call<GetServicesResponse> call, Throwable t) {
+
+            }
+        });
     }
 
     public void resetFilters() {
         this.category.setValue("");
+        this.categoryId.setValue(null);
+        this.eventTypeId.setValue(null);
         this.eventType.setValue("");
         this.lowerBoundaryPrice.setValue(0.0);
-        this.upperBoundaryPrice.setValue(8000.0);
+        this.upperBoundaryPrice.setValue(10000.0);
         this.setIsAvailabilityEnabled(false);
         this.availability.setValue(true);
         applyFilters();
     }
 
-    public void setData(List<PrototypeService> services) {
-        this.allServices.setValue(new ArrayList<>(services));
-        this.filteredServices.setValue(new ArrayList<>(services));
+    public void setData(List<GetServiceResponse> services) {
+        this.services.setValue(services);
     }
 
-    public MutableLiveData<List<PrototypeService>> getFilteredServices() {
-        return filteredServices;
-    }
 
     public MutableLiveData<String> getCategory() {
         return category;
@@ -70,7 +85,6 @@ public class ServiceProviderViewModel extends ViewModel {
 
     public void setCategory(String category) {
         this.category.setValue(category);
-        applyFilters();
     }
 
     public MutableLiveData<String> getEventType() {
@@ -79,7 +93,6 @@ public class ServiceProviderViewModel extends ViewModel {
 
     public void setEventType(String eventType) {
         this.eventType.setValue(eventType);
-        applyFilters();
     }
 
 
@@ -89,7 +102,6 @@ public class ServiceProviderViewModel extends ViewModel {
 
     public void setAvailability(Boolean availability) {
         this.availability.setValue(availability);
-        applyFilters();
     }
 
     public MutableLiveData<String> getSearchConstraint() {
@@ -107,7 +119,6 @@ public class ServiceProviderViewModel extends ViewModel {
 
     public void setLowerBoundaryPrice(Double lowerBoundaryPrice) {
         this.lowerBoundaryPrice.setValue(lowerBoundaryPrice);
-        applyFilters();
     }
 
     public MutableLiveData<Double> getUpperBoundaryPrice() {
@@ -116,7 +127,6 @@ public class ServiceProviderViewModel extends ViewModel {
 
     public void setUpperBoundaryPrice(Double upperBoundaryPrice) {
         this.upperBoundaryPrice.setValue(upperBoundaryPrice);
-        applyFilters();
     }
 
     public MutableLiveData<Boolean> getIsAvailabilityEnabled() {
@@ -125,5 +135,21 @@ public class ServiceProviderViewModel extends ViewModel {
 
     public void setIsAvailabilityEnabled(Boolean isAvailabilityEnabled) {
         this.isAvailabilityEnabled.setValue(isAvailabilityEnabled);
+    }
+
+    public MutableLiveData<Long> getCategoryId() {
+        return categoryId;
+    }
+
+    public MutableLiveData<Long> getEventTypeId() {
+        return eventTypeId;
+    }
+
+    public void setCategoryId(Long categoryId) {
+        this.categoryId.setValue(categoryId);;
+    }
+
+    public void setEventTypeId(Long eventTypeId) {
+        this.eventTypeId.setValue(eventTypeId);
     }
 }
