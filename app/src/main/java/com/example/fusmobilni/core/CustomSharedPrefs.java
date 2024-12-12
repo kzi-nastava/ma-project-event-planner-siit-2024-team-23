@@ -3,7 +3,7 @@ package com.example.fusmobilni.core;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.example.fusmobilni.model.User;
+import com.example.fusmobilni.model.users.User;
 import com.google.gson.Gson;
 
 public class CustomSharedPrefs {

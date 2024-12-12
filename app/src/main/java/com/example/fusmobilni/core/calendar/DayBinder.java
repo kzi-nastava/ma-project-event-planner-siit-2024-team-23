@@ -13,7 +13,7 @@ import androidx.core.content.ContextCompat;
 import androidx.navigation.Navigation;
 
 import com.example.fusmobilni.R;
-import com.example.fusmobilni.model.Event;
+import com.example.fusmobilni.model.event.Event;
 import com.kizitonwose.calendar.core.CalendarDay;
 import com.kizitonwose.calendar.core.DayPosition;
 import com.kizitonwose.calendar.view.MonthDayBinder;

@@ -5,8 +5,6 @@ import com.example.fusmobilni.clients.services.categories.CategoryService;
 import com.example.fusmobilni.clients.services.categories.proposals.ProposalService;
 import com.example.fusmobilni.clients.services.eventTypes.EventTypeService;
 import com.example.fusmobilni.clients.services.serviceOfferings.ServiceOfferingService;
-import com.example.fusmobilni.model.CategoryProposal;
-import com.example.fusmobilni.model.EventType;
 
 import java.util.concurrent.TimeUnit;
 

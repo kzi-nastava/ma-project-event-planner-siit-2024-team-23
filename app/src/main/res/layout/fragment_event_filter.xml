@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:background="@color/white"
     android:scrollbarSize="16sp"
-    tools:context=".fragments.EventFilterFragment">
+    tools:context=".fragments.events.event.filters.EventFilterFragment">
 
     <!-- TODO: Update blank fragment layout -->
 

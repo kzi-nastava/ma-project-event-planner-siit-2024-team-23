@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
-    tools:context=".fragments.UserProfileFragments.ViewProfileFragment">
+    tools:context=".fragments.users.profile.ViewProfileFragment">
 
     <!-- Profile Picture -->
     <androidx.cardview.widget.CardView

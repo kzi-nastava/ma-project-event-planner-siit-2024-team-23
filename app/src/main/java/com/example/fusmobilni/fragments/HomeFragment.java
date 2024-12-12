@@ -11,13 +11,13 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.example.fusmobilni.R;
-import com.example.fusmobilni.adapters.EventsAdapter;
-import com.example.fusmobilni.adapters.ProductsAdapter;
-import com.example.fusmobilni.adapters.ServicesAdapter;
+import com.example.fusmobilni.adapters.events.event.EventsAdapter;
+import com.example.fusmobilni.adapters.items.product.ProductsAdapter;
+import com.example.fusmobilni.adapters.items.service.ServicesAdapter;
 import com.example.fusmobilni.databinding.FragmentHomeBinding;
-import com.example.fusmobilni.model.Event;
-import com.example.fusmobilni.model.Product;
-import com.example.fusmobilni.model.Service;
+import com.example.fusmobilni.model.event.Event;
+import com.example.fusmobilni.model.items.product.Product;
+import com.example.fusmobilni.model.items.service.Service;
 
 import java.util.ArrayList;
 import java.util.List;

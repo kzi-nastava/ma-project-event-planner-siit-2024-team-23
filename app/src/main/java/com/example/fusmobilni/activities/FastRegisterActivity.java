@@ -1,9 +1,6 @@
 package com.example.fusmobilni.activities;
 
 import android.os.Bundle;
-import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
@@ -14,12 +11,12 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.fusmobilni.R;
-import com.example.fusmobilni.adapters.RegistrationAdapter;
+import com.example.fusmobilni.adapters.users.register.RegistrationAdapter;
 import com.example.fusmobilni.databinding.ActivityFastRegisterBinding;
-import com.example.fusmobilni.fragments.RegisterFragments.Fast.StepOneFastRegistrationFragment;
-import com.example.fusmobilni.fragments.RegisterFragments.Fast.StepTwoFastRegistrationFragment;
+import com.example.fusmobilni.fragments.users.register.fast.StepOneFastRegistrationFragment;
+import com.example.fusmobilni.fragments.users.register.fast.StepTwoFastRegistrationFragment;
 import com.example.fusmobilni.interfaces.FragmentValidation;
-import com.example.fusmobilni.viewModels.FastRegisterViewModel;
+import com.example.fusmobilni.viewModels.users.register.FastRegisterViewModel;
 
 import java.util.ArrayList;
 import java.util.List;

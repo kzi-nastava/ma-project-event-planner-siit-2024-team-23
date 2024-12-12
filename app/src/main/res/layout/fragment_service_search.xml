@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.ServiceSearchFragment">
+    tools:context=".fragments.items.service.Filters.ServiceSearchFragment">
 
     <LinearLayout
         android:layout_width="match_parent"

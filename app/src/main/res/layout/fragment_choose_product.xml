@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".fragments.EventFragments.CreateEventSteps.ChooseProductFragment">
+    tools:context=".fragments.events.event.createEventSteps.ChooseProductFragment">
 
     <!-- Toggle Button for switching -->
     <com.google.android.material.button.MaterialButtonToggleGroup

@@ -8,7 +8,7 @@
     android:foregroundTint="#BA8484"
     android:orientation="vertical"
     android:padding="10dp"
-    tools:context=".fragments.UserProfileFragments.UserCalendarFragment">
+    tools:context=".fragments.users.profile.UserCalendarFragment">
 
     <ProgressBar
         android:id="@+id/loading_spinner"

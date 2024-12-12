@@ -23,7 +23,7 @@ import androidx.navigation.ui.NavigationUI;
 import com.example.fusmobilni.R;
 import com.example.fusmobilni.core.CustomSharedPrefs;
 import com.example.fusmobilni.databinding.ActivityHomeBinding;
-import com.example.fusmobilni.model.User;
+import com.example.fusmobilni.model.users.User;
 import com.example.fusmobilni.model.enums.UserType;
 import com.google.android.material.navigation.NavigationView;
 import androidx.activity.OnBackPressedCallback;

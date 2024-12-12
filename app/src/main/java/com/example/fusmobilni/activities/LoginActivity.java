@@ -13,7 +13,7 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
 import com.example.fusmobilni.R;
 import com.example.fusmobilni.databinding.ActivityLoginBinding;
-import com.example.fusmobilni.viewModels.LoginViewModel;
+import com.example.fusmobilni.viewModels.users.login.LoginViewModel;
 import java.util.Objects;
 
 public class LoginActivity extends AppCompatActivity {
