@@ -4,7 +4,10 @@ import com.example.fusmobilni.BuildConfig;
 import com.example.fusmobilni.clients.services.categories.CategoryService;
 import com.example.fusmobilni.clients.services.categories.proposals.ProposalService;
 import com.example.fusmobilni.clients.services.eventTypes.EventTypeService;
+import com.example.fusmobilni.clients.services.events.EventsService;
+import com.example.fusmobilni.clients.services.products.ProductsService;
 import com.example.fusmobilni.clients.services.serviceOfferings.ServiceOfferingService;
+import com.example.fusmobilni.responses.items.services.ServicesHomeResponse;
 
 import java.util.concurrent.TimeUnit;
 
@@ -15,10 +18,10 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ClientUtils {
 
-    public static final String SERVICE_API_PATH = "http://"+ BuildConfig.IP_ADDR +":8080/api/v1/";
+    public static final String SERVICE_API_PATH = "http://" + BuildConfig.IP_ADDR + ":8080/api/v1/";
 
 
-    public static OkHttpClient test(){
+    public static OkHttpClient test() {
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
@@ -40,6 +43,7 @@ public class ClientUtils {
     public static ServiceOfferingService serviceOfferingService = retrofit.create(ServiceOfferingService.class);
     public static CategoryService categoryService = retrofit.create(CategoryService.class);
     public static EventTypeService eventTypeService = retrofit.create(EventTypeService.class);
-
+    public static ProductsService productsService = retrofit.create(ProductsService.class);
     public static ProposalService proposalService = retrofit.create(ProposalService.class);
+    public static EventsService eventsService = retrofit.create(EventsService.class);
 }

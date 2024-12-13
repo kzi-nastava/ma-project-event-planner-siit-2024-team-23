@@ -5,6 +5,7 @@ import com.example.fusmobilni.requests.services.CreateServiceRequest;
 import com.example.fusmobilni.requests.services.GetServicesResponse;
 import com.example.fusmobilni.requests.services.GetServiceResponse;
 import com.example.fusmobilni.requests.services.ServiceFilterRequest;
+import com.example.fusmobilni.responses.items.services.ServicesHomeResponse;
 
 import java.util.List;
 import java.util.Map;
@@ -22,6 +23,7 @@ import retrofit2.http.PUT;
 import retrofit2.http.Part;
 import retrofit2.http.PartMap;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface ServiceOfferingService {
 
@@ -51,5 +53,8 @@ public interface ServiceOfferingService {
 
     @POST("service-providers/{id}/services")
     Call<GetServicesResponse> findAllByServiceProvider(@Path("id") Long id, @Body ServiceFilterRequest request);
+
+    @GET("services/top-five-services")
+    Call<ServicesHomeResponse> findTopFiveServices(@Query("city") String city);
 
 }

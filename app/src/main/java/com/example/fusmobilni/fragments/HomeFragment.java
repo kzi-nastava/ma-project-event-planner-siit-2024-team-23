@@ -5,22 +5,35 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.example.fusmobilni.R;
 import com.example.fusmobilni.adapters.events.event.EventsAdapter;
 import com.example.fusmobilni.adapters.items.product.ProductsAdapter;
 import com.example.fusmobilni.adapters.items.service.ServicesAdapter;
+import com.example.fusmobilni.clients.ClientUtils;
 import com.example.fusmobilni.databinding.FragmentHomeBinding;
 import com.example.fusmobilni.model.event.Event;
 import com.example.fusmobilni.model.items.product.Product;
 import com.example.fusmobilni.model.items.service.Service;
+import com.example.fusmobilni.responses.events.EventHomeResponse;
+import com.example.fusmobilni.responses.events.EventsHomeResponse;
+import com.example.fusmobilni.responses.items.products.ProductHomeResponse;
+import com.example.fusmobilni.responses.items.products.ProductsHomeResponse;
+import com.example.fusmobilni.responses.items.services.ServiceHomeResponse;
+import com.example.fusmobilni.responses.items.services.ServicesHomeResponse;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -73,26 +86,85 @@ public class HomeFragment extends Fragment {
         _binding = FragmentHomeBinding.inflate(inflater, container, false);
         View view = _binding.getRoot();
 
-        events = fillEvents();
         services = fillServices();
         products = fillProducts();
 
-        this._binding.eventsRecycleView.setAdapter(new EventsAdapter(events));
-        this._binding.servicesRecycleView.setAdapter(new ServicesAdapter(services));
-        this._binding.productsRecycleView.setAdapter(new ProductsAdapter(products));
+        this._binding.eventsRecycleView.setAdapter(new EventsAdapter(new ArrayList<>()));
+        this._binding.servicesRecycleView.setAdapter(new ServicesAdapter(new ArrayList<>()));
+        this._binding.productsRecycleView.setAdapter(new ProductsAdapter(new ArrayList<>()));
 
-        this._binding.homeEventsSeeAllButton.setOnClickListener(v->{
+        this._binding.homeEventsSeeAllButton.setOnClickListener(v -> {
             Navigation.findNavController(view).navigate(R.id.action_homeFragment_to_searchFragment);
         });
-        this._binding.homeServicesSeeAllButton.setOnClickListener(v->{
+        this._binding.homeServicesSeeAllButton.setOnClickListener(v -> {
 
             Navigation.findNavController(view).navigate(R.id.action_home_fragment_to_service_search);
         });
-        this._binding.productsSeeAllButton.setOnClickListener(v->{
+        this._binding.productsSeeAllButton.setOnClickListener(v -> {
             Navigation.findNavController(view).navigate(R.id.action_home_fragment_to_product_search);
         });
 
+        fetchEvents();
+        fetchServices();
+        fetchProducts();
         return view;
+    }
+    private void fetchProducts(){
+        Call<ProductsHomeResponse> call = ClientUtils.productsService.findTopFiveProducts(null);
+        call.enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<ProductsHomeResponse> call, Response<ProductsHomeResponse> response) {
+                if(response.isSuccessful()){
+                    List<ProductHomeResponse> list = response.body().products;
+                    _binding.productsRecycleView.setAdapter(new ProductsAdapter(list));
+                }
+            }
+            @Override
+            public void onFailure(Call<ProductsHomeResponse> call, Throwable t) {
+                Log.d("tag", t.getMessage());
+                Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+    private void fetchServices(){
+        Call<ServicesHomeResponse> call = ClientUtils.serviceOfferingService.findTopFiveServices(null);
+        call.enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<ServicesHomeResponse> call, Response<ServicesHomeResponse> response) {
+                if (response.isSuccessful()) {
+
+                    List<ServiceHomeResponse> list = response.body().content;
+                    _binding.servicesRecycleView.setAdapter(new ServicesAdapter(list));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ServicesHomeResponse> call, Throwable t) {
+                Log.d("tag", t.getMessage());
+                Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+    private void fetchEvents(){
+
+        Call<EventsHomeResponse> call = ClientUtils.eventsService.findTopFiveEvents(null);
+        call.enqueue(new Callback<>() {
+            @Override
+
+            public void onResponse(Call<EventsHomeResponse> call, Response<EventsHomeResponse> response) {
+                if (response.isSuccessful()) {
+                    List<EventHomeResponse> list = response.body().events;
+                    _binding.eventsRecycleView.setAdapter(new EventsAdapter(list));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<EventsHomeResponse> call, Throwable t) {
+                Log.d("tag", t.getMessage());
+                Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+
     }
 
     private ArrayList<Service> fillServices() {
@@ -115,7 +187,8 @@ public class HomeFragment extends Fragment {
         return e;
 
     }
-    private  ArrayList<Product> fillProducts(){
+
+    private ArrayList<Product> fillProducts() {
         ArrayList<Product> p = new ArrayList<>();
         p.add(new Product("Gourmet Pizza", "A delicious blend of flavors", 15.99, "New York", "Food"));
         p.add(new Product("Lemonade", "Refreshing and invigorating beverage", 3.49, "California", "Health"));
