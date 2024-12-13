@@ -10,11 +10,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fusmobilni.R;
-import com.example.fusmobilni.model.event.Event;
-import com.example.fusmobilni.responses.events.EventHomeResponse;
-import com.example.fusmobilni.responses.events.EventsHomeResponse;
+import com.example.fusmobilni.responses.events.home.EventHomeResponse;
+import com.example.fusmobilni.responses.events.home.EventsHomeResponse;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 

@@ -1,5 +1,6 @@
-package com.example.fusmobilni.responses.events;
+package com.example.fusmobilni.responses.events.home;
 
+import com.example.fusmobilni.responses.events.EventTypeResponse;
 import com.example.fusmobilni.responses.location.LocationResponse;
 
 public class EventHomeResponse {

@@ -10,13 +10,21 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.example.fusmobilni.R;
+import com.example.fusmobilni.adapters.events.eventType.EventTypeFilterAdapter;
 import com.example.fusmobilni.adapters.items.category.CategoryFilterAdapter;
+import com.example.fusmobilni.clients.ClientUtils;
 import com.example.fusmobilni.databinding.FragmentEventFilterBinding;
 import com.example.fusmobilni.model.items.category.Category;
+import com.example.fusmobilni.responses.events.EventTypeResponse;
+import com.example.fusmobilni.responses.events.EventTypesResponse;
+import com.example.fusmobilni.responses.events.filter.EventLocationsResponse;
+import com.example.fusmobilni.responses.location.LocationResponse;
 import com.example.fusmobilni.viewModels.events.filters.EventSearchViewModel;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.button.MaterialButton;
@@ -27,11 +35,16 @@ import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClic
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -43,8 +56,7 @@ public class EventFilterFragment extends BottomSheetDialogFragment {
     private EventSearchViewModel _viewModel;
     private RecyclerView categoryRecyclerView;
     private FragmentEventFilterBinding _binding;
-    private List<Category> _categories;
-    private CategoryFilterAdapter _adapter;
+    private EventTypeFilterAdapter _adapter;
 
     private Spinner _locationSpinner;
 
@@ -81,26 +93,17 @@ public class EventFilterFragment extends BottomSheetDialogFragment {
 
         _viewModel = new ViewModelProvider(requireActivity()).get(EventSearchViewModel.class);
 
+        _adapter = new EventTypeFilterAdapter(_viewModel.getEventTypes().getValue());
         datePickerButton = _binding.openDatepicker;
         MaterialDatePicker.Builder datePickerBuilder = MaterialDatePicker.Builder.datePicker();
 
         datePickerBuilder.setTitleText("Select a date!");
         datePicker = datePickerBuilder.build();
 
-        this._categories = Arrays.asList(
-                new Category(1, "Sports", R.drawable.ic_category_sports_active, R.drawable.ic_category_sports_inactive),
-                new Category(2, "Music", R.drawable.ic_category_music_active, R.drawable.ic_category_music_inactive),
-                new Category(3, "Art", R.drawable.ic_category_arts_active, R.drawable.ic_category_arts_inactive),
-                new Category(4, "Food", R.drawable.ic_category_food_active, R.drawable.ic_category_food_inactive),
-                new Category(5, "Tech", R.drawable.ic_category_sports_active, R.drawable.ic_category_sports_inactive),
-                new Category(6, "Travel", R.drawable.ic_category_music_active, R.drawable.ic_category_music_inactive),
-                new Category(7, "Education", R.drawable.ic_category_arts_active, R.drawable.ic_category_arts_inactive),
-                new Category(8, "Health", R.drawable.ic_category_sports_active, R.drawable.ic_category_sports_inactive),
-                new Category(9, "Fashion", R.drawable.ic_category_music_active, R.drawable.ic_category_music_inactive)
-        );
-        _adapter = new CategoryFilterAdapter(_categories);
+        _locationSpinner = this._binding.spinner;
         categoryRecyclerView.setAdapter(_adapter);
 
+        initializeLocationSpinner(_viewModel.getLocations().getValue());
         _binding.eventFilterChipToday.setOnClickListener(v -> {
             updateChipStyles(_binding.eventFilterChipToday, _binding.eventFilterChipTomorrow);
 
@@ -113,7 +116,7 @@ public class EventFilterFragment extends BottomSheetDialogFragment {
             invalidateAllChips(_binding.eventFilterChipToday, _binding.eventFilterChipTomorrow);
             _binding.textViewSelectedDateDisplay.setText("");
             resetDatePicker();
-            _adapter.resetCategories();
+            _adapter.resetTypes();
         });
 
         _binding.eventsFilterApplyButton.setOnClickListener(v -> {
@@ -127,18 +130,15 @@ public class EventFilterFragment extends BottomSheetDialogFragment {
 
         initializeDatePicker();
 
-        _locationSpinner = this._binding.spinner;
-        initializeLocationSpinner();
 
         initializeFields();
         return view;
     }
 
     private void initializeApplyButton() {
-        Category fetchedCategory = _adapter.getSelectedCategory();
+        EventTypeResponse eventType = _adapter.getSelectedEventTypeByIndex();
 
-        _viewModel.setCategory(fetchedCategory);
-        _viewModel.setLocation(String.valueOf(_locationSpinner.getSelectedItem()));
+        _viewModel.setEventType(eventType);
 
         String date = convertDateToString(datePicker.getSelection());
         if (date.equals("")) {
@@ -150,18 +150,22 @@ public class EventFilterFragment extends BottomSheetDialogFragment {
         }
         _viewModel.setDate(date);
 
+        _viewModel.doFilter();
+
         dismiss();
     }
 
     private String getTomorrowDate() {
-        LocalDate tomorrow = LocalDate.now().plusDays(1);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        LocalDateTime tomorrow = LocalDateTime.now().plusDays(2);
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+
         return tomorrow.format(formatter);
     }
 
     private String getTodayDate() {
-        LocalDate today = LocalDate.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        LocalDateTime today = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
         return today.format(formatter);
     }
 
@@ -191,22 +195,61 @@ public class EventFilterFragment extends BottomSheetDialogFragment {
 
     }
 
+
+
     private void initializeFields() {
-        if (_viewModel.getCategory().getValue() != null) {
-            _adapter.setSelectedCategory(_viewModel.getCategory().getValue().getId());
+        if (_viewModel.getEventType().getValue() != null) {
+            _adapter.setSelectedEventType(_viewModel.getEventType().getValue());
         }
         if (!_viewModel.getDate().getValue().isEmpty()) {
             datePicker = MaterialDatePicker.Builder.datePicker().setTitleText(_viewModel.getDate().getValue()).setSelection(convertStringToDate(_viewModel.getDate().getValue())).build();
             _binding.textViewSelectedDateDisplay.setText(_viewModel.getDate().getValue());
             initializeDatePicker();
         }
-        _locationSpinner.setSelection(extractLocationPosition(_viewModel.getLocation().getValue()));
+        if (_viewModel.getLocation().getValue() != null)
+            _locationSpinner.setSelection(findLocation(_viewModel.getLocation().getValue().getCity()));
+        else
+            _locationSpinner.setSelection(_viewModel.getLocations().getValue().size());
     }
 
-    private void initializeLocationSpinner() {
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this.getContext(), R.array.event_locations, android.R.layout.simple_spinner_item);
+    private int findLocation(String city) {
+        for (int i = 0; i < _viewModel.getLocations().getValue().size(); ++i) {
+            if (city.equals(_viewModel.getLocations().getValue().get(i).getCity())) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    private void initializeLocationSpinner(List<LocationResponse> locations) {
+
+        List<String> cityNames = new ArrayList<>();
+        for (LocationResponse l : locations) {
+            cityNames.add(l.getCity());
+        }
+        cityNames.add("");
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this.getContext(), android.R.layout.simple_spinner_item, cityNames);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         _locationSpinner.setAdapter(adapter);
+        _locationSpinner.setSelection(adapter.getPosition(""));
+        _locationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String selectedCity = parent.getItemAtPosition(position).toString();
+                LocationResponse location = null;
+                for (LocationResponse l : _viewModel.getLocations().getValue()) {
+                    if (l.getCity().equals(selectedCity)) {
+                        location = l;
+                    }
+                }
+                _viewModel.setLocation(location);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+
     }
 
     private int extractLocationPosition(String location) {
@@ -283,7 +326,7 @@ public class EventFilterFragment extends BottomSheetDialogFragment {
 
         Long dateInMiliseconds = (Long) fetchedDate;
         Date date = new Date(dateInMiliseconds);
-        return (new SimpleDateFormat("dd-MM-yyyy")).format(date);
+        return (new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")).format(date);
     }
 
     private Long convertStringToDate(String dateString) {
@@ -291,7 +334,7 @@ public class EventFilterFragment extends BottomSheetDialogFragment {
             return null;
         }
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));  // Set to UTC to avoid local time zone discrepancies
         try {
             Date date = dateFormat.parse(dateString);

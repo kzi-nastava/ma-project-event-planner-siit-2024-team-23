@@ -10,22 +10,42 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fusmobilni.R;
 import com.example.fusmobilni.model.event.Event;
+import com.example.fusmobilni.responses.events.filter.EventPaginationResponse;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
-public class EventsHorizontalAdapter extends RecyclerView.Adapter<EventsHorizontalAdapter.EventHorizontalViewHolder>  {
+public class EventsHorizontalAdapter extends RecyclerView.Adapter<EventsHorizontalAdapter.EventHorizontalViewHolder> {
+    private static HashMap MonthMap = new HashMap<String, String>();
 
-    private List<Event> _events;
+    static {
+        MonthMap.put("01", "Jan");
+        MonthMap.put("02", "Feb");
+        MonthMap.put("03", "Mar");
+        MonthMap.put("04", "Apr");
+        MonthMap.put("05", "May");
+        MonthMap.put("06", "Jun");
+        MonthMap.put("07", "Jul");
+        MonthMap.put("08", "Aug");
+        MonthMap.put("09", "Sept");
+        MonthMap.put("10", "Oct");
+        MonthMap.put("11", "Nov");
+        MonthMap.put("12", "Dec");
+    }
+
+    private List<EventPaginationResponse> _events;
 
     public EventsHorizontalAdapter() {
 
         this._events = new ArrayList<>();
     }
-    public void setData(List<Event> list){
+
+    public void setData(List<EventPaginationResponse> list) {
         this._events = new ArrayList<>(list);
         notifyDataSetChanged();
     }
+
     static class EventHorizontalViewHolder extends RecyclerView.ViewHolder {
         TextView title;
         TextView day;
@@ -50,11 +70,13 @@ public class EventsHorizontalAdapter extends RecyclerView.Adapter<EventsHorizont
 
     @Override
     public void onBindViewHolder(@NonNull EventHorizontalViewHolder holder, int position) {
-        Event event = _events.get(position);
+        EventPaginationResponse event = _events.get(position);
+
+        String[] dateParts = event.getDate().split("-");
         holder.title.setText(event.getTitle());
-        holder.day.setText(event.getDay());
-        holder.monthYear.setText(event.getMonth() + " " + event.getYear());
-        holder.location.setText(event.getLocation());
+        holder.day.setText(dateParts[2]);
+        holder.monthYear.setText(MonthMap.get(dateParts[1]) + " " + dateParts[0]);
+        holder.location.setText(event.getLocation().getCity() + ", " + event.getLocation().getStreet() + " " + event.getLocation().getStreetNumber());
     }
 
 

@@ -1,4 +1,4 @@
-package com.example.fusmobilni.responses.events;
+package com.example.fusmobilni.responses.events.home;
 
 import java.util.List;
 
