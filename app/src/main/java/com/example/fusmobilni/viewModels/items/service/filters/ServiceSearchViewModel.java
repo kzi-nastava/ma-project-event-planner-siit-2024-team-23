@@ -3,102 +3,133 @@ package com.example.fusmobilni.viewModels.items.service.filters;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.fusmobilni.model.items.category.Category;
-import com.example.fusmobilni.model.items.service.Service;
+import com.example.fusmobilni.clients.ClientUtils;
+import com.example.fusmobilni.responses.items.CategoryResponse;
+import com.example.fusmobilni.responses.items.services.filter.ServicePaginationResponse;
+import com.example.fusmobilni.responses.items.services.filter.ServicesPaginationResponse;
+import com.example.fusmobilni.responses.location.LocationResponse;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ServiceSearchViewModel extends ViewModel {
-    private   MutableLiveData<List<Service>> _allServices = new MutableLiveData<>();
-    private  MutableLiveData<List<Service>> _filteredServices = new MutableLiveData<>();
-    private  MutableLiveData<List<Service>> _pagedServices = new MutableLiveData<>();
-    private   MutableLiveData<String> _constraint = new MutableLiveData<>("");
-    private  MutableLiveData<String> _location = new MutableLiveData<>("");
-    private  MutableLiveData<Category> _category = new MutableLiveData<>(null);
-    private  MutableLiveData<Integer> _currentPage = new MutableLiveData<>(0);
+    private MutableLiveData<List<ServicePaginationResponse>> _services = new MutableLiveData<>(new ArrayList<>());
+    private MutableLiveData<String> _constraint = new MutableLiveData<>("");
+    private MutableLiveData<LocationResponse> _location = new MutableLiveData<>(null);
+    private MutableLiveData<CategoryResponse> _category = new MutableLiveData<>(null);
+    private MutableLiveData<Integer> _currentPage = new MutableLiveData<>(0);
     private MutableLiveData<Integer> _pageSize = new MutableLiveData<>(5);
+    private MutableLiveData<Long> _totalItems = new MutableLiveData<>(0L);
+    private MutableLiveData<Integer> _totalPages = new MutableLiveData<>(0);
+    private MutableLiveData<List<LocationResponse>> _locations = new MutableLiveData<>(new ArrayList<>());
+    private MutableLiveData<List<CategoryResponse>> _categories = new MutableLiveData<>(new ArrayList<>());
 
-    public void applyFilters() {
-        List<Service> filteredList = new ArrayList<>();
+    private MutableLiveData<Double> _selectedMaxPrice = new MutableLiveData<>(0.0);
+    private MutableLiveData<Double> _selectedMinPrice = new MutableLiveData<>(0.0);
 
-        for (Service product : _allServices.getValue()) {
-            boolean matchesConstraint = _constraint.getValue().isEmpty() || product.getName().toLowerCase().trim().contains(_constraint.getValue().toLowerCase().trim());
-            boolean matchesLocation = _location.getValue().isEmpty() || product.getLocation().toLowerCase().trim().equals(_location.getValue().toLowerCase().trim());
-            boolean matchesCategory = _category.getValue() == null || product.getCategory().toLowerCase().trim().equals(_category.getValue().getName().toLowerCase().trim());
-            if (matchesConstraint && matchesLocation && matchesCategory) {
-                filteredList.add(product);
+    public void doFilter() {
+        Map<String, String> queryParams = new HashMap<>();
+        if(!_constraint.getValue().isEmpty())
+        queryParams.put("constraint", _constraint.getValue());
+        if (_category.getValue() != null)
+            queryParams.put("categoryId", String.valueOf(_category.getValue().getId()));
+
+        if (_location.getValue() != null)
+            queryParams.put("city", _location.getValue().getCity());
+        queryParams.put("minPrice", String.valueOf(_selectedMinPrice.getValue()));
+        queryParams.put("maxPrice", String.valueOf(_selectedMaxPrice.getValue()));
+        Call<ServicesPaginationResponse> call = ClientUtils.serviceOfferingService.findFilteredAndPaginated(
+                _currentPage.getValue(),
+                _pageSize.getValue(),
+                queryParams
+        );
+        call.enqueue(new Callback<ServicesPaginationResponse>() {
+            @Override
+            public void onResponse(Call<ServicesPaginationResponse> call, Response<ServicesPaginationResponse> response) {
+                if (response.isSuccessful()) {
+                    _services.setValue(response.body().content);
+                }
             }
-        }
-        _filteredServices.getValue().clear();
-        _filteredServices.setValue(filteredList);
-        loadPage(0);
-    }
 
-    public void loadPage(int page) {
-        if (page < 0 || page * _pageSize.getValue() > _filteredServices.getValue().size()) {
-            return;
-        }
+            @Override
+            public void onFailure(Call<ServicesPaginationResponse> call, Throwable t) {
 
-
-        _currentPage.setValue(page);
-        int start = page * _pageSize.getValue();
-        int end = start + _pageSize.getValue();
-        if (end > _filteredServices.getValue().size()) {
-            end = _filteredServices.getValue().size();
-        }
-
-        List<Service> pageCategories = _filteredServices.getValue().subList(start, end);
-
-        _pagedServices.setValue(pageCategories);
-
-    }
-
-    public void resetFilters() {
-        _category.setValue(null);
-        _location.setValue("");
+            }
+        });
     }
 
     public void prevPage() {
         if (_currentPage.getValue() > 0) {
-            loadPage(_currentPage.getValue() - 1);
+            _currentPage.setValue(_currentPage.getValue() - 1);
+            doFilter();
         }
     }
 
     public void nextPage() {
-        if ((_currentPage.getValue() + 1) * _pageSize.getValue() < _filteredServices.getValue().size()) {
-            loadPage(_currentPage.getValue() + 1);
+        if ((_currentPage.getValue() + 1) * _pageSize.getValue() < _totalItems.getValue()) {
+            _currentPage.setValue(_currentPage.getValue() + 1);
+            doFilter();
         }
     }
 
-    public void setPageSize(int selectedItem, String currentText) {
-        _pageSize.setValue(selectedItem);
-        applyFilters();
+    public void resetFilters() {
+        _category.setValue(null);
+        _constraint.setValue("");
+        _currentPage.setValue(0);
+        _location.setValue(null);
+        _pageSize.setValue(5);
+        Call<ServicesPaginationResponse> call = ClientUtils.serviceOfferingService.findFilteredAndPaginated(_currentPage.getValue(), _pageSize.getValue());
+        call.enqueue(new Callback<ServicesPaginationResponse>() {
+            @Override
+            public void onResponse(Call<ServicesPaginationResponse> call, Response<ServicesPaginationResponse> response) {
+                if (response.isSuccessful()) {
+                    _services.setValue(response.body().content);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ServicesPaginationResponse> call, Throwable t) {
+
+            }
+        });
     }
 
-    public void setData(List<Service> services) {
-        this._allServices.setValue(new ArrayList<>(services));
-        this._filteredServices.setValue(new ArrayList<>(services));
-        this._pagedServices.setValue(new ArrayList<>(services));
-        applyFilters();
+    public MutableLiveData<Double> getSelectedMaxPrice() {
+        return _selectedMaxPrice;
     }
 
-    public MutableLiveData<List<Service>> getAllServices() {
-        return _allServices;
+    public void setSelectedMaxPrice(Double selectedMaxPrice) {
+        this._selectedMaxPrice.setValue(selectedMaxPrice);
     }
 
-    public void setAllServices(List<Service> _allServices) {
-        this._allServices.setValue(_allServices);
-        applyFilters();
+    public MutableLiveData<Double> getSelectedMinPrice() {
+        return _selectedMinPrice;
     }
 
-    public MutableLiveData<Category> getCategory() {
+    public void setSelectedMinPrice(Double selectedMinPrice) {
+        this._selectedMinPrice.setValue(selectedMinPrice);
+    }
+
+    public MutableLiveData<List<CategoryResponse>> getCategories() {
+        return _categories;
+    }
+
+    public void setCategories(List<CategoryResponse> _categories) {
+        this._categories.setValue(_categories);
+    }
+
+    public MutableLiveData<CategoryResponse> getCategory() {
         return _category;
     }
 
-    public void setCategory(Category _category) {
+    public void setCategory(CategoryResponse _category) {
         this._category.setValue(_category);
-        applyFilters();
     }
 
     public MutableLiveData<String> getConstraint() {
@@ -107,7 +138,7 @@ public class ServiceSearchViewModel extends ViewModel {
 
     public void setConstraint(String _constraint) {
         this._constraint.setValue(_constraint);
-        applyFilters();
+        doFilter();
     }
 
     public MutableLiveData<Integer> getCurrentPage() {
@@ -116,34 +147,23 @@ public class ServiceSearchViewModel extends ViewModel {
 
     public void setCurrentPage(Integer _currentPage) {
         this._currentPage.setValue(_currentPage);
-        applyFilters();
     }
 
-    public MutableLiveData<List<Service>> getFilteredServices() {
-        return _filteredServices;
-    }
 
-    public void setFilteredServices(List<Service> _filteredServices) {
-        this._filteredServices.setValue(_filteredServices);
-        applyFilters();
-    }
-
-    public MutableLiveData<String> getLocation() {
+    public MutableLiveData<LocationResponse> getLocation() {
         return _location;
     }
 
-    public void setLocation(String _location) {
+    public void setLocation(LocationResponse _location) {
         this._location.setValue(_location);
-        applyFilters();
     }
 
-    public MutableLiveData<List<Service>> getPagedServices() {
-        return _pagedServices;
+    public MutableLiveData<List<LocationResponse>> getLocations() {
+        return _locations;
     }
 
-    public void setPagedServices(List<Service> _pagedServices) {
-        this._pagedServices.setValue(_pagedServices);
-        applyFilters();
+    public void setLocations(List<LocationResponse> _locations) {
+        this._locations.setValue(_locations);
     }
 
     public MutableLiveData<Integer> getPageSize() {
@@ -152,6 +172,33 @@ public class ServiceSearchViewModel extends ViewModel {
 
     public void setPageSize(Integer _pageSize) {
         this._pageSize.setValue(_pageSize);
-        applyFilters();
+        this._currentPage.setValue(0);
+        doFilter();
     }
+
+    public MutableLiveData<List<ServicePaginationResponse>> getServices() {
+        return _services;
+    }
+
+    public void setServices(List<ServicePaginationResponse> _services) {
+        this._services.setValue(_services);
+    }
+
+    public MutableLiveData<Long> getTotalItems() {
+        return _totalItems;
+    }
+
+    public void setTotalItems(Long _totalItems) {
+        this._totalItems.setValue(_totalItems);
+    }
+
+    public MutableLiveData<Integer> getTotalPages() {
+        return _totalPages;
+    }
+
+    public void setTotalPages(Integer _totalPages) {
+        this._totalPages.setValue(_totalPages);
+    }
+
+
 }

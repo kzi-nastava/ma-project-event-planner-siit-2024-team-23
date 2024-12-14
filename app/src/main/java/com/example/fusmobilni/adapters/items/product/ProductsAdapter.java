@@ -7,18 +7,14 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fusmobilni.R;
 import com.example.fusmobilni.model.items.product.Product;
-import com.example.fusmobilni.responses.items.products.ProductHomeResponse;
+import com.example.fusmobilni.responses.items.products.home.ProductHomeResponse;
 import com.google.android.material.card.MaterialCardView;
 
-import org.w3c.dom.Text;
-
 import java.util.List;
-import java.util.Random;
 
 public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ProductsViewHolder> {
     private List<ProductHomeResponse> _productList;

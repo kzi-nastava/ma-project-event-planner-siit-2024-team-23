@@ -1,4 +1,4 @@
-package com.example.fusmobilni.responses.items.products;
+package com.example.fusmobilni.responses.items.products.home;
 
 import com.example.fusmobilni.responses.items.CategoryResponse;
 import com.example.fusmobilni.responses.location.LocationResponse;

@@ -37,6 +37,46 @@ public class EventSearchViewModel extends ViewModel {
 
     private LocalDate today = LocalDate.now();
     private LocalDate inAWeek = LocalDate.now().plusDays(7);
+    public void doFilter() {
+        Map<String, String> queryParams = new HashMap<>();
+        if(!_constraint.getValue().isEmpty())
+        queryParams.put("constraint", _constraint.getValue());
+        if (_eventType.getValue() != null)
+            queryParams.put("typeId", String.valueOf(_eventType.getValue().getId()));
+        if (!_date.getValue().isEmpty())
+            queryParams.put("date", _date.getValue());
+        if (_location.getValue() != null)
+            queryParams.put("city", _location.getValue().getCity());
+
+        Call<EventsPaginationResponse> call = ClientUtils.eventsService.findFilteredAndPaginated(this._currentPage.getValue(), this._pageSize.getValue(), queryParams);
+        call.enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<EventsPaginationResponse> call, Response<EventsPaginationResponse> response) {
+                if (response.isSuccessful()) {
+                    _events.setValue(response.body().content);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<EventsPaginationResponse> call, Throwable t) {
+                Log.d("TAG", t.getMessage());
+            }
+        });
+    }
+
+    public void prevPage() {
+        if (_currentPage.getValue() > 0) {
+            _currentPage.setValue(_currentPage.getValue()-1);
+            doFilter();
+        }
+    }
+
+    public void nextPage() {
+        if ((_currentPage.getValue() + 1) * _pageSize.getValue() < _totalElements.getValue()) {
+            _currentPage.setValue(_currentPage.getValue()+1);
+            doFilter();
+        }
+    }
 
     public MutableLiveData<List<LocationResponse>> getLocations() {
         return _locations;
@@ -81,31 +121,6 @@ public class EventSearchViewModel extends ViewModel {
         });
     }
 
-    public void doFilter() {
-        Map<String, String> queryParams = new HashMap<>();
-        queryParams.put("constraint", _constraint.getValue());
-        if (_eventType.getValue() != null)
-            queryParams.put("typeId", String.valueOf(_eventType.getValue().getId()));
-        if (!_date.getValue().isEmpty())
-            queryParams.put("date", _date.getValue());
-        if (_location.getValue() != null)
-            queryParams.put("city", _location.getValue().getCity());
-
-        Call<EventsPaginationResponse> call = ClientUtils.eventsService.findFilteredAndPaginated(this._currentPage.getValue(), this._pageSize.getValue(), queryParams);
-        call.enqueue(new Callback<>() {
-            @Override
-            public void onResponse(Call<EventsPaginationResponse> call, Response<EventsPaginationResponse> response) {
-                if (response.isSuccessful()) {
-                    _events.setValue(response.body().content);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<EventsPaginationResponse> call, Throwable t) {
-                Log.d("TAG", t.getMessage());
-            }
-        });
-    }
 
     public void setConstraint(String _constraint) {
         this._constraint.setValue(_constraint);
@@ -158,6 +173,7 @@ public class EventSearchViewModel extends ViewModel {
 
     public void setPageSize(Integer _pageSize) {
         this._pageSize.setValue(_pageSize);
+        doFilter();
     }
 
     public LocalDate getInAWeek() {

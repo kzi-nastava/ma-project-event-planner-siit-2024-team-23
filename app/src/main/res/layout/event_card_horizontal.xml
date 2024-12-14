@@ -157,24 +157,31 @@
                 android:padding="10dp">
 
                 <ImageView
+                    android:id="@+id/attendieOne"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_marginEnd="4dp"
-                    android:src="@drawable/ic_person" />
+                    android:src="@drawable/ic_person"
+                    android:tint="@color/primary_blue_900" />
 
                 <ImageView
+                    android:id="@+id/attendieTwo"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_marginEnd="4dp"
-                    android:src="@drawable/ic_person" />
+                    android:src="@drawable/ic_person"
+                    android:tint="@color/primary_blue_900" />
 
                 <ImageView
+                    android:id="@+id/attendieThree"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_marginEnd="4dp"
-                    android:src="@drawable/ic_person" />
+                    android:src="@drawable/ic_person"
+                    android:tint="@color/primary_blue_900" />
 
                 <TextView
+                    android:id="@+id/textViewNumberGoing"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"

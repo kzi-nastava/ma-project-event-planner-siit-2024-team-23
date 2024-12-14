@@ -1,9 +1,9 @@
 package com.example.fusmobilni.responses.items;
 
 public class CategoryResponse {
-    Long id;
-    String name;
-    String description;
+ public    Long id;
+   public String name;
+public     String description;
 
     public CategoryResponse(String description, Long id, String name) {
         this.description = description;

@@ -3,12 +3,9 @@ package com.example.fusmobilni.fragments.events.event.filters;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,10 +16,8 @@ import android.widget.Toast;
 
 import com.example.fusmobilni.R;
 import com.example.fusmobilni.adapters.events.event.EventsHorizontalAdapter;
-import com.example.fusmobilni.adapters.events.eventType.EventTypeFilterAdapter;
 import com.example.fusmobilni.clients.ClientUtils;
 import com.example.fusmobilni.databinding.EventFragmentSearchBinding;
-import com.example.fusmobilni.model.event.Event;
 import com.example.fusmobilni.responses.events.EventTypesResponse;
 import com.example.fusmobilni.responses.events.filter.EventLocationsResponse;
 import com.example.fusmobilni.responses.events.filter.EventPaginationResponse;
@@ -142,7 +137,15 @@ public class EventSearchFragment extends Fragment {
 
         prevButton = this._binding.eventSearchPreviousButton;
         nextButton = this._binding.eventSearchNextButton;
+
+        prevButton.setOnClickListener(v -> {
+            _viewModel.prevPage();
+        });
+        nextButton.setOnClickListener(v -> {
+            _viewModel.nextPage();
+        });
     }
+
 
     private void fetchEventTypes() {
         Call<EventTypesResponse> call = ClientUtils.eventsService.findEventTypesForEvents();
