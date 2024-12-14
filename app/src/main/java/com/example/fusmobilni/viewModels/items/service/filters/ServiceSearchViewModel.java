@@ -30,13 +30,15 @@ public class ServiceSearchViewModel extends ViewModel {
     private MutableLiveData<List<LocationResponse>> _locations = new MutableLiveData<>(new ArrayList<>());
     private MutableLiveData<List<CategoryResponse>> _categories = new MutableLiveData<>(new ArrayList<>());
 
-    private MutableLiveData<Double> _selectedMaxPrice = new MutableLiveData<>(0.0);
-    private MutableLiveData<Double> _selectedMinPrice = new MutableLiveData<>(0.0);
+    private MutableLiveData<Double> _selectedMaxPrice = new MutableLiveData<>(Double.MAX_VALUE);
+    private MutableLiveData<Double> _selectedMinPrice = new MutableLiveData<>(Double.MIN_VALUE);
+    private MutableLiveData<Double> _upperBoundPrice = new MutableLiveData<>(Double.MAX_VALUE);
+    private MutableLiveData<Double> _lowerBoundPrice = new MutableLiveData<>(Double.MAX_VALUE);
 
     public void doFilter() {
         Map<String, String> queryParams = new HashMap<>();
-        if(!_constraint.getValue().isEmpty())
-        queryParams.put("constraint", _constraint.getValue());
+        if (!_constraint.getValue().isEmpty())
+            queryParams.put("constraint", _constraint.getValue());
         if (_category.getValue() != null)
             queryParams.put("categoryId", String.valueOf(_category.getValue().getId()));
 
@@ -84,6 +86,9 @@ public class ServiceSearchViewModel extends ViewModel {
         _currentPage.setValue(0);
         _location.setValue(null);
         _pageSize.setValue(5);
+        _selectedMaxPrice.setValue(_upperBoundPrice.getValue());
+        _selectedMinPrice.setValue(_lowerBoundPrice.getValue());
+
         Call<ServicesPaginationResponse> call = ClientUtils.serviceOfferingService.findFilteredAndPaginated(_currentPage.getValue(), _pageSize.getValue());
         call.enqueue(new Callback<ServicesPaginationResponse>() {
             @Override
@@ -98,6 +103,22 @@ public class ServiceSearchViewModel extends ViewModel {
 
             }
         });
+    }
+
+    public MutableLiveData<Double> getUpperBoundPrice() {
+        return _upperBoundPrice;
+    }
+
+    public void setUpperBoundPrice(Double _upperBoundPrice) {
+        this._upperBoundPrice.setValue(_upperBoundPrice);
+    }
+
+    public MutableLiveData<Double> getLowerBoundPrice() {
+        return _lowerBoundPrice;
+    }
+
+    public void setLowerBoundPrice(Double _lowerBoundPrice) {
+        this._lowerBoundPrice.setValue(_lowerBoundPrice);
     }
 
     public MutableLiveData<Double> getSelectedMaxPrice() {

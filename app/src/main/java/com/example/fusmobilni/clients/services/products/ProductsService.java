@@ -2,9 +2,11 @@ package com.example.fusmobilni.clients.services.products;
 
 import com.example.fusmobilni.responses.events.filter.EventsPaginationResponse;
 import com.example.fusmobilni.responses.items.CategoriesResponse;
+import com.example.fusmobilni.responses.items.products.filter.ProductsMinMaxPriceResponse;
 import com.example.fusmobilni.responses.items.products.filter.ProductsPaginationResponse;
 import com.example.fusmobilni.responses.items.products.home.ProductsHomeResponse;
 import com.example.fusmobilni.responses.items.products.filter.ProductLocationsResponse;
+import com.example.fusmobilni.responses.items.services.filter.ServicesMinMaxPriceResponse;
 
 import java.util.Map;
 
@@ -35,4 +37,7 @@ public interface ProductsService {
             @Query("pageSize") int pageSize,
             @QueryMap Map<String, String> options
     );
+
+    @GET("products/minMaxPrice")
+    Call<ProductsMinMaxPriceResponse> findMinMaxPrice();
 }

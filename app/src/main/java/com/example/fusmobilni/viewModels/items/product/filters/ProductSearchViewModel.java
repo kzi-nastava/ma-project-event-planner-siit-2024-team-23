@@ -3,109 +3,164 @@ package com.example.fusmobilni.viewModels.items.product.filters;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.fusmobilni.model.items.category.Category;
-import com.example.fusmobilni.model.items.product.Product;
+import com.example.fusmobilni.clients.ClientUtils;
+import com.example.fusmobilni.responses.items.CategoryResponse;
+import com.example.fusmobilni.responses.items.products.filter.ProductPaginationResponse;
+import com.example.fusmobilni.responses.items.products.filter.ProductsPaginationResponse;
+import com.example.fusmobilni.responses.items.services.filter.ServicesPaginationResponse;
+import com.example.fusmobilni.responses.location.LocationResponse;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ProductSearchViewModel extends ViewModel {
-    private MutableLiveData<List<Product>> _allProducts = new MutableLiveData<>();
-    private MutableLiveData<List<Product>> _filteredProducts = new MutableLiveData<>();
-    private MutableLiveData<List<Product>> _pagedProducts = new MutableLiveData<>();
+    private MutableLiveData<List<ProductPaginationResponse>> _products = new MutableLiveData<>(new ArrayList<>());
     private MutableLiveData<String> _constraint = new MutableLiveData<>("");
-    private MutableLiveData<String> _location = new MutableLiveData<>("");
-    private MutableLiveData<Category> _category = new MutableLiveData<>(null);
+    private MutableLiveData<LocationResponse> _location = new MutableLiveData<>(null);
+    private MutableLiveData<List<LocationResponse>> _locations = new MutableLiveData<>(new ArrayList<>());
+    private MutableLiveData<List<CategoryResponse>> _categories = new MutableLiveData<>(new ArrayList<>());
+    private MutableLiveData<CategoryResponse> _category = new MutableLiveData<>(null);
     private MutableLiveData<Double> _minSelectedPrice = new MutableLiveData<>(Double.MIN_VALUE);
     private MutableLiveData<Double> _maxSelectedPrice = new MutableLiveData<>(Double.MAX_VALUE);
     private MutableLiveData<Integer> _currentPage = new MutableLiveData<>(0);
     private MutableLiveData<Integer> _pageSize = new MutableLiveData<>(5);
 
-    public void applyFilters() {
-        List<Product> filteredList = new ArrayList<>();
+    private MutableLiveData<Long> _totalItems = new MutableLiveData<>(0L);
+    private MutableLiveData<Integer> _totalPages = new MutableLiveData<>(0);
+    private MutableLiveData<Double> _upperBoundPrice = new MutableLiveData<>(Double.MAX_VALUE);
+    private MutableLiveData<Double> _lowerBoundPrice = new MutableLiveData<>(Double.MAX_VALUE);
 
-        for (Product product : _allProducts.getValue()) {
-            boolean matchesConstraint = _constraint.getValue().isEmpty() || product.getName().toLowerCase().trim().contains(_constraint.getValue().toLowerCase().trim());
-            boolean matchesLocation = _location.getValue().isEmpty() || product.getLocation().toLowerCase().trim().equals(_location.getValue().toLowerCase().trim());
-            boolean matchesPrice = product.getPrice() >= _minSelectedPrice.getValue() && product.getPrice() <= _maxSelectedPrice.getValue();
-            boolean matchesCategory = _category.getValue() == null || product.getCategory().toLowerCase().trim().equals(_category.getValue().getName().toLowerCase().trim());
-            if (matchesConstraint && matchesLocation && matchesPrice && matchesCategory) {
-                filteredList.add(product);
+    public void doFilter() {
+        Map<String, String> queryParams = new HashMap<>();
+        if (!_constraint.getValue().isEmpty())
+            queryParams.put("constraint", _constraint.getValue());
+        if (_category.getValue() != null)
+            queryParams.put("categoryId", String.valueOf(_category.getValue().getId()));
+
+        if (_location.getValue() != null)
+            queryParams.put("city", _location.getValue().getCity());
+        queryParams.put("minPrice", String.valueOf(_minSelectedPrice.getValue()));
+        queryParams.put("maxPrice", String.valueOf(_maxSelectedPrice.getValue()));
+        Call<ProductsPaginationResponse> call = ClientUtils.productsService.findFilteredAndPaginated(
+                _currentPage.getValue(),
+                _pageSize.getValue(),
+                queryParams
+        );
+        call.enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<ProductsPaginationResponse> call, Response<ProductsPaginationResponse> response) {
+                if (response.isSuccessful()) {
+                    _products.setValue(response.body().content);
+                }
             }
-        }
-        _filteredProducts.getValue().clear();
-        _filteredProducts.setValue(filteredList);
-        loadPage(0);
-    }
 
-    public void loadPage(int page) {
-        if (page < 0 || page * _pageSize.getValue() > _filteredProducts.getValue().size()) {
-            return;
-        }
+            @Override
+            public void onFailure(Call<ProductsPaginationResponse> call, Throwable t) {
 
-
-        _currentPage.setValue(page);
-        int start = page * _pageSize.getValue();
-        int end = start + _pageSize.getValue();
-        if (end > _filteredProducts.getValue().size()) {
-            end = _filteredProducts.getValue().size();
-        }
-
-        List<Product> pageCategories = _filteredProducts.getValue().subList(start, end);
-
-        _pagedProducts.setValue(pageCategories);
-
+            }
+        });
     }
 
     public void resetFilters() {
         _category.setValue(null);
-        _location.setValue("");
-        _minSelectedPrice.setValue(Double.MIN_VALUE);
-        _minSelectedPrice.setValue(Double.MAX_VALUE);
-        applyFilters();
+        _constraint.setValue("");
+        _currentPage.setValue(0);
+        _location.setValue(null);
+        _pageSize.setValue(5);
+        _minSelectedPrice.setValue(_upperBoundPrice.getValue());
+        _maxSelectedPrice.setValue(_lowerBoundPrice.getValue());
+
+        Call<ProductsPaginationResponse> call = ClientUtils.productsService.findFilteredAndPaginated(_currentPage.getValue(), _pageSize.getValue());
+        call.enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<ProductsPaginationResponse> call, Response<ProductsPaginationResponse> response) {
+                if (response.isSuccessful()) {
+                    _products.setValue(response.body().content);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ProductsPaginationResponse> call, Throwable t) {
+
+            }
+        });
     }
 
     public void prevPage() {
         if (_currentPage.getValue() > 0) {
-            loadPage(_currentPage.getValue() - 1);
+            setCurrentPage(_currentPage.getValue() - 1);
+            doFilter();
         }
     }
 
     public void nextPage() {
-        if ((_currentPage.getValue() + 1) * _pageSize.getValue() < _filteredProducts.getValue().size()) {
-            loadPage(_currentPage.getValue() + 1);
+        if ((_currentPage.getValue() + 1) * _pageSize.getValue() < _totalItems.getValue()) {
+            setCurrentPage(_currentPage.getValue() + 1);
+            doFilter();
         }
     }
 
-    public void setPageSize(int selectedItem) {
-        _pageSize.setValue(selectedItem);
-        applyFilters();
+    public MutableLiveData<Double> getUpperBoundPrice() {
+        return _upperBoundPrice;
     }
 
-    public void setData(List<Product> products) {
-        this._allProducts.setValue(new ArrayList<>(products));
-        this._filteredProducts.setValue(new ArrayList<>(products));
-        this._pagedProducts.setValue(new ArrayList<>(products));
-        applyFilters();
+    public void setUpperBoundPrice(Double _upperBoundPrice) {
+        this._upperBoundPrice.setValue(_upperBoundPrice);
     }
 
-    public MutableLiveData<List<Product>> getAllProducts() {
-        return _allProducts;
+    public MutableLiveData<Double> getLowerBoundPrice() {
+        return _lowerBoundPrice;
     }
 
-    public void setAllProducts(List<Product> _allProducts) {
-        this._allProducts.setValue(_allProducts);
-
-        applyFilters();
+    public void setLowerBoundPrice(Double _lowerBoundPrice) {
+        this._lowerBoundPrice.setValue(_lowerBoundPrice);
     }
 
-    public MutableLiveData<Category> getCategory() {
+    public MutableLiveData<Long> getTotalItems() {
+        return _totalItems;
+    }
+
+    public void setTotalItems(Long _totalItems) {
+        this._totalItems.setValue(_totalItems);
+        ;
+    }
+
+    public MutableLiveData<Integer> getTotalPages() {
+        return _totalPages;
+    }
+
+    public void setTotalPages(Integer _totalPages) {
+        this._totalPages.setValue(_totalPages);
+    }
+
+    public MutableLiveData<List<ProductPaginationResponse>> getProducts() {
+        return _products;
+    }
+
+    public void setProducts(List<ProductPaginationResponse> _allProducts) {
+        this._products.setValue(_allProducts);
+    }
+
+    public MutableLiveData<List<CategoryResponse>> getCategories() {
+        return _categories;
+    }
+
+    public void setCategories(List<CategoryResponse> _categories) {
+        this._categories.setValue(_categories);
+    }
+
+    public MutableLiveData<CategoryResponse> getCategory() {
         return _category;
     }
 
-    public void setCategory(Category _category) {
+    public void setCategory(CategoryResponse _category) {
         this._category.setValue(_category);
-        applyFilters();
     }
 
     public MutableLiveData<String> getConstraint() {
@@ -114,7 +169,7 @@ public class ProductSearchViewModel extends ViewModel {
 
     public void setConstraint(String _constraint) {
         this._constraint.setValue(_constraint);
-        applyFilters();
+        doFilter();
     }
 
     public MutableLiveData<Integer> getCurrentPage() {
@@ -123,25 +178,23 @@ public class ProductSearchViewModel extends ViewModel {
 
     public void setCurrentPage(Integer _currentPage) {
         this._currentPage.setValue(_currentPage);
-        applyFilters();
     }
 
-    public MutableLiveData<List<Product>> getFilteredProducts() {
-        return _filteredProducts;
-    }
 
-    public void setFilteredProducts(List<Product> _filteredProducts) {
-        this._filteredProducts.setValue(_filteredProducts);
-        applyFilters();
-    }
-
-    public MutableLiveData<String> getLocation() {
+    public MutableLiveData<LocationResponse> getLocation() {
         return _location;
     }
 
-    public void setLocation(String _location) {
+    public void setLocation(LocationResponse _location) {
         this._location.setValue(_location);
-        applyFilters();
+    }
+
+    public MutableLiveData<List<LocationResponse>> getLocations() {
+        return _locations;
+    }
+
+    public void setLocations(List<LocationResponse> _locations) {
+        this._locations.setValue(_locations);
     }
 
     public MutableLiveData<Double> getMaxSelectedPrice() {
@@ -150,7 +203,6 @@ public class ProductSearchViewModel extends ViewModel {
 
     public void setMaxSelectedPrice(Double _maxSelectedPrice) {
         this._maxSelectedPrice.setValue(_maxSelectedPrice);
-        applyFilters();
     }
 
     public MutableLiveData<Double> getMinSelectedPrice() {
@@ -159,16 +211,8 @@ public class ProductSearchViewModel extends ViewModel {
 
     public void setMinSelectedPrice(Double _minSelectedPrice) {
         this._minSelectedPrice.setValue(_minSelectedPrice);
-        applyFilters();
     }
 
-    public MutableLiveData<List<Product>> getPagedProducts() {
-        return _pagedProducts;
-    }
-
-    public void setPagedProducts(List<Product> _pagedProducts) {
-        this._pagedProducts.setValue(_pagedProducts);
-    }
 
     public MutableLiveData<Integer> getPageSize() {
         return _pageSize;
@@ -176,6 +220,8 @@ public class ProductSearchViewModel extends ViewModel {
 
     public void setPageSize(Integer _pageSize) {
         this._pageSize.setValue(_pageSize);
-        applyFilters();
+        doFilter();
     }
+
+
 }
