@@ -46,7 +46,6 @@
                 android:inputType="textPostalAddress" />
         </com.google.android.material.textfield.TextInputLayout>
 
-
         <!-- Phone Number Input -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/phoneInput"
@@ -73,13 +72,15 @@
             android:fontFamily="@font/poppins_medium"
             android:text="@string/upload_image"
             android:textColor="@color/text_800"
+            android:visibility="gone"
             app:layout_constraintTop_toBottomOf="@id/confirmation_method_group" />
 
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cardView"
             android:layout_width="match_parent"
-            android:layout_height="176dp">
+            android:layout_height="176dp"
+            android:visibility="gone">
 
             <RelativeLayout
                 android:id="@+id/captureLayout"

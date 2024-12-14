@@ -6,6 +6,7 @@ import com.example.fusmobilni.clients.services.categories.proposals.ProposalServ
 import com.example.fusmobilni.clients.services.eventTypes.EventTypeService;
 import com.example.fusmobilni.clients.services.events.EventsService;
 import com.example.fusmobilni.clients.services.events.inivtations.InvitationsService;
+import com.example.fusmobilni.clients.services.fastRegister.FastRegisterService;
 import com.example.fusmobilni.clients.services.products.ProductsService;
 import com.example.fusmobilni.clients.services.serviceOfferings.ServiceOfferingService;
 
@@ -47,4 +48,5 @@ public class ClientUtils {
     public static ProposalService proposalService = retrofit.create(ProposalService.class);
     public static EventsService eventsService = retrofit.create(EventsService.class);
     public static InvitationsService invitationsService = retrofit.create(InvitationsService.class);
+    public static FastRegisterService fastRegisterService = retrofit.create(FastRegisterService.class);
 }
