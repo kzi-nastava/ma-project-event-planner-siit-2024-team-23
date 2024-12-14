@@ -88,8 +88,8 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
         public TextView title;
         public TextView day;
         public TextView monthYear;
-        public TextView numberGoing;
-        public TextView location;
+
+        public TextView location;public TextView numberGoing;
         public ImageView attendieOne;
         public ImageView attendieTwo;
         public ImageView attendieThree;
@@ -107,7 +107,6 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
             attendieTwo = itemView.findViewById(R.id.attendieTwo);
             attendieThree = itemView.findViewById(R.id.attendieThree);
             description = itemView.findViewById(R.id.textViewEventDescription);
-
         }
     }
 

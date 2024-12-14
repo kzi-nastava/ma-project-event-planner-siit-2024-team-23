@@ -7,12 +7,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fusmobilni.R;
 import com.example.fusmobilni.model.items.service.Service;
-import com.example.fusmobilni.responses.items.services.ServiceHomeResponse;
+import com.example.fusmobilni.responses.items.services.home.ServiceHomeResponse;
 import com.google.android.material.card.MaterialCardView;
 
 import java.util.List;
@@ -65,7 +64,7 @@ public class ServicesAdapter extends RecyclerView.Adapter<ServicesAdapter.Servic
             this.description = view.findViewById(R.id.textViewServiceDescription);
             this.location = view.findViewById(R.id.textViewLocationService);
             this._card = view.findViewById(R.id.serviceVerticalCard);
-            this.price = view.findViewById(R.id.serviceHorizontalPrice);
+            this.price = view.findViewById(R.id.price);
             this.category = view.findViewById(R.id.textViewCategory);
 
         }

@@ -1,4 +1,4 @@
-package com.example.fusmobilni.responses.items.products;
+package com.example.fusmobilni.responses.items.products.home;
 
 import java.util.List;
 

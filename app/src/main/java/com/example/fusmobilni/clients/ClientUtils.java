@@ -7,7 +7,6 @@ import com.example.fusmobilni.clients.services.eventTypes.EventTypeService;
 import com.example.fusmobilni.clients.services.events.EventsService;
 import com.example.fusmobilni.clients.services.products.ProductsService;
 import com.example.fusmobilni.clients.services.serviceOfferings.ServiceOfferingService;
-import com.example.fusmobilni.responses.items.services.ServicesHomeResponse;
 
 import java.util.concurrent.TimeUnit;
 

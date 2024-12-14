@@ -7,11 +7,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fusmobilni.R;
 import com.example.fusmobilni.model.items.service.Service;
+import com.example.fusmobilni.responses.items.services.filter.ServicePaginationResponse;
 import com.google.android.material.card.MaterialCardView;
 
 import java.util.ArrayList;
@@ -19,14 +19,14 @@ import java.util.List;
 
 public class ServiceHorizontalAdapter extends RecyclerView.Adapter<ServiceHorizontalAdapter.ServiceHorizontalViewHodler> {
 
-    private List<Service> _services;
+    private List<ServicePaginationResponse> _services;
 
     public ServiceHorizontalAdapter() {
         this._services = new ArrayList<>();
     }
 
-    public ServiceHorizontalAdapter(ArrayList<Service> events) {
-        this._services = new ArrayList<>(events);
+    public ServiceHorizontalAdapter(ArrayList<ServicePaginationResponse> events) {
+        this._services = events;
     }
 
     private Bundle createBundle(Service service) {
@@ -45,13 +45,13 @@ public class ServiceHorizontalAdapter extends RecyclerView.Adapter<ServiceHorizo
 
     @Override
     public void onBindViewHolder(@NonNull ServiceHorizontalAdapter.ServiceHorizontalViewHodler holder, int position) {
-        Service service = _services.get(position);
+        ServicePaginationResponse service = _services.get(position);
         holder.name.setText(service.getName());
         holder.description.setText(service.getDescription());
-        holder.location.setText(service.getLocation());
-        holder._card.setOnClickListener(v -> {
-            Navigation.findNavController(v).navigate(R.id.action_service_card_to_service_details, createBundle(service));
-        });
+        holder.location.setText(service.getLocation().getCity() + ", " + service.getLocation().getStreet() + " " + service.getLocation().getStreetNumber());
+        holder.category.setText(service.getCategory().getName());
+        holder.price.setText(String.valueOf(service.getPrice()));
+
     }
 
     @Override
@@ -60,7 +60,7 @@ public class ServiceHorizontalAdapter extends RecyclerView.Adapter<ServiceHorizo
     }
 
 
-    public void setData(List<Service> list) {
+    public void setData(List<ServicePaginationResponse> list) {
         this._services = new ArrayList<>(list);
         notifyDataSetChanged();
     }
@@ -69,6 +69,8 @@ public class ServiceHorizontalAdapter extends RecyclerView.Adapter<ServiceHorizo
         public TextView name;
         public TextView description;
         public TextView location;
+        public TextView category;
+        public TextView price;
         public MaterialCardView _card;
 
         public ServiceHorizontalViewHodler(@NonNull View view) {
@@ -76,6 +78,8 @@ public class ServiceHorizontalAdapter extends RecyclerView.Adapter<ServiceHorizo
             this.name = view.findViewById(R.id.textViewServiceNameHorizontal);
             this.description = view.findViewById(R.id.serviceDescriptionHorizontal);
             this.location = view.findViewById(R.id.textViewServiceLocationHorizontal);
+            this.category = view.findViewById(R.id.textViewCategory);
+            this.price = view.findViewById(R.id.price);
             _card = view.findViewById(R.id.serviceCardHorizontal);
         }
     }

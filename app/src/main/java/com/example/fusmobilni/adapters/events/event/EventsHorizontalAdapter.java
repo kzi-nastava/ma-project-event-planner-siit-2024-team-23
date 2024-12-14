@@ -3,6 +3,7 @@ package com.example.fusmobilni.adapters.events.event;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -51,6 +52,10 @@ public class EventsHorizontalAdapter extends RecyclerView.Adapter<EventsHorizont
         TextView day;
         TextView monthYear;
         TextView location;
+        public TextView numberGoing;
+        public ImageView attendieOne;
+        public ImageView attendieTwo;
+        public ImageView attendieThree;
 
         EventHorizontalViewHolder(View itemView) {
             super(itemView);
@@ -58,6 +63,10 @@ public class EventsHorizontalAdapter extends RecyclerView.Adapter<EventsHorizont
             day = itemView.findViewById(R.id.textViewDayHorizontal);
             monthYear = itemView.findViewById(R.id.textViewMonthAndYearHorizontal);
             location = itemView.findViewById(R.id.textViewEventLocationHorizontal);
+            numberGoing = itemView.findViewById(R.id.textViewNumberGoing);
+            attendieOne = itemView.findViewById(R.id.attendieOne);
+            attendieTwo = itemView.findViewById(R.id.attendieTwo);
+            attendieThree = itemView.findViewById(R.id.attendieThree);
         }
     }
 
@@ -77,6 +86,20 @@ public class EventsHorizontalAdapter extends RecyclerView.Adapter<EventsHorizont
         holder.day.setText(dateParts[2]);
         holder.monthYear.setText(MonthMap.get(dateParts[1]) + " " + dateParts[0]);
         holder.location.setText(event.getLocation().getCity() + ", " + event.getLocation().getStreet() + " " + event.getLocation().getStreetNumber());
+
+        int numberGoing = event.getNumberGoing();
+
+        View[] attendees = {holder.attendieOne, holder.attendieTwo, holder.attendieThree};
+
+        for (int i = 0; i < attendees.length; i++) {
+            attendees[i].setVisibility(i < numberGoing ? View.VISIBLE : View.GONE);
+        }
+
+        if (numberGoing > attendees.length) {
+            holder.numberGoing.setText(String.valueOf(numberGoing - attendees.length));
+        } else {
+            holder.numberGoing.setText("");
+        }
     }
 
 

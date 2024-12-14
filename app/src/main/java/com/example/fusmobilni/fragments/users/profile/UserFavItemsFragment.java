@@ -52,7 +52,7 @@ public class UserFavItemsFragment extends Fragment {
         listView.setAdapter(serviceHorizontalAdapter);
         ArrayList<Service> services = fillServices();
         ArrayList<Product> products = fillProducts();
-        serviceHorizontalAdapter.setData(services);
+      //  serviceHorizontalAdapter.setData(services);
         productsHorizontalAdapter.setData(products);
 
         toggleGroup.addOnButtonCheckedListener((group, checkedId, isChecked) -> {

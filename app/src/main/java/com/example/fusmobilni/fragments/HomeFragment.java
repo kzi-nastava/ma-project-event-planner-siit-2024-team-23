@@ -23,10 +23,10 @@ import com.example.fusmobilni.model.items.product.Product;
 import com.example.fusmobilni.model.items.service.Service;
 import com.example.fusmobilni.responses.events.home.EventHomeResponse;
 import com.example.fusmobilni.responses.events.home.EventsHomeResponse;
-import com.example.fusmobilni.responses.items.products.ProductHomeResponse;
-import com.example.fusmobilni.responses.items.products.ProductsHomeResponse;
-import com.example.fusmobilni.responses.items.services.ServiceHomeResponse;
-import com.example.fusmobilni.responses.items.services.ServicesHomeResponse;
+import com.example.fusmobilni.responses.items.products.home.ProductHomeResponse;
+import com.example.fusmobilni.responses.items.products.home.ProductsHomeResponse;
+import com.example.fusmobilni.responses.items.services.home.ServiceHomeResponse;
+import com.example.fusmobilni.responses.items.services.home.ServicesHomeResponse;
 
 import java.util.ArrayList;
 import java.util.List;

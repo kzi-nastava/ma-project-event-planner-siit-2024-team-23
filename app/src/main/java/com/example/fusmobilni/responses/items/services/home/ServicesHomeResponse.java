@@ -1,4 +1,4 @@
-package com.example.fusmobilni.responses.items.services;
+package com.example.fusmobilni.responses.items.services.home;
 
 import java.util.List;
 
