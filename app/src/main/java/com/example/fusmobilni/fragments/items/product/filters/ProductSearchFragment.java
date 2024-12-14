@@ -17,14 +17,29 @@ import android.widget.Spinner;
 
 import com.example.fusmobilni.R;
 import com.example.fusmobilni.adapters.items.product.ProductsHorizontalAdapter;
+import com.example.fusmobilni.adapters.items.product.ProductsResponseAdapter;
+import com.example.fusmobilni.clients.ClientUtils;
 import com.example.fusmobilni.databinding.FragmentProductSearchBinding;
 import com.example.fusmobilni.model.items.product.Product;
+import com.example.fusmobilni.responses.items.CategoriesResponse;
+import com.example.fusmobilni.responses.items.products.filter.ProductLocationsResponse;
+import com.example.fusmobilni.responses.items.products.filter.ProductPaginationResponse;
+import com.example.fusmobilni.responses.items.products.filter.ProductsMinMaxPriceResponse;
+import com.example.fusmobilni.responses.items.products.filter.ProductsPaginationResponse;
+import com.example.fusmobilni.responses.items.services.filter.ServiceLocationsResponse;
+import com.example.fusmobilni.responses.items.services.filter.ServicePaginationResponse;
+import com.example.fusmobilni.responses.items.services.filter.ServicesMinMaxPriceResponse;
+import com.example.fusmobilni.responses.items.services.filter.ServicesPaginationResponse;
 import com.example.fusmobilni.viewModels.items.product.filters.ProductSearchViewModel;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
-import java.util.Optional;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -38,10 +53,12 @@ public class ProductSearchFragment extends Fragment {
     private TextInputLayout _searchView;
     private ArrayList<Product> _products;
     private RecyclerView _listView;
-    private ProductsHorizontalAdapter _productsAdapter;
+    private ProductsResponseAdapter _productsAdapter;
     private Spinner _paginationSpinner;
     private MaterialButton _prevButton;
     private MaterialButton _nextButton;
+    private Double _minValue;
+    private Double _maxValue;
 
     public ProductSearchFragment() {
         // Required empty public constructor
@@ -72,61 +89,49 @@ public class ProductSearchFragment extends Fragment {
         _searchView = _binding.searchTextInputLayoutProducts;
 
         initializeButtons();
+        fetchProducts();
+        fetchLocations();
+        fetchCategories();
+        fetchMinMaxPrice();
 
-        _productsAdapter = new ProductsHorizontalAdapter();
+        _productsAdapter = new ProductsResponseAdapter();
         _listView.setAdapter(_productsAdapter);
 
         _viewModel = new ViewModelProvider(requireActivity()).get(ProductSearchViewModel.class);
 
-        _searchView.getEditText().addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                _viewModel.setConstraint(s.toString());
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
         _binding.productsFilterButton.setOnClickListener(v -> {
             openFilterFragment();
         });
 
-        _products = fillProducts();
-        _viewModel.setData(_products);
-
-        _productsAdapter.setData(_viewModel.getPagedProducts().getValue());
-        _viewModel.getConstraint().observe(getViewLifecycleOwner(), observer -> {
-            _productsAdapter.setData(_viewModel.getPagedProducts().getValue());
+        _binding.searchProductsButton.setOnClickListener(v -> {
+            _viewModel.setConstraint(_searchView.getEditText().getText().toString().trim());
         });
-        _viewModel.getPagedProducts().observe(getViewLifecycleOwner(), observer -> {
-            _productsAdapter.setData(_viewModel.getPagedProducts().getValue());
+
+
+        _viewModel.getConstraint().observe(getViewLifecycleOwner(), observer -> {
+            _productsAdapter.setData(_viewModel.getProducts().getValue());
+        });
+        _viewModel.getProducts().observe(getViewLifecycleOwner(), observer -> {
+            _productsAdapter.setData(_viewModel.getProducts().getValue());
         });
         initializePaginationSpinner();
 
-        initializeMaxMinValue();
         return view;
     }
 
-    private void openFilterFragment(){
+    private void openFilterFragment() {
 
         ProductFilterFragment filterFragment = new ProductFilterFragment();
         Bundle bundle = new Bundle();
-        ArrayList<Double> minMaxValue = getMinMaxPrice();
+        if (_minValue != null && _maxValue != null) {
+            bundle.putDouble("minValue", _minValue);
+            bundle.putDouble("maxValue", _maxValue);
+            filterFragment.setArguments(bundle);
+            filterFragment.show(getParentFragmentManager(), filterFragment.getTag());
+        }
 
-        bundle.putDouble("min_slider",minMaxValue.get(0));
-        bundle.putDouble("max_slider",minMaxValue.get(1));
-        filterFragment.setArguments(bundle);
-
-
-        filterFragment.show(getParentFragmentManager(), filterFragment.getTag());
     }
+
     private void initializeButtons() {
 
         _prevButton = this._binding.productSearchPreviousButton;
@@ -138,11 +143,88 @@ public class ProductSearchFragment extends Fragment {
 
 
     }
-    private void initializeMaxMinValue(){
-        ArrayList<Double> minMaxValue = getMinMaxPrice();
-        _viewModel.setMaxSelectedPrice(minMaxValue.get(1));
-        _viewModel.setMinSelectedPrice(minMaxValue.get(0));
+
+    private void fetchCategories() {
+        Call<CategoriesResponse> call = ClientUtils.productsService.findCategoriesForProducts();
+        call.enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<CategoriesResponse> call, Response<CategoriesResponse> response) {
+                if (response.isSuccessful()) {
+                    _viewModel.setCategories(response.body().getCategories());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<CategoriesResponse> call, Throwable t) {
+
+            }
+        });
     }
+
+    private void fetchMinMaxPrice() {
+        Call<ProductsMinMaxPriceResponse> call = ClientUtils.productsService.findMinMaxPrice();
+        call.enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<ProductsMinMaxPriceResponse> call, Response<ProductsMinMaxPriceResponse> response) {
+                if (response.isSuccessful()) {
+                    _minValue = response.body().minPrice;
+                    _maxValue = response.body().maxPrice;
+
+                    _viewModel.setMinSelectedPrice(_minValue);
+                    _viewModel.setMaxSelectedPrice(_maxValue);
+                    _viewModel.setLowerBoundPrice(_minValue);
+                    _viewModel.setUpperBoundPrice(_maxValue);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ProductsMinMaxPriceResponse> call, Throwable t) {
+
+            }
+        });
+    }
+
+    private void fetchLocations() {
+        Call<ProductLocationsResponse> call = ClientUtils.productsService.findProductLocations();
+        call.enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<ProductLocationsResponse> call, Response<ProductLocationsResponse> response) {
+                if (response.isSuccessful()) {
+                    _viewModel.setLocations(response.body().getLocations());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ProductLocationsResponse> call, Throwable t) {
+
+            }
+        });
+    }
+
+    private void fetchProducts() {
+        Call<ProductsPaginationResponse> call = ClientUtils.productsService.findFilteredAndPaginated(0, 5);
+        call.enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<ProductsPaginationResponse> call, Response<ProductsPaginationResponse> response) {
+                if (response.isSuccessful()) {
+                    List<ProductPaginationResponse> responses = response.body().content;
+                    long totalItems = response.body().totalItems;
+                    int totalPages = response.body().totalPages;
+
+                    _viewModel.setProducts(responses);
+                    _viewModel.setTotalItems(totalItems);
+                    _viewModel.setTotalPages(totalPages);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ProductsPaginationResponse> call, Throwable t) {
+
+            }
+        });
+    }
+
+
     private void initializePaginationSpinner() {
         _paginationSpinner = _binding.paginationSpinnerProducts;
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this.getContext(), R.array.paginationPageSizes, android.R.layout.simple_spinner_item);
@@ -154,7 +236,7 @@ public class ProductSearchFragment extends Fragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 int selectedItem = Integer.parseInt(String.valueOf(parent.getItemAtPosition(position)));
                 _viewModel.setPageSize(selectedItem);
-                // _productsAdapter.setData(_viewModel.getPagedProducts().getValue());
+
             }
 
             @Override
@@ -164,60 +246,4 @@ public class ProductSearchFragment extends Fragment {
         });
     }
 
-    private ArrayList<Product> fillProducts() {
-        ArrayList<Product> p = new ArrayList<>();
-        p.add(new Product("Gourmet Pizza", "A delicious blend of flavors", 15.99, "New York", "Food"));
-        p.add(new Product("Lemonade", "Refreshing and invigorating beverage", 3.49, "California", "Health"));
-        p.add(new Product("Mixed Nuts", "Sweet and savory snacks", 5.99, "Texas", "Sports"));
-        p.add(new Product("Croissants", "Freshly baked pastries", 2.99, "France", "Art"));
-        p.add(new Product("Dark Chocolate Truffles", "Artisanal chocolates", 12.49, "Belgium", "Fashion"));
-        p.add(new Product("Sushi Platter", "Assorted fresh sushi and sashimi", 25.00, "Japan", "Food"));
-        p.add(new Product("Espresso", "Strong and bold coffee shot", 2.50, "Italy", "Travel"));
-        p.add(new Product("Hamburger", "Classic beef burger with toppings", 8.99, "USA", "Sports"));
-        p.add(new Product("Macarons", "Colorful French almond cookies", 10.00, "France", "Art"));
-        p.add(new Product("Tacos", "Mexican-style tacos with various fillings", 7.49, "Mexico", "Travel"));
-        p.add(new Product("Smoothie Bowl", "Fruit and granola bowl", 6.99, "California", "Health"));
-        p.add(new Product("Falafel Wrap", "Spiced chickpea wraps", 5.50, "Middle East", "Education"));
-        p.add(new Product("Pasta Carbonara", "Creamy pasta with bacon", 13.99, "Italy", "Food"));
-        p.add(new Product("Matcha Latte", "Green tea latte", 4.99, "Japan", "Tech"));
-        p.add(new Product("Bagel with Cream Cheese", "Toasted bagel with spread", 3.00, "New York", "Food"));
-        p.add(new Product("Avocado Toast", "Healthy smashed avocado on toast", 5.00, "California", "Fashion"));
-        p.add(new Product("Greek Yogurt", "Thick yogurt with honey", 4.49, "Greece", "Health"));
-        p.add(new Product("Ramen", "Japanese noodle soup", 11.99, "Japan", "Education"));
-        p.add(new Product("BBQ Ribs", "Slow-cooked BBQ pork ribs", 16.99, "Texas", "Food"));
-        p.add(new Product("Vegan Burger", "Plant-based burger", 9.99, "Los Angeles", "Health"));
-        p.add(new Product("Cheese Platter", "Assorted cheeses", 20.00, "France", "Food"));
-        p.add(new Product("Orange Juice", "Freshly squeezed orange juice", 3.25, "Florida", "Sports"));
-        p.add(new Product("Caesar Salad", "Salad with romaine, croutons, dressing", 7.99, "Italy", "Education"));
-        p.add(new Product("Pad Thai", "Thai stir-fried noodles", 12.50, "Thailand", "Travel"));
-        p.add(new Product("Cupcakes", "Assorted mini cupcakes", 6.00, "London", "Fashion"));
-        p.add(new Product("Hot Dog", "Classic American hot dog", 4.50, "Chicago", "Music"));
-        p.add(new Product("Ice Cream Sundae", "Ice cream with toppings", 5.50, "New York", "Travel"));
-        p.add(new Product("Burrito", "Mexican wrap with beans, rice, meat", 8.99, "Mexico", "Food"));
-        p.add(new Product("Miso Soup", "Japanese soup with tofu", 2.99, "Japan", "Health"));
-        p.add(new Product("Chocolate Brownie", "Rich chocolate dessert", 3.99, "USA", "Fashion"));
-        p.add(new Product("Kimchi", "Spicy fermented cabbage", 3.99, "South Korea", "Tech"));
-        p.add(new Product("Pancakes", "Stack of fluffy pancakes", 7.00, "Canada", "Sports"));
-        p.add(new Product("Churros", "Fried dough with sugar", 4.99, "Spain", "Travel"));
-        p.add(new Product("Bruschetta", "Italian bread with toppings", 5.50, "Italy", "Education"));
-        p.add(new Product("Pho", "Vietnamese noodle soup", 10.99, "Vietnam", "Art"));
-        p.add(new Product("Fried Chicken", "Crispy fried chicken", 8.99, "Kentucky", "Music"));
-        p.add(new Product("Peking Duck", "Roast duck with pancakes", 25.99, "China", "Food"));
-        p.add(new Product("Beef Wellington", "Fillet steak in puff pastry", 30.00, "England", "Fashion"));
-        p.add(new Product("Paella", "Spanish rice with seafood", 18.50, "Spain", "Travel"));
-        p.add(new Product("Samosas", "Spiced potato-filled pastries", 3.50, "India", "Health"));
-        p.add(new Product("Dim Sum", "Chinese dumplings", 15.00, "China", "Tech"));
-        p.add(new Product("Apple Pie", "Classic American dessert", 5.00, "USA", "Music"));
-
-        return p;
-    }
-
-    private ArrayList<Double> getMinMaxPrice() {
-        ArrayList<Double> resultList = new ArrayList<>();
-        Optional<Double> minPrice = _products.stream().map(Product::getPrice).min(Double::compare);
-        Optional<Double> maxPrice = _products.stream().map(Product::getPrice).max(Double::compare);
-        resultList.add(minPrice.get());
-        resultList.add(maxPrice.get());
-        return resultList;
-    }
 }

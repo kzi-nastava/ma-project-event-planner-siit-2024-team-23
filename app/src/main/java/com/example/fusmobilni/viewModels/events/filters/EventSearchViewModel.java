@@ -1,7 +1,6 @@
 package com.example.fusmobilni.viewModels.events.filters;
 
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -40,7 +39,7 @@ public class EventSearchViewModel extends ViewModel {
     public void doFilter() {
         Map<String, String> queryParams = new HashMap<>();
         if(!_constraint.getValue().isEmpty())
-        queryParams.put("constraint", _constraint.getValue());
+            queryParams.put("constraint", _constraint.getValue());
         if (_eventType.getValue() != null)
             queryParams.put("typeId", String.valueOf(_eventType.getValue().getId()));
         if (!_date.getValue().isEmpty())

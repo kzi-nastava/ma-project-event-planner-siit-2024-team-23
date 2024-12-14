@@ -180,6 +180,8 @@ public class ServiceSearchFragment extends Fragment {
 
                     _viewModel.setSelectedMinPrice(_sliderMinValue);
                     _viewModel.setSelectedMaxPrice(_sliderMaxValue);
+                    _viewModel.setUpperBoundPrice(_sliderMaxValue);
+                    _viewModel.setLowerBoundPrice(_sliderMinValue);
                 }
             }
 

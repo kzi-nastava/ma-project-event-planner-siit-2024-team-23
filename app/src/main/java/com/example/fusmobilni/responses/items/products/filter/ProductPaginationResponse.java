@@ -1,6 +1,7 @@
 package com.example.fusmobilni.responses.items.products.filter;
 
 import com.example.fusmobilni.responses.items.CategoryResponse;
+import com.example.fusmobilni.responses.location.LocationResponse;
 
 public class ProductPaginationResponse {
     public Long id;
@@ -9,6 +10,16 @@ public class ProductPaginationResponse {
     public Double price;
 
     public CategoryResponse category;
+
+    public LocationResponse location;
+
+    public LocationResponse getLocation() {
+        return location;
+    }
+
+    public void setLocation(LocationResponse location) {
+        this.location = location;
+    }
 
     public CategoryResponse getCategory() {
         return category;
