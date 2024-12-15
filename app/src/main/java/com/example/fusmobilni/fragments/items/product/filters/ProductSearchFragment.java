@@ -97,7 +97,7 @@ public class ProductSearchFragment extends Fragment {
         _productsAdapter = new ProductsResponseAdapter();
         _listView.setAdapter(_productsAdapter);
 
-        _viewModel = new ViewModelProvider(requireActivity()).get(ProductSearchViewModel.class);
+        _viewModel = new ViewModelProvider(getParentFragment()).get(ProductSearchViewModel.class);
 
         _binding.productsFilterButton.setOnClickListener(v -> {
             openFilterFragment();

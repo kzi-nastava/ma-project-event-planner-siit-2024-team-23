@@ -39,7 +39,9 @@ public class StepOneFastRegistrationFragment extends Fragment implements Fragmen
                              Bundle savedInstanceState) {
         _binding = FragmentStepOneFastRegistrationBinding.inflate(inflater, container, false);
         View root = _binding.getRoot();
-        _viewModel = new ViewModelProvider(this).get(FastRegisterViewModel.class);
+        _viewModel = new ViewModelProvider(requireActivity()).get(FastRegisterViewModel.class);
+
+        _binding.emailInput.getEditText().setText(_viewModel.getEmail().getValue());
 
         return root;
     }

@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.fusmobilni.adapters.events.event.forms.EmailInvitationAdapter;
 import com.example.fusmobilni.clients.ClientUtils;
@@ -97,10 +98,11 @@ public class InvitationsFragment extends Fragment implements FragmentValidation 
         }
         InvitationsCreateRequest request = new InvitationsCreateRequest(requests);
         Call<InvitationsResponse> call = ClientUtils.invitationsService.create(1L, request);
-        call.enqueue(new Callback<InvitationsResponse>() {
+        call.enqueue(new Callback<>() {
             @Override
             public void onResponse(Call<InvitationsResponse> call, Response<InvitationsResponse> response) {
                 if (response.isSuccessful()) {
+                    Toast.makeText(getContext(),"Sent invitations succesfully",Toast.LENGTH_LONG).show();
                 }
             }
 

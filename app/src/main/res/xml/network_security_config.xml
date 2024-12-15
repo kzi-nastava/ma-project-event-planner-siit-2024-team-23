@@ -5,4 +5,8 @@
         <domain includeSubdomains="true">192.168.1.4</domain>
         <domain includeSubdomains="true">192.168.142.6</domain>
     </domain-config>
+    <domain-config cleartextTrafficPermitted="false">
+        <domain includeSubdomains="true">us1.locationiq.com</domain>
+    </domain-config>
 </network-security-config>
+

@@ -1,6 +1,7 @@
 package com.example.fusmobilni.clients;
 
 import com.example.fusmobilni.BuildConfig;
+import com.example.fusmobilni.clients.auth.AuthService;
 import com.example.fusmobilni.clients.services.categories.CategoryService;
 import com.example.fusmobilni.clients.services.categories.proposals.ProposalService;
 import com.example.fusmobilni.clients.services.eventTypes.EventTypeService;
@@ -49,4 +50,5 @@ public class ClientUtils {
     public static EventsService eventsService = retrofit.create(EventsService.class);
     public static InvitationsService invitationsService = retrofit.create(InvitationsService.class);
     public static FastRegisterService fastRegisterService = retrofit.create(FastRegisterService.class);
+    public static AuthService authService = retrofit.create(AuthService.class);
 }

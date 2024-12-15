@@ -44,7 +44,6 @@ public class StepTwoFastRegistrationFragment extends Fragment implements Fragmen
     private FragmentStepTwoFastRegistrationBinding _binding;
 
     public StepTwoFastRegistrationFragment() {
-        // Required empty public constructor
     }
 
     public static StepTwoFastRegistrationFragment newInstance() {
@@ -69,7 +68,7 @@ public class StepTwoFastRegistrationFragment extends Fragment implements Fragmen
         _captureImage = _binding.profileImg;
         CardView cardView = _binding.cardView;
 
-        _viewModel = new ViewModelProvider(this).get(FastRegisterViewModel.class);
+        _viewModel = new ViewModelProvider(requireActivity()).get(FastRegisterViewModel.class);
 
         cardView.setOnClickListener(v -> pickImage());
         return view;

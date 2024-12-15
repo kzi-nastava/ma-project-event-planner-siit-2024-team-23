@@ -16,12 +16,21 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.example.fusmobilni.R;
 import com.example.fusmobilni.adapters.users.register.RegistrationAdapter;
 import com.example.fusmobilni.clients.ClientUtils;
+import com.example.fusmobilni.clients.GeocodingClient;
 import com.example.fusmobilni.databinding.ActivityFastRegisterBinding;
+import com.example.fusmobilni.fragments.dialogs.FailiureDialogFragment;
+import com.example.fusmobilni.fragments.dialogs.SpinnerDialogFragment;
+import com.example.fusmobilni.fragments.dialogs.SuccessDialogFragment;
 import com.example.fusmobilni.fragments.users.register.fast.HashInvalidFragment;
 import com.example.fusmobilni.fragments.users.register.fast.StepOneFastRegistrationFragment;
 import com.example.fusmobilni.fragments.users.register.fast.StepTwoFastRegistrationFragment;
 import com.example.fusmobilni.interfaces.FragmentValidation;
+import com.example.fusmobilni.requests.auth.AuthenticatedUserRequest;
+import com.example.fusmobilni.requests.register.fast.FastRegisterRequest;
 import com.example.fusmobilni.responses.FastRegisterInvitationResponse;
+import com.example.fusmobilni.responses.geoCoding.GeoCodingResponse;
+import com.example.fusmobilni.responses.location.LocationResponse;
+import com.example.fusmobilni.responses.register.fast.FastRegisterResponse;
 import com.example.fusmobilni.viewModels.users.register.FastRegisterViewModel;
 
 import java.util.ArrayList;
@@ -41,6 +50,10 @@ public class FastRegisterActivity extends AppCompatActivity {
     private RegistrationAdapter _adapter;
     private List<Fragment> _fragments;
 
+    private SpinnerDialogFragment _loader;
+    private SuccessDialogFragment _success;
+    private FailiureDialogFragment _failiure;
+
     private String _hash;
 
     @Override
@@ -53,15 +66,6 @@ public class FastRegisterActivity extends AppCompatActivity {
         Intent intent = getIntent();
         Uri data = intent.getData();
 
-        if (data != null) {
-            _hash = data.getLastPathSegment();
-            Toast.makeText(this, "Received hash: " + _hash, Toast.LENGTH_LONG).show();
-        } else {
-            Toast.makeText(this, "Received nothing", Toast.LENGTH_LONG).show();
-
-        }
-
-
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -71,7 +75,7 @@ public class FastRegisterActivity extends AppCompatActivity {
         _viewModel = new ViewModelProvider(this).get(FastRegisterViewModel.class);
         _viewPager = _binding.viewPager;
 
-        _viewPager.setUserInputEnabled(true);
+        _viewPager.setUserInputEnabled(false);
 
         _fragments = new ArrayList<>();
 
@@ -82,7 +86,7 @@ public class FastRegisterActivity extends AppCompatActivity {
         _fragments.add(new HashInvalidFragment());
         _adapter = new RegistrationAdapter(this, _fragments);
         _viewPager.setAdapter(_adapter);
-        _viewModel.fragments.observe(this,fragments -> {
+        _viewModel.fragments.observe(this, fragments -> {
             observeFragments(fragments);
         });
     }
@@ -103,22 +107,32 @@ public class FastRegisterActivity extends AppCompatActivity {
         _binding.backButton.setOnClickListener(v -> {
             backButtonClick();
         });
+        initializeDialogs();
     }
 
+    private void initializeDialogs(){
+        _loader = new SpinnerDialogFragment();
+        _loader.setCancelable(false);
+        _success = new SuccessDialogFragment();
+        _success.setCancelable(false);
+        _failiure = new FailiureDialogFragment();
+        _failiure.setCancelable(false);
+    }
     private void getHash(Uri data) {
         if (data == null) {
             initalizePageInvalid();
             return;
         }
+        _hash = data.getLastPathSegment();
         Call<FastRegisterInvitationResponse> call = ClientUtils.fastRegisterService.getByHash(_hash);
         call.enqueue(new Callback<>() {
             @Override
             public void onResponse(Call<FastRegisterInvitationResponse> call, Response<FastRegisterInvitationResponse> response) {
                 if (response.isSuccessful()) {
-                    Toast.makeText(getBaseContext(), response.body().hash, Toast.LENGTH_LONG).show();
                     if (!_hash.equals(response.body().hash)) {
                         initalizePageInvalid();
                     }
+                    _viewModel.setEmail(response.body().getEmail());
                     initalizePageValid();
                 }
             }
@@ -166,12 +180,98 @@ public class FastRegisterActivity extends AppCompatActivity {
             Fragment currentFragment = _fragments.get(currentItem);
 
             if (((FragmentValidation) currentFragment).validate()) {
-
+                submitRegistration();
             }
         }
     }
 
+    private String transformAdress() {
+        String city = _viewModel.getCity().getValue();
+        String street = _viewModel.getAddress().getValue().split(" ")[0];
+        String streetNumber = _viewModel.getAddress().getValue().split(" ")[1];
+        return streetNumber + ", " + street + ", " + city;
+    }
+
     private void submitRegistration() {
+        Call<List<GeoCodingResponse>> call = GeocodingClient.geoCodingService.getGeoCode("pk.4a4083e362875d1ad824d7d1d981b2eb", transformAdress(), "json");
+        call.enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<List<GeoCodingResponse>> call, Response<List<GeoCodingResponse>> response) {
+                if (!response.isSuccessful()) {
+                    return;
+                }
+
+                Double lat = Double.valueOf(response.body().get(0).lat);
+                Double lon = Double.valueOf(response.body().get(0).lon);
+
+                registerUser(lat, lon);
+
+            }
+
+            @Override
+            public void onFailure(Call<List<GeoCodingResponse>> call, Throwable t) {
+            }
+        });
+    }
+
+    private void registerUser(Double lat, Double lon) {
+        String street = _viewModel.getAddress().getValue().split(" ")[0];
+        String streetNumber = _viewModel.getAddress().getValue().split(" ")[1];
+
+
+        FastRegisterRequest request = new FastRegisterRequest(
+                _viewModel.getEmail().getValue(),
+                _viewModel.getName().getValue(),
+                _hash,
+                new LocationResponse(_viewModel.getCity().getValue(), lat, lon, street, streetNumber),
+                _viewModel.getPassword().getValue(),
+                _viewModel.getPhone().getValue(),
+                _viewModel.getPassword().getValue(),
+                _viewModel.getLastName().getValue()
+        );
+
+        _loader.show(getSupportFragmentManager(), "loading_spinner");
+        Call<FastRegisterResponse> call = ClientUtils.authService.fastRegister(request);
+        call.enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<FastRegisterResponse> call, Response<FastRegisterResponse> response) {
+                if (response.isSuccessful()) {
+                    openSuccessWindow();
+                }
+                else{
+                    openFailiureWindow();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<FastRegisterResponse> call, Throwable t) {
+                openFailiureWindow();
+
+            }
+        });
+
+    }
+
+    void openSuccessWindow() {
+        if (_loader != null) {
+            _loader.dismiss();
+        }
+        Bundle args = new Bundle();
+        args.putString("Title","Success");
+        args.putString("Message","Verification email has been sent to " + _viewModel.getEmail().getValue());
+        _success.setArguments(args);
+        _success.show(getSupportFragmentManager(),"success_dialog");
+    }
+
+    void openFailiureWindow() {
+        if (_loader != null) {
+            _loader.dismiss();
+        }
+        Bundle args = new Bundle();
+        args.putString("Title","Failiure");
+        args.putString("Message","Failed to register");
+        _failiure.setArguments(args);
+        _failiure.show(getSupportFragmentManager(),"failiure_dialog");
     }
 
 }

@@ -7,6 +7,14 @@ public class LocationResponse {
     public Double latitude;
     public Double longitude;
 
+    public LocationResponse(String city, Double latitude, Double longitude, String street, String streetNumber) {
+        this.city = city;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.street = street;
+        this.streetNumber = streetNumber;
+    }
+
     public String getCity() {
         return city;
     }

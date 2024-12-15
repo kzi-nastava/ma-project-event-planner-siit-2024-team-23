@@ -1,21 +1,27 @@
-package com.example.fusmobilni.requests.register.fast;
+package com.example.fusmobilni.requests.auth;
 
 import com.example.fusmobilni.responses.location.LocationResponse;
 
-public class FastRegisterRequest {
-
-    public String firstName;
-
+public class AuthenticatedUserRequest {
+    public  String firstName;
     public String surname;
     public String email;
-
     public String password;
-
     public String repeatedPassword;
-
     public String hash;
     public String phone;
     public LocationResponse location;
+
+    public AuthenticatedUserRequest(String email, String firstName, String hash, LocationResponse location, String password, String phone, String repeatedPassword, String surname) {
+        this.email = email;
+        this.firstName = firstName;
+        this.hash = hash;
+        this.location = location;
+        this.password = password;
+        this.phone = phone;
+        this.repeatedPassword = repeatedPassword;
+        this.surname = surname;
+    }
 
     public String getEmail() {
         return email;
@@ -78,17 +84,6 @@ public class FastRegisterRequest {
     }
 
     public void setSurname(String surname) {
-        this.surname = surname;
-    }
-
-    public FastRegisterRequest(String email, String firstName, String hash, LocationResponse location, String password, String phone, String repeatedPassword, String surname) {
-        this.email = email;
-        this.firstName = firstName;
-        this.hash = hash;
-        this.location = location;
-        this.password = password;
-        this.phone = phone;
-        this.repeatedPassword = repeatedPassword;
         this.surname = surname;
     }
 }
