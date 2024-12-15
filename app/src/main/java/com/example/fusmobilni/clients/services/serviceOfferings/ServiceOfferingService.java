@@ -6,6 +6,8 @@ import com.example.fusmobilni.requests.services.GetServiceResponse;
 import com.example.fusmobilni.requests.services.ServiceFilterRequest;
 import com.example.fusmobilni.responses.events.filter.EventsPaginationResponse;
 import com.example.fusmobilni.responses.items.CategoriesResponse;
+import com.example.fusmobilni.responses.items.services.ServiceOverviewResponse;
+import com.example.fusmobilni.responses.items.services.ServiceReservationResponse;
 import com.example.fusmobilni.responses.items.services.filter.ServiceLocationsResponse;
 import com.example.fusmobilni.responses.items.services.filter.ServicesMinMaxPriceResponse;
 import com.example.fusmobilni.responses.items.services.filter.ServicesPaginationResponse;
@@ -81,4 +83,13 @@ public interface ServiceOfferingService {
 
     @GET("services/minMaxPrice")
     Call<ServicesMinMaxPriceResponse> findMinMaxPrice();
+
+    @GET("services/overview/{id}")
+    Call<ServiceOverviewResponse> findServiceForOverview(@Path("id") Long id);
+
+    @GET("services/reservation/{id}")
+    Call<ServiceReservationResponse> findServiceForReservation(@Path("id") Long id);
+
+
+
 }

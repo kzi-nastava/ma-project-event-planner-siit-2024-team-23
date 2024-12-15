@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fusmobilni.R;
@@ -29,10 +30,10 @@ public class ServiceHorizontalAdapter extends RecyclerView.Adapter<ServiceHorizo
         this._services = events;
     }
 
-    private Bundle createBundle(Service service) {
+    private Bundle createBundle(ServicePaginationResponse service) {
 
         Bundle bundle = new Bundle();
-        bundle.putParcelable("service", service);
+        bundle.putLong("serviceId", service.getId());
         return bundle;
     }
 
@@ -51,6 +52,9 @@ public class ServiceHorizontalAdapter extends RecyclerView.Adapter<ServiceHorizo
         holder.location.setText(service.getLocation().getCity() + ", " + service.getLocation().getStreet() + " " + service.getLocation().getStreetNumber());
         holder.category.setText(service.getCategory().getName());
         holder.price.setText(String.valueOf(service.getPrice()));
+        holder._card.setOnClickListener(v -> {
+            Navigation.findNavController(v).navigate(R.id.action_service_card_to_service_details, createBundle(service));
+        });
 
     }
 

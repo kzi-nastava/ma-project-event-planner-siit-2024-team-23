@@ -286,17 +286,11 @@
         android:id="@+id/serviceDetailsFragment"
         android:name="com.example.fusmobilni.fragments.items.service.ServiceDetailsFragment"
         android:label="">
-        <argument
-            android:name="product"
-            app:argType="com.example.fusmobilni.model.items.service.Service"/>
     </fragment>
     <fragment
         android:id="@+id/serviceReservationFragment"
         android:name="com.example.fusmobilni.fragments.items.service.ServiceReservationFragment"
         android:label="">
-        <argument
-            android:name="product"
-            app:argType="com.example.fusmobilni.model.items.service.Service"/>
     </fragment>
 
 

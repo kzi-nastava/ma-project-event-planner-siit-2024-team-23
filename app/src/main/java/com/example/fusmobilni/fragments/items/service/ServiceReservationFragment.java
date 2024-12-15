@@ -10,12 +10,17 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.example.fusmobilni.R;
 import com.example.fusmobilni.adapters.events.event.EventSelectionSpinnerAdapter;
+import com.example.fusmobilni.clients.ClientUtils;
 import com.example.fusmobilni.databinding.FragmentServiceReservationBinding;
+import com.example.fusmobilni.fragments.dialogs.SpinnerDialogFragment;
 import com.example.fusmobilni.model.event.Event;
 import com.example.fusmobilni.model.items.service.Service;
+import com.example.fusmobilni.responses.items.services.ServiceOverviewResponse;
+import com.example.fusmobilni.responses.items.services.ServiceReservationResponse;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.datepicker.CalendarConstraints;
 import com.google.android.material.datepicker.DateValidatorPointForward;
@@ -32,17 +37,17 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class ServiceReservationFragment extends Fragment {
 
     private FragmentServiceReservationBinding _binding;
     private boolean toInputsDisabled = new Random(System.currentTimeMillis()).nextBoolean();
-    private Spinner _eventSelectionSpinner;
-    private EventSelectionSpinnerAdapter _adapter;
-    private List<Event> _events;
-    private Service _service;
-
-    private MaterialDatePicker _datePicker;
-
+    private ServiceReservationResponse _service;
+    private Long _serviceId;
+    private SpinnerDialogFragment _loader;
     private EditText _hoursInputFrom;
     private EditText _minutesInputFrom;
     private TextInputEditText _hoursInputTo;
@@ -63,6 +68,7 @@ public class ServiceReservationFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
+            _serviceId = getArguments().getLong("serviceId");
         }
     }
 
@@ -72,30 +78,90 @@ public class ServiceReservationFragment extends Fragment {
         _binding = FragmentServiceReservationBinding.inflate(inflater, container, false);
         View root = _binding.getRoot();
 
-        _service = getArguments().getParcelable("service");
-        _events = fillEvents();
 
+        initializeDialogs();
+
+        getServiceForReservation();
+
+        return root;
+
+    }
+
+    private void initializePageSuccessful() {
 
         _binding.textViewServiceDetailsTitleReservation.setText(_service.getName());
 
-        _binding.textViewSelectedDate.setText("");
-        _binding.buttonOpenDatePicker.setOnClickListener(v -> {
-            _datePicker.show(getParentFragmentManager(), "Pick a date");
-            _binding.buttonOpenDatePicker.setEnabled(false);
-        });
 
         initializeHoursAndMinutes();
 
         initializeTimePicker(_hoursInputFrom, _minutesInputFrom, _binding.buttonPickTimeFrom);
         initializeTimePicker(_hoursInputTo, _minutesInputTo, _binding.buttonPickTimeTo);
-        initializeSpinner();
-        initializeDatePicker();
 
+        _binding.buttonApplyReservation.setOnClickListener(v -> {
+            makeServiceReservation();
+        });
 
         disabledToInputs();
+    }
 
-        return root;
+    private String convertTime(EditText hours, EditText minutes) {
+        String hoursS = "";
+        String minutesS = "";
+        hoursS = hours.getText().toString();
+        if (Integer.parseInt(hoursS) < 10) {
+            hoursS = "0" + hoursS;
+        }
+        minutesS = minutes.getText().toString();
+        if (Integer.parseInt(minutesS) < 10) {
+            minutesS = "0" + minutesS;
+        }
+        return hoursS + ":" + minutesS;
+    }
 
+    private void makeServiceReservation() {
+        Call<Boolean> call = ClientUtils.serviceReservationService.checkIfReservationTimeTaken(
+                1L,
+                _serviceId,
+                convertTime(_hoursInputFrom, _minutesInputFrom),
+                convertTime(_hoursInputTo, _minutesInputTo)
+        );
+        call.enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<Boolean> call, Response<Boolean> response) {
+                if (response.isSuccessful()) {
+                    boolean bool = response.body();
+                    Toast.makeText(getContext(), String.valueOf(bool), Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Boolean> call, Throwable t) {
+                Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_LONG).show();
+
+            }
+        });
+    }
+
+    private void getServiceForReservation() {
+        _loader.show(getFragmentManager(), "loading_spinner");
+        Call<ServiceReservationResponse> call = ClientUtils.serviceOfferingService.findServiceForReservation(_serviceId);
+        call.enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<ServiceReservationResponse> call, Response<ServiceReservationResponse> response) {
+                if (!response.isSuccessful()) {
+                    return;
+                }
+                _service = response.body();
+                _loader.dismiss();
+                initializePageSuccessful();
+
+            }
+
+            @Override
+            public void onFailure(Call<ServiceReservationResponse> call, Throwable t) {
+                Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     private void initializeTimePicker(EditText inputHours, EditText inputMinutes, MaterialButton activator) {
@@ -126,24 +192,6 @@ public class ServiceReservationFragment extends Fragment {
 
     }
 
-    private void initializeSpinner() {
-        _eventSelectionSpinner = _binding.eventSelectionSpinner;
-        _adapter = new EventSelectionSpinnerAdapter(getContext(), _events);
-
-        _eventSelectionSpinner.setAdapter(_adapter);
-
-        _eventSelectionSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-    }
 
     private void disabledToInputs() {
         if (!toInputsDisabled) {
@@ -155,97 +203,11 @@ public class ServiceReservationFragment extends Fragment {
         _binding.buttonPickTimeTo.setTextColor(getResources().getColor(R.color.white));
     }
 
-    private void initializeDatePicker() {
-        MaterialDatePicker.Builder<Long> builder = MaterialDatePicker.Builder.datePicker();
 
-        CalendarConstraints.Builder constraintsBuilder = new CalendarConstraints.Builder();
-        constraintsBuilder.setValidator(DateValidatorPointForward.now());
+    private void initializeDialogs() {
+        _loader = new SpinnerDialogFragment();
+        _loader.setCancelable(false);
 
-        builder.setTitleText("Select a date");
-        builder.setCalendarConstraints(constraintsBuilder.build());
-
-        _datePicker = builder.build();
-
-
-        _datePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener() {
-            @Override
-            public void onPositiveButtonClick(Object selection) {
-                Date selectedDate = new Date((Long) selection);
-
-                // Format the date
-                SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
-                String formattedDate = dateFormat.format(selectedDate);
-
-                // Display the selected date
-                _binding.textViewSelectedDate.setText(formattedDate);
-                _binding.buttonOpenDatePicker.setEnabled(true);
-
-            }
-        });
-
-    }
-
-
-    private ArrayList<Event> fillEvents() {
-        ArrayList<Event> e = new ArrayList<>();
-        e.add(new Event("Food and Wine Tasting", "12-07-2024", "Napa Valley Vineyard", "Food", "Food"));
-        e.add(new Event("Tech Innovators Conference", "15-08-2024", "Silicon Valley Expo Center", "Tech", "Tech"));
-        e.add(new Event("Autumn Art and Sculpture Exhibition", "18-09-2024", "Paris Art Museum", "Art", "Tech"));
-        e.add(new Event("Global Startup Pitch Event", "22-11-2024", "Berlin Startup Hub", "Tech","Tech"));
-        e.add(new Event("International Film and Documentary Festival", "05-11-2024", "Toronto Film Centre", "Art","Art"));
-
-        e.add(new Event("New Year Gala", "01-01-2024", "Times Square", "Travel", "Travel"));
-        e.add(new Event("Valentine's Day Dance", "10-02-2024", "City Hall Ballroom", "Music", "Music"));
-        e.add(new Event("Winter Sports Championship", "20-02-2024", "Aspen Ski Resort", "Sports", "Sports"));
-        e.add(new Event("Spring Fashion Week", "15-03-2024", "New York City", "Fashion", "Fashion"));
-        e.add(new Event("Cherry Blossom Festival", "30-03-2024", "Washington D.C.", "Travel", "Travel"));
-
-        e.add(new Event("Earth Day Celebration", "22-04-2024", "Central Park", "Health", "Health"));
-        e.add(new Event("Music Festival", "10-05-2024", "Coachella Valley", "Music", "Music"));
-        e.add(new Event("Memorial Day Parade", "24-05-2024", "Chicago", "Travel", "Travel"));
-        e.add(new Event("Summer Food Festival", "07-06-2024", "Los Angeles", "Food", "Food"));
-        e.add(new Event("Pride Parade", "15-06-2024", "San Francisco", "Travel", "Travel"));
-
-        e.add(new Event("Independence Day Fireworks", "04-07-2024", "Washington D.C.", "Travel", "Travel"));
-        e.add(new Event("Bastille Day Celebration", "14-07-2024", "Paris", "Travel", "Travel"));
-        e.add(new Event("International Comic Con", "30-07-2024", "San Diego", "Art", "Art"));
-        e.add(new Event("Outdoor Yoga Festival", "10-08-2024", "Bali", "Health", "Health"));
-        e.add(new Event("Gastronomy Festival", "20-08-2024", "Barcelona", "Food", "Food"));
-
-        e.add(new Event("Labor Day Weekend", "01-09-2024", "New York", "Travel", "Travel"));
-        e.add(new Event("Tech Startups Expo", "10-09-2024", "Austin", "Tech", "Tech"));
-        e.add(new Event("International Film Festival", "25-09-2024", "Venice", "Art", "Art"));
-        e.add(new Event("Oktoberfest", "08-10-2024", "Munich", "Food", "Food"));
-        e.add(new Event("Halloween Spooktacular", "31-10-2024", "New Orleans", "Travel", "Travel"));
-
-        e.add(new Event("Thanksgiving Parade", "10-11-2024", "New York", "Travel", "Travel"));
-        e.add(new Event("Black Friday Shopping Event", "22-11-2024", "Mall of America", "Fashion", "Fashion"));
-        e.add(new Event("Christmas Market", "05-12-2024", "Prague", "Food", "Food"));
-        e.add(new Event("Winter Wonderland Festival", "20-12-2024", "London", "Travel", "travel"));
-        e.add(new Event("New Year's Eve Countdown", "31-12-2024", "Sydney", "Travel", "Travel"));
-
-        e.add(new Event("Chocolate Festival", "14-02-2024", "Zurich", "Food", "Food"));
-        e.add(new Event("St. Patrick's Day Parade", "05-03-2024", "Dublin", "Travel","Travel"));
-        e.add(new Event("International Women’s Day Conference", "17-03-2024", "Los Angeles", "Education", "Education"));
-        e.add(new Event("May Day Celebration", "29-04-2024", "Berlin", "Travel", "Travel"));
-        e.add(new Event("Flower Festival", "12-05-2024", "Amsterdam", "Travel", "Travel"));
-
-        e.add(new Event("Midsummer Festival", "19-06-2024", "Stockholm", "Travel", "Travel"));
-        e.add(new Event("World Music Festival", "24-07-2024", "Austin", "Music", "Music"));
-        e.add(new Event("National Book Festival", "13-08-2024", "Washington D.C.", "Education", "Education"));
-        e.add(new Event("Sustainable Living Expo", "21-09-2024", "San Francisco", "Health", "Health"));
-        e.add(new Event("Haunted House Experience", "18-10-2024", "Los Angeles", "Travel", "Travel"));
-
-        e.add(new Event("Dia de los Muertos Festival", "02-11-2024", "Mexico City", "Travel", "Travel"));
-        e.add(new Event("Winter Solstice Celebration", "06-12-2024", "Reykjavik", "Travel", "Travel"));
-        e.add(new Event("Christmas Concert", "25-12-2024", "London", "Music", "Music"));
-        e.add(new Event("Boxing Day Sales", "28-12-2024", "Toronto", "Fashion", "Fashion"));
-        e.add(new Event("Epiphany Celebration", "03-01-2024", "Madrid", "Education", "Education"));
-
-        e.add(new Event("Winter Carnival", "10-02-2024", "Quebec", "Travel", "Travel"));
-        e.add(new Event("Wi Art and Design Fair", "15-03-2024", "Tokyo", "Art", "Art"));
-
-        return e;
     }
 
 }

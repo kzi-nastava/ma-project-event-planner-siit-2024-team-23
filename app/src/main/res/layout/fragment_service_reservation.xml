@@ -58,62 +58,6 @@
                     android:text="Choose Event"
                     android:textSize="16sp" />
 
-                <Spinner
-                    android:id="@+id/eventSelectionSpinner"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:minHeight="48dp"
-                    android:paddingVertical="8dp"
-                    tools:listitem="@layout/event_dropdown_item" />
-
-
-
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginVertical="8dp"
-                    android:orientation="horizontal">
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/buttonOpenDatePicker"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/poppins"
-                        android:text="Choose from your calendar"
-                        android:textColor="#2962FF"
-                        app:backgroundTint="@color/white"
-                        app:icon="@drawable/ic_calendar"
-                        app:iconSize="20dp"
-                        app:iconTint="@color/primary_blue_900"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintVertical_bias="0.0"
-                        app:strokeColor="@color/primary_blue_900"
-                        app:strokeWidth="1dp" />
-
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-
-                        <TextView
-                            android:id="@+id/textViewSelectedDate"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginVertical="8dp"
-                            android:layout_weight="1"
-                            android:fontFamily="@font/poppins"
-                            android:textAlignment="center"
-                            android:textColor="@color/primary_blue_900"
-                            android:textSize="16sp"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-
-                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"

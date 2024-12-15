@@ -10,18 +10,26 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.fusmobilni.R;
+import com.example.fusmobilni.clients.ClientUtils;
 import com.example.fusmobilni.databinding.FragmentServiceDetailsBinding;
+import com.example.fusmobilni.fragments.dialogs.FailiureDialogFragment;
+import com.example.fusmobilni.fragments.dialogs.SpinnerDialogFragment;
+import com.example.fusmobilni.fragments.dialogs.SuccessDialogFragment;
 import com.example.fusmobilni.model.items.service.Service;
+import com.example.fusmobilni.responses.items.services.ServiceOverviewResponse;
+import com.example.fusmobilni.responses.location.LocationResponse;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link ServiceDetailsFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class ServiceDetailsFragment extends Fragment {
 
     private FragmentServiceDetailsBinding _binding;
-    private Service _service;
+    private ServiceOverviewResponse _service;
+    private SpinnerDialogFragment _loader;
+
+    private Long _serviceId;
 
     public ServiceDetailsFragment() {
         // Required empty public constructor
@@ -40,6 +48,7 @@ public class ServiceDetailsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
+            _serviceId = getArguments().getLong("serviceId");
         }
     }
 
@@ -50,21 +59,63 @@ public class ServiceDetailsFragment extends Fragment {
         _binding = FragmentServiceDetailsBinding.inflate(inflater, container, false);
         View view = _binding.getRoot();
 
-        _service = getArguments().getParcelable("service");
+        initializeDialogs();
 
+        getServiceForOverview();
+
+        return view;
+
+    }
+
+    private void initializePageSuccessful() {
         _binding.serviceDetailsText.setText(_service.getName());
-        _binding.textViewServiceLocationHorizontal.setText(_service.getLocation());
-        _binding.textViewServiceCategory.setText(_service.getCategory());
-        _binding.textViewOrganizerNameServiceDetails.setText("Abramovich");
+        LocationResponse location = _service.getProvider().getCompanyLocation();
+        _binding.textViewServiceLocationHorizontal.setText(location.getCity() + ", " + location.getStreet() + " " + location.getStreetNumber());
+        _binding.textViewServiceCategory.setText(_service.getCategory().getName());
+        _binding.textViewOrganizerNameServiceDetails.setText(_service.getProvider().getFirstName() + " " + _service.getProvider().getLastName());
         _binding.textViewServiceDescriptionDetails.setText(_service.getDescription());
+        _binding.price.setText(String.valueOf(_service.getPrice()));
         _binding.imageView5.setImageResource(R.drawable.person);
 
         _binding.bookServiceButton.setOnClickListener(v -> {
-            Navigation.findNavController(v).navigate(R.id.action_service_details_to_service_reservation, createBundle(_service));
+            Navigation.findNavController(v).navigate(R.id.action_service_details_to_service_reservation,createBundle());
         });
 
         initializeFavoriteButton();
-        return view;
+    }
+
+    private Bundle createBundle() {
+        Bundle args = new Bundle();
+        args.putLong("serviceId", _serviceId);
+        return args;
+    }
+
+    private void initializeDialogs() {
+        _loader = new SpinnerDialogFragment();
+        _loader.setCancelable(false);
+
+    }
+
+    private void getServiceForOverview() {
+        _loader.show(getFragmentManager(), "loading_spinner");
+        Call<ServiceOverviewResponse> call = ClientUtils.serviceOfferingService.findServiceForOverview(_serviceId);
+        call.enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<ServiceOverviewResponse> call, Response<ServiceOverviewResponse> response) {
+                if (!response.isSuccessful()) {
+                    return;
+                }
+                _service = response.body();
+                _loader.dismiss();
+                initializePageSuccessful();
+
+            }
+
+            @Override
+            public void onFailure(Call<ServiceOverviewResponse> call, Throwable t) {
+
+            }
+        });
 
     }
 
