@@ -74,6 +74,7 @@ public class CreateEventFragment extends Fragment {
         if (getArguments() != null) {
             int currFragment = getArguments().getInt("currFragment");
             eventId =  getArguments().getLong("eventId");
+            _eventViewModel.eventId = eventId;
             _backButton.setVisibility(View.VISIBLE);
             _viewPager.setCurrentItem(currFragment);
 
@@ -107,7 +108,10 @@ public class CreateEventFragment extends Fragment {
 
             if (((FragmentValidation) currentFragment).validate()){
                 // http request
-                _eventViewModel.submit();
+                if(currentItem == 0){
+                    _eventViewModel.submit();
+                }
+
                 if(currentItem == _eventAdapter.getItemCount() - 1){
                     _backButton.setVisibility(View.GONE);
                     submitRegistration();

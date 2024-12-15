@@ -4,6 +4,7 @@ import com.example.fusmobilni.requests.events.event.CreateEventRequest;
 import com.example.fusmobilni.requests.items.BuyItemRequest;
 import com.example.fusmobilni.responses.events.EventTypeResponse;
 import com.example.fusmobilni.responses.events.EventTypesResponse;
+import com.example.fusmobilni.responses.events.GetEventByIdResponse;
 import com.example.fusmobilni.responses.events.GetEventResponse;
 import com.example.fusmobilni.responses.events.components.EventComponentsResponse;
 import com.example.fusmobilni.responses.events.filter.EventLocationsResponse;
@@ -49,6 +50,8 @@ public interface EventsService {
     Call<GetEventResponse> create(
             @Body CreateEventRequest request
             );
+    @GET("events/{id}")
+    Call<GetEventByIdResponse> findById(@Path("id") Long id);
 
     @POST("events/{id}/event-components")
     Call<Void> createEventComponent(@Path("id") Long id,

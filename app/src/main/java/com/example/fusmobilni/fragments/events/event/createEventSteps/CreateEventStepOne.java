@@ -23,6 +23,7 @@ import com.example.fusmobilni.databinding.FragmentCreateEventStepOneBinding;
 import com.example.fusmobilni.interfaces.FragmentValidation;
 import com.example.fusmobilni.model.event.eventTypes.EventType;
 import com.example.fusmobilni.model.items.category.OfferingsCategory;
+import com.example.fusmobilni.responses.events.GetEventByIdResponse;
 import com.example.fusmobilni.responses.events.GetEventTypesWithCategoriesResponse;
 import com.example.fusmobilni.viewModels.events.event.EventViewModel;
 import com.google.android.material.chip.Chip;
@@ -72,6 +73,22 @@ public class CreateEventStepOne extends Fragment  implements FragmentValidation 
                              Bundle savedInstanceState) {
         _binding = FragmentCreateEventStepOneBinding.inflate(getLayoutInflater());
         _eventViewModel = new ViewModelProvider(requireActivity()).get(EventViewModel.class);
+        if(_eventViewModel.eventId != null){
+            Call<GetEventByIdResponse> request = ClientUtils.eventsService.findById(_eventViewModel.eventId);
+            request.enqueue(new Callback<GetEventByIdResponse>() {
+                @Override
+                public void onResponse(Call<GetEventByIdResponse> call, Response<GetEventByIdResponse> response) {
+                    if(response.isSuccessful()){
+                        populateInputs(response.body());
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<GetEventByIdResponse> call, Throwable t) {
+
+                }
+            });
+        }
 
         View view = _binding.getRoot();
         _privacyType = new String[] {"Private", "Public"};
@@ -96,6 +113,16 @@ public class CreateEventStepOne extends Fragment  implements FragmentValidation 
         populateData();
 
         return view;
+    }
+
+    private void populateInputs(GetEventByIdResponse body) {
+        _binding.titleInput.setText(body.getTitle());
+        _binding.descriptionInput.setText(body.getDescription());
+        _binding.etEventTime.setText(body.getTime());
+        _binding.etEventDate.setText(body.getDate());
+        _binding.eventType.setText(body.getType().name);
+        _binding.privacyType.setText(body.isPublic() ? "Public" : "Private");
+        _binding.visitorsInput.setText(body.getMaxParticipants());
     }
 
     private void populateChipGroup(EventType eventType) {

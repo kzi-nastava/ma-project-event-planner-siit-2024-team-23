@@ -25,6 +25,7 @@ import com.example.fusmobilni.model.items.category.OfferingsCategory;
 import com.example.fusmobilni.requests.categories.GetCategoriesResponse;
 import com.example.fusmobilni.requests.categories.GetCategoryResponse;
 import com.example.fusmobilni.responses.events.components.EventComponentResponse;
+import com.example.fusmobilni.responses.events.components.EventComponentsResponse;
 import com.example.fusmobilni.viewModels.events.event.EventViewModel;
 import com.google.android.material.button.MaterialButton;
 
@@ -95,6 +96,22 @@ public class CreateEventStepTwo extends Fragment  implements FragmentValidation 
         _allcategories.clear();
         populateData();
         populateCategories();
+        Call<EventComponentsResponse> request = ClientUtils.eventsService.findComponentsByEventId(_eventViewModel.eventId);
+        request.enqueue(new Callback<EventComponentsResponse>() {
+            @Override
+            public void onResponse(Call<EventComponentsResponse> call, Response<EventComponentsResponse> response) {
+                if(response.isSuccessful()){
+                    _suggestedCategoryOfferings.clear();
+                    _suggestedCategoryOfferings.addAll(response.body().components);
+                    _budgetPlaningAdapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<EventComponentsResponse> call, Throwable t) {
+
+            }
+        });
         this._budgetPlaningAdapter = new BudgetPlaningItemAdapter(requireContext(), this._suggestedCategoryOfferings, (category, price) -> {
             Bundle bundle = new Bundle();
             bundle.putLong("eventId", _eventViewModel.eventId);

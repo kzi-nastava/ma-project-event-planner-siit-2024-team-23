@@ -46,17 +46,20 @@ public class EventViewModel extends ViewModel {
     public void submit(){
         CreateEventRequest req = new CreateEventRequest(title.getValue(), description.getValue(), maxParticipants.getValue(), isPublic.getValue(), date.getValue(),
                 time.getValue(), 1L, eventType.getValue().getId());
-        Call<GetEventResponse> request = ClientUtils.eventsService.create(req);
-        request.enqueue(new Callback<GetEventResponse>() {
-            @Override
-            public void onResponse(Call<GetEventResponse> call, Response<GetEventResponse> response) {
-                eventId = response.body().getId();
-            }
+        if(eventId == null){
+            Call<GetEventResponse> request = ClientUtils.eventsService.create(req);
+            request.enqueue(new Callback<GetEventResponse>() {
+                @Override
+                public void onResponse(Call<GetEventResponse> call, Response<GetEventResponse> response) {
+                    eventId = response.body().getId();
+                }
 
-            @Override
-            public void onFailure(Call<GetEventResponse> call, Throwable t) {
-            }
-        });
+                @Override
+                public void onFailure(Call<GetEventResponse> call, Throwable t) {
+                }
+            });
+        }
+
     }
 
     // Setters for the fields

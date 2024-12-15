@@ -26,6 +26,7 @@ tools:context=".fragments.events.event.createEventSteps.CreateEventStepOne">
             android:hint="@string/event_title_label"
             app:startIconDrawable="@drawable/outline_message_24">
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/titleInput"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="text" />
@@ -41,6 +42,7 @@ tools:context=".fragments.events.event.createEventSteps.CreateEventStepOne">
             android:hint="@string/description"
             app:startIconDrawable="@drawable/outline_message_24">
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/descriptionInput"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textMultiLine" />
@@ -103,6 +105,7 @@ tools:context=".fragments.events.event.createEventSteps.CreateEventStepOne">
             app:startIconDrawable="@drawable/outline_person_24">
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
+                android:id="@+id/visitorsInput"
                 android:layout_height="wrap_content"
                 android:inputType="number" />
         </com.google.android.material.textfield.TextInputLayout>
