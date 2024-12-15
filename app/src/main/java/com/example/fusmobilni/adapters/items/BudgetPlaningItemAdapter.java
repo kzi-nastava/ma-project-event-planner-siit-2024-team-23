@@ -1,6 +1,7 @@
 package com.example.fusmobilni.adapters.items;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,6 +47,10 @@ public class BudgetPlaningItemAdapter extends RecyclerView.Adapter<BudgetPlaning
         EventComponentResponse category = categories.get(position);
 
         holder.categoryName.setText(category.category.getName());
+        if (category.id != -1){
+            holder.plannedBudget.setText(String.valueOf(category.estimatedBudget));
+            holder.priceInput.setText(String.valueOf(category.actualPrice));
+        }
         holder.seeProductsButton.setOnClickListener(v -> {
             if(categoryClickListener != null){
                 try {

@@ -71,7 +71,7 @@ public class ProductDetailsFragment extends Fragment {
 
         productId = getArguments().getLong("productId");
         eventId = getArguments().getLong("eventId");
-        estimatedBudget = getArguments().getLong("estimatedBudget");
+        estimatedBudget = getArguments().getDouble("estimatedBudget");
         Call<ItemDetails> request = ClientUtils.itemsService.findById(productId);
         request.enqueue(new Callback<ItemDetails>() {
             @Override
@@ -95,7 +95,7 @@ public class ProductDetailsFragment extends Fragment {
             }
 
         });
-        Log.d("Tag", "Is button enabled: " + _binding.buyProductButton.isEnabled());
+
         _binding.buyProductButton.setOnClickListener(v->{
             BuyItemRequest buyItemRequest = new BuyItemRequest(productId, estimatedBudget, "", "", eventId);
             Call<Void> req = ClientUtils.eventsService.createEventComponent(eventId, buyItemRequest);

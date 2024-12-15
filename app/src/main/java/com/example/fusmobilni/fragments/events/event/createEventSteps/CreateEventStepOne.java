@@ -122,7 +122,7 @@ public class CreateEventStepOne extends Fragment  implements FragmentValidation 
         _binding.etEventDate.setText(body.getDate());
         _binding.eventType.setText(body.getType().name);
         _binding.privacyType.setText(body.isPublic() ? "Public" : "Private");
-        _binding.visitorsInput.setText(body.getMaxParticipants());
+        _binding.visitorsInput.setText(String.valueOf(body.getMaxParticipants()));
     }
 
     private void populateChipGroup(EventType eventType) {

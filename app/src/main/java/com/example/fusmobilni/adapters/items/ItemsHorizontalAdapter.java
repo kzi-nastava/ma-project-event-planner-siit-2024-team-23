@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -96,6 +97,7 @@ public class ItemsHorizontalAdapter extends RecyclerView.Adapter<ItemsHorizontal
             if(product.isService){
                 Navigation.findNavController(v).navigate(R.id.action_service_card_to_service_details, createBundle(product.id));
             }else{
+                //Log.d("Tag", "Estimated" + String.valueOf(estimatedBudget));
                 Navigation.findNavController(v).navigate(R.id.action_product_card_to_product_details, createBundle(product.id));
             }
         });

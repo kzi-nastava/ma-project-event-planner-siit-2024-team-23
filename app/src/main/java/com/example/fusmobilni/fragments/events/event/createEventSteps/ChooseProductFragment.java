@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,10 +43,7 @@ public class ChooseProductFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Bundle bundle = getArguments();
-        eventId = bundle.getLong("eventId");
-        estimatedBudget = bundle.getDouble("price");
-        categoryId = bundle.getLong("category");
+
     }
 
     @Override
@@ -54,7 +52,10 @@ public class ChooseProductFragment extends Fragment {
         _binding = FragmentChooseProductBinding.inflate(getLayoutInflater());
         View view = _binding.getRoot();
         listView = _binding.recyclerView;
-
+        Bundle bundle = getArguments();
+        eventId = bundle.getLong("eventId");
+        estimatedBudget = bundle.getDouble("price");
+        categoryId = bundle.getLong("category");
         itemsHorizontalAdapter = new ItemsHorizontalAdapter(eventId, estimatedBudget);
         fillItems();
         return view;
