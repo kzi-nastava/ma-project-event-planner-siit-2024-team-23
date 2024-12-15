@@ -91,7 +91,7 @@ public class EventFilterFragment extends BottomSheetDialogFragment {
         _binding.textViewSelectedDateDisplay.setText("");
         categoryRecyclerView = _binding.categoryRecyclerView;
 
-        _viewModel = new ViewModelProvider(requireActivity()).get(EventSearchViewModel.class);
+        _viewModel = new ViewModelProvider(requireParentFragment()).get(EventSearchViewModel.class);
 
         _adapter = new EventTypeFilterAdapter(_viewModel.getEventTypes().getValue());
         datePickerButton = _binding.openDatepicker;

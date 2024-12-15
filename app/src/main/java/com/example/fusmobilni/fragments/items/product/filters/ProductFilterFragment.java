@@ -74,7 +74,7 @@ public class ProductFilterFragment extends BottomSheetDialogFragment {
 
         initializeSlider();
 
-        _viewModel = new ViewModelProvider(requireActivity()).get(ProductSearchViewModel.class);
+        _viewModel = new ViewModelProvider(requireParentFragment()).get(ProductSearchViewModel.class);
 
         _adapter = new CategoryResponsesFilterAdapter(_viewModel.getCategories().getValue());
         _categoryRecyclerView.setAdapter(_adapter);

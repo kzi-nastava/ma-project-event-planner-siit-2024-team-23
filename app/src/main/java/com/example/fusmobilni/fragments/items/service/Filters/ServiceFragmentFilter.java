@@ -65,7 +65,7 @@ public class ServiceFragmentFilter extends BottomSheetDialogFragment {
 
         _categoryRecyclerView = _binding.categoryRecyclerViewServices;
 
-        _viewModel = new ViewModelProvider(requireActivity()).get(ServiceSearchViewModel.class);
+        _viewModel = new ViewModelProvider(getParentFragment()).get(ServiceSearchViewModel.class);
 
         initializeSlider();
 

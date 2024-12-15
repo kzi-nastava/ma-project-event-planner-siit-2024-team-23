@@ -82,7 +82,7 @@ public class EventSearchFragment extends Fragment {
         eventsHorizontalAdapter = new EventsHorizontalAdapter();
         listView.setAdapter(eventsHorizontalAdapter);
 
-        _viewModel = new ViewModelProvider(requireActivity()).get(EventSearchViewModel.class);
+        _viewModel = new ViewModelProvider(getParentFragment()).get(EventSearchViewModel.class);
 
         fetchEvents();
         fetchEventTypes();

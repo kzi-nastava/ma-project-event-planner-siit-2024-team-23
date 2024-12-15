@@ -85,7 +85,7 @@ public class ServiceSearchFragment extends Fragment {
         _servicesAdapter = new ServiceHorizontalAdapter();
         _listView.setAdapter(_servicesAdapter);
 
-        _viewModel = new ViewModelProvider(requireActivity()).get(ServiceSearchViewModel.class);
+        _viewModel = new ViewModelProvider(requireParentFragment()).get(ServiceSearchViewModel.class);
 
         fetchServices();
         fetchLocations();
