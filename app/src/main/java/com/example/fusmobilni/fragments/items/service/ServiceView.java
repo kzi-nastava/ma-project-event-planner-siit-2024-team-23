@@ -66,7 +66,7 @@ public class ServiceView extends Fragment implements DeleteServiceListener {
         View view = binding.getRoot();
         requireActivity().getViewModelStore().clear();
         viewModel = new ViewModelProvider(requireActivity()).get(ServiceProviderViewModel.class);
-        Call<GetServicesResponse> response = ClientUtils.serviceOfferingService.findAllByServiceProvider(1L,new ServiceFilterRequest());
+        Call<GetServicesResponse> response = ClientUtils.serviceOfferingService.findAllByServiceProvider(2L,new ServiceFilterRequest());
         response.enqueue(new Callback<GetServicesResponse>() {
             @Override
             public void onResponse(Call<GetServicesResponse> call, Response<GetServicesResponse> response) {

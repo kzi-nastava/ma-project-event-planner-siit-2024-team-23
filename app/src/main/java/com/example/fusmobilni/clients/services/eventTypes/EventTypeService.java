@@ -14,4 +14,6 @@ public interface EventTypeService {
     })
     @GET("event-types")
     Call<GetEventTypesResponse> findAll();
+
+
 }

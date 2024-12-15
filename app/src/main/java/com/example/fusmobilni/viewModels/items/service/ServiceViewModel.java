@@ -242,7 +242,7 @@ public class ServiceViewModel extends ViewModel {
         Gson gson = new Gson();
         UpdateServiceRequest request = new UpdateServiceRequest(
                 name.getValue(), description.getValue(), eventTypeIds.getValue(),
-                price.getValue(), discount.getValue(), 1L, specificities.getValue(),
+                price.getValue(), discount.getValue(), 2L, specificities.getValue(),
                 isVisible.getValue(), isAvailable.getValue(), duration.getValue(), reservationDeadline.getValue(),
                 cancellationDeadline.getValue(), reservationConfirmation.getValue()
         );
@@ -276,7 +276,7 @@ public class ServiceViewModel extends ViewModel {
         Gson gson = new Gson();
         CreateServiceRequest request = new CreateServiceRequest(
                 name.getValue(), description.getValue(), categoryId.getValue(), eventTypeIds.getValue(),
-                price.getValue(), discount.getValue(), 1L, specificities.getValue(),
+                price.getValue(), discount.getValue(), 2L, specificities.getValue(),
                 isVisible.getValue(), isAvailable.getValue(), duration.getValue(), reservationDeadline.getValue(),
                 cancellationDeadline.getValue(), reservationConfirmation.getValue()
         );
@@ -307,7 +307,7 @@ public class ServiceViewModel extends ViewModel {
         CreateProposalRequest request = new CreateProposalRequest(
                 customCategoryName.getValue(), customCategoryDescription.getValue(),
                 name.getValue(), description.getValue(), eventTypeIds.getValue(),
-                price.getValue(), discount.getValue(), 1L, specificities.getValue(),
+                price.getValue(), discount.getValue(), 2L, specificities.getValue(),
                 isVisible.getValue(), isAvailable.getValue(), duration.getValue(), reservationDeadline.getValue(),
                 cancellationDeadline.getValue(), reservationConfirmation.getValue()
         );
