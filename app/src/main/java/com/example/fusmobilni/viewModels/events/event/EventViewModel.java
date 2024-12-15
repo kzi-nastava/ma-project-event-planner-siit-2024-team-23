@@ -9,7 +9,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.fusmobilni.clients.ClientUtils;
 import com.example.fusmobilni.model.event.Event;
-import com.example.fusmobilni.model.event.EventType;
+import com.example.fusmobilni.model.event.eventTypes.EventType;
 import com.example.fusmobilni.requests.events.event.CreateEventRequest;
 import com.example.fusmobilni.responses.events.GetEventResponse;
 
@@ -40,6 +40,8 @@ public class EventViewModel extends ViewModel {
     private MutableLiveData<Boolean> isPublic = new MutableLiveData<>();
     private final MutableLiveData<Boolean> isUpdating = new MutableLiveData<>(false);
 
+    public Long eventId = null;
+
 
     public void submit(){
         CreateEventRequest req = new CreateEventRequest(title.getValue(), description.getValue(), maxParticipants.getValue(), isPublic.getValue(), date.getValue(),
@@ -48,12 +50,11 @@ public class EventViewModel extends ViewModel {
         request.enqueue(new Callback<GetEventResponse>() {
             @Override
             public void onResponse(Call<GetEventResponse> call, Response<GetEventResponse> response) {
-
+                eventId = response.body().getId();
             }
 
             @Override
             public void onFailure(Call<GetEventResponse> call, Throwable t) {
-                Log.d("EVENTHUB", t.getMessage());
             }
         });
     }

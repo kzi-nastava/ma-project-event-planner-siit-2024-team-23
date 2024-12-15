@@ -110,11 +110,11 @@ public class EventTypeCreationForm extends Fragment {
     }
 
     private void populateData(){
-        _offeringCategory.add(new OfferingsCategory(1, "Sport", "Sport je jako zanimljiv i zabavan"));
-        _offeringCategory.add(new OfferingsCategory(2, "Food", "Sport je jako zanimljiv i zabavan"));
-        _offeringCategory.add(new OfferingsCategory(3, "Slavlje", "Sport je jako zanimljiv i zabavan"));
-        _offeringCategory.add(new OfferingsCategory(4, "Hronologija", "Sport je jako zanimljiv i zabavan"));
-        _offeringCategory.add(new OfferingsCategory(5, "Jelo", "Sport je jako zanimljiv i zabavan"));
+        _offeringCategory.add(new OfferingsCategory(1L, "Sport", "Sport je jako zanimljiv i zabavan"));
+        _offeringCategory.add(new OfferingsCategory(2L, "Food", "Sport je jako zanimljiv i zabavan"));
+        _offeringCategory.add(new OfferingsCategory(3L, "Slavlje", "Sport je jako zanimljiv i zabavan"));
+        _offeringCategory.add(new OfferingsCategory(4L, "Hronologija", "Sport je jako zanimljiv i zabavan"));
+        _offeringCategory.add(new OfferingsCategory(5L, "Jelo", "Sport je jako zanimljiv i zabavan"));
     }
     private void showCategorySelectionDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());

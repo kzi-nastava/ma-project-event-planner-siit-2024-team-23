@@ -24,6 +24,9 @@ public class ChooseProductFragment extends Fragment {
     private FragmentChooseProductBinding _binding;
     private ServiceHorizontalAdapter serviceHorizontalAdapter;
     private ProductsHorizontalAdapter productsHorizontalAdapter;
+    private double estimatedBudget;
+    private Long eventId;
+    private Long categoryId;
     private RecyclerView listView;
     public ChooseProductFragment() {
         // Required empty public constructor
@@ -35,6 +38,10 @@ public class ChooseProductFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Bundle bundle = getArguments();
+        eventId = bundle.getLong("eventId");
+        estimatedBudget = bundle.getDouble("price");
+        categoryId = bundle.getLong("category");
     }
 
     @Override

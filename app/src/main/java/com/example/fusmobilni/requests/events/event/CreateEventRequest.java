@@ -1,12 +1,5 @@
 package com.example.fusmobilni.requests.events.event;
 
-import com.example.fusmobilni.model.event.EventType;
-
-import org.jetbrains.annotations.NotNull;
-
-import java.time.LocalDate;
-import java.time.LocalTime;
-
 public class CreateEventRequest {
     private String title;
 

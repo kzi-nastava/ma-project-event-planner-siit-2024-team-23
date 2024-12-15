@@ -9,6 +9,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,10 +18,12 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Toast;
 
 import com.example.fusmobilni.R;
+import com.example.fusmobilni.clients.ClientUtils;
 import com.example.fusmobilni.databinding.FragmentCreateEventStepOneBinding;
 import com.example.fusmobilni.interfaces.FragmentValidation;
-import com.example.fusmobilni.model.event.EventType;
+import com.example.fusmobilni.model.event.eventTypes.EventType;
 import com.example.fusmobilni.model.items.category.OfferingsCategory;
+import com.example.fusmobilni.responses.events.GetEventTypesWithCategoriesResponse;
 import com.example.fusmobilni.viewModels.events.event.EventViewModel;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
@@ -29,13 +32,15 @@ import com.google.android.material.textfield.TextInputEditText;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 public class CreateEventStepOne extends Fragment  implements FragmentValidation {
@@ -46,9 +51,9 @@ public class CreateEventStepOne extends Fragment  implements FragmentValidation 
     private AutoCompleteTextView _eventTypeInput;
     private AutoCompleteTextView _privacyTypeInput;
     private String[] _privacyType;
-    private final ArrayList<OfferingsCategory> _offeringCategory = new ArrayList<>();
-    private final ArrayList<EventType> _eventTypes = new ArrayList<>();
+    private ArrayList<EventType> _eventTypes = new ArrayList<>();
     private ChipGroup _selectedEventCategories;
+    private ArrayAdapter<EventType> eventTypeAdapter;
 
     public CreateEventStepOne() {
         // Required empty public constructor
@@ -67,7 +72,7 @@ public class CreateEventStepOne extends Fragment  implements FragmentValidation 
                              Bundle savedInstanceState) {
         _binding = FragmentCreateEventStepOneBinding.inflate(getLayoutInflater());
         _eventViewModel = new ViewModelProvider(requireActivity()).get(EventViewModel.class);
-        populateData();
+
         View view = _binding.getRoot();
         _privacyType = new String[] {"Private", "Public"};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
@@ -75,18 +80,12 @@ public class CreateEventStepOne extends Fragment  implements FragmentValidation 
                 R.layout.dropdown_item,
                 _privacyType
         );
-        ArrayAdapter<EventType> eventTypeAdapter = new ArrayAdapter<>(
-                requireContext(),
-                R.layout.dropdown_item,
-                _eventTypes
-        );
         _selectedEventCategories = _binding.selectedCategoriesChipGroup;
         _eventDate = _binding.etEventDate;
         _eventTime = _binding.etEventTime;
         _privacyTypeInput = _binding.privacyType;
         _privacyTypeInput.setAdapter(adapter);
         _eventTypeInput = _binding.eventType;
-        _eventTypeInput.setAdapter(eventTypeAdapter);
         _eventDate.setOnClickListener(v-> showDatePickerDialog());
         _eventTime.setOnClickListener(v-> showTimePickerDialog());
         _eventTypeInput.setOnItemClickListener((parent, cbView, position, id) -> {
@@ -94,6 +93,7 @@ public class CreateEventStepOne extends Fragment  implements FragmentValidation 
             _eventViewModel.setEventType(selectedEventType);
             populateChipGroup(selectedEventType);
         });
+        populateData();
 
         return view;
     }
@@ -101,7 +101,7 @@ public class CreateEventStepOne extends Fragment  implements FragmentValidation 
     private void populateChipGroup(EventType eventType) {
         _selectedEventCategories.removeAllViews();
 
-        List<OfferingsCategory> categories = eventType.getSuggestedCategories();
+        List<OfferingsCategory> categories = eventType.getSuggestedCategories().categories;
         if (categories != null && !categories.isEmpty()) {
             for (OfferingsCategory category : categories) {
                 Chip chip = new Chip(requireContext());
@@ -129,14 +129,15 @@ public class CreateEventStepOne extends Fragment  implements FragmentValidation 
         DatePickerDialog datePickerDialog = new DatePickerDialog(requireContext(),
                 R.style.CustomDatePickerDialogTheme,
                 (view, selectedYear, selectedMonth, selectedDay) -> {
-                    // Format the selected date and set it in the TextInputEditText
-                    String selectedDate = String.format(Locale.getDefault(), "%02d-%02d-%04d",
-                            selectedDay, selectedMonth + 1, selectedYear);
+                    // Format the selected date as yyyy-MM-dd
+                    String selectedDate = String.format(Locale.getDefault(), "%04d-%02d-%02d",
+                            selectedYear, selectedMonth + 1, selectedDay);
                     _eventDate.setText(selectedDate);
                 }, year, month, day);
 
         datePickerDialog.show();
     }
+
     private void showTimePickerDialog() {
         Calendar calendar = Calendar.getInstance();
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
@@ -154,47 +155,24 @@ public class CreateEventStepOne extends Fragment  implements FragmentValidation 
         timePickerDialog.show();
     }
     private void populateData() {
-        _offeringCategory.add(new OfferingsCategory(1, "Sport", "Sport je jako zanimljiv i zabavan"));
-        _offeringCategory.add(new OfferingsCategory(2, "Food", "Sport je jako zanimljiv i zabavan"));
-        _offeringCategory.add(new OfferingsCategory(3, "Slavlje", "Sport je jako zanimljiv i zabavan"));
-        _offeringCategory.add(new OfferingsCategory(4, "Hronologija", "Sport je jako zanimljiv i zabavan"));
-        _offeringCategory.add(new OfferingsCategory(5, "Jelo", "Sport je jako zanimljiv i zabavan"));
-        _eventTypes.add(new EventType(
-                null,
-                "All",
-                "",
-                new ArrayList<>()
-        ));
-        _eventTypes.add(new EventType(
-                1L,
-                "Sports Event",
-                "An event centered around sports activities.",
-                Arrays.asList(_offeringCategory.get(0), _offeringCategory.get(1))
-        ));
-        _eventTypes.add(new EventType(
-                2L,
-                "Food Festival",
-                "A festival showcasing various cuisines and food culture.",
-                Arrays.asList(_offeringCategory.get(1), _offeringCategory.get(4))
-        ));
-        _eventTypes.add(new EventType(
-                3L,
-                "Birthday Party",
-                "A celebration for someone's birthday.",
-                Arrays.asList(_offeringCategory.get(2), _offeringCategory.get(4))
-        ));
-        _eventTypes.add(new EventType(
-                4L,
-                "Historical Conference",
-                "A conference focusing on historical topics and events.",
-                Collections.singletonList(_offeringCategory.get(3))
-        ));
-        _eventTypes.add(new EventType(
-                5L,
-                "Community Gathering",
-                "An event for bringing the community together.",
-                Arrays.asList(_offeringCategory.get(0), _offeringCategory.get(2), _offeringCategory.get(4))
-        ));
+        Call<GetEventTypesWithCategoriesResponse> request = ClientUtils.eventTypeService.findAllWIthSuggestedCategories();
+        request.enqueue(new Callback<GetEventTypesWithCategoriesResponse>() {
+            @Override
+            public void onResponse(Call<GetEventTypesWithCategoriesResponse> call, Response<GetEventTypesWithCategoriesResponse> response) {
+                _eventTypes.clear();
+                _eventTypes = response.body().eventTypes;
+                eventTypeAdapter = new ArrayAdapter<>(
+                        requireContext(),
+                        R.layout.dropdown_item,
+                        _eventTypes
+                );
+                _eventTypeInput.setAdapter(eventTypeAdapter);
+            }
+
+            @Override
+            public void onFailure(Call<GetEventTypesWithCategoriesResponse> call, Throwable t) {
+            }
+        });
     }
 
     @Override

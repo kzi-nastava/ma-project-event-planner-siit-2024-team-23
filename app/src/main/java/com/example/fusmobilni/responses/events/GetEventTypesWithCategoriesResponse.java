@@ -1,8 +1,10 @@
 package com.example.fusmobilni.responses.events;
 
-import java.util.List;
+import com.example.fusmobilni.model.event.eventTypes.EventType;
+
+import java.util.ArrayList;
 
 public class GetEventTypesWithCategoriesResponse {
 
-    public List<GetEventTypeWithCategoriesResponse> eventTypes;
+    public ArrayList<EventType> eventTypes;
 }

@@ -14,16 +14,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.fusmobilni.R;
 import com.example.fusmobilni.interfaces.OnCategoryClickListener;
 import com.example.fusmobilni.model.items.category.OfferingsCategory;
+import com.example.fusmobilni.responses.events.components.EventComponentResponse;
 import com.google.android.material.button.MaterialButton;
 
 import java.util.List;
 
 public class BudgetPlaningItemAdapter extends RecyclerView.Adapter<BudgetPlaningItemAdapter.ViewHolder> {
-    private final List<OfferingsCategory> categories;
+    private final List<EventComponentResponse> categories;
     private final Context context;
 
     private final OnCategoryClickListener categoryClickListener;
-    public BudgetPlaningItemAdapter(Context context, List<OfferingsCategory> categories, OnCategoryClickListener categoryClickListener) {
+    public BudgetPlaningItemAdapter(Context context, List<EventComponentResponse> categories, OnCategoryClickListener categoryClickListener) {
         this.context = context;
         this.categories = categories;
         this.categoryClickListener = categoryClickListener;
@@ -35,16 +36,16 @@ public class BudgetPlaningItemAdapter extends RecyclerView.Adapter<BudgetPlaning
         View view = LayoutInflater.from(context).inflate(R.layout.item_event_type_category, parent, false);
         return new ViewHolder(view);
     }
-    public void addCategory(OfferingsCategory category) {
+    public void addCategory(EventComponentResponse category) {
         categories.add(category);
         notifyItemInserted(categories.size() - 1);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        OfferingsCategory category = categories.get(position);
+        EventComponentResponse category = categories.get(position);
 
-        holder.categoryName.setText(category.getName());
+        holder.categoryName.setText(category.category.getName());
         holder.seeProductsButton.setOnClickListener(v -> {
             if(categoryClickListener != null){
                 try {
