@@ -1,14 +1,25 @@
 package com.example.fusmobilni.viewModels.events.event;
 
+import android.util.Log;
+
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.fusmobilni.clients.ClientUtils;
 import com.example.fusmobilni.model.event.Event;
 import com.example.fusmobilni.model.event.EventType;
+import com.example.fusmobilni.requests.events.event.CreateEventRequest;
+import com.example.fusmobilni.responses.events.GetEventResponse;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class EventViewModel extends ViewModel {
     private final MutableLiveData<List<Fragment>> _fragments = new MutableLiveData<>();
@@ -16,16 +27,36 @@ public class EventViewModel extends ViewModel {
     private MutableLiveData<String> title = new MutableLiveData<>("");
     private MutableLiveData<String> description = new MutableLiveData<>("");
     private MutableLiveData<String> date = new MutableLiveData<>("");
+    private MutableLiveData<LocalDate> localDate = new MutableLiveData<>();
     private MutableLiveData<String> location = new MutableLiveData<>("");
     private MutableLiveData<String> category = new MutableLiveData<>("");
     private MutableLiveData<EventType> eventType = new MutableLiveData<>(null);
 
-    private MutableLiveData<String> time = new MutableLiveData<>("");
+    private MutableLiveData<String> time = new MutableLiveData<>();
+    private MutableLiveData<LocalTime> localTime = new MutableLiveData<>();
 
     private MutableLiveData<Integer> maxParticipants = new MutableLiveData<Integer>();
 
     private MutableLiveData<Boolean> isPublic = new MutableLiveData<>();
     private final MutableLiveData<Boolean> isUpdating = new MutableLiveData<>(false);
+
+
+    public void submit(){
+        CreateEventRequest req = new CreateEventRequest(title.getValue(), description.getValue(), maxParticipants.getValue(), isPublic.getValue(), date.getValue(),
+                time.getValue(), 1L, eventType.getValue().getId());
+        Call<GetEventResponse> request = ClientUtils.eventsService.create(req);
+        request.enqueue(new Callback<GetEventResponse>() {
+            @Override
+            public void onResponse(Call<GetEventResponse> call, Response<GetEventResponse> response) {
+
+            }
+
+            @Override
+            public void onFailure(Call<GetEventResponse> call, Throwable t) {
+                Log.d("EVENTHUB", t.getMessage());
+            }
+        });
+    }
 
     // Setters for the fields
     public void setTitle(String title) {

@@ -166,31 +166,31 @@ public class CreateEventStepOne extends Fragment  implements FragmentValidation 
                 new ArrayList<>()
         ));
         _eventTypes.add(new EventType(
-                1,
+                1L,
                 "Sports Event",
                 "An event centered around sports activities.",
                 Arrays.asList(_offeringCategory.get(0), _offeringCategory.get(1))
         ));
         _eventTypes.add(new EventType(
-                2,
+                2L,
                 "Food Festival",
                 "A festival showcasing various cuisines and food culture.",
                 Arrays.asList(_offeringCategory.get(1), _offeringCategory.get(4))
         ));
         _eventTypes.add(new EventType(
-                3,
+                3L,
                 "Birthday Party",
                 "A celebration for someone's birthday.",
                 Arrays.asList(_offeringCategory.get(2), _offeringCategory.get(4))
         ));
         _eventTypes.add(new EventType(
-                4,
+                4L,
                 "Historical Conference",
                 "A conference focusing on historical topics and events.",
                 Collections.singletonList(_offeringCategory.get(3))
         ));
         _eventTypes.add(new EventType(
-                5,
+                5L,
                 "Community Gathering",
                 "An event for bringing the community together.",
                 Arrays.asList(_offeringCategory.get(0), _offeringCategory.get(2), _offeringCategory.get(4))
@@ -201,14 +201,6 @@ public class CreateEventStepOne extends Fragment  implements FragmentValidation 
     public boolean validate() {
         String eventTypeInput = Objects.requireNonNull(_binding.eventType.getEditableText()).toString().trim();
         EventType eventType = _eventViewModel.getEventType().getValue();
-        if (eventTypeInput.isEmpty()) {
-            _binding.eventType.setError("Event title is required");
-            return false;
-        } else {
-            _binding.eventType.setError(null);
-        }
-
-        // Retrieve values from input fields
         String eventTitle = Objects.requireNonNull(_binding.eventTitleInput.getEditText()).getText().toString().trim();
         String eventDescription = Objects.requireNonNull(_binding.eventDescriptionInput.getEditText()).getText().toString().trim();
         String eventDate = Objects.requireNonNull(_binding.etEventDate.getText()).toString().trim();
@@ -216,7 +208,8 @@ public class CreateEventStepOne extends Fragment  implements FragmentValidation 
         String maxVisitors = Objects.requireNonNull(_binding.maxVisitorsInput.getEditText()).getText().toString().trim();
         String privacyType = Objects.requireNonNull(_binding.privacyType.getText()).toString().trim();
 
-        // Validate each field
+
+
         if (eventTitle.isEmpty()) {
             _binding.eventTitleInput.setErrorEnabled(true);
             _binding.eventTitleInput.setError("Event title is required");
@@ -292,6 +285,12 @@ public class CreateEventStepOne extends Fragment  implements FragmentValidation 
             _binding.privacyTypeLayout.setError(null);
             _binding.privacyTypeLayout.setErrorEnabled(false);
         }
+        if (eventTypeInput.isEmpty()) {
+            _binding.eventType.setError("Event title is required");
+            return false;
+        } else {
+            _binding.eventType.setError(null);
+        }
 
         // Optionally, you can add logic to process the values (e.g., send to a ViewModel)
         _eventViewModel.setTitle(eventTitle);
@@ -299,7 +298,7 @@ public class CreateEventStepOne extends Fragment  implements FragmentValidation 
         _eventViewModel.setDate(eventDate);
         _eventViewModel.setTime(eventTime);
         _eventViewModel.setMaxParticipants(Integer.valueOf(maxVisitors));
-        _eventViewModel.setIsPublic(privacyType == "Public"? true: false);
+        _eventViewModel.setIsPublic(privacyType.equals("Public"));
 
         return eventType != null;
     }

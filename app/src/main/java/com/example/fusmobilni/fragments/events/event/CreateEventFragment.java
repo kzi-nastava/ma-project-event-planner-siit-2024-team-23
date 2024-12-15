@@ -15,12 +15,14 @@ import android.widget.Toast;
 
 import com.example.fusmobilni.R;
 import com.example.fusmobilni.adapters.events.event.forms.CreateEventAdapter;
+import com.example.fusmobilni.clients.ClientUtils;
 import com.example.fusmobilni.databinding.FragmentCreateEventBinding;
 import com.example.fusmobilni.fragments.events.event.createEventSteps.CreateEventStepOne;
 import com.example.fusmobilni.fragments.events.event.createEventSteps.CreateEventStepThree;
 import com.example.fusmobilni.fragments.events.event.createEventSteps.CreateEventStepTwo;
 import com.example.fusmobilni.fragments.events.event.createEventSteps.InvitationsFragment;
 import com.example.fusmobilni.interfaces.FragmentValidation;
+import com.example.fusmobilni.requests.events.event.CreateEventRequest;
 import com.example.fusmobilni.viewModels.events.event.EventViewModel;
 import com.google.android.material.button.MaterialButton;
 
@@ -101,6 +103,8 @@ public class CreateEventFragment extends Fragment {
             Fragment currentFragment = _fragments.get(currentItem);
 
             if (((FragmentValidation) currentFragment).validate()){
+                // http request
+                _eventViewModel.submit();
                 if(currentItem == _eventAdapter.getItemCount() - 1){
                     _backButton.setVisibility(View.GONE);
                     submitRegistration();

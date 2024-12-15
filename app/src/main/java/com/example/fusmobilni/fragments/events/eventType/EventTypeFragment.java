@@ -68,31 +68,31 @@ public class EventTypeFragment extends Fragment implements EventTypeListener {
         _offeringCategory.add(new OfferingsCategory(4, "Hronologija", "Sport je jako zanimljiv i zabavan"));
         _offeringCategory.add(new OfferingsCategory(5, "Jelo", "Sport je jako zanimljiv i zabavan"));
         _eventTypes.add(new EventType(
-                1,
+                1L,
                 "Sports Event",
                 "An event centered around sports activities.",
                 Arrays.asList(_offeringCategory.get(0), _offeringCategory.get(1))
         ));
         _eventTypes.add(new EventType(
-                2,
+                2L,
                 "Food Festival",
                 "A festival showcasing various cuisines and food culture.",
                 Arrays.asList(_offeringCategory.get(1), _offeringCategory.get(4))
         ));
         _eventTypes.add(new EventType(
-                3,
+                3L,
                 "Birthday Party",
                 "A celebration for someone's birthday.",
                 Arrays.asList(_offeringCategory.get(2), _offeringCategory.get(4))
         ));
         _eventTypes.add(new EventType(
-                4,
+                4L,
                 "Historical Conference",
                 "A conference focusing on historical topics and events.",
                 Collections.singletonList(_offeringCategory.get(3))
         ));
         _eventTypes.add(new EventType(
-                5,
+                5L,
                 "Community Gathering",
                 "An event for bringing the community together.",
                 Arrays.asList(_offeringCategory.get(0), _offeringCategory.get(2), _offeringCategory.get(4))
