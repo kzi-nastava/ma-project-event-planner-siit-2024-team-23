@@ -26,10 +26,13 @@ import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.textfield.TextInputEditText;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -204,101 +207,101 @@ public class CreateEventStepOne extends Fragment  implements FragmentValidation 
         } else {
             _binding.eventType.setError(null);
         }
+
+        // Retrieve values from input fields
+        String eventTitle = Objects.requireNonNull(_binding.eventTitleInput.getEditText()).getText().toString().trim();
+        String eventDescription = Objects.requireNonNull(_binding.eventDescriptionInput.getEditText()).getText().toString().trim();
+        String eventDate = Objects.requireNonNull(_binding.etEventDate.getText()).toString().trim();
+        String eventTime = Objects.requireNonNull(_binding.etEventTime.getText()).toString().trim();
+        String maxVisitors = Objects.requireNonNull(_binding.maxVisitorsInput.getEditText()).getText().toString().trim();
+        String privacyType = Objects.requireNonNull(_binding.privacyType.getText()).toString().trim();
+
+        // Validate each field
+        if (eventTitle.isEmpty()) {
+            _binding.eventTitleInput.setErrorEnabled(true);
+            _binding.eventTitleInput.setError("Event title is required");
+            return false;
+        } else {
+            _binding.eventTitleInput.setError(null);
+            _binding.eventTitleInput.setErrorEnabled(false);
+        }
+
+        if (eventDescription.isEmpty()) {
+            _binding.eventDescriptionInput.setErrorEnabled(true);
+            _binding.eventDescriptionInput.setError("Event description is required");
+            return false;
+        } else {
+            _binding.eventDescriptionInput.setError(null);
+            _binding.eventDescriptionInput.setErrorEnabled(false);
+        }
+
+        if (eventDate.isEmpty()) {
+            _binding.etEventDate.setError("Event date is required");
+            return false;
+        } else {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            try {
+                Date eventDateParsed = dateFormat.parse(eventDate);
+                if (eventDate == null) {
+                    _binding.etEventDate.setError("Invalid date format");
+                    return false;
+                }
+//                _eventViewModel.setEventDate(eventDate); // Set the Date object to the ViewModel
+            } catch (ParseException e) {
+                _binding.etEventDate.setError("Invalid date format");
+                return false;
+            }
+            _binding.etEventDate.setError(null);
+        }
+
+        // Validate event time
+        if (eventTime.isEmpty()) {
+            _binding.etEventTime.setError("Event time is required");
+            return false;
+        } else {
+            try {
+                SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm"); // Adjust format as necessary
+                // For Time, you could either use Time (if defined as an object) or convert to Date (with only the time part)
+                Date eventTimeParsed = timeFormat.parse(eventTime);
+                if (eventTime == null) {
+                    _binding.etEventTime.setError("Invalid time format");
+                    return false;
+                }
+//                _eventViewModel.setTime(eventTime); // Set the time object to the ViewModel
+            } catch (ParseException e) {
+                _binding.etEventTime.setError("Invalid time format");
+                return false;
+            }
+            _binding.etEventTime.setError(null);
+        }
+
+        if (maxVisitors.isEmpty()) {
+            _binding.maxVisitorsInput.setErrorEnabled(true);
+            _binding.maxVisitorsInput.setError("Max visitors is required");
+            return false;
+        } else {
+            _binding.maxVisitorsInput.setError(null);
+            _binding.maxVisitorsInput.setErrorEnabled(false);
+        }
+
+        if (privacyType.isEmpty()) {
+            _binding.privacyTypeLayout.setErrorEnabled(true);
+            _binding.privacyTypeLayout.setError("Privacy type is required");
+            return false;
+        } else {
+            _binding.privacyTypeLayout.setError(null);
+            _binding.privacyTypeLayout.setErrorEnabled(false);
+        }
+
+        // Optionally, you can add logic to process the values (e.g., send to a ViewModel)
+        _eventViewModel.setTitle(eventTitle);
+        _eventViewModel.setDescription(eventDescription);
+        _eventViewModel.setDate(eventDate);
+        _eventViewModel.setTime(eventTime);
+        _eventViewModel.setMaxParticipants(Integer.valueOf(maxVisitors));
+        _eventViewModel.setIsPublic(privacyType == "Public"? true: false);
+
         return eventType != null;
-//        // Retrieve values from input fields
-//        String eventTitle = Objects.requireNonNull(_binding.eventTitleInput.getEditText()).getText().toString().trim();
-//        String eventDescription = Objects.requireNonNull(_binding.eventDescriptionInput.getEditText()).getText().toString().trim();
-//        String eventDate = Objects.requireNonNull(_binding.etEventDate.getText()).toString().trim();
-//        String eventTime = Objects.requireNonNull(_binding.etEventTime.getText()).toString().trim();
-//        String maxVisitors = Objects.requireNonNull(_binding.maxVisitorsInput.getEditText()).getText().toString().trim();
-//        String privacyType = Objects.requireNonNull(_binding.privacyType.getText()).toString().trim();
-//
-//        // Validate each field
-//        if (eventTitle.isEmpty()) {
-//            _binding.eventTitleInput.setErrorEnabled(true);
-//            _binding.eventTitleInput.setError("Event title is required");
-//            return false;
-//        } else {
-//            _binding.eventTitleInput.setError(null);
-//            _binding.eventTitleInput.setErrorEnabled(false);
-//        }
-//
-//        if (eventDescription.isEmpty()) {
-//            _binding.eventDescriptionInput.setErrorEnabled(true);
-//            _binding.eventDescriptionInput.setError("Event description is required");
-//            return false;
-//        } else {
-//            _binding.eventDescriptionInput.setError(null);
-//            _binding.eventDescriptionInput.setErrorEnabled(false);
-//        }
-//
-//        if (eventDate.isEmpty()) {
-//            _binding.etEventDate.setError("Event date is required");
-//            return false;
-//        } else {
-//            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-//            try {
-//                Date eventDateParsed = dateFormat.parse(eventDate);
-//                if (eventDate == null) {
-//                    _binding.etEventDate.setError("Invalid date format");
-//                    return false;
-//                }
-////                _eventViewModel.setEventDate(eventDate); // Set the Date object to the ViewModel
-//            } catch (ParseException e) {
-//                _binding.etEventDate.setError("Invalid date format");
-//                return false;
-//            }
-//            _binding.etEventDate.setError(null);
-//        }
-//
-//        // Validate event time
-//        if (eventTime.isEmpty()) {
-//            _binding.etEventTime.setError("Event time is required");
-//            return false;
-//        } else {
-//            try {
-//                SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm"); // Adjust format as necessary
-//                // For Time, you could either use Time (if defined as an object) or convert to Date (with only the time part)
-//                Date eventTimeParsed = timeFormat.parse(eventTime);
-//                if (eventTime == null) {
-//                    _binding.etEventTime.setError("Invalid time format");
-//                    return false;
-//                }
-////                _eventViewModel.setTime(eventTime); // Set the time object to the ViewModel
-//            } catch (ParseException e) {
-//                _binding.etEventTime.setError("Invalid time format");
-//                return false;
-//            }
-//            _binding.etEventTime.setError(null);
-//        }
-//
-//        if (maxVisitors.isEmpty()) {
-//            _binding.maxVisitorsInput.setErrorEnabled(true);
-//            _binding.maxVisitorsInput.setError("Max visitors is required");
-//            return false;
-//        } else {
-//            _binding.maxVisitorsInput.setError(null);
-//            _binding.maxVisitorsInput.setErrorEnabled(false);
-//        }
-//
-//        if (privacyType.isEmpty()) {
-//            _binding.privacyTypeLayout.setErrorEnabled(true);
-//            _binding.privacyTypeLayout.setError("Privacy type is required");
-//            return false;
-//        } else {
-//            _binding.privacyTypeLayout.setError(null);
-//            _binding.privacyTypeLayout.setErrorEnabled(false);
-//        }
-//
-//        // Optionally, you can add logic to process the values (e.g., send to a ViewModel)
-//        _eventViewModel.setTitle(eventTitle);
-//        _eventViewModel.setDescription(eventDescription);
-//        _eventViewModel.setDate(eventDate);
-////        _eventViewModel.setTime(eventTime);
-////        _eventViewModel.(maxVisitors);
-////        _eventViewModel.setPrivacyType(privacyType);
-//
-//        return true;
     }
 
 }

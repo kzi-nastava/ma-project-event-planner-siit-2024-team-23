@@ -19,6 +19,12 @@ public class EventViewModel extends ViewModel {
     private MutableLiveData<String> location = new MutableLiveData<>("");
     private MutableLiveData<String> category = new MutableLiveData<>("");
     private MutableLiveData<EventType> eventType = new MutableLiveData<>(null);
+
+    private MutableLiveData<String> time = new MutableLiveData<>("");
+
+    private MutableLiveData<Integer> maxParticipants = new MutableLiveData<Integer>();
+
+    private MutableLiveData<Boolean> isPublic = new MutableLiveData<>();
     private final MutableLiveData<Boolean> isUpdating = new MutableLiveData<>(false);
 
     // Setters for the fields
@@ -97,5 +103,29 @@ public class EventViewModel extends ViewModel {
         this.location.setValue("");
         this.category.setValue("");
         this.isUpdating.setValue(false);
+    }
+
+    public MutableLiveData<String> getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time.setValue(time);
+    }
+
+    public MutableLiveData<Integer> getMaxParticipants() {
+        return maxParticipants;
+    }
+
+    public void setMaxParticipants(Integer maxParticipants) {
+        this.maxParticipants.setValue(maxParticipants);
+    }
+
+    public MutableLiveData<Boolean> getIsPublic() {
+        return isPublic;
+    }
+
+    public void setIsPublic(Boolean isPublic) {
+        this.isPublic.setValue(isPublic);
     }
 }
