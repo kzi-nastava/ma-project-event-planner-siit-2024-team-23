@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.example.fusmobilni.R;
 import com.example.fusmobilni.clients.ClientUtils;
+import com.example.fusmobilni.core.CustomSharedPrefs;
 import com.example.fusmobilni.databinding.FragmentCreateEventStepOneBinding;
 import com.example.fusmobilni.interfaces.FragmentValidation;
 import com.example.fusmobilni.model.event.eventTypes.EventType;
@@ -73,6 +74,10 @@ public class CreateEventStepOne extends Fragment  implements FragmentValidation 
                              Bundle savedInstanceState) {
         _binding = FragmentCreateEventStepOneBinding.inflate(getLayoutInflater());
         _eventViewModel = new ViewModelProvider(requireActivity()).get(EventViewModel.class);
+        CustomSharedPrefs prefs = new CustomSharedPrefs(requireActivity());
+        _eventViewModel.eventId = prefs.getLong("eventId", -1);
+        if (_eventViewModel.eventId == -1)
+            _eventViewModel.eventId = null;
         if(_eventViewModel.eventId != null){
             Call<GetEventByIdResponse> request = ClientUtils.eventsService.findById(_eventViewModel.eventId);
             request.enqueue(new Callback<GetEventByIdResponse>() {

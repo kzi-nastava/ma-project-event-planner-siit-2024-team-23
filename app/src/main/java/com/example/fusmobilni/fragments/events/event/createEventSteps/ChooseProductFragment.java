@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 
 import com.example.fusmobilni.adapters.items.ItemsHorizontalAdapter;
 import com.example.fusmobilni.clients.ClientUtils;
+import com.example.fusmobilni.core.CustomSharedPrefs;
 import com.example.fusmobilni.databinding.FragmentChooseProductBinding;
 import com.example.fusmobilni.requests.events.event.GetItemsByCategoryAndPrice;
 import com.example.fusmobilni.responses.events.GetItemResponse;
@@ -54,6 +55,8 @@ public class ChooseProductFragment extends Fragment {
         listView = _binding.recyclerView;
         Bundle bundle = getArguments();
         eventId = bundle.getLong("eventId");
+        CustomSharedPrefs prefs = new CustomSharedPrefs(requireActivity());
+        prefs.saveLong("eventId", eventId);
         estimatedBudget = bundle.getDouble("price");
         categoryId = bundle.getLong("category");
         itemsHorizontalAdapter = new ItemsHorizontalAdapter(eventId, estimatedBudget);
