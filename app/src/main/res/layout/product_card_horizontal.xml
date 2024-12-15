@@ -156,36 +156,7 @@
 
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/productslocationHorizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="10sp">
 
-                <ImageView
-                    android:layout_width="30sp"
-                    android:layout_height="30sp"
-                    android:layout_marginEnd="4dp"
-                    android:src="@drawable/ic_location" />
-
-                <TextView
-                    android:id="@+id/textViewProductLocationHorizontal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:drawablePadding="4dp"
-
-                    android:fontFamily="@font/poppins"
-                    android:text="36 Guild Street London, UK"
-                    android:textAlignment="center"
-                    android:textColor="@color/text_700"
-                    android:textSize="14sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/attendeesContainerHorizontal"
-                    app:layout_constraintVertical_bias="0.0" />
-
-            </LinearLayout>
 
         </LinearLayout>
 

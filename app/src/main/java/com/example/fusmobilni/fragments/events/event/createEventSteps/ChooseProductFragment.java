@@ -29,6 +29,7 @@ public class ChooseProductFragment extends Fragment {
     private double estimatedBudget;
     private Long eventId;
     private Long categoryId;
+
     private ArrayList<GetItemResponse> items = new ArrayList<>();
     private RecyclerView listView;
     public ChooseProductFragment() {
@@ -54,7 +55,7 @@ public class ChooseProductFragment extends Fragment {
         View view = _binding.getRoot();
         listView = _binding.recyclerView;
 
-        itemsHorizontalAdapter = new ItemsHorizontalAdapter();
+        itemsHorizontalAdapter = new ItemsHorizontalAdapter(eventId, estimatedBudget);
         fillItems();
         return view;
     }

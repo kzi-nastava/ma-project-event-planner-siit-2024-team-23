@@ -1,9 +1,13 @@
 package com.example.fusmobilni.adapters.items;
 
+import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -16,6 +20,9 @@ import com.example.fusmobilni.responses.events.GetItemResponse;
 import com.example.fusmobilni.responses.events.GetItemsResponse;
 import com.google.android.material.card.MaterialCardView;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -23,12 +30,17 @@ import java.util.Random;
 public class ItemsHorizontalAdapter extends RecyclerView.Adapter<ItemsHorizontalAdapter.ItemsHorizontalViewHolder> {
 
     private List<GetItemResponse> _products;
+    private Long eventId;
+    private double estimatedBudget;
 
-    public ItemsHorizontalAdapter() {
+    public ItemsHorizontalAdapter(Long eventId, double estimatedBudget) {
 
         this._products = new ArrayList<>();
+        this.eventId = eventId;
+        this.estimatedBudget = estimatedBudget;
 
     }
+
 
     public void setData(List<GetItemResponse> list) {
         this._products = new ArrayList<>(list);
@@ -40,20 +52,23 @@ public class ItemsHorizontalAdapter extends RecyclerView.Adapter<ItemsHorizontal
         TextView _description;
         TextView _price;
         MaterialCardView _card;
-        TextView _location;
+
+        ImageView _image;
 
         ItemsHorizontalViewHolder(View itemView) {
             super(itemView);
             _name = itemView.findViewById(R.id.textViewProductNameHorizontal);
             _description = itemView.findViewById(R.id.productDescriptionHorizontal);
             _price = itemView.findViewById(R.id.productsHorizontalPrice);
-            _location = itemView.findViewById(R.id.textViewProductLocationHorizontal);
             _card = itemView.findViewById(R.id.productCardHorizontal);
+            _image = itemView.findViewById(R.id.productImageBannerHorizontal);
         }
     }
 
     private Bundle createBundle(Long productId) {
         Bundle bundle = new Bundle();
+        bundle.putLong("eventId", eventId);
+        bundle.putDouble("estimatedBudget", estimatedBudget);
         bundle.putLong("productId", productId);
         return bundle;
     }
@@ -72,6 +87,11 @@ public class ItemsHorizontalAdapter extends RecyclerView.Adapter<ItemsHorizontal
         holder._name.setText(product.name);
         holder._description.setText(product.description);
         holder._price.setText(String.valueOf(product.price));
+        try {
+            holder._image.setImageURI(this.convertToUrisFromBase64(holder._name.getContext(), product.image));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         holder._card.setOnClickListener(v -> {
             if(product.isService){
                 Navigation.findNavController(v).navigate(R.id.action_service_card_to_service_details, createBundle(product.id));
@@ -88,4 +108,18 @@ public class ItemsHorizontalAdapter extends RecyclerView.Adapter<ItemsHorizontal
     }
 
 
+    public static Uri convertToUrisFromBase64(Context context, String base64String) throws IOException {
+
+
+            byte[] decodedBytes = Base64.decode(base64String, Base64.DEFAULT);
+
+            File tempFile = File.createTempFile("image_", ".jpg", context.getCacheDir());
+            tempFile.deleteOnExit();
+
+            try (FileOutputStream fos = new FileOutputStream(tempFile)) {
+                fos.write(decodedBytes);
+            }
+
+            return Uri.fromFile(tempFile);
+    }
 }

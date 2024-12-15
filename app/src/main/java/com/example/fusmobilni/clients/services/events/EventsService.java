@@ -1,9 +1,11 @@
 package com.example.fusmobilni.clients.services.events;
 
 import com.example.fusmobilni.requests.events.event.CreateEventRequest;
+import com.example.fusmobilni.requests.items.BuyItemRequest;
 import com.example.fusmobilni.responses.events.EventTypeResponse;
 import com.example.fusmobilni.responses.events.EventTypesResponse;
 import com.example.fusmobilni.responses.events.GetEventResponse;
+import com.example.fusmobilni.responses.events.components.EventComponentsResponse;
 import com.example.fusmobilni.responses.events.filter.EventLocationsResponse;
 import com.example.fusmobilni.responses.events.filter.EventsPaginationResponse;
 import com.example.fusmobilni.responses.events.home.EventsHomeResponse;
@@ -12,8 +14,10 @@ import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 import retrofit2.http.QueryMap;
 
@@ -45,4 +49,14 @@ public interface EventsService {
     Call<GetEventResponse> create(
             @Body CreateEventRequest request
             );
+
+    @POST("events/{id}/event-components")
+    Call<Void> createEventComponent(@Path("id") Long id,
+                                    @Body BuyItemRequest request);
+
+    @DELETE("events/{id}/event-components/{componentId}")
+    Call<Void> removeComponentFromEvent(@Path("id") Long id,
+                                        @Path("componentId") Long componentId);
+    @GET("events/{id}/event-components")
+    Call<EventComponentsResponse> findComponentsByEventId(@Path("id") Long id);
 }

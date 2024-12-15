@@ -34,6 +34,7 @@ public class CreateEventFragment extends Fragment {
     private CreateEventAdapter _eventAdapter;
     private EventViewModel _eventViewModel;
     private ViewPager2 _viewPager;
+    private Long eventId;
     private List<Fragment> _fragments;
     private MaterialButton _nextButton;
     private MaterialButton _backButton;
@@ -72,8 +73,10 @@ public class CreateEventFragment extends Fragment {
         _viewPager.setAdapter(_eventAdapter);
         if (getArguments() != null) {
             int currFragment = getArguments().getInt("currFragment");
+            eventId =  getArguments().getLong("eventId");
             _backButton.setVisibility(View.VISIBLE);
             _viewPager.setCurrentItem(currFragment);
+
         }
         _nextButton.setOnClickListener(v -> nextButtonClick());
 
