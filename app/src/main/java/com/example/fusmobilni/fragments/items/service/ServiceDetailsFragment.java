@@ -78,10 +78,16 @@ public class ServiceDetailsFragment extends Fragment {
         _binding.imageView5.setImageResource(R.drawable.person);
 
         _binding.bookServiceButton.setOnClickListener(v -> {
-            Navigation.findNavController(v).navigate(R.id.action_service_details_to_service_reservation);
+            Navigation.findNavController(v).navigate(R.id.action_service_details_to_service_reservation,createBundle());
         });
 
         initializeFavoriteButton();
+    }
+
+    private Bundle createBundle() {
+        Bundle args = new Bundle();
+        args.putLong("serviceId", _serviceId);
+        return args;
     }
 
     private void initializeDialogs() {
