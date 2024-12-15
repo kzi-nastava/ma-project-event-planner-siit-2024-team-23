@@ -73,11 +73,9 @@ public class VerifyEmailActivity extends AppCompatActivity {
                     if (response.body().status.equals("ACCEPTED")) {
                         openSuccessWindow(response.body().getMessage());
                     } else {
-                        Toast.makeText(getBaseContext(), "Boolean nije true", Toast.LENGTH_LONG).show();
                         openFailiureWindow(response.body().getMessage());
                     }
                 } else {
-                    Toast.makeText(getBaseContext(), "Response nije true", Toast.LENGTH_LONG).show();
 
                     openFailiureWindow(response.body().getMessage());
                 }
@@ -86,7 +84,6 @@ public class VerifyEmailActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<EmailVerificationResponse> call, Throwable t) {
                 openFailiureWindow("Request failed");
-                Toast.makeText(getBaseContext(), "Failovao je request", Toast.LENGTH_LONG).show();
             }
         });
     }
