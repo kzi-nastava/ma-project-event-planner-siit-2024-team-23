@@ -110,7 +110,7 @@ public class FastRegisterActivity extends AppCompatActivity {
         initializeDialogs();
     }
 
-    private void initializeDialogs(){
+    private void initializeDialogs() {
         _loader = new SpinnerDialogFragment();
         _loader.setCancelable(false);
         _success = new SuccessDialogFragment();
@@ -118,6 +118,7 @@ public class FastRegisterActivity extends AppCompatActivity {
         _failiure = new FailiureDialogFragment();
         _failiure.setCancelable(false);
     }
+
     private void getHash(Uri data) {
         if (data == null) {
             initalizePageInvalid();
@@ -193,11 +194,15 @@ public class FastRegisterActivity extends AppCompatActivity {
     }
 
     private void submitRegistration() {
+
+        _loader.show(getSupportFragmentManager(), "loading_spinner");
         Call<List<GeoCodingResponse>> call = GeocodingClient.geoCodingService.getGeoCode("pk.4a4083e362875d1ad824d7d1d981b2eb", transformAdress(), "json");
         call.enqueue(new Callback<>() {
             @Override
             public void onResponse(Call<List<GeoCodingResponse>> call, Response<List<GeoCodingResponse>> response) {
                 if (!response.isSuccessful()) {
+
+                    openFailiureWindow();
                     return;
                 }
 
@@ -210,6 +215,7 @@ public class FastRegisterActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<List<GeoCodingResponse>> call, Throwable t) {
+                openFailiureWindow();
             }
         });
     }
@@ -230,15 +236,13 @@ public class FastRegisterActivity extends AppCompatActivity {
                 _viewModel.getLastName().getValue()
         );
 
-        _loader.show(getSupportFragmentManager(), "loading_spinner");
         Call<FastRegisterResponse> call = ClientUtils.authService.fastRegister(request);
         call.enqueue(new Callback<>() {
             @Override
             public void onResponse(Call<FastRegisterResponse> call, Response<FastRegisterResponse> response) {
                 if (response.isSuccessful()) {
                     openSuccessWindow();
-                }
-                else{
+                } else {
                     openFailiureWindow();
                 }
             }
@@ -257,10 +261,10 @@ public class FastRegisterActivity extends AppCompatActivity {
             _loader.dismiss();
         }
         Bundle args = new Bundle();
-        args.putString("Title","Success");
-        args.putString("Message","Verification email has been sent to " + _viewModel.getEmail().getValue());
+        args.putString("Title", "Success");
+        args.putString("Message", "Verification email has been sent to " + _viewModel.getEmail().getValue());
         _success.setArguments(args);
-        _success.show(getSupportFragmentManager(),"success_dialog");
+        _success.show(getSupportFragmentManager(), "success_dialog");
     }
 
     void openFailiureWindow() {
@@ -268,10 +272,10 @@ public class FastRegisterActivity extends AppCompatActivity {
             _loader.dismiss();
         }
         Bundle args = new Bundle();
-        args.putString("Title","Failiure");
-        args.putString("Message","Failed to register");
+        args.putString("Title", "Failiure");
+        args.putString("Message", "Failed to register");
         _failiure.setArguments(args);
-        _failiure.show(getSupportFragmentManager(),"failiure_dialog");
+        _failiure.show(getSupportFragmentManager(), "failiure_dialog");
     }
 
 }
