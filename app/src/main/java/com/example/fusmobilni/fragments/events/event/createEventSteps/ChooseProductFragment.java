@@ -55,8 +55,6 @@ public class ChooseProductFragment extends Fragment {
         listView = _binding.recyclerView;
         Bundle bundle = getArguments();
         eventId = bundle.getLong("eventId");
-        CustomSharedPrefs prefs = new CustomSharedPrefs(requireActivity());
-        prefs.saveLong("eventId", eventId);
         estimatedBudget = bundle.getDouble("price");
         categoryId = bundle.getLong("category");
         itemsHorizontalAdapter = new ItemsHorizontalAdapter(eventId, estimatedBudget);

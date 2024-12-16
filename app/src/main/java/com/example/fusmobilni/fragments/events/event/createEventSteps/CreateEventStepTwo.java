@@ -112,7 +112,7 @@ public class CreateEventStepTwo extends Fragment  implements FragmentValidation 
 
             }
         });
-        this._budgetPlaningAdapter = new BudgetPlaningItemAdapter(requireContext(), this._suggestedCategoryOfferings, (category, price) -> {
+        this._budgetPlaningAdapter = new BudgetPlaningItemAdapter(requireContext(), this._suggestedCategoryOfferings, _eventViewModel.eventId, (category, price) -> {
             Bundle bundle = new Bundle();
             bundle.putLong("eventId", _eventViewModel.eventId);
             bundle.putDouble("price", price);

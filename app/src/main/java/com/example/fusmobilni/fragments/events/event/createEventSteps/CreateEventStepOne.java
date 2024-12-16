@@ -74,10 +74,6 @@ public class CreateEventStepOne extends Fragment  implements FragmentValidation 
                              Bundle savedInstanceState) {
         _binding = FragmentCreateEventStepOneBinding.inflate(getLayoutInflater());
         _eventViewModel = new ViewModelProvider(requireActivity()).get(EventViewModel.class);
-        CustomSharedPrefs prefs = new CustomSharedPrefs(requireActivity());
-        _eventViewModel.eventId = prefs.getLong("eventId", -1);
-        if (_eventViewModel.eventId == -1)
-            _eventViewModel.eventId = null;
         if(_eventViewModel.eventId != null){
             Call<GetEventByIdResponse> request = ClientUtils.eventsService.findById(_eventViewModel.eventId);
             request.enqueue(new Callback<GetEventByIdResponse>() {

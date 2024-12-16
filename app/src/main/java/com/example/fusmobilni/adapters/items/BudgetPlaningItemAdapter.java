@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fusmobilni.R;
+import com.example.fusmobilni.clients.ClientUtils;
 import com.example.fusmobilni.interfaces.OnCategoryClickListener;
 import com.example.fusmobilni.model.items.category.OfferingsCategory;
 import com.example.fusmobilni.responses.events.components.EventComponentResponse;
@@ -20,14 +21,20 @@ import com.google.android.material.button.MaterialButton;
 
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class BudgetPlaningItemAdapter extends RecyclerView.Adapter<BudgetPlaningItemAdapter.ViewHolder> {
     private final List<EventComponentResponse> categories;
     private final Context context;
 
+    private final Long eventId;
     private final OnCategoryClickListener categoryClickListener;
-    public BudgetPlaningItemAdapter(Context context, List<EventComponentResponse> categories, OnCategoryClickListener categoryClickListener) {
+    public BudgetPlaningItemAdapter(Context context, List<EventComponentResponse> categories, Long eventId, OnCategoryClickListener categoryClickListener) {
         this.context = context;
         this.categories = categories;
+        this.eventId = eventId;
         this.categoryClickListener = categoryClickListener;
     }
 
@@ -65,6 +72,19 @@ public class BudgetPlaningItemAdapter extends RecyclerView.Adapter<BudgetPlaning
         });
 
         holder.deleteButton.setOnClickListener(v -> {
+            if (categories.get(position).id != -1) {
+                Call<Void> deleteResponse = ClientUtils.eventsService.removeComponentFromEvent(eventId, categories.get(position).id);
+                deleteResponse.enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+                    }
+
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t) {
+
+                    }
+                });
+            }
             categories.remove(position);
             notifyDataSetChanged();
         });
