@@ -86,9 +86,11 @@ public class MultiStepServiceFormThree extends Fragment implements ItemClickList
         });
         binding.forwardButton.setOnClickListener(v -> {
             //create new service
-            viewModel.submit(getContext());
-            requireActivity().getViewModelStore().clear();
-            Navigation.findNavController(view).navigate(R.id.action_serviceCreationStepThree_toServiceView);
+            if (validate()) {
+                viewModel.submit(getContext());
+                requireActivity().getViewModelStore().clear();
+                Navigation.findNavController(view).navigate(R.id.action_serviceCreationStepThree_toServiceView);
+            }
         });
 
         if (viewModel.getIsUpdating().getValue()) {
@@ -142,5 +144,15 @@ public class MultiStepServiceFormThree extends Fragment implements ItemClickList
         imageAdapter.notifyItemRemoved(position);
         setValues();
     }
+
+    private boolean validate() {
+        if (imageUris.isEmpty()) {
+            binding.textView11.setVisibility(View.VISIBLE);
+            return false;
+        }
+        binding.textView11.setVisibility(View.GONE);
+        return true;
+    }
+
 
 }

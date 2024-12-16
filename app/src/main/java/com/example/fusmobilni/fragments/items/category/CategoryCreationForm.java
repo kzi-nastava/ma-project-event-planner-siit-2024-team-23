@@ -50,8 +50,10 @@ public class CategoryCreationForm extends Fragment {
 
         binding.submitButton.setOnClickListener(v -> {
             setValues();
-            viewModel.submit();
-            Navigation.findNavController(view).navigate(R.id.creationForm_toCategories);
+            if (validate()) {
+                viewModel.submit();
+                Navigation.findNavController(view).navigate(R.id.creationForm_toCategories);
+            }
         });
 
         return view;
@@ -71,4 +73,19 @@ public class CategoryCreationForm extends Fragment {
         viewModel.setName(String.valueOf(binding.nameInput.getText()));
         viewModel.setDescription(String.valueOf(binding.descriptionInput.getText()));
     }
+
+    private boolean validate() {
+        if(viewModel.getName().getValue().isEmpty()) {
+            binding.nameInputLayout.setError("Name is required");
+            binding.nameInputLayout.setErrorEnabled(true);
+            return false;
+        }
+        if (viewModel.getDescription().getValue().isEmpty()) {
+            binding.descriptionInputLayout.setErrorEnabled(true);
+            binding.descriptionInputLayout.setError("Description in enabled");
+            return false;
+        }
+        return true;
+    }
+
 }
