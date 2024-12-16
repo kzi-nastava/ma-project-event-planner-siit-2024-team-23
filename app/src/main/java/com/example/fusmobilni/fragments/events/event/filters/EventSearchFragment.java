@@ -6,6 +6,8 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +18,8 @@ import android.widget.Toast;
 
 import com.example.fusmobilni.R;
 import com.example.fusmobilni.adapters.events.event.EventsHorizontalAdapter;
+import com.example.fusmobilni.adapters.loading.LoadingCardHorizontalAdapter;
+import com.example.fusmobilni.adapters.loading.LoadingCardVerticalAdapter;
 import com.example.fusmobilni.clients.ClientUtils;
 import com.example.fusmobilni.databinding.EventFragmentSearchBinding;
 import com.example.fusmobilni.responses.events.EventTypesResponse;
@@ -84,15 +88,20 @@ public class EventSearchFragment extends Fragment {
 
         _viewModel = new ViewModelProvider(getParentFragment()).get(EventSearchViewModel.class);
 
+        initializeLoadingCards();
+        _binding.nestedEventCards.setVisibility(View.GONE);
+
         fetchEvents();
         fetchEventTypes();
         fetchLocations();
-
         _viewModel.getEvents().observe(getViewLifecycleOwner(), observer -> {
-            eventsHorizontalAdapter.setData(_viewModel.getEvents().getValue());
-            listView.setAdapter(eventsHorizontalAdapter);
+            turnOnShimmer();
+            delayedTask(() -> {
+                eventsHorizontalAdapter.setData(_viewModel.getEvents().getValue());
+                listView.setAdapter(eventsHorizontalAdapter);
+                turnOffShimmer();
+            });
         });
-
         _binding.searchButton.setOnClickListener(v -> {
             _viewModel.setConstraint(_searchView.getEditText().getText().toString());
         });
@@ -105,6 +114,36 @@ public class EventSearchFragment extends Fragment {
         initializePaginationSpinner();
 
         return view;
+    }
+
+    private void delayedTask(Runnable onComplete) {
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+            _binding.loadingCards.setAdapter(new LoadingCardHorizontalAdapter(_viewModel.getPageSize().getValue()));
+            _binding.nestedLoadingCards.setVisibility(View.VISIBLE);
+            _binding.nestedEventCards.setVisibility(View.GONE);
+            if (onComplete != null) {
+                onComplete.run();
+            }
+        }, 1000);
+    }
+
+    private void turnOnShimmer() {
+        _binding.loadingCards.setAdapter(new LoadingCardHorizontalAdapter(_viewModel.getPageSize().getValue()));
+        _binding.nestedLoadingCards.setVisibility(View.VISIBLE);
+        _binding.nestedEventCards.setVisibility(View.GONE);
+    }
+
+    private void turnOffShimmer() {
+
+        _binding.loadingCards.setAdapter(new LoadingCardHorizontalAdapter(0));
+        _binding.nestedLoadingCards.setVisibility(View.GONE);
+        _binding.nestedEventCards.setVisibility(View.VISIBLE);
+
+
+    }
+
+    private void initializeLoadingCards() {
+        _binding.loadingCards.setAdapter(new LoadingCardHorizontalAdapter(_viewModel.getPageSize().getValue()));
     }
 
     private void openFilterFragment() {

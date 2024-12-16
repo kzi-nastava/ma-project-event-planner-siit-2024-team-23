@@ -78,6 +78,7 @@ public class ServiceFragmentFilter extends BottomSheetDialogFragment {
             initializeApplyButton();
         });
         _binding.servicesFilterResetButton.setOnClickListener(v -> {
+            _viewModel.resetPage();
             _viewModel.resetFilters();
             _adapter.resetCategories();
             dismiss();
@@ -98,6 +99,7 @@ public class ServiceFragmentFilter extends BottomSheetDialogFragment {
     }
 
     private void initializeApplyButton() {
+        _viewModel.resetPage();
         CategoryResponse category = _adapter.getSelectedCategory();
         _viewModel.setCategory(category);
         if (_viewModel.getLocation().getValue() != null)

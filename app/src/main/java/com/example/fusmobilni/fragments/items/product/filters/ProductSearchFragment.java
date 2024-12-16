@@ -6,6 +6,8 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -18,6 +20,7 @@ import android.widget.Spinner;
 import com.example.fusmobilni.R;
 import com.example.fusmobilni.adapters.items.product.ProductsHorizontalAdapter;
 import com.example.fusmobilni.adapters.items.product.ProductsResponseAdapter;
+import com.example.fusmobilni.adapters.loading.LoadingCardHorizontalAdapter;
 import com.example.fusmobilni.clients.ClientUtils;
 import com.example.fusmobilni.databinding.FragmentProductSearchBinding;
 import com.example.fusmobilni.model.items.product.Product;
@@ -88,6 +91,8 @@ public class ProductSearchFragment extends Fragment {
         _listView = _binding.productList;
         _searchView = _binding.searchTextInputLayoutProducts;
 
+        _binding.nestedProductCards.setVisibility(View.GONE);
+
         initializeButtons();
         fetchProducts();
         fetchLocations();
@@ -99,6 +104,7 @@ public class ProductSearchFragment extends Fragment {
 
         _viewModel = new ViewModelProvider(getParentFragment()).get(ProductSearchViewModel.class);
 
+        initializeLoadingCards();
         _binding.productsFilterButton.setOnClickListener(v -> {
             openFilterFragment();
         });
@@ -112,11 +118,46 @@ public class ProductSearchFragment extends Fragment {
             _productsAdapter.setData(_viewModel.getProducts().getValue());
         });
         _viewModel.getProducts().observe(getViewLifecycleOwner(), observer -> {
-            _productsAdapter.setData(_viewModel.getProducts().getValue());
+            turnOnShimmer();
+            delayedTask(() -> {
+                _productsAdapter.setData(_viewModel.getProducts().getValue());
+                _listView.setAdapter(_productsAdapter);
+                turnOffShimmer();
+            });
         });
         initializePaginationSpinner();
 
         return view;
+    }
+
+    private void delayedTask(Runnable onComplete) {
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+            _binding.loadingCards.setAdapter(new LoadingCardHorizontalAdapter(_viewModel.getPageSize().getValue()));
+            _binding.nestedLoadingCards.setVisibility(View.VISIBLE);
+            _binding.nestedProductCards.setVisibility(View.GONE);
+            if (onComplete != null) {
+                onComplete.run();
+            }
+        }, 1000);
+    }
+
+    private void turnOnShimmer() {
+        _binding.loadingCards.setAdapter(new LoadingCardHorizontalAdapter(_viewModel.getPageSize().getValue()));
+        _binding.nestedLoadingCards.setVisibility(View.VISIBLE);
+        _binding.nestedProductCards.setVisibility(View.GONE);
+    }
+
+    private void turnOffShimmer() {
+
+        _binding.loadingCards.setAdapter(new LoadingCardHorizontalAdapter(0));
+        _binding.nestedLoadingCards.setVisibility(View.GONE);
+        _binding.nestedProductCards.setVisibility(View.VISIBLE);
+
+
+    }
+
+    private void initializeLoadingCards() {
+        _binding.loadingCards.setAdapter(new LoadingCardHorizontalAdapter(_viewModel.getPageSize().getValue()));
     }
 
     private void openFilterFragment() {
@@ -174,6 +215,7 @@ public class ProductSearchFragment extends Fragment {
                     _viewModel.setMaxSelectedPrice(_maxValue);
                     _viewModel.setLowerBoundPrice(_minValue);
                     _viewModel.setUpperBoundPrice(_maxValue);
+
                 }
             }
 

@@ -57,6 +57,8 @@ public class EventsHorizontalAdapter extends RecyclerView.Adapter<EventsHorizont
         public ImageView attendieTwo;
         public ImageView attendieThree;
 
+        TextView _eventType;
+
         EventHorizontalViewHolder(View itemView) {
             super(itemView);
             title = itemView.findViewById(R.id.textViewEventNameHorizontal);
@@ -67,6 +69,7 @@ public class EventsHorizontalAdapter extends RecyclerView.Adapter<EventsHorizont
             attendieOne = itemView.findViewById(R.id.attendieOne);
             attendieTwo = itemView.findViewById(R.id.attendieTwo);
             attendieThree = itemView.findViewById(R.id.attendieThree);
+            _eventType = itemView.findViewById(R.id.textViewEventType);
         }
     }
 
@@ -86,6 +89,7 @@ public class EventsHorizontalAdapter extends RecyclerView.Adapter<EventsHorizont
         holder.day.setText(dateParts[2]);
         holder.monthYear.setText(MonthMap.get(dateParts[1]) + " " + dateParts[0]);
         holder.location.setText(event.getLocation().getCity() + ", " + event.getLocation().getStreet() + " " + event.getLocation().getStreetNumber());
+        holder._eventType.setText(event.getType().getName());
 
         int numberGoing = event.getNumberGoing();
 

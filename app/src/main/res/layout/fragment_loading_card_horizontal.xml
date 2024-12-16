@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.facebook.shimmer.ShimmerFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/shimmerLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    android:background="@color/shimmer_placeholder">
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/shimmer_placeholder"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="10dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/shimmer_placeholder"
+            android:orientation="horizontal"
+            android:padding="8dp">
+
+            <!-- Placeholder for Image -->
+            <View
+                android:layout_width="150dp"
+                android:layout_height="match_parent"
+                android:background="@color/bg_gray" />
+
+            <!-- Placeholder for Text -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="20dp"
+                    android:layout_margin="4dp"
+                    android:background="@color/bg_gray" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="20dp"
+                    android:layout_margin="4dp"
+                    android:background="@color/bg_gray" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="20dp"
+                    android:layout_margin="4dp"
+                    android:background="@color/bg_gray" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="20dp"
+                    android:layout_margin="4dp"
+                    android:background="@color/bg_gray" />
+            </LinearLayout>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+</com.facebook.shimmer.ShimmerFrameLayout>

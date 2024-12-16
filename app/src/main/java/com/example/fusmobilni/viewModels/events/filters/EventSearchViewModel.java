@@ -36,9 +36,10 @@ public class EventSearchViewModel extends ViewModel {
 
     private LocalDate today = LocalDate.now();
     private LocalDate inAWeek = LocalDate.now().plusDays(7);
+
     public void doFilter() {
         Map<String, String> queryParams = new HashMap<>();
-        if(!_constraint.getValue().isEmpty())
+        if (!_constraint.getValue().isEmpty())
             queryParams.put("constraint", _constraint.getValue());
         if (_eventType.getValue() != null)
             queryParams.put("typeId", String.valueOf(_eventType.getValue().getId()));
@@ -65,16 +66,24 @@ public class EventSearchViewModel extends ViewModel {
 
     public void prevPage() {
         if (_currentPage.getValue() > 0) {
-            _currentPage.setValue(_currentPage.getValue()-1);
+            _currentPage.setValue(_currentPage.getValue() - 1);
             doFilter();
         }
     }
 
     public void nextPage() {
         if ((_currentPage.getValue() + 1) * _pageSize.getValue() < _totalElements.getValue()) {
-            _currentPage.setValue(_currentPage.getValue()+1);
+            _currentPage.setValue(_currentPage.getValue() + 1);
             doFilter();
         }
+    }
+
+    public void resetPage() {
+        _currentPage.setValue(0);
+    }
+
+    public void setInitialPageSize(int pageSize) {
+        _pageSize.setValue(pageSize);
     }
 
     public MutableLiveData<List<LocationResponse>> getLocations() {

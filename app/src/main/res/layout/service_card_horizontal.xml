@@ -180,37 +180,5 @@
 
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <androidx.cardview.widget.CardView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:alpha="0.9"
-                    android:background="#80FFFFFF"
-                    app:cardCornerRadius="14dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                    <ImageView
-                        android:id="@+id/bookmarkIconHorizontal"
-                        android:layout_width="36sp"
-                        android:layout_height="36sp"
-                        android:background="#D7FFFFFF"
-                        android:padding="5sp"
-                        android:src="@drawable/ic_heart" />
-                </androidx.cardview.widget.CardView>
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-        </LinearLayout>
-
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>
