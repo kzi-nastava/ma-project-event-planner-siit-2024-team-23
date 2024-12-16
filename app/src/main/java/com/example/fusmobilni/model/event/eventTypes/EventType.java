@@ -1,4 +1,4 @@
-package com.example.fusmobilni.model.event;
+package com.example.fusmobilni.model.event.eventTypes;
 
 import androidx.annotation.NonNull;
 
@@ -7,20 +7,20 @@ import com.example.fusmobilni.model.items.category.OfferingsCategory;
 import java.util.List;
 
 public class EventType {
-    private final Integer id;
+    private final Long id;
     private String name;
     private String description;
-    private List<OfferingsCategory> suggestedCategories;
+    private SuggestedCategories suggestedCategories;
 
     private boolean isActive=true;
-    public EventType(Integer id,String name, String description, List<OfferingsCategory> categories) {
+    public EventType(Long id,String name, String description, SuggestedCategories categories) {
         this.id = id;
         this.name = name;
         this.description = description;
         suggestedCategories = categories;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
@@ -40,11 +40,11 @@ public class EventType {
         this.description = description;
     }
 
-    public List<OfferingsCategory> getSuggestedCategories() {
+    public SuggestedCategories getSuggestedCategories() {
         return suggestedCategories;
     }
 
-    public void setSuggestedCategories(List<OfferingsCategory> suggestedCategories) {
+    public void setSuggestedCategories(SuggestedCategories suggestedCategories) {
         this.suggestedCategories = suggestedCategories;
     }
 

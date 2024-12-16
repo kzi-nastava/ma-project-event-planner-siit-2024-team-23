@@ -1,18 +1,33 @@
 package com.example.fusmobilni.fragments.items.product;
 
+import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.fusmobilni.R;
+import com.example.fusmobilni.clients.ClientUtils;
 import com.example.fusmobilni.databinding.FragmentProductDetailsBinding;
+import com.example.fusmobilni.model.items.item.ItemDetails;
 import com.example.fusmobilni.model.items.product.Product;
+import com.example.fusmobilni.requests.items.BuyItemRequest;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -22,6 +37,9 @@ import com.example.fusmobilni.model.items.product.Product;
 public class ProductDetailsFragment extends Fragment {
 
     private FragmentProductDetailsBinding _binding;
+    private Long productId;
+    private Long eventId;
+    private double estimatedBudget;
 
     private boolean favorite = false;
 
@@ -51,25 +69,53 @@ public class ProductDetailsFragment extends Fragment {
         _binding = FragmentProductDetailsBinding.inflate(inflater, container, false);
         View view = _binding.getRoot();
 
-        Product product = getArguments().getParcelable("product");
-        Boolean displayPurchase = getArguments().getBoolean("displayPurchase");
+        productId = getArguments().getLong("productId");
+        eventId = getArguments().getLong("eventId");
+        estimatedBudget = getArguments().getDouble("estimatedBudget");
+        Call<ItemDetails> request = ClientUtils.itemsService.findById(productId);
+        request.enqueue(new Callback<ItemDetails>() {
+            @Override
+            public void onResponse(Call<ItemDetails> call, Response<ItemDetails> response) {
+                ItemDetails product = response.body();
+                _binding.productDetailsText.setText(product.getName());
+                _binding.productsHorizontalPrice.setText(String.valueOf(product.getPrice()));
+                _binding.textViewOrganizerNameProductDetails.setText(product.getServiceProvider().getLastName());
+                _binding.textViewProductDescriptionDetails.setText(product.getDescription());
+                try {
+                    _binding.imageView4.setImageURI(convertToUrisFromBase64(getContext(), product.getImages().get(0)));
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                _binding.imageView5.setImageResource(R.drawable.person);
+            }
 
-        if (displayPurchase == false) {
-            _binding.purchaseProductCard.setVisibility(View.INVISIBLE);
-            ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) _binding.productDetailsText.getLayoutParams();
-            params.setMargins(0, 32, 0, 16);
-        }
-        _binding.productDetailsText.setText(product.getName());
-        _binding.productsHorizontalPrice.setText(String.valueOf(product.getPrice()));
-        _binding.textViewProductLocationHorizontal.setText(product.getLocation());
-        _binding.textViewOrganizerNameProductDetails.setText("Ibrahimovic");
-        _binding.textViewProductDescriptionDetails.setText(product.getDescription());
-        _binding.imageView5.setImageResource(R.drawable.person);
+            @Override
+            public void onFailure(Call<ItemDetails> call, Throwable t) {
+
+            }
+
+        });
+
         _binding.buyProductButton.setOnClickListener(v->{
-            Toast.makeText(requireContext(), "Product bought successfully", Toast.LENGTH_SHORT).show();
-            Bundle bundle = new Bundle();
-            bundle.putInt("currFragment", 1);
-            Navigation.findNavController(_binding.getRoot()).navigate(R.id.action_viewProductsFragment_to_stepTwoFragment, bundle);
+            BuyItemRequest buyItemRequest = new BuyItemRequest(productId, estimatedBudget, "", "", eventId);
+            Call<Void> req = ClientUtils.eventsService.createEventComponent(eventId, buyItemRequest);
+            req.enqueue(new Callback<Void>() {
+                @Override
+                public void onResponse(Call<Void> call, Response<Void> response) {
+                    if (response.isSuccessful()) {
+                        Toast.makeText(requireContext(), "Product bought successfully", Toast.LENGTH_SHORT).show();
+                        Bundle bundle = new Bundle();
+                        bundle.putInt("currFragment", 1);
+                        bundle.putLong("eventId", eventId);
+                        Navigation.findNavController(_binding.getRoot()).navigate(R.id.action_viewProductsFragment_to_stepTwoFragment, bundle);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Void> call, Throwable t) {
+
+                }
+            });
         });
 
         initializeFavoriteButton();
@@ -92,6 +138,21 @@ public class ProductDetailsFragment extends Fragment {
                     })
                     .start();
         });
+    }
+
+    public static Uri convertToUrisFromBase64(Context context, String base64String) throws IOException {
+
+
+        byte[] decodedBytes = Base64.decode(base64String, Base64.DEFAULT);
+
+        File tempFile = File.createTempFile("image_", ".jpg", context.getCacheDir());
+        tempFile.deleteOnExit();
+
+        try (FileOutputStream fos = new FileOutputStream(tempFile)) {
+            fos.write(decodedBytes);
+        }
+
+        return Uri.fromFile(tempFile);
     }
 
 }

@@ -9,19 +9,26 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fusmobilni.R;
+import com.example.fusmobilni.clients.ClientUtils;
 import com.example.fusmobilni.model.event.AgendaActivity;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class AgendaActivityEditableAdapter extends RecyclerView.Adapter<AgendaActivityEditableAdapter.AgendaViewHolder> {
 
 private final List<AgendaActivity> agendaActivities;
+private final Long eventId;
 private final SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
 
-public AgendaActivityEditableAdapter(List<AgendaActivity> agendaActivities) {
+public AgendaActivityEditableAdapter(List<AgendaActivity> agendaActivities, Long eventId) {
     this.agendaActivities = agendaActivities;
+    this.eventId = eventId;
 }
     public void addAgendaActivity(AgendaActivity activity) {
         agendaActivities.add(activity); // Add the new category to the list
@@ -46,9 +53,22 @@ public void onBindViewHolder(@NonNull AgendaActivityEditableAdapter.AgendaViewHo
     String timeRange = timeFormat.format(activity.getStartTime()) + " - " + timeFormat.format(activity.getEndTime());
     holder.timeRange.setText(timeRange);
     holder.deleteView.setOnClickListener(v->{
-            agendaActivities.remove(position);
-            notifyDataSetChanged();
+        Call<Void> deleteRequest = ClientUtils.eventsService.deleteAgenda(eventId, agendaActivities.get(position).getId());
+        deleteRequest.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    agendaActivities.remove(position);
+                    notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+
+            }
         });
+    });
 
 }
 

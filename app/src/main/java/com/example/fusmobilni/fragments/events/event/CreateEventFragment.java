@@ -15,12 +15,14 @@ import android.widget.Toast;
 
 import com.example.fusmobilni.R;
 import com.example.fusmobilni.adapters.events.event.forms.CreateEventAdapter;
+import com.example.fusmobilni.clients.ClientUtils;
 import com.example.fusmobilni.databinding.FragmentCreateEventBinding;
 import com.example.fusmobilni.fragments.events.event.createEventSteps.CreateEventStepOne;
 import com.example.fusmobilni.fragments.events.event.createEventSteps.CreateEventStepThree;
 import com.example.fusmobilni.fragments.events.event.createEventSteps.CreateEventStepTwo;
 import com.example.fusmobilni.fragments.events.event.createEventSteps.InvitationsFragment;
 import com.example.fusmobilni.interfaces.FragmentValidation;
+import com.example.fusmobilni.requests.events.event.CreateEventRequest;
 import com.example.fusmobilni.viewModels.events.event.EventViewModel;
 import com.google.android.material.button.MaterialButton;
 
@@ -32,6 +34,7 @@ public class CreateEventFragment extends Fragment {
     private CreateEventAdapter _eventAdapter;
     private EventViewModel _eventViewModel;
     private ViewPager2 _viewPager;
+    private Long eventId;
     private List<Fragment> _fragments;
     private MaterialButton _nextButton;
     private MaterialButton _backButton;
@@ -70,8 +73,11 @@ public class CreateEventFragment extends Fragment {
         _viewPager.setAdapter(_eventAdapter);
         if (getArguments() != null) {
             int currFragment = getArguments().getInt("currFragment");
+            eventId =  getArguments().getLong("eventId");
+            _eventViewModel.eventId = eventId;
             _backButton.setVisibility(View.VISIBLE);
             _viewPager.setCurrentItem(currFragment);
+
         }
         _nextButton.setOnClickListener(v -> nextButtonClick());
 
@@ -101,9 +107,15 @@ public class CreateEventFragment extends Fragment {
             Fragment currentFragment = _fragments.get(currentItem);
 
             if (((FragmentValidation) currentFragment).validate()){
+                // http request
+                if(currentItem == 0){
+                    _eventViewModel.submit();
+                }
+
                 if(currentItem == _eventAdapter.getItemCount() - 1){
                     _backButton.setVisibility(View.GONE);
                     submitRegistration();
+                    _eventViewModel.eventId = null;
                     return;
                 }
                 _backButton.setVisibility(View.VISIBLE);

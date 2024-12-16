@@ -10,27 +10,38 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.fusmobilni.R;
 import com.example.fusmobilni.adapters.items.BudgetPlaningItemAdapter;
+import com.example.fusmobilni.clients.ClientUtils;
 import com.example.fusmobilni.databinding.FragmentCreateEventStepTwoBinding;
 import com.example.fusmobilni.interfaces.FragmentValidation;
-import com.example.fusmobilni.model.event.EventType;
+import com.example.fusmobilni.model.event.eventTypes.EventType;
 import com.example.fusmobilni.model.items.category.OfferingsCategory;
+import com.example.fusmobilni.requests.categories.GetCategoriesResponse;
+import com.example.fusmobilni.requests.categories.GetCategoryResponse;
+import com.example.fusmobilni.responses.events.components.EventComponentResponse;
+import com.example.fusmobilni.responses.events.components.EventComponentsResponse;
 import com.example.fusmobilni.viewModels.events.event.EventViewModel;
 import com.google.android.material.button.MaterialButton;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class CreateEventStepTwo extends Fragment  implements FragmentValidation {
     private FragmentCreateEventStepTwoBinding _binding;
     private EventViewModel _eventViewModel;
     private BudgetPlaningItemAdapter _budgetPlaningAdapter;
-    private final List<OfferingsCategory> _suggestedCategoryOfferings = new ArrayList<>();
+    private final List<EventComponentResponse> _suggestedCategoryOfferings = new ArrayList<>();
     private final ArrayList<OfferingsCategory> _allcategories = new ArrayList<>();
 
     public CreateEventStepTwo() {
@@ -65,10 +76,14 @@ public class CreateEventStepTwo extends Fragment  implements FragmentValidation 
 
         builder.setItems(categoryNames, (dialog, which) -> {
             OfferingsCategory selectedCategory = _allcategories.get(which);
-            _budgetPlaningAdapter.addCategory(selectedCategory);
+            _budgetPlaningAdapter.addCategory(getEmptyComponent(selectedCategory));
         });
 
         builder.show();
+    }
+
+    private EventComponentResponse getEmptyComponent(OfferingsCategory category) {
+        return new EventComponentResponse(-1L, 0, "", 0, category);
     }
 
     @Override
@@ -81,28 +96,60 @@ public class CreateEventStepTwo extends Fragment  implements FragmentValidation 
         _allcategories.clear();
         populateData();
         populateCategories();
-        this._budgetPlaningAdapter = new BudgetPlaningItemAdapter(requireContext(), this._suggestedCategoryOfferings, (category, price) -> {
+        Call<EventComponentsResponse> request = ClientUtils.eventsService.findComponentsByEventId(_eventViewModel.eventId);
+        request.enqueue(new Callback<EventComponentsResponse>() {
+            @Override
+            public void onResponse(Call<EventComponentsResponse> call, Response<EventComponentsResponse> response) {
+                if(response.isSuccessful()){
+                    _suggestedCategoryOfferings.clear();
+                    _suggestedCategoryOfferings.addAll(response.body().components);
+                    _budgetPlaningAdapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<EventComponentsResponse> call, Throwable t) {
+
+            }
+        });
+        this._budgetPlaningAdapter = new BudgetPlaningItemAdapter(requireContext(), this._suggestedCategoryOfferings, _eventViewModel.eventId, (category, price) -> {
             Bundle bundle = new Bundle();
+            bundle.putLong("eventId", _eventViewModel.eventId);
             bundle.putDouble("price", price);
-            bundle.putInt("category", category.getId());
-            Navigation.findNavController(_binding.getRoot()).navigate(R.id.action_stepTwoFragment_to_viewProductsFragment);
+            bundle.putLong("category", category.category.getId());
+            Navigation.findNavController(_binding.getRoot()).navigate(R.id.action_stepTwoFragment_to_viewProductsFragment, bundle);
         });
         recyclerView.setAdapter(_budgetPlaningAdapter);
     }
 
 
     private void populateCategories() {
-        _allcategories.add(new OfferingsCategory(1, "Sport", "Sport je jako zanimljiv i zabavan"));
-        _allcategories.add(new OfferingsCategory(2, "Food", "Sport je jako zanimljiv i zabavan"));
-        _allcategories.add(new OfferingsCategory(3, "Slavlje", "Sport je jako zanimljiv i zabavan"));
-        _allcategories.add(new OfferingsCategory(4, "Hronologija", "Sport je jako zanimljiv i zabavan"));
-        _allcategories.add(new OfferingsCategory(5, "Jelo", "Sport je jako zanimljiv i zabavan"));
+        Call<GetCategoriesResponse> request = ClientUtils.categoryService.findAll();
+        request.enqueue(new Callback<GetCategoriesResponse>() {
+            @Override
+            public void onResponse(Call<GetCategoriesResponse> call, Response<GetCategoriesResponse> response) {
+                Log.d("Tag", String.valueOf(response.code()));
+                if (response.isSuccessful()) {
+                    _allcategories.clear();
+                    for(GetCategoryResponse cat: response.body().categories) {
+                        _allcategories.add(new OfferingsCategory(cat.id, cat.name, cat.description));
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<GetCategoriesResponse> call, Throwable t) {
+
+            }
+        });
     }
 
     private void populateData() {
         EventType eventType = _eventViewModel.getEventType().getValue();
         if (eventType != null && eventType.getSuggestedCategories() != null) {
-            _suggestedCategoryOfferings.addAll(eventType.getSuggestedCategories());
+            eventType.getSuggestedCategories().categories.stream().map(
+                    c -> _suggestedCategoryOfferings.add(getEmptyComponent(c))).
+                    collect(Collectors.toList());
         }
     }
 

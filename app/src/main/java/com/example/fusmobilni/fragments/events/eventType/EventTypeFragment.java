@@ -17,13 +17,15 @@ import com.example.fusmobilni.R;
 import com.example.fusmobilni.adapters.events.eventType.EventTypeAdapter;
 import com.example.fusmobilni.databinding.FragmentEventTypeBinding;
 import com.example.fusmobilni.interfaces.EventTypeListener;
-import com.example.fusmobilni.model.event.EventType;
+import com.example.fusmobilni.model.event.eventTypes.EventType;
+import com.example.fusmobilni.model.event.eventTypes.SuggestedCategories;
 import com.example.fusmobilni.model.items.category.OfferingsCategory;
 import com.example.fusmobilni.viewModels.events.eventTypes.EventTypeViewModel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 public class EventTypeFragment extends Fragment implements EventTypeListener {
     private FragmentEventTypeBinding _binding;
@@ -62,40 +64,40 @@ public class EventTypeFragment extends Fragment implements EventTypeListener {
         return view;
     }
     private void populateData() {
-        _offeringCategory.add(new OfferingsCategory(1, "Sport", "Sport je jako zanimljiv i zabavan"));
-        _offeringCategory.add(new OfferingsCategory(2, "Food", "Sport je jako zanimljiv i zabavan"));
-        _offeringCategory.add(new OfferingsCategory(3, "Slavlje", "Sport je jako zanimljiv i zabavan"));
-        _offeringCategory.add(new OfferingsCategory(4, "Hronologija", "Sport je jako zanimljiv i zabavan"));
-        _offeringCategory.add(new OfferingsCategory(5, "Jelo", "Sport je jako zanimljiv i zabavan"));
+        _offeringCategory.add(new OfferingsCategory(1L, "Sport", "Sport je jako zanimljiv i zabavan"));
+        _offeringCategory.add(new OfferingsCategory(2L, "Food", "Sport je jako zanimljiv i zabavan"));
+        _offeringCategory.add(new OfferingsCategory(3L, "Slavlje", "Sport je jako zanimljiv i zabavan"));
+        _offeringCategory.add(new OfferingsCategory(4L, "Hronologija", "Sport je jako zanimljiv i zabavan"));
+        _offeringCategory.add(new OfferingsCategory(5L, "Jelo", "Sport je jako zanimljiv i zabavan"));
         _eventTypes.add(new EventType(
-                1,
+                1L,
                 "Sports Event",
                 "An event centered around sports activities.",
-                Arrays.asList(_offeringCategory.get(0), _offeringCategory.get(1))
+                new SuggestedCategories(new ArrayList<>(List.of(_offeringCategory.get(1), _offeringCategory.get(4))))
         ));
         _eventTypes.add(new EventType(
-                2,
+                2L,
                 "Food Festival",
                 "A festival showcasing various cuisines and food culture.",
-                Arrays.asList(_offeringCategory.get(1), _offeringCategory.get(4))
+                new SuggestedCategories(new ArrayList<>(List.of(_offeringCategory.get(1), _offeringCategory.get(4))))
         ));
         _eventTypes.add(new EventType(
-                3,
+                3L,
                 "Birthday Party",
                 "A celebration for someone's birthday.",
-                Arrays.asList(_offeringCategory.get(2), _offeringCategory.get(4))
+                new SuggestedCategories(new ArrayList<>(List.of(_offeringCategory.get(1), _offeringCategory.get(4))))
         ));
         _eventTypes.add(new EventType(
-                4,
+                4L,
                 "Historical Conference",
                 "A conference focusing on historical topics and events.",
-                Collections.singletonList(_offeringCategory.get(3))
+                new SuggestedCategories(new ArrayList<>(List.of(_offeringCategory.get(1), _offeringCategory.get(4))))
         ));
         _eventTypes.add(new EventType(
-                5,
+                5L,
                 "Community Gathering",
                 "An event for bringing the community together.",
-                Arrays.asList(_offeringCategory.get(0), _offeringCategory.get(2), _offeringCategory.get(4))
+                new SuggestedCategories(new ArrayList<>(List.of(_offeringCategory.get(1), _offeringCategory.get(4))))
         ));
     }
 

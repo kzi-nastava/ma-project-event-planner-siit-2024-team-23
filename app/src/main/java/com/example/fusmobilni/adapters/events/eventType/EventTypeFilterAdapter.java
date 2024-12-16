@@ -11,7 +11,6 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fusmobilni.R;
-import com.example.fusmobilni.model.event.EventType;
 import com.example.fusmobilni.responses.events.EventTypeResponse;
 
 import java.util.ArrayList;

@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fusmobilni.R;
 import com.example.fusmobilni.interfaces.EventTypeListener;
-import com.example.fusmobilni.model.event.EventType;
+import com.example.fusmobilni.model.event.eventTypes.EventType;
 import com.example.fusmobilni.model.items.category.OfferingsCategory;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
@@ -55,7 +55,7 @@ public class EventTypeAdapter extends RecyclerView.Adapter<EventTypeAdapter.Even
         holder.deleteButton.setOnClickListener(v -> eventTypeListener.onDeleteEventType(position));
         holder.editButton.setOnClickListener(v -> eventTypeListener.onUpdateEventType(position));
         holder.chipGroup.removeAllViews();
-        for(OfferingsCategory category: eventType.getSuggestedCategories()){
+        for(OfferingsCategory category: eventType.getSuggestedCategories().categories){
             Chip chip = new Chip(holder.title.getContext());
             chip.setText(category.getName());
             chip.setChipBackgroundColorResource(R.color.white);

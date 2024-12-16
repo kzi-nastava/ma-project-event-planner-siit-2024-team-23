@@ -6,24 +6,33 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.fusmobilni.R;
-import com.example.fusmobilni.adapters.items.product.ProductsHorizontalAdapter;
-import com.example.fusmobilni.adapters.items.service.ServiceHorizontalAdapter;
+import com.example.fusmobilni.adapters.items.ItemsHorizontalAdapter;
+import com.example.fusmobilni.clients.ClientUtils;
+import com.example.fusmobilni.core.CustomSharedPrefs;
 import com.example.fusmobilni.databinding.FragmentChooseProductBinding;
-import com.example.fusmobilni.model.items.product.Product;
-import com.example.fusmobilni.model.items.service.Service;
-import com.google.android.material.button.MaterialButtonToggleGroup;
+import com.example.fusmobilni.requests.events.event.GetItemsByCategoryAndPrice;
+import com.example.fusmobilni.responses.events.GetItemResponse;
+import com.example.fusmobilni.responses.events.GetItemsResponse;
 
 import java.util.ArrayList;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class ChooseProductFragment extends Fragment {
     private FragmentChooseProductBinding _binding;
-    private ServiceHorizontalAdapter serviceHorizontalAdapter;
-    private ProductsHorizontalAdapter productsHorizontalAdapter;
+    private ItemsHorizontalAdapter itemsHorizontalAdapter;
+    private double estimatedBudget;
+    private Long eventId;
+    private Long categoryId;
+
+    private ArrayList<GetItemResponse> items = new ArrayList<>();
     private RecyclerView listView;
     public ChooseProductFragment() {
         // Required empty public constructor
@@ -35,6 +44,7 @@ public class ChooseProductFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
     }
 
     @Override
@@ -43,50 +53,33 @@ public class ChooseProductFragment extends Fragment {
         _binding = FragmentChooseProductBinding.inflate(getLayoutInflater());
         View view = _binding.getRoot();
         listView = _binding.recyclerView;
-        MaterialButtonToggleGroup toggleGroup = _binding.toggleGroup;
-
-        serviceHorizontalAdapter = new ServiceHorizontalAdapter();
-        productsHorizontalAdapter = new ProductsHorizontalAdapter();
-        listView.setAdapter(serviceHorizontalAdapter);
-        ArrayList<Service> services = fillServices();
-        ArrayList<Product> products = fillProducts();
-       // serviceHorizontalAdapter.setData(services);
-        productsHorizontalAdapter.setData(products);
-
-        toggleGroup.addOnButtonCheckedListener((group, checkedId, isChecked) -> {
-            if (isChecked) {
-                if (checkedId == R.id.toggle_services) {
-                    // Show services
-                    listView.setAdapter(serviceHorizontalAdapter);
-                } else if (checkedId == R.id.toggle_products) {
-                    // Show products
-                    listView.setAdapter(productsHorizontalAdapter);
-                }
-            }
-        });
+        Bundle bundle = getArguments();
+        eventId = bundle.getLong("eventId");
+        estimatedBudget = bundle.getDouble("price");
+        categoryId = bundle.getLong("category");
+        itemsHorizontalAdapter = new ItemsHorizontalAdapter(eventId, estimatedBudget);
+        fillItems();
         return view;
     }
-    private  ArrayList<Product> fillProducts(){
-        ArrayList<Product> p = new ArrayList<>();
-        p.add(new Product("Gourmet Pizza", "A delicious blend of flavors", 15.99, "New York", "Food"));
-        p.add(new Product("Lemonade", "Refreshing and invigorating beverage", 3.49, "California", "Health"));
-        p.add(new Product("Mixed Nuts", "Sweet and savory snacks", 5.99, "Texas", "Sports"));
-        p.add(new Product("Croissants", "Freshly baked pastries", 2.99, "France", "Art"));
-        p.add(new Product("Dark Chocolate Truffles", "Artisanal chocolates", 12.49, "Belgium", "Fashion"));
-        return p;
-    }
 
-    private ArrayList<Service> fillServices() {
-        ArrayList<Service> s = new ArrayList<>();
-        s.add(new Service("Live band for weddings and parties", "Wedding Band", "New York", "Music"));
-        s.add(new Service("Professional photography for events", "Photography Service", "Los Angeles", "Art"));
-        s.add(new Service("Catering services for all occasions", "Catering Service", "Chicago", "Food"));
-        s.add(new Service("Event decoration and setup", "Decoration Service", "San Francisco", "Art"));
-        s.add(new Service("Spacious venue for corporate events", "Venue Rental", "Miami", "Travel"));
-        s.add(new Service("DJ service with customized playlists", "DJ Service", "Las Vegas", "Music"));
-        s.add(new Service("Makeup and styling for events", "Makeup Service", "New York", "Fashion"));
-        s.add(new Service("Mobile food truck service for events", "Food Truck Service", "Austin", "Food"));
-        s.add(new Service("Event photography with instant prints", "Instant Photography", "Orlando", "Art"));
-        return s;
+    private void fillItems() {
+        Call<GetItemsResponse> request = ClientUtils.itemsService.
+                findAllByCategoryAndPrice(new GetItemsByCategoryAndPrice(categoryId, estimatedBudget));
+        request.enqueue(new Callback<GetItemsResponse>() {
+            @Override
+            public void onResponse(Call<GetItemsResponse> call, Response<GetItemsResponse> response) {
+                if(response.isSuccessful()){
+                    items.clear();
+                    items = response.body().itemsResponsesDTO;
+                    itemsHorizontalAdapter.setData(items);
+                    listView.setAdapter(itemsHorizontalAdapter);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<GetItemsResponse> call, Throwable t) {
+
+            }
+        });
     }
 }

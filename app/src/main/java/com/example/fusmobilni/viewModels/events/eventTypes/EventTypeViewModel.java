@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.fusmobilni.model.event.EventType;
+import com.example.fusmobilni.model.event.eventTypes.EventType;
 import com.example.fusmobilni.model.items.category.OfferingsCategory;
 
 import java.util.ArrayList;
@@ -43,7 +43,7 @@ public class EventTypeViewModel extends ViewModel {
     public void populate(EventType eventType) {
         this.name.setValue(eventType.getName());
         this.description.setValue(eventType.getDescription());
-        this.suggestedCategories.setValue(eventType.getSuggestedCategories());
+        this.suggestedCategories.setValue(eventType.getSuggestedCategories().categories);
         this.isUpdating.setValue(true);
     }
 

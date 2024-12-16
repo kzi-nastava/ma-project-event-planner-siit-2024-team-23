@@ -82,56 +82,56 @@ public class EventDetailsFragment extends Fragment {
     private ArrayList<AgendaActivity> fillAgenda() {
         ArrayList<AgendaActivity> a = new ArrayList<>();
         a.add(new AgendaActivity(
-                1,
+                1L,
                 Time.valueOf("09:00:00"),
                 Time.valueOf("10:00:00"),
                 "Welcome and Opening Remarks",
                 "Kick off the event with opening speeches and a warm welcome."
         ));
         a.add(new AgendaActivity(
-                2,
+                2L,
                 Time.valueOf("10:00:00"),
                 Time.valueOf("11:00:00"),
                 "Keynote Speech",
                 "A renowned speaker shares insights on the event's theme."
         ));
         a.add(new AgendaActivity(
-                3,
+                3L,
                 Time.valueOf("11:15:00"),
                 Time.valueOf("12:15:00"),
                 "Panel Discussion",
                 "Industry leaders discuss trends and challenges."
         ));
         a.add(new AgendaActivity(
-                4,
+                4L,
                 Time.valueOf("12:15:00"),
                 Time.valueOf("13:30:00"),
                 "Lunch Break",
                 "Enjoy a buffet lunch and network with other attendees."
         ));
         a.add(new AgendaActivity(
-                5,
+                5L,
                 Time.valueOf("13:30:00"),
                 Time.valueOf("14:30:00"),
                 "Workshop: Innovation in Action",
                 "An interactive workshop on implementing innovative ideas."
         ));
         a.add(new AgendaActivity(
-                6,
+                6L,
                 Time.valueOf("14:45:00"),
                 Time.valueOf("15:45:00"),
                 "Breakout Sessions",
                 "Choose from multiple sessions focused on specific topics."
         ));
         a.add(new AgendaActivity(
-                7,
+                7L,
                 Time.valueOf("16:00:00"),
                 Time.valueOf("16:30:00"),
                 "Coffee Break",
                 "Relax and recharge with refreshments."
         ));
         a.add(new AgendaActivity(
-                8,
+                8L,
                 Time.valueOf("16:30:00"),
                 Time.valueOf("17:30:00"),
                 "Closing Ceremony",
