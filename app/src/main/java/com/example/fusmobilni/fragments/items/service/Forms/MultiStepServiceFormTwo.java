@@ -52,7 +52,9 @@ public class MultiStepServiceFormTwo extends Fragment {
 
         binding.forwardButton.setOnClickListener(v -> {
             setValues();
-            Navigation.findNavController(view).navigate(R.id.action_serviceCreationStepTwo_toServiceCreationStepThree);
+            if (validate()) {
+                Navigation.findNavController(view).navigate(R.id.action_serviceCreationStepTwo_toServiceCreationStepThree);
+            }
         });
 
         if (viewModel.getIsUpdating().getValue()) {
@@ -113,4 +115,29 @@ public class MultiStepServiceFormTwo extends Fragment {
             }
         });
     }
+
+    private boolean validate() {
+        if (viewModel.getSpecificities().getValue().isEmpty()) {
+            binding.specificitiesInput.setError("Specificities is required");
+            binding.specificitiesInput.setErrorEnabled(true);
+            return false;
+        }
+        if (viewModel.getDuration().getValue() == null || viewModel.getDuration().getValue() <= 0) {
+            binding.serviceDurationField.setError("Duration must be greater than 0 ");
+            binding.serviceDurationField.setErrorEnabled(true);
+            return false;
+        }
+        if (viewModel.getReservationDeadline().getValue() == null || viewModel.getReservationDeadline().getValue() <= 0) {
+            binding.reservationDeadlineField.setError("Deadline must be greater than 0 ");
+            binding.reservationDeadlineField.setErrorEnabled(true);
+            return false;
+        }
+        if (viewModel.getCancellationDeadline().getValue() == null || viewModel.getCancellationDeadline().getValue() <= 0) {
+            binding.cancellationDeadlineField.setError("Deadline must be greater than 0 ");
+            binding.cancellationDeadlineField.setErrorEnabled(true);
+            return false;
+        }
+        return true;
+    }
+
 }

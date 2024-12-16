@@ -81,9 +81,11 @@ public class ModifyCategoryProposalFragment extends Fragment {
 
         binding.submitButton.setOnClickListener(v -> {
             setValues();
-            viewModel.submit();
-            viewModel.cleanUp();
-            Navigation.findNavController(view).navigate(R.id.categoryModificationForm_toCategoryProposals);
+            if (validate()) {
+                viewModel.submit();
+                viewModel.cleanUp();
+                Navigation.findNavController(view).navigate(R.id.categoryModificationForm_toCategoryProposals);
+            }
         });
 
         binding.categoriesList.setOnItemClickListener((parent, v, position, id) -> {
@@ -121,5 +123,27 @@ public class ModifyCategoryProposalFragment extends Fragment {
             viewModel.setExistingCategory(existingCategory);
             viewModel.setIsExistingCategoryChosen(true);
         }
+    }
+
+    private boolean validate() {
+        if (!viewModel.getIsExistingCategoryChosen().getValue()) {
+            if (viewModel.getName().getValue().isEmpty()) {
+                binding.nameInputLayout.setError("Name is required");
+                binding.nameInputLayout.setErrorEnabled(true);
+                return false;
+            }
+            if (viewModel.getDescription().getValue().isEmpty()) {
+                binding.descriptionInputLayout.setErrorEnabled(true);
+                binding.descriptionInputLayout.setError("Description is required");
+                return false;
+            }
+        } else {
+            if (viewModel.existingCategoryId == null) {
+                binding.existingCategories.setError("Must choose existing category");
+                binding.existingCategories.setErrorEnabled(true);
+                return false;
+            }
+        }
+        return true;
     }
 }

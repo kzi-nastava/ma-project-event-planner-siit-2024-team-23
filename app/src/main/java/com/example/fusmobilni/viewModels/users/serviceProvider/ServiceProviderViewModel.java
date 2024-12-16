@@ -44,7 +44,7 @@ public class ServiceProviderViewModel extends ViewModel {
                 searchConstraint.getValue(), lowerBoundaryPrice.getValue(), upperBoundaryPrice.getValue(),
                 categoryId.getValue(), eventTypeIds, isAvailabilityEnabled.getValue(), availability.getValue()
         );
-        Call<GetServicesResponse> response = ClientUtils.serviceOfferingService.findAllByServiceProvider(1L, request);
+        Call<GetServicesResponse> response = ClientUtils.serviceOfferingService.findAllByServiceProvider(2L, request);
         response.enqueue(new Callback<GetServicesResponse>() {
             @Override
             public void onResponse(Call<GetServicesResponse> call, Response<GetServicesResponse> response) {

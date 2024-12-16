@@ -36,7 +36,7 @@ import retrofit2.Response;
 
 public class ServiceViewModel extends ViewModel {
 
-    private final MutableLiveData<String> category = new MutableLiveData<>();
+    private final MutableLiveData<String> category = new MutableLiveData<>("");
     private final MutableLiveData<String> name = new MutableLiveData<>("");
     private final MutableLiveData<String> description = new MutableLiveData<>("");
 

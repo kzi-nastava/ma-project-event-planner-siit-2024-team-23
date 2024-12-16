@@ -115,7 +115,9 @@ public class MultiStepServiceFormOne extends Fragment {
 
         binding.materialButton.setOnClickListener(v -> {
             setValues();
-            Navigation.findNavController(view).navigate(R.id.action_serviceCreationStepOne_toServiceCreationStepTwo);
+            if (validate()) {
+                Navigation.findNavController(view).navigate(R.id.action_serviceCreationStepOne_toServiceCreationStepTwo);
+            }
         });
 
         if (viewModel.getIsUpdating().getValue()) {
@@ -198,5 +200,53 @@ public class MultiStepServiceFormOne extends Fragment {
                 })
                 .setNegativeButton("Cancel", null)
                 .show();
+    }
+
+    private boolean validate() {
+        if(viewModel.getPrice().getValue() == null || viewModel.getPrice().getValue() <= 0) {
+            binding.priceFieldStep1.setError("price must be greater than 0");
+            binding.priceFieldStep1.setErrorEnabled(true);
+            return false;
+        }
+        if(viewModel.getDiscount().getValue() == null ||
+                viewModel.getDiscount().getValue() < 0 || viewModel.getDiscount().getValue() > 100) {
+            binding.discountFieldStep1.setError("discount must be greater than 0 and less than 100");
+            binding.discountFieldStep1.setErrorEnabled(true);
+            return false;
+        }
+        if (viewModel.getName().getValue().isEmpty()) {
+            binding.textFieldStep1.setErrorEnabled(true);
+            binding.textFieldStep1.setError("Name is required");
+            return false;
+        }
+        if (viewModel.getDescription().getValue().isEmpty()) {
+            binding.descriptionFieldStep1.setErrorEnabled(true);
+            binding.descriptionFieldStep1.setError("Description is required");
+            return false;
+        }
+        if (viewModel.getCategory().getValue().isEmpty()) {
+            binding.dropdownMenuStep1.setError("Category is required");
+            binding.dropdownMenuStep1.setErrorEnabled(true);
+            return false;
+        }
+        if(viewModel.getEventTypes().getValue().isEmpty()) {
+            binding.eventTypesFieldStep1.setErrorEnabled(true);
+            binding.eventTypesFieldStep1.setError("Event type is reuired");
+            return false;
+        }
+
+        if (Objects.equals(viewModel.getCategory().getValue(), "Custom")) {
+            if (viewModel.getCustomCategoryName().getValue().isEmpty()) {
+                binding.customCategoryNameLabel.setErrorEnabled(true);
+                binding.customCategoryNameLabel.setError("Reuired");
+                return false;
+            }
+            if (viewModel.getCustomCategoryDescription().getValue().isEmpty()) {
+                binding.customCategoryDescriptionLabel.setErrorEnabled(true);
+                binding.customCategoryDescriptionLabel.setError("Reuired");
+                return false;
+            }
+        }
+        return true;
     }
 }
