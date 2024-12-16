@@ -3,13 +3,13 @@ package com.example.fusmobilni.model.event;
 import java.sql.Time;
 
 public class AgendaActivity {
-    private int id;
+    private Long id;
     private Time startTime;
     private Time endTime;
     private String title;
     private String description;
 
-    public AgendaActivity(int id, Time startTime, Time endTime, String title, String description) {
+    public AgendaActivity(Long id, Time startTime, Time endTime, String title, String description) {
         this.id = id;
         this.startTime = startTime;
         this.endTime = endTime;
@@ -17,11 +17,11 @@ public class AgendaActivity {
         this.description = description;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

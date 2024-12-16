@@ -1,11 +1,15 @@
 package com.example.fusmobilni.clients.services.events;
 
+import com.example.fusmobilni.model.event.AgendaActivity;
+import com.example.fusmobilni.requests.events.event.AgendaActivitiesResponse;
+import com.example.fusmobilni.requests.events.event.CreateAgendaActivityRequest;
 import com.example.fusmobilni.requests.events.event.CreateEventRequest;
 import com.example.fusmobilni.requests.items.BuyItemRequest;
 import com.example.fusmobilni.responses.events.EventTypeResponse;
 import com.example.fusmobilni.responses.events.EventTypesResponse;
 import com.example.fusmobilni.responses.events.GetEventByIdResponse;
 import com.example.fusmobilni.responses.events.GetEventResponse;
+import com.example.fusmobilni.responses.events.components.AgendaActivityResponse;
 import com.example.fusmobilni.responses.events.components.EventComponentsResponse;
 import com.example.fusmobilni.responses.events.filter.EventLocationsResponse;
 import com.example.fusmobilni.responses.events.filter.EventsPaginationResponse;
@@ -62,4 +66,13 @@ public interface EventsService {
                                         @Path("componentId") Long componentId);
     @GET("events/{id}/event-components")
     Call<EventComponentsResponse> findComponentsByEventId(@Path("id") Long id);
+
+    @GET("events/{eventId}/agenda-activities")
+    Call<AgendaActivitiesResponse> findAllAgendasByEventId(@Path("eventId") Long eventId);
+
+    @DELETE("events/{eventId}/agenda-activities/{id}")
+    Call<Void> deleteAgenda(@Path("eventId") Long eventId, @Path("id") Long id);
+
+    @POST("events/{eventId}/agenda-activities")
+    Call<AgendaActivityResponse> createAgenda(@Path("eventId") Long eventId, @Body CreateAgendaActivityRequest request);
 }
