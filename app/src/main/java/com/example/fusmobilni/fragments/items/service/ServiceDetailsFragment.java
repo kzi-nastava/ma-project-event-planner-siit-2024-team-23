@@ -28,6 +28,8 @@ public class ServiceDetailsFragment extends Fragment {
     private FragmentServiceDetailsBinding _binding;
     private ServiceOverviewResponse _service;
     private SpinnerDialogFragment _loader;
+    private Long eventId;
+    private double estimatedBudget;
 
     private Long _serviceId;
 
@@ -47,9 +49,6 @@ public class ServiceDetailsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            _serviceId = getArguments().getLong("serviceId");
-        }
     }
 
     @Override
@@ -58,6 +57,9 @@ public class ServiceDetailsFragment extends Fragment {
         // Inflate the layout for this fragment
         _binding = FragmentServiceDetailsBinding.inflate(inflater, container, false);
         View view = _binding.getRoot();
+        _serviceId = getArguments().getLong("productId");
+        eventId = getArguments().getLong("eventId");
+        estimatedBudget = getArguments().getDouble("estimatedBudget");
 
         initializeDialogs();
 
@@ -87,6 +89,8 @@ public class ServiceDetailsFragment extends Fragment {
     private Bundle createBundle() {
         Bundle args = new Bundle();
         args.putLong("serviceId", _serviceId);
+        args.putDouble("estimatedBudget", estimatedBudget);
+        args.putLong("eventId", eventId);
         return args;
     }
 

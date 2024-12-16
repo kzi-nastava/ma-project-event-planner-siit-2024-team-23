@@ -3,6 +3,7 @@ package com.example.fusmobilni.fragments.items.service;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +20,7 @@ import com.example.fusmobilni.databinding.FragmentServiceReservationBinding;
 import com.example.fusmobilni.fragments.dialogs.SpinnerDialogFragment;
 import com.example.fusmobilni.model.event.Event;
 import com.example.fusmobilni.model.items.service.Service;
+import com.example.fusmobilni.requests.events.event.EventComponentReservationRequest;
 import com.example.fusmobilni.responses.items.services.ServiceOverviewResponse;
 import com.example.fusmobilni.responses.items.services.ServiceReservationResponse;
 import com.google.android.material.button.MaterialButton;
@@ -47,6 +49,8 @@ public class ServiceReservationFragment extends Fragment {
     private boolean toInputsDisabled = new Random(System.currentTimeMillis()).nextBoolean();
     private ServiceReservationResponse _service;
     private Long _serviceId;
+    private Long _eventId;
+    private double _estimatedBudget;
     private SpinnerDialogFragment _loader;
     private EditText _hoursInputFrom;
     private EditText _minutesInputFrom;
@@ -69,6 +73,8 @@ public class ServiceReservationFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             _serviceId = getArguments().getLong("serviceId");
+            _eventId = getArguments().getLong("eventId");
+            _estimatedBudget = getArguments().getDouble("estimatedBudget");
         }
     }
 
@@ -130,6 +136,25 @@ public class ServiceReservationFragment extends Fragment {
             public void onResponse(Call<Boolean> call, Response<Boolean> response) {
                 if (response.isSuccessful()) {
                     boolean bool = response.body();
+                    if (bool) {
+                        Call<Void> reservationRequest = ClientUtils.eventsService.createComponentWithReservation(_eventId, createReservation());
+                        reservationRequest.enqueue(new Callback<Void>() {
+                            @Override
+                            public void onResponse(Call<Void> call, Response<Void> response) {
+                                if (response.isSuccessful()) {
+                                    Bundle bundle = new Bundle();
+                                    bundle.putInt("currFragment", 1);
+                                    bundle.putLong("eventId", _eventId);
+                                    Navigation.findNavController(_binding.getRoot()).navigate(R.id.action_serviceReservation_to_stepTeoFragment, bundle);
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<Void> call, Throwable t) {
+
+                            }
+                        });
+                    }
                     Toast.makeText(getContext(), String.valueOf(bool), Toast.LENGTH_LONG).show();
                 }
             }
@@ -141,6 +166,15 @@ public class ServiceReservationFragment extends Fragment {
             }
         });
     }
+
+    public EventComponentReservationRequest createReservation() {
+        return new EventComponentReservationRequest(_service.category.id, _estimatedBudget,
+                _serviceId, _service.getPrice(), _service.name, _service.description,
+                convertTime(_hoursInputFrom, _minutesInputFrom),
+                convertTime(_hoursInputTo, _minutesInputTo));
+
+    }
+
 
     private void getServiceForReservation() {
         _loader.show(getFragmentManager(), "loading_spinner");

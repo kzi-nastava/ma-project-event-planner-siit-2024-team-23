@@ -415,4 +415,8 @@
         android:id="@+id/to_verify_email"
         app:destination="@+id/veri"/>
 
+    <action
+        android:id="@+id/action_serviceReservation_to_stepTeoFragment"
+        app:destination="@id/stepTwoFragment"/>
+
 </navigation>

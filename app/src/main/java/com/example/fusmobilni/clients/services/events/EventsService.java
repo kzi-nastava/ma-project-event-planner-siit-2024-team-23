@@ -4,6 +4,7 @@ import com.example.fusmobilni.model.event.AgendaActivity;
 import com.example.fusmobilni.requests.events.event.AgendaActivitiesResponse;
 import com.example.fusmobilni.requests.events.event.CreateAgendaActivityRequest;
 import com.example.fusmobilni.requests.events.event.CreateEventRequest;
+import com.example.fusmobilni.requests.events.event.EventComponentReservationRequest;
 import com.example.fusmobilni.requests.items.BuyItemRequest;
 import com.example.fusmobilni.responses.events.EventTypeResponse;
 import com.example.fusmobilni.responses.events.EventTypesResponse;
@@ -75,4 +76,8 @@ public interface EventsService {
 
     @POST("events/{eventId}/agenda-activities")
     Call<AgendaActivityResponse> createAgenda(@Path("eventId") Long eventId, @Body CreateAgendaActivityRequest request);
+
+
+    @POST("events/{eventId}/components/service-reservation")
+    Call<Void> createComponentWithReservation(@Path("eventId") Long eventId, @Body EventComponentReservationRequest request);
 }

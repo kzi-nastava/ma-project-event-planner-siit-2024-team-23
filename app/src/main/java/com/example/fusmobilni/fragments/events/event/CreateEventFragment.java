@@ -115,6 +115,7 @@ public class CreateEventFragment extends Fragment {
                 if(currentItem == _eventAdapter.getItemCount() - 1){
                     _backButton.setVisibility(View.GONE);
                     submitRegistration();
+                    _eventViewModel.eventId = null;
                     return;
                 }
                 _backButton.setVisibility(View.VISIBLE);
