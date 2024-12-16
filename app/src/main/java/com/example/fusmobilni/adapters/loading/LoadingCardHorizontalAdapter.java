@@ -13,29 +13,20 @@ import com.facebook.shimmer.ShimmerFrameLayout;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LoadingCardVerticalAdapter extends RecyclerView.Adapter<LoadingCardVerticalAdapter.LoadingCardVerticalViewHolder> {
+public class LoadingCardHorizontalAdapter extends RecyclerView.Adapter<LoadingCardHorizontalAdapter.LoadingCardHorizontalViewHolder> {
 
     private List<Boolean> _members = new ArrayList<>();
-
-    @NonNull
-    @Override
-    public LoadingCardVerticalViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_loading_card_vertical, parent, false);
-        return new LoadingCardVerticalViewHolder(view);
-
-    }
-
-    public LoadingCardVerticalAdapter() {
+    public LoadingCardHorizontalAdapter() {
         _members = new ArrayList<>();
     }
 
-    public LoadingCardVerticalAdapter(int size) {
+    public LoadingCardHorizontalAdapter(int size) {
         _members = new ArrayList<>();
         for (int i = 0; i < size; ++i) {
             _members.add(true);
         }
+        notifyDataSetChanged();
     }
-
     public void setSize(int size) {
         _members = new ArrayList<>();
         for (int i = 0; i < size; ++i) {
@@ -43,13 +34,15 @@ public class LoadingCardVerticalAdapter extends RecyclerView.Adapter<LoadingCard
         }
         notifyDataSetChanged();
     }
-
-    public void ceaseShimmer(){
-        setSize(0);
-    }
+    @NonNull
     @Override
+    public LoadingCardHorizontalViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_loading_card_horizontal, parent, false);
+        return new LoadingCardHorizontalViewHolder(view);
+    }
 
-    public void onBindViewHolder(@NonNull LoadingCardVerticalViewHolder holder, int position) {
+    @Override
+    public void onBindViewHolder(@NonNull LoadingCardHorizontalViewHolder holder, int position) {
         Boolean bool = _members.get(position);
         if (bool) {
             holder.shimmerFrameLayout.startShimmer();
@@ -63,12 +56,12 @@ public class LoadingCardVerticalAdapter extends RecyclerView.Adapter<LoadingCard
         return _members.size();
     }
 
-    public static class LoadingCardVerticalViewHolder extends RecyclerView.ViewHolder {
+    public static class LoadingCardHorizontalViewHolder extends RecyclerView.ViewHolder {
         private ShimmerFrameLayout shimmerFrameLayout;
 
-        public LoadingCardVerticalViewHolder(@NonNull View itemView) {
+        public LoadingCardHorizontalViewHolder(@NonNull View itemView) {
             super(itemView);
-            shimmerFrameLayout = itemView.findViewById(R.id.shimmer_layout);
+            shimmerFrameLayout = itemView.findViewById(R.id.shimmerLayout);
         }
     }
 }

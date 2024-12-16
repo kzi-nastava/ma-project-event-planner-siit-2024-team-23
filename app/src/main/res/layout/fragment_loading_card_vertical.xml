@@ -1,88 +1,116 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.facebook.shimmer.ShimmerFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_margin="8dp"
-    android:padding="8dp"
-    android:id="@+id/loading_card_layout"
-    android:background="@color/white">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
 
-    <com.google.android.material.card.MaterialCardView
-        android:layout_width="250dp"
-        android:layout_height="match_parent"
-        app:cardBackgroundColor="@color/shimmer_back_ground"
-        app:cardCornerRadius="8dp"
-        app:cardElevation="10dp">
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/shimmer_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:background="@color/white"
             android:padding="8dp">
 
+            <!-- Placeholder for Image -->
             <View
-                android:layout_width="match_parent"
+                android:id="@+id/imagePlaceholder"
+                android:layout_width="0dp"
                 android:layout_height="150dp"
-                android:background="@color/shimmer_placeholder" />
+                android:background="#D3D3D3"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-            <!-- Shimmer for Date -->
+            <!-- Placeholder for Title -->
+            <View
+                android:id="@+id/titlePlaceholder"
+                android:layout_width="150dp"
+                android:layout_height="20dp"
+                android:layout_marginTop="16dp"
+                android:background="#D3D3D3"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/imagePlaceholder" />
+
+            <!-- Placeholder for Description -->
+            <View
+                android:id="@+id/descriptionPlaceholder"
+                android:layout_width="200dp"
+                android:layout_height="15dp"
+                android:layout_marginTop="8dp"
+                android:background="#D3D3D3"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/titlePlaceholder" />
+
+            <!-- Placeholder for Attendees -->
             <LinearLayout
+                android:id="@+id/attendeesContainer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="8dp">
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/descriptionPlaceholder">
 
                 <View
-                    android:layout_width="40dp"
-                    android:layout_height="16dp"
-                    android:background="@color/shimmer_placeholder" />
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginEnd="4dp"
+                    android:background="#D3D3D3" />
 
                 <View
-                    android:layout_width="40dp"
-                    android:layout_height="12dp"
-                    android:layout_marginTop="4dp"
-                    android:background="@color/shimmer_placeholder" />
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginEnd="4dp"
+                    android:background="#D3D3D3" />
+
+                <View
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="#D3D3D3" />
+
+                <View
+                    android:layout_width="80dp"
+                    android:layout_height="15dp"
+                    android:background="#D3D3D3" />
             </LinearLayout>
 
-            <!-- Shimmer for Title -->
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="20dp"
-                android:layout_marginTop="8dp"
-                android:background="@color/shimmer_placeholder" />
-
-            <!-- Shimmer for Description -->
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="16dp"
-                android:layout_marginTop="4dp"
-                android:background="@color/shimmer_placeholder" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="16dp"
-                android:layout_marginTop="4dp"
-                android:background="@color/shimmer_placeholder" />
-
-            <!-- Shimmer for Location -->
+            <!-- Placeholder for Location -->
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/attendeesContainer">
 
                 <View
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:background="@color/shimmer_placeholder" />
+                    android:layout_marginEnd="8dp"
+                    android:background="#D3D3D3" />
 
                 <View
-                    android:layout_width="match_parent"
-                    android:layout_height="16dp"
-                    android:layout_marginStart="8dp"
-                    android:background="@color/shimmer_placeholder" />
+                    android:layout_width="100dp"
+                    android:layout_height="15dp"
+                    android:background="#D3D3D3" />
             </LinearLayout>
-        </LinearLayout>
-    </com.google.android.material.card.MaterialCardView>
-</com.facebook.shimmer.ShimmerFrameLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.facebook.shimmer.ShimmerFrameLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -83,6 +83,7 @@ public class ProductFilterFragment extends BottomSheetDialogFragment {
             initializeApplyButton();
         });
         _binding.servicesFilterResetButton.setOnClickListener(v -> {
+            _viewModel.resetPage();
             _viewModel.resetFilters();
             dismiss();
         });
@@ -103,6 +104,8 @@ public class ProductFilterFragment extends BottomSheetDialogFragment {
     }
 
     private void initializeApplyButton() {
+
+        _viewModel.resetPage();
         CategoryResponse category = _adapter.getSelectedCategory();
         _viewModel.setCategory(category);
 

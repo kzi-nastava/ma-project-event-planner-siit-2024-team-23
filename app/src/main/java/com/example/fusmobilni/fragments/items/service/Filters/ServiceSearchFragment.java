@@ -6,6 +6,8 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -17,6 +19,7 @@ import android.widget.Spinner;
 
 import com.example.fusmobilni.R;
 import com.example.fusmobilni.adapters.items.service.ServiceHorizontalAdapter;
+import com.example.fusmobilni.adapters.loading.LoadingCardHorizontalAdapter;
 import com.example.fusmobilni.clients.ClientUtils;
 import com.example.fusmobilni.databinding.FragmentServiceSearchBinding;
 import com.example.fusmobilni.model.items.service.Service;
@@ -86,6 +89,8 @@ public class ServiceSearchFragment extends Fragment {
         _listView.setAdapter(_servicesAdapter);
 
         _viewModel = new ViewModelProvider(requireParentFragment()).get(ServiceSearchViewModel.class);
+        initializeLoadingCards();
+        _binding.nestedServiceCards.setVisibility(View.GONE);
 
         fetchServices();
         fetchLocations();
@@ -93,10 +98,17 @@ public class ServiceSearchFragment extends Fragment {
         fetchMinMaxPrice();
 
         _viewModel.getServices().observe(getViewLifecycleOwner(), observer -> {
-            _servicesAdapter.setData(_viewModel.getServices().getValue());
+            turnOnShimmer();
+            delayedTask(() -> {
+                _servicesAdapter.setData(_viewModel.getServices().getValue());
+                _listView.setAdapter(_servicesAdapter);
+                turnOffShimmer();
+            });
+
         });
 
         _binding.buttonSearchServices.setOnClickListener(v -> {
+
             _viewModel.setConstraint(_searchView.getEditText().getText().toString());
         });
 
@@ -107,6 +119,10 @@ public class ServiceSearchFragment extends Fragment {
         initalizepaginationspinner();
 
         return view;
+    }
+
+    private void initializeLoadingCards() {
+        _binding.loadingCards.setAdapter(new LoadingCardHorizontalAdapter(_viewModel.getPageSize().getValue()));
     }
 
     private void fetchServices() {
@@ -130,6 +146,33 @@ public class ServiceSearchFragment extends Fragment {
 
             }
         });
+    }
+
+    private void delayedTask(Runnable onComplete) {
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+            _binding.loadingCards.setAdapter(new LoadingCardHorizontalAdapter(_viewModel.getPageSize().getValue()));
+            _binding.nestedLoadingCards.setVisibility(View.VISIBLE);
+            _binding.nestedServiceCards.setVisibility(View.GONE);
+            if (onComplete != null) {
+                onComplete.run();
+            }
+        }, 1000);
+    }
+
+    private void turnOnShimmer() {
+        _binding.loadingCards.setAdapter(new LoadingCardHorizontalAdapter(_viewModel.getPageSize().getValue()));
+        _binding.nestedLoadingCards.setVisibility(View.VISIBLE);
+        _binding.nestedServiceCards.setVisibility(View.GONE);
+    }
+
+    private void turnOffShimmer() {
+
+
+        _binding.loadingCards.setAdapter(new LoadingCardHorizontalAdapter(0));
+        _binding.nestedServiceCards.setVisibility(View.VISIBLE);
+        _binding.nestedLoadingCards.setVisibility(View.GONE);
+
+
     }
 
     private void initalizepaginationspinner() {

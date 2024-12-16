@@ -124,6 +124,8 @@ public class EventFilterFragment extends BottomSheetDialogFragment {
         });
 
         _binding.eventFilterResetButton.setOnClickListener(v -> {
+
+            _viewModel.resetPage();
             _viewModel.resetFilters();
             dismiss();
         });
@@ -136,6 +138,7 @@ public class EventFilterFragment extends BottomSheetDialogFragment {
     }
 
     private void initializeApplyButton() {
+        _viewModel.resetPage();
         EventTypeResponse eventType = _adapter.getSelectedEventTypeByIndex();
 
         _viewModel.setEventType(eventType);

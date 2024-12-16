@@ -36,6 +36,7 @@ public class ProductSearchViewModel extends ViewModel {
     private MutableLiveData<Double> _upperBoundPrice = new MutableLiveData<>(Double.MAX_VALUE);
     private MutableLiveData<Double> _lowerBoundPrice = new MutableLiveData<>(Double.MAX_VALUE);
 
+
     public void doFilter() {
         Map<String, String> queryParams = new HashMap<>();
         if (!_constraint.getValue().isEmpty())
@@ -91,7 +92,9 @@ public class ProductSearchViewModel extends ViewModel {
             }
         });
     }
-
+    public void resetPage(){
+        _currentPage.setValue(0);
+    }
     public void prevPage() {
         if (_currentPage.getValue() > 0) {
             setCurrentPage(_currentPage.getValue() - 1);

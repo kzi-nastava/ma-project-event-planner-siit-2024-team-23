@@ -4,7 +4,10 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +19,7 @@ import com.example.fusmobilni.R;
 import com.example.fusmobilni.adapters.events.event.EventsAdapter;
 import com.example.fusmobilni.adapters.items.product.ProductsAdapter;
 import com.example.fusmobilni.adapters.items.service.ServicesAdapter;
+import com.example.fusmobilni.adapters.loading.LoadingCardVerticalAdapter;
 import com.example.fusmobilni.clients.ClientUtils;
 import com.example.fusmobilni.databinding.FragmentHomeBinding;
 import com.example.fusmobilni.model.event.Event;
@@ -42,21 +46,7 @@ import retrofit2.Response;
  */
 public class HomeFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private FragmentHomeBinding _binding;
-    private List<Event> events;
-    private List<Service> services;
-    private List<Product> products;
-
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    private LinearLayout _eventsContainer;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -64,10 +54,6 @@ public class HomeFragment extends Fragment {
 
     public static HomeFragment newInstance() {
         HomeFragment fragment = new HomeFragment();
-//        Bundle args = new Bundle();
-//        args.putString(ARG_PARAM1, param1);
-//        args.putString(ARG_PARAM2, param2);
-//        fragment.setArguments(args);
         return fragment;
     }
 
@@ -75,8 +61,7 @@ public class HomeFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+
         }
     }
 
@@ -86,12 +71,16 @@ public class HomeFragment extends Fragment {
         _binding = FragmentHomeBinding.inflate(inflater, container, false);
         View view = _binding.getRoot();
 
-        services = fillServices();
-        products = fillProducts();
+
+        initializeLoadingCards();
 
         this._binding.eventsRecycleView.setAdapter(new EventsAdapter(new ArrayList<>()));
         this._binding.servicesRecycleView.setAdapter(new ServicesAdapter(new ArrayList<>()));
         this._binding.productsRecycleView.setAdapter(new ProductsAdapter(new ArrayList<>()));
+
+        _binding.eventsRecycleView.setVisibility(View.GONE);
+        _binding.servicesRecycleView.setVisibility(View.GONE);
+        _binding.productsRecycleView.setVisibility(View.GONE);
 
         this._binding.homeEventsSeeAllButton.setOnClickListener(v -> {
             Navigation.findNavController(view).navigate(R.id.action_homeFragment_to_searchFragment);
@@ -109,16 +98,34 @@ public class HomeFragment extends Fragment {
         fetchProducts();
         return view;
     }
-    private void fetchProducts(){
+
+    private void turnOffShimmer(RecyclerView loadingCardsView, RecyclerView actualCards) {
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+            loadingCardsView.setAdapter(new LoadingCardVerticalAdapter(0));
+            loadingCardsView.setVisibility(View.GONE);
+            actualCards.setVisibility(View.VISIBLE);
+
+        }, 1500); //
+    }
+
+    private void initializeLoadingCards() {
+        _binding.eventsLoadingCards.setAdapter(new LoadingCardVerticalAdapter(5));
+        _binding.serviceLoadingCards.setAdapter(new LoadingCardVerticalAdapter(5));
+        _binding.productLoadingCards.setAdapter(new LoadingCardVerticalAdapter(5));
+    }
+
+    private void fetchProducts() {
         Call<ProductsHomeResponse> call = ClientUtils.productsService.findTopFiveProducts(null);
         call.enqueue(new Callback<>() {
             @Override
             public void onResponse(Call<ProductsHomeResponse> call, Response<ProductsHomeResponse> response) {
-                if(response.isSuccessful()){
+                if (response.isSuccessful()) {
                     List<ProductHomeResponse> list = response.body().products;
                     _binding.productsRecycleView.setAdapter(new ProductsAdapter(list));
+                    turnOffShimmer(_binding.productLoadingCards, _binding.productsRecycleView);
                 }
             }
+
             @Override
             public void onFailure(Call<ProductsHomeResponse> call, Throwable t) {
                 Log.d("tag", t.getMessage());
@@ -126,7 +133,8 @@ public class HomeFragment extends Fragment {
             }
         });
     }
-    private void fetchServices(){
+
+    private void fetchServices() {
         Call<ServicesHomeResponse> call = ClientUtils.serviceOfferingService.findTopFiveServices(null);
         call.enqueue(new Callback<>() {
             @Override
@@ -135,6 +143,7 @@ public class HomeFragment extends Fragment {
 
                     List<ServiceHomeResponse> list = response.body().content;
                     _binding.servicesRecycleView.setAdapter(new ServicesAdapter(list));
+                    turnOffShimmer(_binding.serviceLoadingCards, _binding.servicesRecycleView);
                 }
             }
 
@@ -145,7 +154,8 @@ public class HomeFragment extends Fragment {
             }
         });
     }
-    private void fetchEvents(){
+
+    private void fetchEvents() {
 
         Call<EventsHomeResponse> call = ClientUtils.eventsService.findTopFiveEvents(null);
         call.enqueue(new Callback<>() {
@@ -155,6 +165,7 @@ public class HomeFragment extends Fragment {
                 if (response.isSuccessful()) {
                     List<EventHomeResponse> list = response.body().events;
                     _binding.eventsRecycleView.setAdapter(new EventsAdapter(list));
+                    turnOffShimmer(_binding.eventsLoadingCards, _binding.eventsRecycleView);
                 }
             }
 
@@ -166,38 +177,4 @@ public class HomeFragment extends Fragment {
         });
 
     }
-
-    private ArrayList<Service> fillServices() {
-        ArrayList<Service> s = new ArrayList<>();
-        s.add(new Service("Live band for weddings and parties", "Wedding Band", "New York", "Music"));
-        s.add(new Service("Professional photography for events", "Photography Service", "Los Angeles", "Art"));
-        s.add(new Service("Catering services for all occasions", "Catering Service", "Chicago", "Food"));
-        s.add(new Service("Event decoration and setup", "Decoration Service", "San Francisco", "Art"));
-        s.add(new Service("Spacious venue for corporate events", "Venue Rental", "Miami", "Travel"));
-        return s;
-    }
-
-    private ArrayList<Event> fillEvents() {
-        ArrayList<Event> e = new ArrayList<>();
-        e.add(new Event("Food and Wine Tasting", "12-07-2024", "Napa Valley Vineyard", "Food", "Food"));
-        e.add(new Event("Tech Innovators Conference", "15-08-2024", "Silicon Valley Expo Center", "Tech", "Tech"));
-        e.add(new Event("Autumn Art and Sculpture Exhibition", "18-09-2024", "Paris Art Museum", "Art", "Art"));
-        e.add(new Event("Global Startup Pitch Event", "22-11-2024", "Berlin Startup Hub", "Tech", "Tech"));
-        e.add(new Event("International Film and Documentary Festival", "05-11-2024", "Toronto Film Centre", "Art", "Art"));
-        return e;
-
-    }
-
-    private ArrayList<Product> fillProducts() {
-        ArrayList<Product> p = new ArrayList<>();
-        p.add(new Product("Gourmet Pizza", "A delicious blend of flavors", 15.99, "New York", "Food"));
-        p.add(new Product("Lemonade", "Refreshing and invigorating beverage", 3.49, "California", "Health"));
-        p.add(new Product("Mixed Nuts", "Sweet and savory snacks", 5.99, "Texas", "Sports"));
-        p.add(new Product("Croissants", "Freshly baked pastries", 2.99, "France", "Art"));
-        p.add(new Product("Dark Chocolate Truffles", "Artisanal chocolates", 12.49, "Belgium", "Fashion"));
-
-        return p;
-
-    }
-
 }

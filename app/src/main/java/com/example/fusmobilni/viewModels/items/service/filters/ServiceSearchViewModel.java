@@ -35,6 +35,9 @@ public class ServiceSearchViewModel extends ViewModel {
     private MutableLiveData<Double> _upperBoundPrice = new MutableLiveData<>(Double.MAX_VALUE);
     private MutableLiveData<Double> _lowerBoundPrice = new MutableLiveData<>(Double.MAX_VALUE);
 
+    public void resetPage() {
+        _currentPage.setValue(0);
+    }
     public void doFilter() {
         Map<String, String> queryParams = new HashMap<>();
         if (!_constraint.getValue().isEmpty())
