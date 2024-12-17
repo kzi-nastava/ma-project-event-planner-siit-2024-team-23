@@ -7,6 +7,8 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +18,9 @@ import android.widget.Toast;
 import com.example.fusmobilni.adapters.events.event.forms.EmailInvitationAdapter;
 import com.example.fusmobilni.clients.ClientUtils;
 import com.example.fusmobilni.databinding.FragmentInvitationsBinding;
+import com.example.fusmobilni.fragments.dialogs.FailiureDialogFragment;
+import com.example.fusmobilni.fragments.dialogs.SpinnerDialogFragment;
+import com.example.fusmobilni.fragments.dialogs.SuccessDialogFragment;
 import com.example.fusmobilni.interfaces.FragmentValidation;
 import com.example.fusmobilni.requests.events.invitations.InvitationCreateRequest;
 import com.example.fusmobilni.requests.events.invitations.InvitationsCreateRequest;
@@ -39,6 +44,10 @@ public class InvitationsFragment extends Fragment implements FragmentValidation 
     private TextInputLayout _emailInputField;
     private RecyclerView _recyclerView;
     private InvitationsViewModel _viewModel;
+
+    private SpinnerDialogFragment _loader;
+    private SuccessDialogFragment _success;
+    private FailiureDialogFragment _failiure;
     private static final Pattern EMAIL_PATTERN = Pattern.compile("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$");
 
 
@@ -89,7 +98,27 @@ public class InvitationsFragment extends Fragment implements FragmentValidation 
 
         return view;
     }
+    void openSuccessWindow() {
+        if (_loader != null) {
+            _loader.dismiss();
+        }
+        Bundle args = new Bundle();
+        args.putString("Title", "Success");
+        args.putString("Message", "Invitations set successfully");
+        _success.setArguments(args);
+        _success.show(getParentFragmentManager(), "success_dialog");
+    }
 
+    void openFailiureWindow() {
+        if (_loader != null) {
+            _loader.dismiss();
+        }
+        Bundle args = new Bundle();
+        args.putString("Title", "Failiure");
+        args.putString("Message", "Failed to send invitations");
+        _failiure.setArguments(args);
+        _failiure.show(getParentFragmentManager(), "failiure_dialog");
+    }
     private void createInvitations() {
         List<String> emails = _viewModel.getEmails().getValue();
         List<InvitationCreateRequest> requests = new ArrayList<>();
@@ -97,22 +126,45 @@ public class InvitationsFragment extends Fragment implements FragmentValidation 
             requests.add(new InvitationCreateRequest(email, 1L, "PENDING"));
         }
         InvitationsCreateRequest request = new InvitationsCreateRequest(requests);
+
+        _loader.show(getParentFragmentManager(), "loading_spinner");
+        sendInvitations(request);
+
+    }
+    private void sendInvitations(InvitationsCreateRequest request){
         Call<InvitationsResponse> call = ClientUtils.invitationsService.create(1L, request);
         call.enqueue(new Callback<>() {
             @Override
             public void onResponse(Call<InvitationsResponse> call, Response<InvitationsResponse> response) {
                 if (response.isSuccessful()) {
-                    Toast.makeText(getContext(),"Sent invitations succesfully",Toast.LENGTH_LONG).show();
+                    openSuccessWindow();
+                    new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                        _success.dismiss();
+                    },1500);
+                }else{
+                    openFailiureWindow();
+                    new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                        _failiure.dismiss();
+                    },1500);
                 }
             }
 
             @Override
             public void onFailure(Call<InvitationsResponse> call, Throwable t) {
-                Log.d("ERRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR", t.getMessage());
+                openFailiureWindow();
+                new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                    _failiure.dismiss();
+                },1500);
             }
         });
     }
-
+    private void initializeDialogs() {
+        _loader = new SpinnerDialogFragment();
+        _loader.setCancelable(false);
+        _success = new SuccessDialogFragment();
+        _success.setCancelable(false);
+        _failiure = new FailiureDialogFragment();
+    }
     private boolean validateEmail(String email) {
         return !email.isEmpty() && EMAIL_PATTERN.matcher(email).matches();
     }

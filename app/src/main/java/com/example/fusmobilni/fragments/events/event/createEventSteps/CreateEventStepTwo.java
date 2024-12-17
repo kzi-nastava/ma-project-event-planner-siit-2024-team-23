@@ -97,10 +97,10 @@ public class CreateEventStepTwo extends Fragment  implements FragmentValidation 
         populateData();
         populateCategories();
         Call<EventComponentsResponse> request = ClientUtils.eventsService.findComponentsByEventId(_eventViewModel.eventId);
-        request.enqueue(new Callback<EventComponentsResponse>() {
+        request.enqueue(new Callback<>() {
             @Override
             public void onResponse(Call<EventComponentsResponse> call, Response<EventComponentsResponse> response) {
-                if(response.isSuccessful()){
+                if (response.isSuccessful()) {
                     _suggestedCategoryOfferings.clear();
                     _suggestedCategoryOfferings.addAll(response.body().components);
                     _budgetPlaningAdapter.notifyDataSetChanged();
