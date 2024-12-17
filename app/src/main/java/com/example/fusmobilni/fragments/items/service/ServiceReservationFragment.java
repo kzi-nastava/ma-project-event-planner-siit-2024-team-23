@@ -125,6 +125,8 @@ public class ServiceReservationFragment extends Fragment {
     }
 
     private void makeServiceReservation() {
+
+        _loader.show(getFragmentManager(), "loading_spinner");
         Call<Boolean> call = ClientUtils.serviceReservationService.checkIfReservationTimeTaken(
                 1L,
                 _serviceId,

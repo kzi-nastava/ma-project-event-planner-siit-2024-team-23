@@ -28,6 +28,9 @@ public class ServiceDetailsFragment extends Fragment {
     private FragmentServiceDetailsBinding _binding;
     private ServiceOverviewResponse _service;
     private SpinnerDialogFragment _loader;
+
+    private SuccessDialogFragment _success;
+    private FailiureDialogFragment _failiure;
     private Long eventId;
     private double estimatedBudget;
 
