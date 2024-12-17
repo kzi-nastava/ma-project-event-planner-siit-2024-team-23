@@ -1,9 +1,15 @@
 package com.example.fusmobilni.adapters.items.service;
 
+import static com.example.fusmobilni.adapters.AdapterUtils.convertToUrisFromBase64;
+
+import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -15,6 +21,9 @@ import com.example.fusmobilni.model.items.service.Service;
 import com.example.fusmobilni.responses.items.services.home.ServiceHomeResponse;
 import com.google.android.material.card.MaterialCardView;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.List;
 
 public class ServicesAdapter extends RecyclerView.Adapter<ServicesAdapter.ServicesViewHolder> {
@@ -35,9 +44,14 @@ public class ServicesAdapter extends RecyclerView.Adapter<ServicesAdapter.Servic
         holder.location.setText(service.getLocation().city + ", " + service.getLocation().street + " " + service.getLocation().streetNumber);
         holder.category.setText(service.getCategory().getName());
         holder.price.setText(String.valueOf(service.getPrice()));
-        holder._card.setOnClickListener(v->{
-            Navigation.findNavController(v).navigate(R.id.action_service_card_to_service_details,createBundle(service));
+        holder._card.setOnClickListener(v -> {
+            Navigation.findNavController(v).navigate(R.id.action_service_card_to_service_details_regular, createBundle(service));
         });
+        try {
+            holder.image.setImageURI(convertToUrisFromBase64(holder.image.getContext(), service.getImage()));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
     }
 
@@ -60,6 +74,7 @@ public class ServicesAdapter extends RecyclerView.Adapter<ServicesAdapter.Servic
         public TextView location;
         public TextView price;
         public TextView category;
+        public ImageView image;
         MaterialCardView _card;
 
         public ServicesViewHolder(@NonNull View view) {
@@ -70,6 +85,7 @@ public class ServicesAdapter extends RecyclerView.Adapter<ServicesAdapter.Servic
             this._card = view.findViewById(R.id.serviceVerticalCard);
             this.price = view.findViewById(R.id.price);
             this.category = view.findViewById(R.id.textViewCategory);
+            this.image = view.findViewById(R.id.imageBanner);
 
         }
     }

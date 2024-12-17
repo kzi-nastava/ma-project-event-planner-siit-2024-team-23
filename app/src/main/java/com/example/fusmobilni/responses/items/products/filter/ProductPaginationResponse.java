@@ -8,10 +8,28 @@ public class ProductPaginationResponse {
     public String name;
     public String description;
     public Double price;
-
+    public String image;
     public CategoryResponse category;
 
     public LocationResponse location;
+
+    public ProductPaginationResponse(CategoryResponse category, String description, Long id, String image, LocationResponse location, String name, Double price) {
+        this.category = category;
+        this.description = description;
+        this.id = id;
+        this.image = image;
+        this.location = location;
+        this.name = name;
+        this.price = price;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
 
     public LocationResponse getLocation() {
         return location;

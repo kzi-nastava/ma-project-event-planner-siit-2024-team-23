@@ -1,9 +1,15 @@
 package com.example.fusmobilni.adapters.items.product;
 
+import static com.example.fusmobilni.adapters.AdapterUtils.convertToUrisFromBase64;
+
+import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -14,6 +20,9 @@ import com.example.fusmobilni.model.items.product.Product;
 import com.example.fusmobilni.responses.items.products.filter.ProductPaginationResponse;
 import com.google.android.material.card.MaterialCardView;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,16 +47,17 @@ public class ProductsResponseAdapter extends RecyclerView.Adapter<ProductsRespon
         MaterialCardView _card;
         TextView _location;
         TextView _category;
-
+        ImageView _image;
 
         ProductHorizontalViewHolder(View itemView) {
             super(itemView);
             _name = itemView.findViewById(R.id.textViewProductNameHorizontal);
             _description = itemView.findViewById(R.id.productDescriptionHorizontal);
             _price = itemView.findViewById(R.id.productsHorizontalPrice);
-            _location = itemView.findViewById(R.id.textViewProductLocationHorizontal);
+            _location = itemView.findViewById(R.id.textViewServiceLocationHorizontal);
             _card = itemView.findViewById(R.id.productCardHorizontal);
             _category = itemView.findViewById(R.id.textViewCategory);
+            _image = itemView.findViewById(R.id.productImageBannerHorizontal);
         }
     }
 
@@ -75,10 +85,14 @@ public class ProductsResponseAdapter extends RecyclerView.Adapter<ProductsRespon
         holder._price.setText(String.valueOf(product.getPrice()));
         holder._location.setText(product.getLocation().getCity() + ", " + product.getLocation().getStreet() + " " + product.getLocation().getStreetNumber());
         holder._category.setText(product.getCategory().getName());
+        try {
+            holder._image.setImageURI(convertToUrisFromBase64(holder._image.getContext(),product.getImage()));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
 
     }
-
 
     @Override
     public int getItemCount() {
