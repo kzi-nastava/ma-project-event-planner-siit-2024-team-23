@@ -8,6 +8,7 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,6 +64,7 @@ public class CategoryProposalsPage extends Fragment implements CategoryProposalL
             public void onResponse(Call<GetProposalsResponse> call, Response<GetProposalsResponse> response) {
                 if (response.isSuccessful()) {
                     proposals.clear();
+                    Log.d("Tag", String.valueOf(response.body().proposals.size()));
                     proposals.addAll(response.body().proposals);
                     adapter.notifyDataSetChanged();
                 }
@@ -79,6 +81,29 @@ public class CategoryProposalsPage extends Fragment implements CategoryProposalL
 
         return view;
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Call<GetProposalsResponse> request = ClientUtils.proposalService.findAll();
+        request.enqueue(new Callback<GetProposalsResponse>() {
+            @Override
+            public void onResponse(Call<GetProposalsResponse> call, Response<GetProposalsResponse> response) {
+                if (response.isSuccessful()) {
+                    proposals.clear();
+                    Log.d("Tag", String.valueOf(response.body().proposals.size()));
+                    proposals.addAll(response.body().proposals);
+                    adapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<GetProposalsResponse> call, Throwable t) {
+
+            }
+        });
+    }
+
 
     @Override
     public void onModifyCategory(int position) {

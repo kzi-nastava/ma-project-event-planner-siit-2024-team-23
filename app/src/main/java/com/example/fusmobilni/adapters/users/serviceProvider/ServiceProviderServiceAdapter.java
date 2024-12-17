@@ -1,5 +1,8 @@
 package com.example.fusmobilni.adapters.users.serviceProvider;
 
+import android.content.Context;
+import android.net.Uri;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,23 +16,27 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.fusmobilni.R;
 import com.example.fusmobilni.interfaces.DeleteServiceListener;
 import com.example.fusmobilni.requests.services.GetServiceResponse;
+import com.example.fusmobilni.requests.services.cardView.GetServiceCardResponse;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ServiceProviderServiceAdapter extends RecyclerView.Adapter<ServiceProviderServiceAdapter.ServiceViewHolder> {
 
-    private List<GetServiceResponse> serviceList;
+    private List<GetServiceCardResponse> serviceList;
 
 
     private DeleteServiceListener clickListener;
 
-    public ServiceProviderServiceAdapter(List<GetServiceResponse> services, DeleteServiceListener clickListener) {
+    public ServiceProviderServiceAdapter(List<GetServiceCardResponse> services, DeleteServiceListener clickListener) {
         this.serviceList = services;
         this.clickListener = clickListener;
     }
 
-    public void setData(List<GetServiceResponse> list) {
+    public void setData(List<GetServiceCardResponse> list) {
         this.serviceList = new ArrayList<>(list);
         notifyDataSetChanged();
     }
@@ -44,11 +51,16 @@ public class ServiceProviderServiceAdapter extends RecyclerView.Adapter<ServiceP
 
     @Override
     public void onBindViewHolder(@NonNull ServiceViewHolder holder, int position) {
-        GetServiceResponse service = serviceList.get(position);
-        holder.title.setText(service.getName());
-        holder.description.setText(service.getDescription());
+        GetServiceCardResponse service = serviceList.get(position);
+        holder.title.setText(service.name);
+        holder.description.setText(service.description);
         holder.deleteButton.setOnClickListener(v -> clickListener.onDeleteService(position));
         holder.editButton.setOnClickListener(v -> clickListener.onUpdateService(position));
+        try {
+            holder.image.setImageURI(convertToUrisFromBase64(holder.title.getContext(), service.image));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -56,10 +68,19 @@ public class ServiceProviderServiceAdapter extends RecyclerView.Adapter<ServiceP
         return serviceList.size();
     }
 
-    public void updateServiceList(List<GetServiceResponse> newServiceList) {
-        this.serviceList = new ArrayList<>(newServiceList);
-        notifyDataSetChanged();
+    public static Uri convertToUrisFromBase64(Context context, String base64String) throws IOException {
+        byte[] decodedBytes = Base64.decode(base64String, Base64.DEFAULT);
+
+        File tempFile = File.createTempFile("image_", ".jpg", context.getCacheDir());
+        tempFile.deleteOnExit();
+
+        try (FileOutputStream fos = new FileOutputStream(tempFile)) {
+            fos.write(decodedBytes);
+        }
+
+        return Uri.fromFile(tempFile);
     }
+
 
     public static class ServiceViewHolder extends RecyclerView.ViewHolder {
 

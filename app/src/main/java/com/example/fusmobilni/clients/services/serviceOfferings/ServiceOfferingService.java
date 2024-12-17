@@ -4,6 +4,7 @@ package com.example.fusmobilni.clients.services.serviceOfferings;
 import com.example.fusmobilni.requests.services.GetServicesResponse;
 import com.example.fusmobilni.requests.services.GetServiceResponse;
 import com.example.fusmobilni.requests.services.ServiceFilterRequest;
+import com.example.fusmobilni.requests.services.cardView.GetServicesCardResponse;
 import com.example.fusmobilni.responses.events.filter.EventsPaginationResponse;
 import com.example.fusmobilni.responses.items.CategoriesResponse;
 import com.example.fusmobilni.responses.items.services.ServiceOverviewResponse;
@@ -57,7 +58,10 @@ public interface ServiceOfferingService {
     Call<Void> delete(@Path("id") Long id);
 
     @POST("service-providers/{id}/services")
-    Call<GetServicesResponse> findAllByServiceProvider(@Path("id") Long id, @Body ServiceFilterRequest request);
+    Call<GetServicesCardResponse> findAllByServiceProvider(@Path("id") Long id, @Body ServiceFilterRequest request);
+
+    @GET("services/{id}")
+    Call<GetServiceResponse> findById(@Path("id") long id);
 
     @GET("services/top-five-services")
     Call<ServicesHomeResponse> findTopFiveServices(@Query("city") String city);

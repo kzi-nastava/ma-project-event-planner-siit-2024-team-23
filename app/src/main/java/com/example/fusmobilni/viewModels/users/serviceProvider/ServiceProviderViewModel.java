@@ -7,6 +7,8 @@ import com.example.fusmobilni.clients.ClientUtils;
 import com.example.fusmobilni.requests.services.GetServiceResponse;
 import com.example.fusmobilni.requests.services.GetServicesResponse;
 import com.example.fusmobilni.requests.services.ServiceFilterRequest;
+import com.example.fusmobilni.requests.services.cardView.GetServiceCardResponse;
+import com.example.fusmobilni.requests.services.cardView.GetServicesCardResponse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +19,7 @@ import retrofit2.Response;
 
 public class ServiceProviderViewModel extends ViewModel {
 
-    private final MutableLiveData<List<GetServiceResponse>> services = new MutableLiveData<List<GetServiceResponse>>();
+    private final MutableLiveData<List<GetServiceCardResponse>> services = new MutableLiveData<List<GetServiceCardResponse>>();
     private final MutableLiveData<String> category = new MutableLiveData<>("");
     private final MutableLiveData<String> eventType = new MutableLiveData<>("");
 
@@ -30,7 +32,7 @@ public class ServiceProviderViewModel extends ViewModel {
 
     private final MutableLiveData<Boolean> isAvailabilityEnabled = new MutableLiveData<>(false);
 
-    public MutableLiveData<List<GetServiceResponse>> getServices() {
+    public MutableLiveData<List<GetServiceCardResponse>> getServices() {
         return services;
     }
 
@@ -44,15 +46,15 @@ public class ServiceProviderViewModel extends ViewModel {
                 searchConstraint.getValue(), lowerBoundaryPrice.getValue(), upperBoundaryPrice.getValue(),
                 categoryId.getValue(), eventTypeIds, isAvailabilityEnabled.getValue(), availability.getValue()
         );
-        Call<GetServicesResponse> response = ClientUtils.serviceOfferingService.findAllByServiceProvider(2L, request);
-        response.enqueue(new Callback<GetServicesResponse>() {
+        Call<GetServicesCardResponse> response = ClientUtils.serviceOfferingService.findAllByServiceProvider(2L, request);
+        response.enqueue(new Callback<GetServicesCardResponse>() {
             @Override
-            public void onResponse(Call<GetServicesResponse> call, Response<GetServicesResponse> response) {
+            public void onResponse(Call<GetServicesCardResponse> call, Response<GetServicesCardResponse> response) {
                 services.setValue(response.body().services);
             }
 
             @Override
-            public void onFailure(Call<GetServicesResponse> call, Throwable t) {
+            public void onFailure(Call<GetServicesCardResponse> call, Throwable t) {
 
             }
         });
@@ -70,7 +72,7 @@ public class ServiceProviderViewModel extends ViewModel {
         applyFilters();
     }
 
-    public void setData(List<GetServiceResponse> services) {
+    public void setData(List<GetServiceCardResponse> services) {
         this.services.setValue(services);
     }
 

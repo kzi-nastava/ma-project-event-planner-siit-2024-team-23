@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,8 @@ import com.example.fusmobilni.interfaces.DeleteServiceListener;
 import com.example.fusmobilni.requests.services.GetServiceResponse;
 import com.example.fusmobilni.requests.services.GetServicesResponse;
 import com.example.fusmobilni.requests.services.ServiceFilterRequest;
+import com.example.fusmobilni.requests.services.cardView.GetServiceCardResponse;
+import com.example.fusmobilni.requests.services.cardView.GetServicesCardResponse;
 import com.example.fusmobilni.viewModels.users.serviceProvider.ServiceProviderViewModel;
 import com.example.fusmobilni.viewModels.items.service.ServiceViewModel;
 
@@ -43,7 +46,7 @@ public class ServiceView extends Fragment implements DeleteServiceListener {
     private Handler handler = new Handler();
     private ServiceProviderServiceAdapter serviceAdapter;
     private View deleteModal;
-    private List<GetServiceResponse> services = new ArrayList<>();
+    private List<GetServiceCardResponse> services = new ArrayList<>();
     private ServiceProviderViewModel viewModel;
 
     public ServiceView() {
@@ -66,21 +69,22 @@ public class ServiceView extends Fragment implements DeleteServiceListener {
         View view = binding.getRoot();
         requireActivity().getViewModelStore().clear();
         viewModel = new ViewModelProvider(requireActivity()).get(ServiceProviderViewModel.class);
-        Call<GetServicesResponse> response = ClientUtils.serviceOfferingService.findAllByServiceProvider(2L,new ServiceFilterRequest());
-        response.enqueue(new Callback<GetServicesResponse>() {
+        setUpAdapter();
+        viewModel.setData(services);
+        Call<GetServicesCardResponse> response = ClientUtils.serviceOfferingService.findAllByServiceProvider(2L,new ServiceFilterRequest());
+        response.enqueue(new Callback<GetServicesCardResponse>() {
             @Override
-            public void onResponse(Call<GetServicesResponse> call, Response<GetServicesResponse> response) {
+            public void onResponse(Call<GetServicesCardResponse> call, Response<GetServicesCardResponse> response) {
                 services = response.body().services;
-                setUpAdapter();
+                Log.d("Tag", "idemo servicei se ucitavaju");
+                serviceAdapter.notifyDataSetChanged();
                 viewModel.setData(services);
             }
 
             @Override
-            public void onFailure(Call<GetServicesResponse> call, Throwable t) {
+            public void onFailure(Call<GetServicesCardResponse> call, Throwable t) {
             }
         });
-        setUpAdapter();
-        viewModel.setData(services);
 
         binding.floatingActionButton.setOnClickListener(v -> {
             Navigation.findNavController(view).navigate(R.id.action_serviceView_toServiceCreationStepOne);
@@ -119,7 +123,7 @@ public class ServiceView extends Fragment implements DeleteServiceListener {
         });
 
         confirmButton.setOnClickListener(v -> {
-            Long id = this.services.get(position).getId();
+            Long id = this.services.get(position).id;
             Call<Void> response = ClientUtils.serviceOfferingService.delete(id);
             response.enqueue(new Callback<Void>() {
                 @Override
@@ -142,10 +146,22 @@ public class ServiceView extends Fragment implements DeleteServiceListener {
 
     @Override
     public void onUpdateService(int position) {
-        GetServiceResponse service = services.get(position);
-        ServiceViewModel viewModel = new ViewModelProvider(requireActivity()).get(ServiceViewModel.class);
-        viewModel.populate(service, getContext());
-        Navigation.findNavController(binding.getRoot()).navigate(R.id.action_serviceView_toServiceCreationStepOne);
+        GetServiceCardResponse service = services.get(position);
+        Call<GetServiceResponse> findById = ClientUtils.serviceOfferingService.findById(service.id);
+        findById.enqueue(new Callback<GetServiceResponse>() {
+            @Override
+            public void onResponse(Call<GetServiceResponse> call, Response<GetServiceResponse> response) {
+                if (response.isSuccessful()) {
+                    ServiceViewModel viewModel = new ViewModelProvider(requireActivity()).get(ServiceViewModel.class);
+                    viewModel.populate(response.body(), getContext());
+                    Navigation.findNavController(binding.getRoot()).navigate(R.id.action_serviceView_toServiceCreationStepOne);
+                }
+            }
+            @Override
+            public void onFailure(Call<GetServiceResponse> call, Throwable t) {
+
+            }
+        });
     }
 
     private void setUpAdapter() {

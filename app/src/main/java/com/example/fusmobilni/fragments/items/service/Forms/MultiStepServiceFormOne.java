@@ -224,7 +224,7 @@ public class MultiStepServiceFormOne extends Fragment {
             binding.descriptionFieldStep1.setError("Description is required");
             return false;
         }
-        if (viewModel.getCategory().getValue().isEmpty()) {
+        if (viewModel.getCategory().getValue().isEmpty() && !viewModel.getIsUpdating().getValue()) {
             binding.dropdownMenuStep1.setError("Category is required");
             binding.dropdownMenuStep1.setErrorEnabled(true);
             return false;
@@ -238,12 +238,12 @@ public class MultiStepServiceFormOne extends Fragment {
         if (Objects.equals(viewModel.getCategory().getValue(), "Custom")) {
             if (viewModel.getCustomCategoryName().getValue().isEmpty()) {
                 binding.customCategoryNameLabel.setErrorEnabled(true);
-                binding.customCategoryNameLabel.setError("Reuired");
+                binding.customCategoryNameLabel.setError("Required");
                 return false;
             }
             if (viewModel.getCustomCategoryDescription().getValue().isEmpty()) {
                 binding.customCategoryDescriptionLabel.setErrorEnabled(true);
-                binding.customCategoryDescriptionLabel.setError("Reuired");
+                binding.customCategoryDescriptionLabel.setError("Rqeuired");
                 return false;
             }
         }
