@@ -51,7 +51,8 @@ public class EventViewModel extends ViewModel {
             request.enqueue(new Callback<GetEventResponse>() {
                 @Override
                 public void onResponse(Call<GetEventResponse> call, Response<GetEventResponse> response) {
-                    eventId = response.body().getId();
+                    if (response.isSuccessful())
+                     eventId = response.body().getId();
                 }
 
                 @Override

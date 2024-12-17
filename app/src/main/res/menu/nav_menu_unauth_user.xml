@@ -31,7 +31,10 @@
                     android:id="@+id/event_invitations_fragment"
                     android:icon="@drawable/plus_icon"
                     android:title="Event Invitations"/>
-
+                <item
+                    android:id="@id/eventOrganizerEventDetailsFragment"
+                    android:icon="@drawable/ic_home_big_black"
+                    android:title="Home" />
             </menu>
 
         </item>
