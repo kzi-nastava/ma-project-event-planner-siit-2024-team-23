@@ -21,6 +21,7 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import com.example.fusmobilni.R;
+import com.example.fusmobilni.clients.ClientUtils;
 import com.example.fusmobilni.core.CustomSharedPrefs;
 import com.example.fusmobilni.databinding.ActivityHomeBinding;
 import com.example.fusmobilni.model.users.User;
@@ -43,7 +44,12 @@ public class HomeActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+
         super.onCreate(savedInstanceState);
+
+        ClientUtils.initalize(getApplicationContext());
+
         _binding = ActivityHomeBinding.inflate(getLayoutInflater());
         setContentView(_binding.getRoot());
         _drawer = _binding.drawerLayout;

@@ -59,6 +59,9 @@ public class FastRegisterActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        ClientUtils.initalize(getApplicationContext());
+
         _binding = ActivityFastRegisterBinding.inflate(getLayoutInflater());
         setContentView(_binding.getRoot());
         getSupportActionBar();

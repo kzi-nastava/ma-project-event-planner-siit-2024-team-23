@@ -34,6 +34,9 @@ public class VerifyEmailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        ClientUtils.initalize(getApplicationContext());
+
         _binding = ActivityVerifyEmailBinding.inflate(getLayoutInflater());
         setContentView(R.layout.activity_verify_email);
         getSupportActionBar();
