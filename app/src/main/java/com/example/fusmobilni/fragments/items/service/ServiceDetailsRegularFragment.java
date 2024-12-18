@@ -1,5 +1,7 @@
 package com.example.fusmobilni.fragments.items.service;
 
+import static com.example.fusmobilni.adapters.AdapterUtils.convertToUrisFromBase64;
+
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -8,6 +10,7 @@ import androidx.navigation.Navigation;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.fusmobilni.R;
 import com.example.fusmobilni.clients.ClientUtils;
@@ -17,6 +20,8 @@ import com.example.fusmobilni.fragments.dialogs.SpinnerDialogFragment;
 import com.example.fusmobilni.fragments.dialogs.SuccessDialogFragment;
 import com.example.fusmobilni.responses.items.services.ServiceOverviewResponse;
 import com.example.fusmobilni.responses.location.LocationResponse;
+
+import java.io.IOException;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -65,7 +70,7 @@ public class ServiceDetailsRegularFragment extends Fragment {
         // Inflate the layout for this fragment
         _binding = FragmentServiceDetailsRegularBinding.inflate(inflater, container, false);
         View root = _binding.getRoot();
-        _serviceId = getArguments().getLong("productId");
+        _serviceId = getArguments().getLong("serviceId");
         initializeDialogs();
 
         getServiceForOverview();
@@ -87,7 +92,11 @@ public class ServiceDetailsRegularFragment extends Fragment {
         _binding.textViewServiceDescriptionDetails.setText(_service.getDescription());
         _binding.price.setText(String.valueOf(_service.getPrice()));
         _binding.imageView5.setImageResource(R.drawable.person);
+        try {
+            _binding.imageView4.setImageURI(convertToUrisFromBase64(getContext(), _service.getImage()));
+        } catch (IOException e) {
 
+        }
 
         initializeFavoriteButton();
     }
@@ -127,7 +136,7 @@ public class ServiceDetailsRegularFragment extends Fragment {
 
             @Override
             public void onFailure(Call<ServiceOverviewResponse> call, Throwable t) {
-
+                Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
 

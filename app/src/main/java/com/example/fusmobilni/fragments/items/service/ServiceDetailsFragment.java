@@ -1,5 +1,7 @@
 package com.example.fusmobilni.fragments.items.service;
 
+import static com.example.fusmobilni.adapters.AdapterUtils.convertToUrisFromBase64;
+
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -18,6 +20,8 @@ import com.example.fusmobilni.fragments.dialogs.SuccessDialogFragment;
 import com.example.fusmobilni.model.items.service.Service;
 import com.example.fusmobilni.responses.items.services.ServiceOverviewResponse;
 import com.example.fusmobilni.responses.location.LocationResponse;
+
+import java.io.IOException;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -83,8 +87,13 @@ public class ServiceDetailsFragment extends Fragment {
         _binding.imageView5.setImageResource(R.drawable.person);
 
         _binding.bookServiceButton.setOnClickListener(v -> {
-            Navigation.findNavController(v).navigate(R.id.action_service_details_to_service_reservation,createBundle());
+            Navigation.findNavController(v).navigate(R.id.action_service_details_to_service_reservation, createBundle());
         });
+        try {
+            _binding.imageView4.setImageURI(convertToUrisFromBase64(getContext(), _service.getImage()));
+        } catch (IOException e) {
+
+        }
 
         initializeFavoriteButton();
     }
