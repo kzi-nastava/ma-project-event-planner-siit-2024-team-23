@@ -11,11 +11,12 @@ public class ServiceOverviewResponse {
     public String description;
     public String specificities;
     public Double price;
+    public String image;
     public CategoryResponse category;
     public ServiceProviderResponse provider;
     public List<ItemGradeResponse> grades;
 
-    public ServiceOverviewResponse(CategoryResponse category, String description, List<ItemGradeResponse> grades, String name, Double price, ServiceProviderResponse provider, String specificities) {
+    public ServiceOverviewResponse(CategoryResponse category, String description, List<ItemGradeResponse> grades, String name, Double price, ServiceProviderResponse provider, String specificities,String image) {
         this.category = category;
         this.description = description;
         this.grades = grades;
@@ -23,6 +24,15 @@ public class ServiceOverviewResponse {
         this.price = price;
         this.provider = provider;
         this.specificities = specificities;
+        this.image = image;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 
     public CategoryResponse getCategory() {

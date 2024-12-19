@@ -8,17 +8,26 @@ public class ServicePaginationResponse {
     public String name;
     public String description;
     public Double price;
-
+    public String image;
     public CategoryResponse category;
     public LocationResponse location;
 
-    public ServicePaginationResponse(CategoryResponse category, String description, Long id, LocationResponse location, String name, Double price) {
+    public ServicePaginationResponse(CategoryResponse category, String description, Long id, LocationResponse location, String name, Double price,String image) {
         this.category = category;
         this.description = description;
         this.id = id;
         this.location = location;
         this.name = name;
         this.price = price;
+        this.image = image;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 
     public CategoryResponse getCategory() {

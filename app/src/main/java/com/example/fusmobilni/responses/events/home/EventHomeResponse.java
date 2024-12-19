@@ -11,9 +11,10 @@ public class EventHomeResponse {
     public String description;
     public LocationResponse location;
     public EventTypeResponse type;
+    public String image;
     public int numberGoing;
 
-    public EventHomeResponse(String date, String description, Long id, boolean isPublic, LocationResponse location, int numberGoing, String title, EventTypeResponse type) {
+    public EventHomeResponse(String date, String description, Long id, boolean isPublic, LocationResponse location, int numberGoing, String title, EventTypeResponse type, String image) {
         this.date = date;
         this.description = description;
         this.id = id;
@@ -21,7 +22,16 @@ public class EventHomeResponse {
         this.location = location;
         this.numberGoing = numberGoing;
         this.title = title;
+        this.image = image;
         this.type = type;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 
     public String getDate() {

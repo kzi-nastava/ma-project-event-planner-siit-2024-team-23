@@ -1,5 +1,7 @@
 package com.example.fusmobilni.adapters.events.event;
 
+import static com.example.fusmobilni.adapters.AdapterUtils.convertToUrisFromBase64;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +15,7 @@ import com.example.fusmobilni.R;
 import com.example.fusmobilni.responses.events.home.EventHomeResponse;
 import com.example.fusmobilni.responses.events.home.EventsHomeResponse;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -64,6 +67,11 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
         holder.monthYear.setText(MonthMap.get(dateParts[1]) + " " + dateParts[0]);
         holder.location.setText(event.getLocation().city + ", " + event.getLocation().street + " " + event.getLocation().streetNumber);
         holder.description.setText(event.getDescription());
+        try {
+            holder._image.setImageURI(convertToUrisFromBase64(holder._image.getContext(),event.getImage()));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         int numberGoing = event.getNumberGoing();
 
         View[] attendees = {holder.attendieOne, holder.attendieTwo, holder.attendieThree};
@@ -89,11 +97,13 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
         public TextView day;
         public TextView monthYear;
 
-        public TextView location;public TextView numberGoing;
+        public TextView location;
+        public TextView numberGoing;
         public ImageView attendieOne;
         public ImageView attendieTwo;
         public ImageView attendieThree;
         public TextView description;
+        public ImageView _image;
 
         public EventsViewHolder(@NonNull View itemView) {
 
@@ -107,6 +117,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
             attendieTwo = itemView.findViewById(R.id.attendieTwo);
             attendieThree = itemView.findViewById(R.id.attendieThree);
             description = itemView.findViewById(R.id.textViewEventDescription);
+            _image = itemView.findViewById(R.id.imageBanner);
         }
     }
 

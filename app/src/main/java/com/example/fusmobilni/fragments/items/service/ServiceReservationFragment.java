@@ -1,5 +1,7 @@
 package com.example.fusmobilni.fragments.items.service;
 
+import static com.example.fusmobilni.adapters.AdapterUtils.convertToUrisFromBase64;
+
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -26,6 +28,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.timepicker.MaterialTimePicker;
 import com.google.android.material.timepicker.TimeFormat;
 
+import java.io.IOException;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
@@ -98,12 +101,15 @@ public class ServiceReservationFragment extends Fragment {
 
         initializeTimePicker(_hoursInputFrom, _minutesInputFrom, _binding.buttonPickTimeFrom);
         initializeTimePicker(_hoursInputTo, _minutesInputTo, _binding.buttonPickTimeTo);
+        try {
+            _binding.imageView6.setImageURI(convertToUrisFromBase64(getContext(), _service.getImage()));
+        } catch (IOException e) {
 
+        }
         _binding.buttonApplyReservation.setOnClickListener(v -> {
-            if(checkTimeValid()){
+            if (checkTimeValid()) {
                 checkTimeForReservation();
-            }
-            else{
+            } else {
                 openFailiureWindow("Time from must be before time to");
             }
         });

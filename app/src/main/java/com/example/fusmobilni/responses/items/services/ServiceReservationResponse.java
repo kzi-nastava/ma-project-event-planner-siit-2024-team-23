@@ -7,14 +7,24 @@ public class ServiceReservationResponse {
     public String name;
     public String description;
     public Double price;
+    public String image;
     public CategoryResponse category;
 
-    public ServiceReservationResponse(CategoryResponse category, String description, Long id, String name, Double price) {
+    public ServiceReservationResponse(CategoryResponse category, String description, Long id, String name, Double price,String image) {
         this.category = category;
         this.description = description;
         this.id = id;
         this.name = name;
         this.price = price;
+        this.image = image;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 
     public CategoryResponse getCategory() {

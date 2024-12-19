@@ -264,6 +264,9 @@
         android:id="@+id/action_service_card_to_service_details"
         app:destination="@id/serviceDetailsFragment"/>
     <action
+        android:id="@+id/action_service_card_to_service_details_regular"
+        app:destination="@+id/serviceDetailsFragmentRegular"/>
+    <action
         android:id="@+id/action_service_details_to_service_reservation"
         app:destination="@id/serviceReservationFragment"/>
     <fragment
@@ -285,6 +288,11 @@
     <fragment
         android:id="@+id/serviceDetailsFragment"
         android:name="com.example.fusmobilni.fragments.items.service.ServiceDetailsFragment"
+        android:label="">
+    </fragment>
+    <fragment
+        android:id="@+id/serviceDetailsFragmentRegular"
+        android:name="com.example.fusmobilni.fragments.items.service.ServiceDetailsRegularFragment"
         android:label="">
     </fragment>
     <fragment

@@ -12,6 +12,27 @@ public class EventPaginationResponse {
     public LocationResponse location;
     public EventTypeResponse type;
     public int numberGoing;
+    public String image;
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public EventPaginationResponse(String date, String description, Long id, String image, boolean isPublic, LocationResponse location, int numberGoing, String title, EventTypeResponse type) {
+        this.date = date;
+        this.description = description;
+        this.id = id;
+        this.image = image;
+        this.isPublic = isPublic;
+        this.location = location;
+        this.numberGoing = numberGoing;
+        this.title = title;
+        this.type = type;
+    }
 
     public String getDate() {
         return date;

@@ -8,17 +8,27 @@ public class ServiceHomeResponse {
     String name;
     String description;
     Double price;
-
+    String image;
     CategoryResponse category;
     LocationResponse location;
 
-    public ServiceHomeResponse(CategoryResponse category, String description, Long id, LocationResponse location, String name, Double price) {
+
+    public ServiceHomeResponse(CategoryResponse category, String description, Long id, LocationResponse location, String name, Double price, String image) {
         this.category = category;
         this.description = description;
         this.id = id;
         this.location = location;
         this.name = name;
         this.price = price;
+        this.image = image;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 
     public CategoryResponse getCategory() {
