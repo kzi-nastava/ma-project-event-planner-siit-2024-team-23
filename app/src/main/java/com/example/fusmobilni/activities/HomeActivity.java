@@ -21,6 +21,7 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import com.example.fusmobilni.R;
+import com.example.fusmobilni.clients.ClientUtils;
 import com.example.fusmobilni.core.CustomSharedPrefs;
 import com.example.fusmobilni.databinding.ActivityHomeBinding;
 import com.example.fusmobilni.model.users.User;
@@ -43,7 +44,12 @@ public class HomeActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+
         super.onCreate(savedInstanceState);
+
+        ClientUtils.initalize(CustomSharedPrefs.getInstance(getApplicationContext()));
+
         _binding = ActivityHomeBinding.inflate(getLayoutInflater());
         setContentView(_binding.getRoot());
         _drawer = _binding.drawerLayout;
@@ -51,7 +57,7 @@ public class HomeActivity extends AppCompatActivity {
         _topToolbar = _binding.activityHomeBase.topAppBar;
 
         // get logged in user
-        CustomSharedPrefs sharedPrefs = new CustomSharedPrefs(this);
+        CustomSharedPrefs sharedPrefs = CustomSharedPrefs.getInstance();
         User user = sharedPrefs.getUser();
 
         setupDrawerMenu(user != null && user.getRole() != null ? user.getRole() : UserType.UNAUTHENTICATED_USER);
@@ -92,7 +98,7 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        CustomSharedPrefs sharedPrefs = new CustomSharedPrefs(this);
+        CustomSharedPrefs sharedPrefs = CustomSharedPrefs.getInstance();
         User user = sharedPrefs.getUser();
         setupDrawerMenu(user != null && user.getRole() != null ? user.getRole() : UserType.UNAUTHENTICATED_USER);
     }
@@ -131,7 +137,7 @@ public class HomeActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.toolbar_menu, menu);
 
         MenuItem profileItem = menu.findItem(R.id.login_activity);
-        CustomSharedPrefs sharedPrefs = new CustomSharedPrefs(this);
+        CustomSharedPrefs sharedPrefs = CustomSharedPrefs.getInstance();
         User user = sharedPrefs.getUser();
 
         if (user != null) {
@@ -157,7 +163,7 @@ public class HomeActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == R.id.login_activity) {// Retrieve the login status from SharedPreferences
-            CustomSharedPrefs sharedPrefs = new CustomSharedPrefs(this);
+            CustomSharedPrefs sharedPrefs = CustomSharedPrefs.getInstance();
             User user = sharedPrefs.getUser();
             if (user != null) {
                 // If logged in, navigate to the profile fragment

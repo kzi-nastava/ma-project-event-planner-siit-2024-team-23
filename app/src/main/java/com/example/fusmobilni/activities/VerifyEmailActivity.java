@@ -13,6 +13,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.fusmobilni.R;
 import com.example.fusmobilni.clients.ClientUtils;
+import com.example.fusmobilni.core.CustomSharedPrefs;
 import com.example.fusmobilni.databinding.ActivityVerifyEmailBinding;
 import com.example.fusmobilni.fragments.dialogs.FailiureDialogFragment;
 import com.example.fusmobilni.fragments.dialogs.SpinnerDialogFragment;
@@ -34,6 +35,9 @@ public class VerifyEmailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        ClientUtils.initalize(CustomSharedPrefs.getInstance(getApplicationContext()));
+
         _binding = ActivityVerifyEmailBinding.inflate(getLayoutInflater());
         setContentView(R.layout.activity_verify_email);
         getSupportActionBar();

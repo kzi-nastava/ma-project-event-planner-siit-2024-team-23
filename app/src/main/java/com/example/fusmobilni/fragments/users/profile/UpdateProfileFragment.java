@@ -40,6 +40,7 @@ public class UpdateProfileFragment extends Fragment {
     public UpdateProfileFragment() {
         // Required empty public constructor
     }
+
     public static UpdateProfileFragment newInstance() {
         return new UpdateProfileFragment();
     }
@@ -58,7 +59,7 @@ public class UpdateProfileFragment extends Fragment {
         _updateProfileViewModel = new ViewModelProvider(requireActivity()).get(UpdateProfileViewModel.class);
         _viewPager = _binding.viewPager;
         _signUpLayout = _binding.signUpLayout;
-        User user = new CustomSharedPrefs(requireContext()).getUser();
+        User user = CustomSharedPrefs.getInstance().getUser();
         _updateProfileViewModel.setUser(user);
 
         _viewPager.setUserInputEnabled(false);
@@ -78,7 +79,7 @@ public class UpdateProfileFragment extends Fragment {
 
             _viewPager.setCurrentItem(_viewPager.getCurrentItem());
             _signUpLayout.setVisibility(View.VISIBLE);
-            if(_viewPager.getCurrentItem() == _adapter.getItemCount() - 1){
+            if (_viewPager.getCurrentItem() == _adapter.getItemCount() - 1) {
                 _nextButton.setText(R.string.finish);
             }
 
@@ -91,7 +92,7 @@ public class UpdateProfileFragment extends Fragment {
                 _viewPager.setCurrentItem(_viewPager.getCurrentItem() - 1);
                 _backButton.setVisibility(View.VISIBLE);
             }
-            if (_viewPager.getCurrentItem() == 0){
+            if (_viewPager.getCurrentItem() == 0) {
                 _backButton.setVisibility(View.GONE);
             }
             _nextButton.setText(R.string.next);
@@ -101,14 +102,13 @@ public class UpdateProfileFragment extends Fragment {
     }
 
 
-
     private void nextButtonClick() {
         int currentItem = _viewPager.getCurrentItem();
         if (currentItem <= _adapter.getItemCount() - 1) {
             Fragment currentFragment = _fragments.get(currentItem);
 
-            if (((FragmentValidation) currentFragment).validate()){
-                if(currentItem == _adapter.getItemCount() - 1){
+            if (((FragmentValidation) currentFragment).validate()) {
+                if (currentItem == _adapter.getItemCount() - 1) {
                     _backButton.setVisibility(View.GONE);
                     submitRegistration();
                     return;
@@ -116,7 +116,7 @@ public class UpdateProfileFragment extends Fragment {
                 _backButton.setVisibility(View.VISIBLE);
                 _viewPager.setCurrentItem(currentItem + 1);
                 // if we are on fragment change btn text
-                if(_viewPager.getCurrentItem() == _adapter.getItemCount() - 1){
+                if (_viewPager.getCurrentItem() == _adapter.getItemCount() - 1) {
                     _nextButton.setText(R.string.finish);
                 }
             }

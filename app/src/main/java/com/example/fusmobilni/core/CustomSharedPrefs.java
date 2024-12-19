@@ -10,28 +10,47 @@ public class CustomSharedPrefs {
     private static final String PREFS_NAME = "app_prefs";
     private final SharedPreferences sharedPreferences;
     private final Gson gson;
+    private static volatile CustomSharedPrefs instance;
 
-    public CustomSharedPrefs(Context context){
+    public static CustomSharedPrefs getInstance(Context context) {
+        if (instance == null) {
+            synchronized (CustomSharedPrefs.class) {
+                if (instance == null) {
+                    instance = new CustomSharedPrefs(context.getApplicationContext());
+                }
+            }
+        }
+        return instance;
+
+    }
+
+    public static CustomSharedPrefs getInstance() {
+        return instance;
+    }
+
+    private CustomSharedPrefs(Context context) {
         sharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         gson = new Gson();
     }
-    public void saveUser(User user){
+
+    public void saveUser(User user) {
         String userJson = gson.toJson(user);
         saveString("user", userJson);
     }
-    public User getUser(){
+
+    public User getUser() {
         String userJson = getString("user", null);
-        if(userJson != null){
+        if (userJson != null) {
             return gson.fromJson(userJson, User.class);
         }
         return null;
     }
 
-    public void saveString(String key, String value){
+    public void saveString(String key, String value) {
         sharedPreferences.edit().putString(key, value).apply();
     }
 
-    public String getString(String key, String defaultValue){
+    public String getString(String key, String defaultValue) {
         return sharedPreferences.getString(key, defaultValue);
     }
 

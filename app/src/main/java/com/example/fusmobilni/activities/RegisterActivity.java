@@ -14,6 +14,8 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.fusmobilni.R;
 import com.example.fusmobilni.adapters.users.register.RegistrationAdapter;
+import com.example.fusmobilni.clients.ClientUtils;
+import com.example.fusmobilni.core.CustomSharedPrefs;
 import com.example.fusmobilni.databinding.ActivityRegisterBinding;
 import com.example.fusmobilni.fragments.users.register.regular.RoleSelectionFragment;
 import com.example.fusmobilni.interfaces.FragmentValidation;
@@ -36,6 +38,9 @@ public class RegisterActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        ClientUtils.initalize(CustomSharedPrefs.getInstance(getApplicationContext()));
+
         ActivityRegisterBinding binding = ActivityRegisterBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         getSupportActionBar();

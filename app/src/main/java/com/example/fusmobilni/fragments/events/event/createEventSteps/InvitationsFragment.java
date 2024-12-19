@@ -71,6 +71,8 @@ public class InvitationsFragment extends Fragment implements FragmentValidation 
         _binding = FragmentInvitationsBinding.inflate(inflater, container, false);
         View view = _binding.getRoot();
 
+        initializeDialogs();
+
         _emailInputField = _binding.textField;
         _invitationAdapter = new EmailInvitationAdapter();
         _viewModel = new ViewModelProvider(requireActivity()).get(InvitationsViewModel.class);

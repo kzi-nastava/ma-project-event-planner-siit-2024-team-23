@@ -12,6 +12,8 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
 import com.example.fusmobilni.R;
+import com.example.fusmobilni.clients.ClientUtils;
+import com.example.fusmobilni.core.CustomSharedPrefs;
 import com.example.fusmobilni.databinding.ActivityLoginBinding;
 import com.example.fusmobilni.viewModels.users.login.LoginViewModel;
 import java.util.Objects;
@@ -24,6 +26,9 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        ClientUtils.initalize(CustomSharedPrefs.getInstance(getApplicationContext()));
+
         _binding = ActivityLoginBinding.inflate(getLayoutInflater());
         _loginViewModel = new ViewModelProvider(this).get(LoginViewModel.class);
 
