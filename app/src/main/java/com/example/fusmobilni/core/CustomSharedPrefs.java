@@ -10,14 +10,18 @@ public class CustomSharedPrefs {
     private static final String PREFS_NAME = "app_prefs";
     private final SharedPreferences sharedPreferences;
     private final Gson gson;
-    private static CustomSharedPrefs instance;
+    private static volatile CustomSharedPrefs instance;
 
     public static CustomSharedPrefs getInstance(Context context) {
-        if (instance != null) {
-            return instance;
+        if (instance == null) {
+            synchronized (CustomSharedPrefs.class) {
+                if (instance == null) {
+                    instance = new CustomSharedPrefs(context.getApplicationContext());
+                }
+            }
         }
-        instance = new CustomSharedPrefs(context);
         return instance;
+
     }
 
     public static CustomSharedPrefs getInstance() {
