@@ -17,6 +17,7 @@ import com.example.fusmobilni.R;
 import com.example.fusmobilni.adapters.users.register.RegistrationAdapter;
 import com.example.fusmobilni.clients.ClientUtils;
 import com.example.fusmobilni.clients.GeocodingClient;
+import com.example.fusmobilni.core.CustomSharedPrefs;
 import com.example.fusmobilni.databinding.ActivityFastRegisterBinding;
 import com.example.fusmobilni.fragments.dialogs.FailiureDialogFragment;
 import com.example.fusmobilni.fragments.dialogs.SpinnerDialogFragment;
@@ -60,7 +61,7 @@ public class FastRegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ClientUtils.initalize(getApplicationContext());
+        ClientUtils.initalize(CustomSharedPrefs.getInstance(getApplicationContext()));
 
         _binding = ActivityFastRegisterBinding.inflate(getLayoutInflater());
         setContentView(_binding.getRoot());

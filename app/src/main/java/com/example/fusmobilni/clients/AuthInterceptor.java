@@ -16,8 +16,8 @@ import okhttp3.Response;
 public class AuthInterceptor implements Interceptor {
     private final CustomSharedPrefs sharedPrefs;
 
-    public AuthInterceptor(Context context) {
-        this.sharedPrefs = new CustomSharedPrefs(context);
+    public AuthInterceptor(CustomSharedPrefs sharedPrefs) {
+        this.sharedPrefs = sharedPrefs;
     }
 
     @NonNull

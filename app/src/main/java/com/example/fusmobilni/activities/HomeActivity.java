@@ -48,7 +48,7 @@ public class HomeActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
 
-        ClientUtils.initalize(getApplicationContext());
+        ClientUtils.initalize(CustomSharedPrefs.getInstance(getApplicationContext()));
 
         _binding = ActivityHomeBinding.inflate(getLayoutInflater());
         setContentView(_binding.getRoot());
@@ -57,7 +57,7 @@ public class HomeActivity extends AppCompatActivity {
         _topToolbar = _binding.activityHomeBase.topAppBar;
 
         // get logged in user
-        CustomSharedPrefs sharedPrefs = new CustomSharedPrefs(this);
+        CustomSharedPrefs sharedPrefs = CustomSharedPrefs.getInstance();
         User user = sharedPrefs.getUser();
 
         setupDrawerMenu(user != null && user.getRole() != null ? user.getRole() : UserType.UNAUTHENTICATED_USER);
@@ -98,7 +98,7 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        CustomSharedPrefs sharedPrefs = new CustomSharedPrefs(this);
+        CustomSharedPrefs sharedPrefs = CustomSharedPrefs.getInstance();
         User user = sharedPrefs.getUser();
         setupDrawerMenu(user != null && user.getRole() != null ? user.getRole() : UserType.UNAUTHENTICATED_USER);
     }
@@ -137,7 +137,7 @@ public class HomeActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.toolbar_menu, menu);
 
         MenuItem profileItem = menu.findItem(R.id.login_activity);
-        CustomSharedPrefs sharedPrefs = new CustomSharedPrefs(this);
+        CustomSharedPrefs sharedPrefs = CustomSharedPrefs.getInstance();
         User user = sharedPrefs.getUser();
 
         if (user != null) {
@@ -163,7 +163,7 @@ public class HomeActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == R.id.login_activity) {// Retrieve the login status from SharedPreferences
-            CustomSharedPrefs sharedPrefs = new CustomSharedPrefs(this);
+            CustomSharedPrefs sharedPrefs = CustomSharedPrefs.getInstance();
             User user = sharedPrefs.getUser();
             if (user != null) {
                 // If logged in, navigate to the profile fragment

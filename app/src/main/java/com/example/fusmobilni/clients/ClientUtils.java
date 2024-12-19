@@ -14,6 +14,7 @@ import com.example.fusmobilni.clients.services.items.ItemsService;
 import com.example.fusmobilni.clients.services.products.ProductsService;
 import com.example.fusmobilni.clients.services.serviceOfferings.ServiceOfferingReservationService;
 import com.example.fusmobilni.clients.services.serviceOfferings.ServiceOfferingService;
+import com.example.fusmobilni.core.CustomSharedPrefs;
 
 import java.util.concurrent.TimeUnit;
 
@@ -28,9 +29,9 @@ public class ClientUtils {
 
     private static Retrofit retrofit;
 
-    public static void initalize(Context context) {
+    public static void initalize(CustomSharedPrefs sharedPrefs) {
         if (retrofit == null) {
-            retrofit = createRetrofitInstance(context);
+            retrofit = createRetrofitInstance(sharedPrefs);
 
             serviceOfferingService = retrofit.create(ServiceOfferingService.class);
             categoryService = retrofit.create(CategoryService.class);
@@ -47,11 +48,11 @@ public class ClientUtils {
         }
     }
 
-    private static Retrofit createRetrofitInstance(Context context) {
+    private static Retrofit createRetrofitInstance(CustomSharedPrefs sharedPrefs) {
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
-        OkHttpClient okHttpClient = getClient(context);
+        OkHttpClient okHttpClient = getClient( sharedPrefs);
 
         return new Retrofit.Builder()
                 .baseUrl(SERVICE_API_PATH)
@@ -72,7 +73,7 @@ public class ClientUtils {
 //
 //        return client;
 //    }
-    private static OkHttpClient getClient(Context context) {
+    private static OkHttpClient getClient(CustomSharedPrefs sharedPrefs) {
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
@@ -80,7 +81,7 @@ public class ClientUtils {
                 .readTimeout(120, TimeUnit.SECONDS)
                 .writeTimeout(120, TimeUnit.SECONDS)
                 .addInterceptor(interceptor)
-                .addInterceptor(new AuthInterceptor(context))
+                .addInterceptor(new AuthInterceptor(sharedPrefs))
                 .build();
     }
 

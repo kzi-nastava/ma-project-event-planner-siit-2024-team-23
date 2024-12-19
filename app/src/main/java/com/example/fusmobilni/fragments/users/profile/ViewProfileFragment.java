@@ -77,7 +77,7 @@ public class ViewProfileFragment extends Fragment {
         return  view;
     }
     private void logout() {
-        CustomSharedPrefs sharedPrefs = new CustomSharedPrefs(requireContext());
+        CustomSharedPrefs sharedPrefs = CustomSharedPrefs.getInstance();
         sharedPrefs.clearAll();
         Intent intent = new Intent(requireContext(), HomeActivity.class);
         startActivity(intent);
