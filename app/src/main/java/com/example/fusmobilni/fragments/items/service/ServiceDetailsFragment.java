@@ -90,6 +90,11 @@ public class ServiceDetailsFragment extends Fragment {
             Navigation.findNavController(v).navigate(R.id.action_service_details_to_service_reservation, createBundle());
         });
         try {
+            _binding.imageView5.setImageURI(convertToUrisFromBase64(getContext(), _service.getProvider().getImage()));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        try {
             _binding.imageView4.setImageURI(convertToUrisFromBase64(getContext(), _service.getImage()));
         } catch (IOException e) {
 

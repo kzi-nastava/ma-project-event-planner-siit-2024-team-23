@@ -82,7 +82,11 @@ public class ServiceDetailsRegularFragment extends Fragment {
         _binding.textViewOrganizerNameServiceDetails.setText(_service.getProvider().getFirstName() + " " + _service.getProvider().getLastName());
         _binding.textViewServiceDescriptionDetails.setText(_service.getDescription());
         _binding.price.setText(String.valueOf(_service.getPrice()));
-        _binding.imageView5.setImageResource(R.drawable.person);
+        try {
+            _binding.imageView5.setImageURI(convertToUrisFromBase64(getContext(), _service.getProvider().getImage()));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         try {
             _binding.imageView4.setImageURI(convertToUrisFromBase64(getContext(), _service.getImage()));
         } catch (IOException e) {
@@ -95,6 +99,10 @@ public class ServiceDetailsRegularFragment extends Fragment {
     }
 
     private void initializeGradesAccordion() {
+        if (_service.getGrades().size() == 0) {
+            _binding.expandForGrades.setVisibility(View.GONE);
+            return;
+        }
         _adapter = new ItemReviewsAdapter(_service.getGrades());
         _binding.gradesView.setAdapter(_adapter);
         _binding.expandForGrades.setOnClickListener(v -> {
