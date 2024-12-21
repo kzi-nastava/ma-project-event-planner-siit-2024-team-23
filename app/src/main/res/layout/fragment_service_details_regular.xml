@@ -4,6 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
+    android:backgroundTint="@color/white"
+    android:elevation="16dp"
     tools:context=".fragments.items.service.ServiceDetailsRegularFragment">
 
     <LinearLayout
@@ -97,6 +100,33 @@
                     android:text="Service title"
                     android:textFontWeight="?attr/motionDurationLong4"
                     android:textSize="24sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginVertical="16dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/textViewAboutServiceTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/poppins"
+                        android:text="About service"
+                        android:textFontWeight="?attr/motionDurationLong4"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:id="@+id/textViewServiceDescriptionDetails"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/poppins"
+                        android:text="TextView" />
+                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -302,33 +332,48 @@
 
                 </LinearLayout>
 
-                <LinearLayout
+                <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginVertical="16dp"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
+                    android:layout_height="wrap_content"
+                    android:elevation="16dp"
+                    app:cardCornerRadius="8dp"
+                    app:cardElevation="16dp"
+                    app:cardMaxElevation="16dp">
 
-                    <TextView
-                        android:id="@+id/textViewAboutServiceTitle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:fontFamily="@font/poppins"
-                        android:text="About service"
-                        android:textFontWeight="?attr/motionDurationLong4"
-                        android:textSize="18sp" />
-
-                    <TextView
-                        android:id="@+id/textViewServiceDescriptionDetails"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:layout_weight="1"
-                        android:fontFamily="@font/poppins"
-                        android:text="TextView" />
-                </LinearLayout>
+                        android:orientation="vertical">
 
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/expandForGrades"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@color/white"
+                            android:padding="16dp"
+                            android:text="See Grades"
+                            android:textColor="@color/primary_blue_900"
+                            android:textSize="16sp"
+                            app:backgroundTint="@color/white"
+                            app:cornerRadius="8dp"
+                            app:elevation="16dp" />
+
+                        <androidx.core.widget.NestedScrollView
+                            android:id="@+id/gradesScrollView"
+                            android:layout_width="match_parent"
+                            android:layout_height="400dp"
+                            android:visibility="gone">
+
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/gradesView"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:orientation="vertical"
+                                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                                tools:listitem="@layout/fragment_item_review" />
+                        </androidx.core.widget.NestedScrollView>
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
 

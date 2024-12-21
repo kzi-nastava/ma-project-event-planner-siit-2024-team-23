@@ -7,9 +7,9 @@ import java.time.LocalDate;
 public class ItemGradeResponse {
     public Long id;
     public int grade;
-    public EventOrganizerResponse eventOrganizer;
+    public EventOrganizerReviewResponse eventOrganizer;
     public String content;
-    public LocalDate date;
+    public String date;
 
     public String getContent() {
         return content;
@@ -19,19 +19,19 @@ public class ItemGradeResponse {
         this.content = content;
     }
 
-    public LocalDate getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(LocalDate date) {
+    public void setDate(String date) {
         this.date = date;
     }
 
-    public EventOrganizerResponse getEventOrganizer() {
+    public EventOrganizerReviewResponse getEventOrganizer() {
         return eventOrganizer;
     }
 
-    public void setEventOrganizer(EventOrganizerResponse eventOrganizer) {
+    public void setEventOrganizer(EventOrganizerReviewResponse eventOrganizer) {
         this.eventOrganizer = eventOrganizer;
     }
 
@@ -51,7 +51,7 @@ public class ItemGradeResponse {
         this.id = id;
     }
 
-    public ItemGradeResponse(String content, LocalDate date, EventOrganizerResponse eventOrganizer, int grade, Long id) {
+    public ItemGradeResponse(String content, String date, EventOrganizerReviewResponse eventOrganizer, int grade, Long id) {
         this.content = content;
         this.date = date;
         this.eventOrganizer = eventOrganizer;

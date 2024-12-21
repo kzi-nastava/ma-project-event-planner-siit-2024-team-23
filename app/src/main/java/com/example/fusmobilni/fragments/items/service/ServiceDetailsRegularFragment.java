@@ -5,7 +5,6 @@ import static com.example.fusmobilni.adapters.AdapterUtils.convertToUrisFromBase
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
-import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,11 +12,10 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.fusmobilni.R;
+import com.example.fusmobilni.adapters.items.reviews.ItemReviewsAdapter;
 import com.example.fusmobilni.clients.ClientUtils;
 import com.example.fusmobilni.databinding.FragmentServiceDetailsRegularBinding;
-import com.example.fusmobilni.fragments.dialogs.FailiureDialogFragment;
 import com.example.fusmobilni.fragments.dialogs.SpinnerDialogFragment;
-import com.example.fusmobilni.fragments.dialogs.SuccessDialogFragment;
 import com.example.fusmobilni.responses.items.services.ServiceOverviewResponse;
 import com.example.fusmobilni.responses.location.LocationResponse;
 
@@ -27,20 +25,13 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link ServiceDetailsRegularFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class ServiceDetailsRegularFragment extends Fragment {
     private boolean favorite = false;
     private Long _serviceId;
     private ServiceOverviewResponse _service;
     private SpinnerDialogFragment _loader;
-
-    private SuccessDialogFragment _success;
-    private FailiureDialogFragment _failiure;
-
+    private ItemReviewsAdapter _adapter;
+    private boolean accordionOpen = false;
     private FragmentServiceDetailsRegularBinding _binding;
 
     public ServiceDetailsRegularFragment() {
@@ -98,7 +89,18 @@ public class ServiceDetailsRegularFragment extends Fragment {
 
         }
 
+        initializeGradesAccordion();
+
         initializeFavoriteButton();
+    }
+
+    private void initializeGradesAccordion() {
+        _adapter = new ItemReviewsAdapter(_service.getGrades());
+        _binding.gradesView.setAdapter(_adapter);
+        _binding.expandForGrades.setOnClickListener(v -> {
+            accordionOpen = !accordionOpen;
+            _binding.gradesScrollView.setVisibility((accordionOpen) ? View.VISIBLE : View.GONE);
+        });
     }
 
     private void initializeFavoriteButton() {
