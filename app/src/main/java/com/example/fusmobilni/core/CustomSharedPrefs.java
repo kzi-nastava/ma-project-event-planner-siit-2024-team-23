@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.example.fusmobilni.model.users.User;
+import com.example.fusmobilni.responses.auth.LoginResponse;
 import com.google.gson.Gson;
 
 public class CustomSharedPrefs {
@@ -33,15 +34,15 @@ public class CustomSharedPrefs {
         gson = new Gson();
     }
 
-    public void saveUser(User user) {
+    public void saveUser(LoginResponse user) {
         String userJson = gson.toJson(user);
         saveString("user", userJson);
     }
 
-    public User getUser() {
+    public LoginResponse getUser() {
         String userJson = getString("user", null);
         if (userJson != null) {
-            return gson.fromJson(userJson, User.class);
+            return gson.fromJson(userJson, LoginResponse.class);
         }
         return null;
     }

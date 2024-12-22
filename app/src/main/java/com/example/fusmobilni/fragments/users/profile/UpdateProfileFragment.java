@@ -21,6 +21,7 @@ import com.example.fusmobilni.databinding.FragmentUpdateProfileBinding;
 import com.example.fusmobilni.interfaces.FragmentValidation;
 import com.example.fusmobilni.model.users.User;
 import com.example.fusmobilni.model.enums.UserType;
+import com.example.fusmobilni.responses.auth.LoginResponse;
 import com.example.fusmobilni.viewModels.users.UpdateProfileViewModel;
 import com.google.android.material.button.MaterialButton;
 
@@ -59,8 +60,9 @@ public class UpdateProfileFragment extends Fragment {
         _updateProfileViewModel = new ViewModelProvider(requireActivity()).get(UpdateProfileViewModel.class);
         _viewPager = _binding.viewPager;
         _signUpLayout = _binding.signUpLayout;
-        User user = CustomSharedPrefs.getInstance().getUser();
-        _updateProfileViewModel.setUser(user);
+        LoginResponse user = CustomSharedPrefs.getInstance().getUser();
+        // TODO here i need second call to get user info!
+//        _updateProfileViewModel.setUser(user);
 
         _viewPager.setUserInputEnabled(false);
 

@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 
 import com.example.fusmobilni.core.CustomSharedPrefs;
 import com.example.fusmobilni.model.users.User;
+import com.example.fusmobilni.responses.auth.LoginResponse;
 
 import java.io.IOException;
 
@@ -24,12 +25,12 @@ public class AuthInterceptor implements Interceptor {
     @Override
     public Response intercept(@NonNull Chain chain) throws IOException {
         Request originalRequest = chain.request();
-        User user = sharedPrefs.getUser();
+        LoginResponse user = sharedPrefs.getUser();
 
         String jwtToken = (user != null) ? user.getJwt() : null;
 
         if (jwtToken != null && !jwtToken.isEmpty()) {
-            Request modified = originalRequest.newBuilder().header("Authorization", "Bearer" + jwtToken).build();
+            Request modified = originalRequest.newBuilder().header("Authorization", "Bearer " + jwtToken).build();
             return chain.proceed(modified);
         }
         return chain.proceed(originalRequest);

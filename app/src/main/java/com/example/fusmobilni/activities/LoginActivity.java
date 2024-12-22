@@ -15,6 +15,8 @@ import com.example.fusmobilni.R;
 import com.example.fusmobilni.clients.ClientUtils;
 import com.example.fusmobilni.core.CustomSharedPrefs;
 import com.example.fusmobilni.databinding.ActivityLoginBinding;
+import com.example.fusmobilni.interfaces.ILoginCallback;
+import com.example.fusmobilni.responses.auth.LoginResponse;
 import com.example.fusmobilni.viewModels.users.login.LoginViewModel;
 import java.util.Objects;
 
@@ -89,7 +91,20 @@ public class LoginActivity extends AppCompatActivity {
         _loginViewModel.setEmail(email);
         _loginViewModel.setPassword(password);
 
-        _loginViewModel.login();
+        _loginViewModel.login(new ILoginCallback() {
+            @Override
+            public void onSuccess(LoginResponse response) {
+                Toast.makeText(LoginActivity.this, "Login successfully!", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                startActivity(intent);
+                LoginActivity.this.finish();
+            }
+
+            @Override
+            public void onFailure(Throwable throwable) {
+                Toast.makeText(LoginActivity.this, "Login failure!", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private boolean validate(){
