@@ -40,7 +40,7 @@ public class StepOneFragment extends Fragment implements FragmentValidation {
                              Bundle savedInstanceState) {
         _binding = FragmentStepOneBinding.inflate(getLayoutInflater());
         View view = _binding.getRoot();
-        _registerViewModel = new ViewModelProvider(this).get(RegisterViewModel.class);
+        _registerViewModel = new ViewModelProvider(requireActivity()).get(RegisterViewModel.class);
 
         return view;
     }

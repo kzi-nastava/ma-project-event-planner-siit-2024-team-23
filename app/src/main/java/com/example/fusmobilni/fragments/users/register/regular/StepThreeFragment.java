@@ -36,7 +36,7 @@ public class StepThreeFragment extends Fragment implements FragmentValidation {
                              Bundle savedInstanceState) {
         _binding = FragmentStepThreeBinding.inflate(getLayoutInflater());
         View view = _binding.getRoot();
-        _registerViewModel = new ViewModelProvider(this).get(RegisterViewModel.class);
+        _registerViewModel = new ViewModelProvider(requireActivity()).get(RegisterViewModel.class);
 
         return view;
     }
