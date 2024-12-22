@@ -1,5 +1,6 @@
 package com.example.fusmobilni.responses.items.services;
 
+import com.example.fusmobilni.responses.auth.ServiceProviderDetailsResponse;
 import com.example.fusmobilni.responses.auth.ServiceProviderResponse;
 import com.example.fusmobilni.responses.items.CategoryResponse;
 import com.example.fusmobilni.responses.items.ItemGradeResponse;
@@ -7,24 +8,44 @@ import com.example.fusmobilni.responses.items.ItemGradeResponse;
 import java.util.List;
 
 public class ServiceOverviewResponse {
+    public Long id;
     public String name;
     public String description;
     public String specificities;
     public Double price;
+    public Double discount;
     public String image;
     public CategoryResponse category;
-    public ServiceProviderResponse provider;
+    public ServiceProviderDetailsResponse provider;
     public List<ItemGradeResponse> grades;
 
-    public ServiceOverviewResponse(CategoryResponse category, String description, List<ItemGradeResponse> grades, String name, Double price, ServiceProviderResponse provider, String specificities,String image) {
+    public ServiceOverviewResponse(Long id, CategoryResponse category, String description, List<ItemGradeResponse> grades, String name, Double price, Double discount, ServiceProviderDetailsResponse provider, String specificities, String image) {
+        this.id = id;
         this.category = category;
         this.description = description;
         this.grades = grades;
         this.name = name;
         this.price = price;
+        this.discount = discount;
         this.provider = provider;
         this.specificities = specificities;
         this.image = image;
+    }
+
+    public Double getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(Double discount) {
+        this.discount = discount;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getImage() {
@@ -75,11 +96,11 @@ public class ServiceOverviewResponse {
         this.price = price;
     }
 
-    public ServiceProviderResponse getProvider() {
+    public ServiceProviderDetailsResponse getProvider() {
         return provider;
     }
 
-    public void setProvider(ServiceProviderResponse provider) {
+    public void setProvider(ServiceProviderDetailsResponse provider) {
         this.provider = provider;
     }
 
