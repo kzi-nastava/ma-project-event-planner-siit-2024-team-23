@@ -12,14 +12,17 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.fusmobilni.R;
+import com.example.fusmobilni.adapters.items.reviews.ItemReviewsAdapter;
 import com.example.fusmobilni.clients.ClientUtils;
 import com.example.fusmobilni.databinding.FragmentServiceDetailsBinding;
 import com.example.fusmobilni.fragments.dialogs.FailiureDialogFragment;
 import com.example.fusmobilni.fragments.dialogs.SpinnerDialogFragment;
 import com.example.fusmobilni.fragments.dialogs.SuccessDialogFragment;
 import com.example.fusmobilni.model.items.service.Service;
+import com.example.fusmobilni.responses.items.IsBoughtItemResponse;
 import com.example.fusmobilni.responses.items.services.ServiceOverviewResponse;
 import com.example.fusmobilni.responses.location.LocationResponse;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.io.IOException;
 
@@ -33,16 +36,17 @@ public class ServiceDetailsFragment extends Fragment {
     private ServiceOverviewResponse _service;
     private SpinnerDialogFragment _loader;
 
-    private SuccessDialogFragment _success;
-    private FailiureDialogFragment _failiure;
+    private ItemReviewsAdapter _adapter;
+    private boolean accordionOpen = false;
     private Long eventId;
     private double estimatedBudget;
-
     private Long _serviceId;
+    Snackbar snackbar;
 
     public ServiceDetailsFragment() {
         // Required empty public constructor
     }
+
 
     private boolean favorite = false;
 
@@ -100,7 +104,22 @@ public class ServiceDetailsFragment extends Fragment {
 
         }
 
+        initializeGradesAccordion();
         initializeFavoriteButton();
+        checkIfBought();
+    }
+
+    private void initializeGradesAccordion() {
+        if (_service.getGrades().size() == 0) {
+            _binding.expandForGrades.setVisibility(View.GONE);
+            return;
+        }
+        _adapter = new ItemReviewsAdapter(_service.getGrades());
+        _binding.gradesView.setAdapter(_adapter);
+        _binding.expandForGrades.setOnClickListener(v -> {
+            accordionOpen = !accordionOpen;
+            _binding.gradesScrollView.setVisibility((accordionOpen) ? View.VISIBLE : View.GONE);
+        });
     }
 
     private Bundle createBundle() {
@@ -115,6 +134,40 @@ public class ServiceDetailsFragment extends Fragment {
         _loader = new SpinnerDialogFragment();
         _loader.setCancelable(false);
 
+    }
+
+    private void showSnackBar() {
+        View rootView = getActivity().getWindow().getDecorView().findViewById(android.R.id.content);
+        snackbar = Snackbar.make(rootView, "You have reserved this item, give us a review", Snackbar.LENGTH_INDEFINITE);
+        snackbar.setAction("Review", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle args = new Bundle();
+                args.putString("itemName", _service.getName());
+                args.putLong("itemId", _serviceId);
+                args.putLong("eoId", 224L);
+                Navigation.findNavController(getView()).navigate(R.id.action_to_item_review_form, args);
+            }
+        });
+        snackbar.show();
+    }
+
+    private void checkIfBought() {
+        Call<IsBoughtItemResponse> call = ClientUtils.itemsService.checkIfBought(_serviceId, 224L);
+        call.enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<IsBoughtItemResponse> call, Response<IsBoughtItemResponse> response) {
+                if (response.isSuccessful()) {
+                    if (response.body().isBought)
+                        showSnackBar();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<IsBoughtItemResponse> call, Throwable t) {
+
+            }
+        });
     }
 
     private void getServiceForOverview() {

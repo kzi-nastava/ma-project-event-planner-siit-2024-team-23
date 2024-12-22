@@ -5,6 +5,7 @@ import static com.example.fusmobilni.adapters.AdapterUtils.convertToUrisFromBase
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,8 +17,10 @@ import com.example.fusmobilni.adapters.items.reviews.ItemReviewsAdapter;
 import com.example.fusmobilni.clients.ClientUtils;
 import com.example.fusmobilni.databinding.FragmentServiceDetailsRegularBinding;
 import com.example.fusmobilni.fragments.dialogs.SpinnerDialogFragment;
+import com.example.fusmobilni.responses.items.IsBoughtItemResponse;
 import com.example.fusmobilni.responses.items.services.ServiceOverviewResponse;
 import com.example.fusmobilni.responses.location.LocationResponse;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.io.IOException;
 
@@ -26,6 +29,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class ServiceDetailsRegularFragment extends Fragment {
+    Snackbar snackbar;
     private boolean favorite = false;
     private Long _serviceId;
     private ServiceOverviewResponse _service;
@@ -96,6 +100,44 @@ public class ServiceDetailsRegularFragment extends Fragment {
         initializeGradesAccordion();
 
         initializeFavoriteButton();
+
+        checkIfBought();
+    }
+
+    private void showSnackBar() {
+        View rootView = getActivity().getWindow().getDecorView().findViewById(android.R.id.content);
+        snackbar = Snackbar.make(rootView, "You have recently reserved this item, give us a review", Snackbar.LENGTH_INDEFINITE);
+        snackbar.setAction("Review", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle args = new Bundle();
+                args.putString("itemName", _service.getName());
+                args.putLong("itemId", _serviceId);
+                args.putLong("eoId", 224L);
+                Navigation.findNavController(getView()).navigate(R.id.action_to_item_review_form, args);
+            }
+        });
+        snackbar.show();
+
+
+    }
+
+    private void checkIfBought() {
+        Call<IsBoughtItemResponse> call = ClientUtils.itemsService.checkIfBought(_serviceId, 224L);
+        call.enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<IsBoughtItemResponse> call, Response<IsBoughtItemResponse> response) {
+                if (response.isSuccessful()) {
+                    if (response.body().isBought)
+                        showSnackBar();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<IsBoughtItemResponse> call, Throwable t) {
+
+            }
+        });
     }
 
     private void initializeGradesAccordion() {
