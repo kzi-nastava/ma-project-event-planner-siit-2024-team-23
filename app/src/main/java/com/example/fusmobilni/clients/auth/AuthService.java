@@ -1,9 +1,12 @@
 package com.example.fusmobilni.clients.auth;
 
+import com.example.fusmobilni.requests.auth.LoginRequest;
 import com.example.fusmobilni.requests.register.fast.FastRegisterRequest;
 import com.example.fusmobilni.requests.register.regular.RegisterRequest;
 import com.example.fusmobilni.requests.services.GetServiceResponse;
 import com.example.fusmobilni.responses.auth.EmailVerificationResponse;
+import com.example.fusmobilni.responses.auth.LoginResponse;
+import com.example.fusmobilni.responses.auth.UserAvatarResponse;
 import com.example.fusmobilni.responses.register.fast.FastRegisterResponse;
 import com.example.fusmobilni.responses.register.regular.RegisterResponse;
 
@@ -30,4 +33,10 @@ public interface AuthService {
     @Multipart
     @POST("auth/register/mobile")
     Call<RegisterResponse> register(@Part("data") RequestBody request, @Part MultipartBody.Part image);
+
+    @POST("auth/login")
+    Call<LoginResponse> login(@Body LoginRequest request);
+
+    @GET("users/user-avatar")
+    Call<UserAvatarResponse> findProfileImage();
 }

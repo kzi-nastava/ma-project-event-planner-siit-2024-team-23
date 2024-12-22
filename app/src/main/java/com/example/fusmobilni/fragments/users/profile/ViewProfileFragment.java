@@ -1,6 +1,7 @@
 package com.example.fusmobilni.fragments.users.profile;
 
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -8,15 +9,23 @@ import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.fusmobilni.R;
 import com.example.fusmobilni.activities.HomeActivity;
+import com.example.fusmobilni.clients.ClientUtils;
 import com.example.fusmobilni.core.CustomSharedPrefs;
 import com.example.fusmobilni.databinding.FragmentViewProfileBinding;
+import com.example.fusmobilni.responses.auth.LoginResponse;
+import com.example.fusmobilni.responses.auth.UserAvatarResponse;
 import com.google.android.material.tabs.TabLayout;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 public class ViewProfileFragment extends Fragment {
@@ -43,6 +52,24 @@ public class ViewProfileFragment extends Fragment {
         TabLayout tabLayout = _binding.profileTabs;
         NestedScrollView contentScrollView = _binding.contentScrollView;
         loadFragment(new UserFavEventsFragment());
+
+        Call<UserAvatarResponse> request = ClientUtils.authService.findProfileImage();
+        request.enqueue(new Callback<>() {
+            @Override
+            public void onResponse(@NonNull Call<UserAvatarResponse> call, @NonNull Response<UserAvatarResponse> response) {
+                if(response.isSuccessful() && response.body() != null){
+                    byte[] imageBytes = Base64.decode(response.body().getAvatar(), Base64.DEFAULT);
+                    _binding.profilePicture.setImageBitmap(BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length));
+                }
+            }
+            @Override
+            public void onFailure(@NonNull Call<UserAvatarResponse> call, @NonNull Throwable t) {
+            }
+        });
+        CustomSharedPrefs prefs = CustomSharedPrefs.getInstance();
+        LoginResponse user = prefs.getUser();
+        _binding.userName.setText(String.format("%s %s", user.getFirstName(), user.getSurname()));
+        _binding.userEmail.setText(user.getEmail());
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
