@@ -179,7 +179,7 @@ public class RegisterViewModel extends ViewModel {
         Call<List<GeoCodingResponse>> call = GeocodingClient.geoCodingService.getGeoCode("pk.4a4083e362875d1ad824d7d1d981b2eb", transformAddress(), "json");
         call.enqueue(new Callback<>() {
             @Override
-            public void onResponse(Call<List<GeoCodingResponse>> call, Response<List<GeoCodingResponse>> response) {
+            public void onResponse(@NonNull Call<List<GeoCodingResponse>> call, @NonNull Response<List<GeoCodingResponse>> response) {
                 if (!response.isSuccessful() || response.body() == null || response.body().isEmpty()) {
                     iLocationCallback.onLocationFailure(new RuntimeException("Failed to fetch location data."));
                     return;
