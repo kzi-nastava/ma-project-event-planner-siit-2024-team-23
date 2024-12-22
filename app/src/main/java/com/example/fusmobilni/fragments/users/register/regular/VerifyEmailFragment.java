@@ -35,7 +35,7 @@ public class VerifyEmailFragment extends Fragment {
         View view = _binding.getRoot();
 
         _binding.loginLink.setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(), LoginActivity.class);
+            Intent intent = new Intent(requireActivity(), LoginActivity.class);
             startActivity(intent);
             // prevent going back once the register process is finished
             requireActivity().finish();

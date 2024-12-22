@@ -42,6 +42,7 @@ public class StepTwoFragment extends Fragment implements FragmentValidation {
                         Uri uri = result.getData() != null ? result.getData().getData() : null;
                         if (uri != null) {
                             _captureImage.setImageURI(uri);
+                            _registerViewModel.setImageUri(uri);
                             _captureImage.setImageTintList(null);
 
                             try {
@@ -85,7 +86,7 @@ public class StepTwoFragment extends Fragment implements FragmentValidation {
         _captureImage = _binding.profileImg;
         CardView cardView = _binding.cardView;
 
-        _registerViewModel = new ViewModelProvider(this).get(RegisterViewModel.class);
+        _registerViewModel = new ViewModelProvider(requireActivity()).get(RegisterViewModel.class);
 
         cardView.setOnClickListener(v -> pickImage());
         return view;
@@ -95,6 +96,7 @@ public class StepTwoFragment extends Fragment implements FragmentValidation {
     public boolean validate() {
         String city = Objects.requireNonNull(_binding.cityInput.getEditText()).getText().toString().trim();
         String address = Objects.requireNonNull(_binding.addressInput.getEditText()).getText().toString().trim();
+        String streetNumber = Objects.requireNonNull(_binding.addressNumberInput.getEditText()).getText().toString().trim();
         String phone = Objects.requireNonNull(_binding.phoneInput.getEditText()).getText().toString().trim();
 
         if (city.isEmpty()) {
@@ -104,6 +106,13 @@ public class StepTwoFragment extends Fragment implements FragmentValidation {
         } else {
             _binding.cityInput.setError(null);
             _binding.cityInput.setErrorEnabled(false);
+        }
+        if(streetNumber.isEmpty()){
+            _binding.addressNumberInput.setErrorEnabled(true);
+            _binding.addressNumberInput.setError("required");
+        }else{
+            _binding.addressNumberInput.setErrorEnabled(false);
+            _binding.addressNumberInput.setError(null);
         }
 
         if (address.isEmpty()) {
@@ -126,6 +135,7 @@ public class StepTwoFragment extends Fragment implements FragmentValidation {
         _registerViewModel.setCity(city);
         _registerViewModel.setAddress(address);
         _registerViewModel.setPhone(phone);
+        _registerViewModel.setStreetNumber(streetNumber);
 
         return true;
     }
