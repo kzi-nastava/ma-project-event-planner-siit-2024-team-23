@@ -378,6 +378,48 @@
                         android:text="TextView" />
                 </LinearLayout>
 
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:elevation="16dp"
+                    app:cardCornerRadius="8dp"
+                    app:cardElevation="16dp"
+                    app:cardMaxElevation="16dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/expandForGrades"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@color/white"
+                            android:padding="16dp"
+                            android:text="See Grades"
+                            android:textColor="@color/primary_blue_900"
+                            android:textSize="16sp"
+                            app:backgroundTint="@color/white"
+                            app:cornerRadius="8dp"
+                            app:elevation="16dp" />
+
+                        <androidx.core.widget.NestedScrollView
+                            android:id="@+id/gradesScrollView"
+                            android:layout_width="match_parent"
+                            android:layout_height="400dp"
+                            android:visibility="gone">
+
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/gradesView"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:orientation="vertical"
+                                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                                tools:listitem="@layout/fragment_item_review" />
+                        </androidx.core.widget.NestedScrollView>
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
 
