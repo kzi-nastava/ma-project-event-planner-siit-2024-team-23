@@ -9,22 +9,43 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.fusmobilni.R;
 import com.example.fusmobilni.adapters.items.product.ProductsHorizontalAdapter;
 import com.example.fusmobilni.adapters.items.service.ServiceHorizontalAdapter;
+import com.example.fusmobilni.adapters.users.ViewProfileEventAdapter;
+import com.example.fusmobilni.clients.ClientUtils;
+import com.example.fusmobilni.core.CustomSharedPrefs;
 import com.example.fusmobilni.databinding.FragmentUserItemsFragmentBinding;
+import com.example.fusmobilni.model.event.Event;
 import com.example.fusmobilni.model.items.product.Product;
 import com.example.fusmobilni.model.items.service.Service;
+import com.example.fusmobilni.responses.auth.LoginResponse;
+import com.example.fusmobilni.responses.items.products.home.ProductHomeResponse;
+import com.example.fusmobilni.responses.items.services.filter.ServicePaginationResponse;
+import com.example.fusmobilni.responses.users.UserFavoriteEventsResponse;
+import com.example.fusmobilni.responses.users.UserFavoriteProductsResponse;
+import com.example.fusmobilni.responses.users.UserFavoriteServicesResponse;
 import com.google.android.material.button.MaterialButtonToggleGroup;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class UserFavItemsFragment extends Fragment {
     private FragmentUserItemsFragmentBinding _binding;
     private ServiceHorizontalAdapter serviceHorizontalAdapter;
     private ProductsHorizontalAdapter productsHorizontalAdapter;
     private RecyclerView listView;
+    private LoginResponse user;
+
+    List<ProductHomeResponse> products;
+    List<ServicePaginationResponse> services;
 
     public UserFavItemsFragment() {
         // Required empty public constructor
@@ -46,14 +67,14 @@ public class UserFavItemsFragment extends Fragment {
         View view = _binding.getRoot();
         listView = _binding.recyclerView;
         MaterialButtonToggleGroup toggleGroup = _binding.toggleGroup;
+        CustomSharedPrefs prefs = CustomSharedPrefs.getInstance();
+        user = prefs.getUser();
 
         serviceHorizontalAdapter = new ServiceHorizontalAdapter();
         productsHorizontalAdapter = new ProductsHorizontalAdapter();
         listView.setAdapter(serviceHorizontalAdapter);
-        ArrayList<Service> services = fillServices();
-        ArrayList<Product> products = fillProducts();
-      //  serviceHorizontalAdapter.setData(services);
-        productsHorizontalAdapter.setData(products);
+        fillServices();
+        fillProducts();
 
         toggleGroup.addOnButtonCheckedListener((group, checkedId, isChecked) -> {
             if (isChecked) {
@@ -69,27 +90,58 @@ public class UserFavItemsFragment extends Fragment {
         return view;
     }
 
-    private  ArrayList<Product> fillProducts(){
-        ArrayList<Product> p = new ArrayList<>();
-        p.add(new Product("Gourmet Pizza", "A delicious blend of flavors", 15.99, "New York", "Food"));
-        p.add(new Product("Lemonade", "Refreshing and invigorating beverage", 3.49, "California", "Health"));
-        p.add(new Product("Mixed Nuts", "Sweet and savory snacks", 5.99, "Texas", "Sports"));
-        p.add(new Product("Croissants", "Freshly baked pastries", 2.99, "France", "Art"));
-        p.add(new Product("Dark Chocolate Truffles", "Artisanal chocolates", 12.49, "Belgium", "Fashion"));
-        return p;
+    private  void fillProducts(){
+        Call<UserFavoriteProductsResponse> request = ClientUtils.userService.findFavoriteProducts(user.getId());
+        request.enqueue(new Callback<>() {
+            @Override
+            public void onResponse(@NonNull Call<UserFavoriteProductsResponse> call, @NonNull Response<UserFavoriteProductsResponse> response) {
+                if(response.isSuccessful() && response.body() != null){
+                    products = response.body().getProducts().stream().map(product ->
+                                    new ProductHomeResponse(product.getCategory(), product.getDescription(), product.getId(), product.getLocation(),
+                                            product.getName(), product.getPrice(), product.getImage())).
+                            collect(Collectors.toList());
+                    productsHorizontalAdapter.setData(products);
+                    listView.setAdapter(productsHorizontalAdapter);
+                    if(products.isEmpty()){
+                        _binding.recyclerView.setVisibility(View.GONE);
+                        _binding.emptyMessage.setVisibility(View.VISIBLE);
+                    }else{
+                        _binding.recyclerView.setVisibility(View.VISIBLE);
+                        _binding.emptyMessage.setVisibility(View.GONE);
+                    }
+                }
+            }
+            @Override
+            public void onFailure(@NonNull Call<UserFavoriteProductsResponse> call, @NonNull Throwable t) {
+                Toast.makeText(requireContext(), t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
-    private ArrayList<Service> fillServices() {
-        ArrayList<Service> s = new ArrayList<>();
-        s.add(new Service("Live band for weddings and parties", "Wedding Band", "New York", "Music"));
-        s.add(new Service("Professional photography for events", "Photography Service", "Los Angeles", "Art"));
-        s.add(new Service("Catering services for all occasions", "Catering Service", "Chicago", "Food"));
-        s.add(new Service("Event decoration and setup", "Decoration Service", "San Francisco", "Art"));
-        s.add(new Service("Spacious venue for corporate events", "Venue Rental", "Miami", "Travel"));
-        s.add(new Service("DJ service with customized playlists", "DJ Service", "Las Vegas", "Music"));
-        s.add(new Service("Makeup and styling for events", "Makeup Service", "New York", "Fashion"));
-        s.add(new Service("Mobile food truck service for events", "Food Truck Service", "Austin", "Food"));
-        s.add(new Service("Event photography with instant prints", "Instant Photography", "Orlando", "Art"));
-        return s;
+    private void fillServices() {
+        Call<UserFavoriteServicesResponse> request = ClientUtils.userService.findFavoriteServices(user.getId());
+        request.enqueue(new Callback<>() {
+            @Override
+            public void onResponse(@NonNull Call<UserFavoriteServicesResponse> call, @NonNull Response<UserFavoriteServicesResponse> response) {
+                if(response.isSuccessful() && response.body() != null){
+                    services = response.body().getResponses().stream().map(service ->
+                                    new ServicePaginationResponse(service.getCategory(), service.getDescription(), service.getId(), service.getLocation(), service.getName(), service.getPrice(), service.getImage())).
+                            collect(Collectors.toList());
+                    serviceHorizontalAdapter.setData(services);
+                    listView.setAdapter(serviceHorizontalAdapter);
+                    if(services.isEmpty()){
+                        _binding.recyclerView.setVisibility(View.GONE);
+                        _binding.emptyMessage.setVisibility(View.VISIBLE);
+                    }else{
+                        _binding.recyclerView.setVisibility(View.VISIBLE);
+                        _binding.emptyMessage.setVisibility(View.GONE);
+                    }
+                }
+            }
+            @Override
+            public void onFailure(@NonNull Call<UserFavoriteServicesResponse> call, @NonNull Throwable t) {
+                Toast.makeText(requireContext(), t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
     }
 }

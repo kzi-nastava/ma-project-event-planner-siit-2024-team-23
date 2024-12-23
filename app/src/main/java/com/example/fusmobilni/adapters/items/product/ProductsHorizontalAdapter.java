@@ -1,9 +1,12 @@
 package com.example.fusmobilni.adapters.items.product;
 
+import static com.example.fusmobilni.adapters.AdapterUtils.convertToUrisFromBase64;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -12,15 +15,18 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fusmobilni.R;
 import com.example.fusmobilni.model.items.product.Product;
+import com.example.fusmobilni.responses.items.products.home.ProductHomeResponse;
+import com.example.fusmobilni.responses.items.products.home.ProductsHomeResponse;
 import com.google.android.material.card.MaterialCardView;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 public class ProductsHorizontalAdapter extends RecyclerView.Adapter<ProductsHorizontalAdapter.ProductHorizontalViewHolder> {
 
-    private List<Product> _products;
+    private List<ProductHomeResponse> _products;
 
     public ProductsHorizontalAdapter() {
 
@@ -28,7 +34,7 @@ public class ProductsHorizontalAdapter extends RecyclerView.Adapter<ProductsHori
 
     }
 
-    public void setData(List<Product> list) {
+    public void setData(List<ProductHomeResponse> list) {
         this._products = new ArrayList<>(list);
         notifyDataSetChanged();
     }
@@ -39,14 +45,16 @@ public class ProductsHorizontalAdapter extends RecyclerView.Adapter<ProductsHori
         TextView _price;
         MaterialCardView _card;
         TextView _location;
+        ImageView _image;
 
         ProductHorizontalViewHolder(View itemView) {
             super(itemView);
             _name = itemView.findViewById(R.id.textViewProductNameHorizontal);
             _description = itemView.findViewById(R.id.productDescriptionHorizontal);
             _price = itemView.findViewById(R.id.productsHorizontalPrice);
-            _location = itemView.findViewById(R.id.textViewProductLocationHorizontal);
+            _location = itemView.findViewById(R.id.textViewServiceLocationHorizontal);
             _card = itemView.findViewById(R.id.productCardHorizontal);
+            _image = itemView.findViewById(R.id.productImageBannerHorizontal);
         }
     }
 
@@ -67,15 +75,20 @@ public class ProductsHorizontalAdapter extends RecyclerView.Adapter<ProductsHori
 
     @Override
     public void onBindViewHolder(@NonNull ProductHorizontalViewHolder holder, int position) {
-        Product product = _products.get(position);
+        ProductHomeResponse product = _products.get(position);
 
         holder._name.setText(product.getName());
         holder._description.setText(product.getDescription());
         holder._price.setText(String.valueOf(product.getPrice()));
-        holder._location.setText(product.getLocation());
-        holder._card.setOnClickListener(v -> {
-            Navigation.findNavController(v).navigate(R.id.action_product_card_to_product_details, createBundle(product, new Random(System.currentTimeMillis()).nextBoolean()));
-        });
+        holder._location.setText(product.getLocation().city +", " + product.getLocation().street);
+//        holder._card.setOnClickListener(v -> {
+//            Navigation.findNavController(v).navigate(R.id.action_product_card_to_product_details, createBundle(product, new Random(System.currentTimeMillis()).nextBoolean()));
+//        });
+        try {
+            holder._image.setImageURI(convertToUrisFromBase64(holder._image.getContext(), product.getImage()));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 

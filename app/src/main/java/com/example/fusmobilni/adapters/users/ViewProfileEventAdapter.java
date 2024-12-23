@@ -46,6 +46,7 @@ public class ViewProfileEventAdapter extends RecyclerView.Adapter<ViewProfileEve
             holder.day.setText(event.getDay());
             holder.monthYear.setText(event.getMonth() + " " + event.getYear());
             holder.location.setText(event.getLocation());
+            holder.eventType.setText(event.getCategory());
             holder.eventCard.setOnClickListener(v -> eventClickListener.onEventClick(position));
         }
 
@@ -66,6 +67,8 @@ public static class EventViewHolder extends RecyclerView.ViewHolder {
     TextView monthYear;
     TextView location;
 
+    TextView eventType;
+
     public EventViewHolder(@NonNull View itemView) {
         super(itemView);
         title = itemView.findViewById(R.id.textViewEventNameHorizontal);
@@ -73,6 +76,7 @@ public static class EventViewHolder extends RecyclerView.ViewHolder {
         monthYear = itemView.findViewById(R.id.textViewMonthAndYearHorizontal);
         location = itemView.findViewById(R.id.textViewEventLocationHorizontal);
         eventCard = itemView.findViewById(R.id.eventCard);
+        eventType = itemView.findViewById(R.id.textViewEventType);
 
     }
 }

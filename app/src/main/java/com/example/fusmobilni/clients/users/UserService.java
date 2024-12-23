@@ -1,6 +1,10 @@
 package com.example.fusmobilni.clients.users;
 
 import com.example.fusmobilni.responses.register.regular.RegisterResponse;
+import com.example.fusmobilni.responses.users.UserFavoriteEventsResponse;
+import com.example.fusmobilni.responses.users.UserFavoriteProductsResponse;
+import com.example.fusmobilni.responses.users.UserFavoriteServiceResponse;
+import com.example.fusmobilni.responses.users.UserFavoriteServicesResponse;
 import com.example.fusmobilni.responses.users.UserInfoPreviewResponse;
 import com.example.fusmobilni.responses.users.UserInfoResponse;
 
@@ -25,6 +29,12 @@ public interface UserService {
     @Multipart
     @PUT("service-providers/{id}/mobile")
     Call<UserInfoResponse> updateServiceProvider(@Part("data") RequestBody request, @Part MultipartBody.Part image, @Path("id") Long id);
+    @GET("users/{id}/favorite-events")
+    Call<UserFavoriteEventsResponse> findFavoriteEvents(@Path("id") Long id);
+    @GET("users/{id}/favorite-services")
+    Call<UserFavoriteServicesResponse> findFavoriteServices(@Path("id") Long id);
+    @GET("users/{id}/favorite-products")
+    Call<UserFavoriteProductsResponse> findFavoriteProducts(@Path("id") Long id);
 
 
 }
