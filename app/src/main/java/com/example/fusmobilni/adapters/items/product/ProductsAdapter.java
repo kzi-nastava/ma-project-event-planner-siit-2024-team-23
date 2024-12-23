@@ -11,12 +11,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fusmobilni.R;
+import com.example.fusmobilni.clients.ClientUtils;
+import com.example.fusmobilni.core.CustomSharedPrefs;
 import com.example.fusmobilni.model.items.product.Product;
+import com.example.fusmobilni.requests.users.favorites.FavoriteProductRequest;
+import com.example.fusmobilni.requests.users.favorites.FavoriteServiceRequest;
+import com.example.fusmobilni.responses.auth.LoginResponse;
 import com.example.fusmobilni.responses.items.products.home.ProductHomeResponse;
 import com.google.android.material.card.MaterialCardView;
 
@@ -24,6 +30,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ProductsViewHolder> {
     private List<ProductHomeResponse> _productList;
@@ -49,6 +59,25 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        holder._favoriteIcon.setOnClickListener(v -> {
+            CustomSharedPrefs prefs = CustomSharedPrefs.getInstance();
+            LoginResponse user = prefs.getUser();
+            Call<Void> request = ClientUtils.userService.addToProductFavorites(user.getId(), new FavoriteProductRequest(product.getId(), user.getId()));
+            request.enqueue(new Callback<>() {
+                @Override
+                public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
+                    if (response.isSuccessful()) {
+                        Toast.makeText(v.getContext(), "Success!", Toast.LENGTH_SHORT).show();
+                        holder._favoriteIcon.setImageResource(R.drawable.ic_heart_full);
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
+
+                }
+            });
+        });
 
     }
 
@@ -73,6 +102,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
         public TextView _price;
         public TextView _location;
         public ImageView _image;
+        public ImageView _favoriteIcon;
         public ProductsViewHolder(@NonNull View view) {
             super(view);
             _card = view.findViewById(R.id.productCardVertical);
@@ -82,6 +112,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
             _location = view.findViewById(R.id.textViewLocationService);
             category = view.findViewById(R.id.textViewCategory);
             _image = view.findViewById(R.id.imageBanner);
+            _favoriteIcon = view.findViewById(R.id.bookmarkIcon);
         }
     }
 

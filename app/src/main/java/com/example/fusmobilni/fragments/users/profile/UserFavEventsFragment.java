@@ -7,12 +7,16 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.fusmobilni.R;
+import com.example.fusmobilni.adapters.loading.LoadingCardHorizontalAdapter;
+import com.example.fusmobilni.adapters.loading.LoadingCardVerticalAdapter;
 import com.example.fusmobilni.adapters.users.ViewProfileEventAdapter;
 import com.example.fusmobilni.clients.ClientUtils;
 import com.example.fusmobilni.core.CustomSharedPrefs;
@@ -20,6 +24,7 @@ import com.example.fusmobilni.databinding.FragmentUserEventsFragmentsBinding;
 import com.example.fusmobilni.interfaces.EventClickListener;
 import com.example.fusmobilni.model.event.Event;
 import com.example.fusmobilni.responses.auth.LoginResponse;
+import com.example.fusmobilni.responses.events.home.EventHomeResponse;
 import com.example.fusmobilni.responses.users.UserFavoriteEventResponse;
 import com.example.fusmobilni.responses.users.UserFavoriteEventsResponse;
 
@@ -34,7 +39,7 @@ import retrofit2.Response;
 public class UserFavEventsFragment extends Fragment implements EventClickListener {
 
     private FragmentUserEventsFragmentsBinding _binding;
-    private List<Event> events;
+    private List<EventHomeResponse> events;
     private RecyclerView listView;
 
     public UserFavEventsFragment() {
@@ -56,8 +61,8 @@ public class UserFavEventsFragment extends Fragment implements EventClickListene
         _binding = FragmentUserEventsFragmentsBinding.inflate(getLayoutInflater());
         View view = _binding.getRoot();
         listView = _binding.eventsList;
+        initializeLoadingCards();
         fillEvents();
-
         return view;
     }
     private void fillEvents() {
@@ -69,12 +74,15 @@ public class UserFavEventsFragment extends Fragment implements EventClickListene
             public void onResponse(@NonNull Call<UserFavoriteEventsResponse> call, @NonNull Response<UserFavoriteEventsResponse> response) {
                 if(response.isSuccessful() && response.body() != null){
                     events = response.body().getEvents().stream().map(event ->
-                            new Event(event.description, event.date, event.title,
-                                    event.location.city + ", " + event.location.street, event.getType().name)).
+                            new EventHomeResponse( event.date,event.description, event.getId(), event.isPublic,
+                                    event.location, event.numberGoing, event.title, event.type, event.image)).
                             collect(Collectors.toList());
                     ViewProfileEventAdapter eventsHorizontalAdapter = new ViewProfileEventAdapter(events, UserFavEventsFragment.this);
                     listView.setAdapter(eventsHorizontalAdapter);
                     eventsHorizontalAdapter.setData(events);
+
+                    turnOffShimmer(_binding.eventsListLoading, _binding.eventsList);
+
                     if(events.isEmpty()){
                         _binding.eventsList.setVisibility(View.GONE);
                         _binding.emptyMessage.setVisibility(View.VISIBLE);
@@ -90,13 +98,24 @@ public class UserFavEventsFragment extends Fragment implements EventClickListene
             }
         });
     }
+    public static void turnOffShimmer(RecyclerView loadingCardsView, RecyclerView actualCards) {
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+            loadingCardsView.setAdapter(new LoadingCardHorizontalAdapter(0));
+            loadingCardsView.setVisibility(View.GONE);
+            actualCards.setVisibility(View.VISIBLE);
+        }, 0);
+    }
+    private void initializeLoadingCards() {
+        _binding.eventsListLoading.setAdapter(new LoadingCardHorizontalAdapter(2));
+    }
 
     @Override
     public void onEventClick(int position) {
-        Event event = events.get(position);
+        EventHomeResponse event = events.get(position);
         Toast.makeText(getContext(), event.getTitle(), Toast.LENGTH_SHORT).show();
-        Bundle bundle = new Bundle();
-        bundle.putParcelable("event", event);
-        Navigation.findNavController(_binding.getRoot()).navigate(R.id.action_viewProfileFragment_to_eventDetailsFragment, bundle);
+//        TODO
+//        Bundle bundle = new Bundle();
+//        bundle.putParcelable("event", event);
+//        Navigation.findNavController(_binding.getRoot()).navigate(R.id.action_viewProfileFragment_to_eventDetailsFragment, bundle);
     }
 }

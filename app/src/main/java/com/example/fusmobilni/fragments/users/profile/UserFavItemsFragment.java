@@ -6,6 +6,8 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +16,7 @@ import android.widget.Toast;
 import com.example.fusmobilni.R;
 import com.example.fusmobilni.adapters.items.product.ProductsHorizontalAdapter;
 import com.example.fusmobilni.adapters.items.service.ServiceHorizontalAdapter;
+import com.example.fusmobilni.adapters.loading.LoadingCardHorizontalAdapter;
 import com.example.fusmobilni.adapters.users.ViewProfileEventAdapter;
 import com.example.fusmobilni.clients.ClientUtils;
 import com.example.fusmobilni.core.CustomSharedPrefs;
@@ -73,6 +76,9 @@ public class UserFavItemsFragment extends Fragment {
         serviceHorizontalAdapter = new ServiceHorizontalAdapter();
         productsHorizontalAdapter = new ProductsHorizontalAdapter();
         listView.setAdapter(serviceHorizontalAdapter);
+
+        initializeLoadingCards();
+
         fillServices();
         fillProducts();
 
@@ -102,6 +108,9 @@ public class UserFavItemsFragment extends Fragment {
                             collect(Collectors.toList());
                     productsHorizontalAdapter.setData(products);
                     listView.setAdapter(productsHorizontalAdapter);
+
+                    turnOffShimmer(_binding.recyclerViewLoading, _binding.recyclerView);
+
                     if(products.isEmpty()){
                         _binding.recyclerView.setVisibility(View.GONE);
                         _binding.emptyMessage.setVisibility(View.VISIBLE);
@@ -129,6 +138,7 @@ public class UserFavItemsFragment extends Fragment {
                             collect(Collectors.toList());
                     serviceHorizontalAdapter.setData(services);
                     listView.setAdapter(serviceHorizontalAdapter);
+                    turnOffShimmer(_binding.recyclerViewLoading, _binding.recyclerView);
                     if(services.isEmpty()){
                         _binding.recyclerView.setVisibility(View.GONE);
                         _binding.emptyMessage.setVisibility(View.VISIBLE);
@@ -144,4 +154,16 @@ public class UserFavItemsFragment extends Fragment {
             }
         });
     }
+
+    public static void turnOffShimmer(RecyclerView loadingCardsView, RecyclerView actualCards) {
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+            loadingCardsView.setAdapter(new LoadingCardHorizontalAdapter(0));
+            loadingCardsView.setVisibility(View.GONE);
+            actualCards.setVisibility(View.VISIBLE);
+        }, 0);
+    }
+    private void initializeLoadingCards() {
+        _binding.recyclerViewLoading.setAdapter(new LoadingCardHorizontalAdapter(2));
+    }
+
 }

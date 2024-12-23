@@ -54,6 +54,12 @@
 
     <!-- RecyclerView to display content -->
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view_loading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/fragment_loading_card_horizontal" />
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

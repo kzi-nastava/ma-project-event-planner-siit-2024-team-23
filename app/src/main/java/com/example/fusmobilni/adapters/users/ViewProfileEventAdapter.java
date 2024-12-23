@@ -1,8 +1,11 @@
 package com.example.fusmobilni.adapters.users;
 
+import static com.example.fusmobilni.adapters.AdapterUtils.convertToUrisFromBase64;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -12,21 +15,23 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.fusmobilni.R;
 import com.example.fusmobilni.interfaces.EventClickListener;
 import com.example.fusmobilni.model.event.Event;
+import com.example.fusmobilni.responses.events.home.EventHomeResponse;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ViewProfileEventAdapter extends RecyclerView.Adapter<ViewProfileEventAdapter.EventViewHolder>{
         private EventClickListener eventClickListener;
-        private List<Event> eventList;
+        private List<EventHomeResponse> eventList;
 
 
 
-        public ViewProfileEventAdapter(List<Event> eventList, EventClickListener clickListener) {
+        public ViewProfileEventAdapter(List<EventHomeResponse> eventList, EventClickListener clickListener) {
             this.eventList = eventList;
             this.eventClickListener = clickListener;
         }
-        public void setData(List<Event> list) {
+        public void setData(List<EventHomeResponse> list) {
             this.eventList = new ArrayList<>(list);
             notifyDataSetChanged();
         }
@@ -41,13 +46,18 @@ public class ViewProfileEventAdapter extends RecyclerView.Adapter<ViewProfileEve
 
         @Override
         public void onBindViewHolder(@NonNull ViewProfileEventAdapter.EventViewHolder holder, int position) {
-            Event event = eventList.get(position);
+            EventHomeResponse event = eventList.get(position);
             holder.title.setText(event.getTitle());
-            holder.day.setText(event.getDay());
-            holder.monthYear.setText(event.getMonth() + " " + event.getYear());
-            holder.location.setText(event.getLocation());
-            holder.eventType.setText(event.getCategory());
+            holder.day.setText(event.getDate());
+            holder.monthYear.setText(event.getDate());
+            holder.location.setText(event.getLocation().city + ", " + event.getLocation().street);
+            holder.eventType.setText(event.getType().name);
             holder.eventCard.setOnClickListener(v -> eventClickListener.onEventClick(position));
+//            try {
+//                holder.imageView.setImageURI(convertToUrisFromBase64(holder.imageView.getContext(), event.getImage()));
+//            } catch (IOException e) {
+//                throw new RuntimeException(e);
+//            }
         }
 
         @Override
@@ -55,7 +65,7 @@ public class ViewProfileEventAdapter extends RecyclerView.Adapter<ViewProfileEve
             return eventList.size();
         }
 
-        public void updateServiceList(List<Event> newServiceList) {
+        public void updateServiceList(List<EventHomeResponse> newServiceList) {
             this.eventList = new ArrayList<>(newServiceList);
             notifyDataSetChanged();
         }
@@ -68,6 +78,7 @@ public static class EventViewHolder extends RecyclerView.ViewHolder {
     TextView location;
 
     TextView eventType;
+    ImageView imageView;
 
     public EventViewHolder(@NonNull View itemView) {
         super(itemView);
@@ -77,7 +88,7 @@ public static class EventViewHolder extends RecyclerView.ViewHolder {
         location = itemView.findViewById(R.id.textViewEventLocationHorizontal);
         eventCard = itemView.findViewById(R.id.eventCard);
         eventType = itemView.findViewById(R.id.textViewEventType);
-
+        imageView = itemView.findViewById(R.id.imageBannerHorizontal);
     }
 }
 }
