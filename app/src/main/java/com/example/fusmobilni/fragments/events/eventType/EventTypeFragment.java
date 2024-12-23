@@ -21,21 +21,14 @@ import com.example.fusmobilni.databinding.FragmentEventTypeBinding;
 import com.example.fusmobilni.interfaces.EventTypeListener;
 import com.example.fusmobilni.model.event.eventTypes.EventType;
 import com.example.fusmobilni.model.event.eventTypes.EventTypeStatus;
-import com.example.fusmobilni.model.event.eventTypes.SuggestedCategories;
 import com.example.fusmobilni.model.items.category.OfferingsCategory;
 import com.example.fusmobilni.requests.categories.GetCategoriesResponse;
 import com.example.fusmobilni.requests.categories.GetCategoryResponse;
 import com.example.fusmobilni.requests.eventTypes.EventTypeUpdateRequest;
-import com.example.fusmobilni.requests.eventTypes.GetEventTypeResponse;
-import com.example.fusmobilni.requests.eventTypes.GetEventTypesResponse;
-import com.example.fusmobilni.responses.events.GetEventTypeWithCategoriesResponse;
 import com.example.fusmobilni.responses.events.GetEventTypesWithCategoriesResponse;
 import com.example.fusmobilni.viewModels.events.eventTypes.EventTypeViewModel;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 import java.util.stream.Collectors;
 
 import retrofit2.Call;

@@ -30,13 +30,13 @@ public class EventTypeCreationForm extends Fragment {
     private FragmentEventTypeCreationFormBinding _binding;
     private List<OfferingsCategory> _offeringCategory = new ArrayList<>();
     private ChipGroup _selectedCategoriesChipGroup;
-    private List<OfferingsCategory> _selectedCategories = new ArrayList<>();
+    private final List<OfferingsCategory> _selectedCategories = new ArrayList<>();
     private EventTypeViewModel _eventTypeViewModel;
 
     public EventTypeCreationForm() {
         // Required empty public constructor
     }
-    public static EventTypeCreationForm newInstance(String param1, String param2) {
+    public static EventTypeCreationForm newInstance() {
         return new EventTypeCreationForm();
     }
 
@@ -64,24 +64,18 @@ public class EventTypeCreationForm extends Fragment {
 
         addCategoryButton.setOnClickListener(v -> showCategorySelectionDialog());
 
-        _binding.cancelButton.setOnClickListener(v -> {
-            Navigation.findNavController(view).navigate(R.id.eventTypeCreation_to_eventType);
-        });
+        _binding.cancelButton.setOnClickListener(v -> Navigation.findNavController(view).navigate(R.id.eventTypeCreation_to_eventType));
 
-        _binding.submitButton.setOnClickListener(v -> {
-            setValuesAndSubmit();
-        });
+        _binding.submitButton.setOnClickListener(v -> setValuesAndSubmit());
 
         return view;
     }
 
     private void populateInputs() {
-            _eventTypeViewModel.getName().observe(getViewLifecycleOwner(), name -> {
-                _binding.nameInput.setText(String.valueOf(name));
-            });
-            _eventTypeViewModel.getDescription().observe(getViewLifecycleOwner(), description -> {
-                _binding.descriptionInput.setText(String.valueOf(description));
-            });
+            _eventTypeViewModel.getName().observe(getViewLifecycleOwner(), name ->
+                    _binding.nameInput.setText(String.valueOf(name)));
+            _eventTypeViewModel.getDescription().observe(getViewLifecycleOwner(), description ->
+                    _binding.descriptionInput.setText(String.valueOf(description)));
             _eventTypeViewModel.getSuggestedCategories().observe(getViewLifecycleOwner(), suggestedCategories -> {
                 _selectedCategoriesChipGroup.removeAllViews();
                 _selectedCategories.clear();
@@ -106,10 +100,6 @@ public class EventTypeCreationForm extends Fragment {
     private void setValuesAndSubmit() {
         _eventTypeViewModel.setName(String.valueOf(_binding.nameInput.getText()));
         _eventTypeViewModel.setDescription(String.valueOf(_binding.descriptionInput.getText()));
-        if(_selectedCategories == null){
-            Toast.makeText(requireContext(), "Suggested categories must be entered!", Toast.LENGTH_SHORT).show();
-            return;
-        }
         _eventTypeViewModel.submitForm(_selectedCategories, new IEventTypeCallback() {
             @Override
             public void onSuccess(EventType eventType) {
