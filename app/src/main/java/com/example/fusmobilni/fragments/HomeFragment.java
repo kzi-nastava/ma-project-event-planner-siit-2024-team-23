@@ -129,7 +129,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onFailure(Call<ProductsHomeResponse> call, Throwable t) {
                 Log.d("tag", t.getMessage());
-                Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_LONG).show();
+                Toast.makeText(requireActivity(), t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
     }

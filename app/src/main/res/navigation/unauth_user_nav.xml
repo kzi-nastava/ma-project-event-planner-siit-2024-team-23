@@ -190,7 +190,7 @@
     <fragment
         android:id="@+id/updateProfileFragment"
         android:name="com.example.fusmobilni.fragments.users.profile.UpdateProfileFragment"
-        android:label=""
+        android:label="Profile update"
         tools:layout="@layout/fragment_update_profile">
         <action
             android:id="@+id/action_updateProfileFragment_to_viewProfileFragment"
