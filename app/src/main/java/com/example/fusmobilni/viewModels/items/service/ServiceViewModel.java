@@ -10,6 +10,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.fusmobilni.clients.ClientUtils;
+import com.example.fusmobilni.core.CustomSharedPrefs;
 import com.example.fusmobilni.helper.UriConverter;
 import com.example.fusmobilni.model.enums.ReservationConfirmation;
 import com.example.fusmobilni.requests.eventTypes.GetEventTypesResponse;
@@ -17,6 +18,7 @@ import com.example.fusmobilni.requests.services.CreateProposalRequest;
 import com.example.fusmobilni.requests.services.CreateServiceRequest;
 import com.example.fusmobilni.requests.services.GetServiceResponse;
 import com.example.fusmobilni.requests.services.UpdateServiceRequest;
+import com.example.fusmobilni.responses.auth.LoginResponse;
 import com.google.gson.Gson;
 
 import java.io.File;
@@ -240,9 +242,12 @@ public class ServiceViewModel extends ViewModel {
 
     private void updateService(Context context) {
         Gson gson = new Gson();
+        Long userId = getUserId(context);
+        if (userId == null)
+            return;
         UpdateServiceRequest request = new UpdateServiceRequest(
                 name.getValue(), description.getValue(), eventTypeIds.getValue(),
-                price.getValue(), discount.getValue(), 2L, specificities.getValue(),
+                price.getValue(), discount.getValue(), userId, specificities.getValue(),
                 isVisible.getValue(), isAvailable.getValue(), duration.getValue(), reservationDeadline.getValue(),
                 cancellationDeadline.getValue(), reservationConfirmation.getValue()
         );
@@ -274,9 +279,12 @@ public class ServiceViewModel extends ViewModel {
 
     public void createService(Context context) {
         Gson gson = new Gson();
+        Long userId = getUserId(context);
+        if (userId == null)
+            return;
         CreateServiceRequest request = new CreateServiceRequest(
                 name.getValue(), description.getValue(), categoryId.getValue(), eventTypeIds.getValue(),
-                price.getValue(), discount.getValue(), 2L, specificities.getValue(),
+                price.getValue(), discount.getValue(), userId, specificities.getValue(),
                 isVisible.getValue(), isAvailable.getValue(), duration.getValue(), reservationDeadline.getValue(),
                 cancellationDeadline.getValue(), reservationConfirmation.getValue()
         );
@@ -302,12 +310,23 @@ public class ServiceViewModel extends ViewModel {
         });
     }
 
+    private Long getUserId(Context context) {
+        LoginResponse user = CustomSharedPrefs.getInstance(context).getUser();
+        if (user == null) {
+            return null;
+        }
+        return user.getId();
+    }
+
     private void createProposal(Context context) {
         Gson gson = new Gson();
+        Long userId = getUserId(context);
+        if (userId == null)
+            return;
         CreateProposalRequest request = new CreateProposalRequest(
                 customCategoryName.getValue(), customCategoryDescription.getValue(),
                 name.getValue(), description.getValue(), eventTypeIds.getValue(),
-                price.getValue(), discount.getValue(), 2L, specificities.getValue(),
+                price.getValue(), discount.getValue(), userId, specificities.getValue(),
                 isVisible.getValue(), isAvailable.getValue(), duration.getValue(), reservationDeadline.getValue(),
                 cancellationDeadline.getValue(), reservationConfirmation.getValue()
         );
