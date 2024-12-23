@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.fusmobilni.R;
 import com.example.fusmobilni.interfaces.EventTypeListener;
 import com.example.fusmobilni.model.event.eventTypes.EventType;
+import com.example.fusmobilni.model.event.eventTypes.EventTypeStatus;
 import com.example.fusmobilni.model.items.category.OfferingsCategory;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
@@ -42,15 +43,15 @@ public class EventTypeAdapter extends RecyclerView.Adapter<EventTypeAdapter.Even
         EventType eventType = eventTypes.get(position);
         holder.title.setText(eventType.getName());
         holder.description.setText(eventType.getDescription());
-        holder.isActiveIndicator.setText(eventType.getActive() ? "Active" : "Deactivated");
+        holder.isActiveIndicator.setText(eventType.getActive().equals(EventTypeStatus.ACTIVATED) ? "Active" : "Deactivated");
         holder.isActiveIndicator.setTextColor(ContextCompat.getColor(
                 holder.itemView.getContext(),
-                eventType.getActive() ? R.color.accent_green : R.color.accent_red
+                eventType.getActive().equals(EventTypeStatus.ACTIVATED) ? R.color.accent_green : R.color.accent_red
         ));
-        holder.deleteButton.setText(eventType.getActive() ? "Disable" : "Enable");
+        holder.deleteButton.setText(eventType.getActive().equals(EventTypeStatus.ACTIVATED) ? "Disable" : "Enable");
         holder.deleteButton.setTextColor(ContextCompat.getColor(
                 holder.itemView.getContext(),
-                eventType.getActive() ? R.color.accent_red : R.color.accent_green
+                eventType.getActive().equals(EventTypeStatus.ACTIVATED) ? R.color.accent_red : R.color.accent_green
         ));
         holder.deleteButton.setOnClickListener(v -> eventTypeListener.onDeleteEventType(position));
         holder.editButton.setOnClickListener(v -> eventTypeListener.onUpdateEventType(position));

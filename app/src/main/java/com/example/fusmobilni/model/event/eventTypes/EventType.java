@@ -12,7 +12,7 @@ public class EventType {
     private String description;
     private SuggestedCategories suggestedCategories;
 
-    private boolean isActive=true;
+    private EventTypeStatus isActive;
     public EventType(Long id,String name, String description, SuggestedCategories categories) {
         this.id = id;
         this.name = name;
@@ -48,14 +48,14 @@ public class EventType {
         this.suggestedCategories = suggestedCategories;
     }
 
-    public boolean isActive() {
+    public EventTypeStatus isActive() {
         return isActive;
     }
 
-    public void setActive(boolean active) {
+    public void setActive(EventTypeStatus active) {
         isActive = active;
     }
-    public boolean getActive(){ return isActive ;}
+    public EventTypeStatus getActive(){ return isActive ;}
 
     @NonNull
     @Override
