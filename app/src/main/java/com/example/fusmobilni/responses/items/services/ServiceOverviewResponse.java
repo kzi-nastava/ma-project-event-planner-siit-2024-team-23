@@ -1,9 +1,8 @@
 package com.example.fusmobilni.responses.items.services;
 
 import com.example.fusmobilni.responses.auth.ServiceProviderDetailsResponse;
-import com.example.fusmobilni.responses.auth.ServiceProviderResponse;
 import com.example.fusmobilni.responses.items.CategoryResponse;
-import com.example.fusmobilni.responses.items.ItemGradeResponse;
+import com.example.fusmobilni.responses.items.ItemReviewResponse;
 
 import java.util.List;
 
@@ -17,9 +16,9 @@ public class ServiceOverviewResponse {
     public String image;
     public CategoryResponse category;
     public ServiceProviderDetailsResponse provider;
-    public List<ItemGradeResponse> grades;
+    public List<ItemReviewResponse> grades;
 
-    public ServiceOverviewResponse(Long id, CategoryResponse category, String description, List<ItemGradeResponse> grades, String name, Double price, Double discount, ServiceProviderDetailsResponse provider, String specificities, String image) {
+    public ServiceOverviewResponse(Long id, CategoryResponse category, String description, List<ItemReviewResponse> grades, String name, Double price, Double discount, ServiceProviderDetailsResponse provider, String specificities, String image) {
         this.id = id;
         this.category = category;
         this.description = description;
@@ -72,11 +71,11 @@ public class ServiceOverviewResponse {
         this.description = description;
     }
 
-    public List<ItemGradeResponse> getGrades() {
+    public List<ItemReviewResponse> getGrades() {
         return grades;
     }
 
-    public void setGrades(List<ItemGradeResponse> grades) {
+    public void setGrades(List<ItemReviewResponse> grades) {
         this.grades = grades;
     }
 

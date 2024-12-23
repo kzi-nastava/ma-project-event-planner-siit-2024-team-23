@@ -5,6 +5,7 @@ import com.example.fusmobilni.requests.events.event.GetItemsByCategoryAndPrice;
 import com.example.fusmobilni.requests.items.ItemReviewCreateRequest;
 import com.example.fusmobilni.responses.events.GetItemsResponse;
 import com.example.fusmobilni.responses.items.IsBoughtItemResponse;
+import com.example.fusmobilni.responses.items.ItemReviewsResponse;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -24,4 +25,7 @@ public interface ItemsService {
 
     @POST("items/reviews")
     Call<Void> submitReview(@Body ItemReviewCreateRequest request);
+
+    @GET("item/reviews/pending")
+    Call<ItemReviewsResponse> findPendingReviews();
 }

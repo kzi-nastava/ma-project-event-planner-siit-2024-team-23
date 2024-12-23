@@ -5,6 +5,7 @@ import static com.example.fusmobilni.adapters.AdapterUtils.convertToUrisFromBase
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -18,27 +19,27 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ItemReviewsAdapter extends RecyclerView.Adapter<ItemReviewsAdapter.ItemReviewsViewHolder> {
-    List<ItemReviewResponse> _grades;
+public class ItemReviewApprovalAdapter extends RecyclerView.Adapter<ItemReviewApprovalAdapter.ItemReviewApprovalAdapterViewHolder> {
+    List<ItemReviewResponse> reviews = new ArrayList<>();
 
-    public ItemReviewsAdapter(List<ItemReviewResponse> grades) {
-        _grades = new ArrayList<>(grades);
+    public ItemReviewApprovalAdapter() {
+        reviews = new ArrayList<>();
     }
 
-    public ItemReviewsAdapter() {
-        _grades = new ArrayList<>();
+    public ItemReviewApprovalAdapter(List<ItemReviewResponse> responses) {
+        reviews = new ArrayList<>(responses);
     }
 
     @NonNull
     @Override
-    public ItemReviewsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_item_review, parent, false);
-        return new ItemReviewsAdapter.ItemReviewsViewHolder(view);
+    public ItemReviewApprovalAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_item_review_approve, parent, false);
+        return new ItemReviewApprovalAdapterViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ItemReviewsViewHolder holder, int position) {
-        ItemReviewResponse grade = _grades.get(position);
+    public void onBindViewHolder(@NonNull ItemReviewApprovalAdapterViewHolder holder, int position) {
+        ItemReviewResponse grade = reviews.get(position);
         try {
             holder.eoImage.setImageURI(convertToUrisFromBase64(holder.eoImage.getContext(), grade.getEventOrganizer().getImage()));
         } catch (IOException e) {
@@ -55,16 +56,19 @@ public class ItemReviewsAdapter extends RecyclerView.Adapter<ItemReviewsAdapter.
                 attendees[i].setImageResource(R.drawable.ic_star);
             }
         }
+        holder.approveButton.setOnClickListener(v -> {
 
-
+        });
+        holder.declineButton.setOnClickListener(v -> {
+        });
     }
 
     @Override
     public int getItemCount() {
-        return _grades.size();
+        return reviews.size();
     }
 
-    public static class ItemReviewsViewHolder extends RecyclerView.ViewHolder {
+    public static class ItemReviewApprovalAdapterViewHolder extends RecyclerView.ViewHolder {
         ImageView eoImage;
         TextView eoName;
         TextView reviewDate;
@@ -74,18 +78,11 @@ public class ItemReviewsAdapter extends RecyclerView.Adapter<ItemReviewsAdapter.
         ImageView star3;
         ImageView star4;
         ImageView star5;
+        Button approveButton;
+        Button declineButton;
 
-        public ItemReviewsViewHolder(@NonNull View itemView) {
+        public ItemReviewApprovalAdapterViewHolder(@NonNull View itemView) {
             super(itemView);
-            eoImage = itemView.findViewById(R.id.eoImageView);
-            eoName = itemView.findViewById(R.id.eoNameTextView);
-            reviewContent = itemView.findViewById(R.id.textViewReviewContent);
-            reviewDate = itemView.findViewById(R.id.textViewReviewDate);
-            star1 = itemView.findViewById(R.id.star1);
-            star2 = itemView.findViewById(R.id.star2);
-            star3 = itemView.findViewById(R.id.star3);
-            star4 = itemView.findViewById(R.id.star4);
-            star5 = itemView.findViewById(R.id.star5);
         }
     }
 }
