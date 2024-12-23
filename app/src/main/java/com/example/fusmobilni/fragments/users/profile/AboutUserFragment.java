@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+
 import com.example.fusmobilni.R;
 import com.example.fusmobilni.clients.ClientUtils;
 import com.example.fusmobilni.databinding.FragmentAboutUserBinding;
@@ -17,6 +18,7 @@ import com.example.fusmobilni.model.enums.UserType;
 import com.example.fusmobilni.responses.auth.UserAvatarResponse;
 import com.example.fusmobilni.responses.users.UserInfoPreviewResponse;
 import com.example.fusmobilni.responses.users.UserInfoResponse;
+
 
 import retrofit2.Call;
 import retrofit2.Callback;
