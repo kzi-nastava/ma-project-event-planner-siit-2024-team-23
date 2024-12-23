@@ -3,6 +3,8 @@ package com.example.fusmobilni.fragments.items.pricelist;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -22,6 +24,8 @@ import com.example.fusmobilni.interfaces.PriceListListener;
 import com.example.fusmobilni.responses.auth.LoginResponse;
 import com.example.fusmobilni.responses.items.pricelist.PriceListGetResponse;
 import com.example.fusmobilni.responses.items.pricelist.PriceListsGetResponse;
+import com.example.fusmobilni.viewModels.items.category.CategoryViewModel;
+import com.example.fusmobilni.viewModels.items.pricelist.PriceListViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +40,7 @@ public class PriceListFragment extends Fragment implements PriceListListener {
     private FragmentPriceListBinding binding;
     private PriceListAdapter adapter;
 
+    private PriceListViewModel viewModel;
     private RecyclerView recyclerView;
     private List<PriceListGetResponse> items = new ArrayList<>();
 
@@ -44,7 +49,7 @@ public class PriceListFragment extends Fragment implements PriceListListener {
     public PriceListFragment() {
     }
 
-    public static PriceListFragment newInstance(String param1, String param2) {
+    public static PriceListFragment newInstance() {
         return new PriceListFragment();
     }
 
@@ -57,6 +62,7 @@ public class PriceListFragment extends Fragment implements PriceListListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentPriceListBinding.inflate(inflater, container, false);
+        viewModel = new ViewModelProvider(requireActivity()).get(PriceListViewModel.class);
         View view = binding.getRoot();
 
         initializeRecycler();
@@ -71,6 +77,7 @@ public class PriceListFragment extends Fragment implements PriceListListener {
                 if (response.isSuccessful() && response.body() != null) {
                     items = response.body().items;
                     adapter.setData(items);
+                    initializeRecycler();
                 }
             }
 
@@ -85,7 +92,8 @@ public class PriceListFragment extends Fragment implements PriceListListener {
 
     @Override
     public void onUpdate(int position) {
-        Log.d("Tag", "nigga");
+        viewModel.populate(this.items.get(position));
+        Navigation.findNavController(binding.getRoot()).navigate(R.id.action_priceList_toPriceListEdit);
     }
 
     private void initializeRecycler() {
