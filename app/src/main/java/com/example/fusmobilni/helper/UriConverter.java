@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.OpenableColumns;
+import android.util.Base64;
 import android.util.Log;
 
 import java.io.File;
@@ -88,5 +89,18 @@ public class UriConverter {
             return new File(uri.getPath()).getName();
         }
         return null;
+    }
+
+    public static Uri convertToUriFromBase64(Context context, String base64String) throws IOException {
+        byte[] decodedBytes = Base64.decode(base64String, Base64.DEFAULT);
+
+        File tempFile = File.createTempFile("image_", ".jpg", context.getCacheDir());
+        tempFile.deleteOnExit();
+
+        try (FileOutputStream fos = new FileOutputStream(tempFile)) {
+            fos.write(decodedBytes);
+        }
+
+        return Uri.fromFile(tempFile);
     }
 }

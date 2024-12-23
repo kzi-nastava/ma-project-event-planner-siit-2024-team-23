@@ -24,9 +24,6 @@
             android:id="@+id/action_home_fragment_to_notifications_fragment"
             app:destination="@id/notifications_fragment" />
         <action
-            android:id="@+id/action_home_fragment_to_messages_fragment"
-            app:destination="@id/messages_fragment" />
-        <action
             android:id="@+id/action_home_fragment_to_login_activity"
             app:destination="@id/login_activity" />
         <action
@@ -88,15 +85,6 @@
         android:name="com.example.fusmobilni.fragments.items.service.Filters.ServiceSearchFragment"
         android:label="Browse Services"
         tools:layout="@layout/fragment_service_search" />
-    <fragment
-        android:id="@+id/messages_fragment"
-        android:name="com.example.fusmobilni.fragments.communication.MessagesFragment"
-        android:label="Messages"
-        tools:layout="@layout/fragment_messages">
-        <action
-            android:id="@+id/action_messages_fragment_to_home_fragment"
-            app:destination="@id/home_fragment" />
-    </fragment>
 
     <fragment
         android:id="@+id/events_search_fragment"
@@ -405,4 +393,12 @@
     <action
         android:id="@+id/action_to_item_review_form"
         app:destination="@id/item_review_fragment" />
+
+    <fragment
+        android:id="@+id/chat_fragment"
+        android:name="com.example.fusmobilni.fragments.communication.chat.ChatsOverviewFragment"
+        android:label=""
+        tools:layout="@layout/fragment_chats_overview">
+
+    </fragment>
 </navigation>

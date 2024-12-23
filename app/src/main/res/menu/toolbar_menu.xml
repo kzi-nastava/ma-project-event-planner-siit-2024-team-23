@@ -4,7 +4,7 @@
     <group android:checkableBehavior="single">
 
         <item
-            android:id="@id/messages_fragment"
+            android:id="@id/chat_fragment"
             android:icon="@drawable/ic_message_white"
             android:title="Messages"
             app:showAsAction="always"
