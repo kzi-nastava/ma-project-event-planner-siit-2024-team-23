@@ -1,10 +1,6 @@
 package com.example.fusmobilni.activities;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,12 +20,11 @@ import com.example.fusmobilni.R;
 import com.example.fusmobilni.clients.ClientUtils;
 import com.example.fusmobilni.core.CustomSharedPrefs;
 import com.example.fusmobilni.databinding.ActivityHomeBinding;
-import com.example.fusmobilni.model.users.User;
 import com.example.fusmobilni.model.enums.UserType;
+import com.example.fusmobilni.responses.auth.LoginResponse;
 import com.google.android.material.navigation.NavigationView;
 import androidx.activity.OnBackPressedCallback;
 
-import java.io.File;
 import java.util.Objects;
 
 public class HomeActivity extends AppCompatActivity {
@@ -58,7 +53,7 @@ public class HomeActivity extends AppCompatActivity {
 
         // get logged in user
         CustomSharedPrefs sharedPrefs = CustomSharedPrefs.getInstance();
-        User user = sharedPrefs.getUser();
+        LoginResponse user = sharedPrefs.getUser();
 
         setupDrawerMenu(user != null && user.getRole() != null ? user.getRole() : UserType.UNAUTHENTICATED_USER);
         setSupportActionBar(_topToolbar);
@@ -99,7 +94,7 @@ public class HomeActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         CustomSharedPrefs sharedPrefs = CustomSharedPrefs.getInstance();
-        User user = sharedPrefs.getUser();
+        LoginResponse user = sharedPrefs.getUser();
         setupDrawerMenu(user != null && user.getRole() != null ? user.getRole() : UserType.UNAUTHENTICATED_USER);
     }
 
@@ -138,18 +133,19 @@ public class HomeActivity extends AppCompatActivity {
 
         MenuItem profileItem = menu.findItem(R.id.login_activity);
         CustomSharedPrefs sharedPrefs = CustomSharedPrefs.getInstance();
-        User user = sharedPrefs.getUser();
+        LoginResponse user = sharedPrefs.getUser();
 
         if (user != null) {
             // If the user is logged in, load their profile image
-            if (user.getAvatar() != null) {
-                File imgFile = new File(user.getAvatar());
-                if (imgFile.exists()) {
-                    Bitmap bitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-                    Drawable drawable = new BitmapDrawable(getResources(), bitmap);
-                    profileItem.setIcon(drawable); // Set the user's profile image
-                }
-            }
+//            TODO
+//            if (user.getAvatar() != null) {
+//                File imgFile = new File(user.getAvatar());
+//                if (imgFile.exists()) {
+//                    Bitmap bitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+//                    Drawable drawable = new BitmapDrawable(getResources(), bitmap);
+//                    profileItem.setIcon(drawable); // Set the user's profile image
+//                }
+//            }
         } else {
             // If not logged in, use a default icon
             profileItem.setIcon(R.drawable.ic_person_white);
@@ -164,7 +160,7 @@ public class HomeActivity extends AppCompatActivity {
 
         if (id == R.id.login_activity) {// Retrieve the login status from SharedPreferences
             CustomSharedPrefs sharedPrefs = CustomSharedPrefs.getInstance();
-            User user = sharedPrefs.getUser();
+            LoginResponse user = sharedPrefs.getUser();
             if (user != null) {
                 // If logged in, navigate to the profile fragment
                 _navController.navigate(R.id.viewProfileFragment);

@@ -20,6 +20,7 @@ import android.widget.Button;
 import com.example.fusmobilni.R;
 import com.example.fusmobilni.adapters.users.serviceProvider.ServiceProviderServiceAdapter;
 import com.example.fusmobilni.clients.ClientUtils;
+import com.example.fusmobilni.core.CustomSharedPrefs;
 import com.example.fusmobilni.databinding.FragmentServiceViewBinding;
 import com.example.fusmobilni.fragments.users.filters.ServiceProviderFilterFragment;
 import com.example.fusmobilni.interfaces.DeleteServiceListener;
@@ -28,6 +29,7 @@ import com.example.fusmobilni.requests.services.GetServicesResponse;
 import com.example.fusmobilni.requests.services.ServiceFilterRequest;
 import com.example.fusmobilni.requests.services.cardView.GetServiceCardResponse;
 import com.example.fusmobilni.requests.services.cardView.GetServicesCardResponse;
+import com.example.fusmobilni.responses.auth.LoginResponse;
 import com.example.fusmobilni.viewModels.users.serviceProvider.ServiceProviderViewModel;
 import com.example.fusmobilni.viewModels.items.service.ServiceViewModel;
 
@@ -71,14 +73,21 @@ public class ServiceView extends Fragment implements DeleteServiceListener {
         viewModel = new ViewModelProvider(requireActivity()).get(ServiceProviderViewModel.class);
         setUpAdapter();
         viewModel.setData(services);
-        Call<GetServicesCardResponse> response = ClientUtils.serviceOfferingService.findAllByServiceProvider(2L,new ServiceFilterRequest());
+        LoginResponse user = CustomSharedPrefs.getInstance(getContext()).getUser();
+        Long userId = null;
+        if (user == null) {
+            return view;
+        }
+        userId = user.getId();
+        Call<GetServicesCardResponse> response = ClientUtils.serviceOfferingService.findAllByServiceProvider(userId,new ServiceFilterRequest());
         response.enqueue(new Callback<GetServicesCardResponse>() {
             @Override
             public void onResponse(Call<GetServicesCardResponse> call, Response<GetServicesCardResponse> response) {
-                services = response.body().services;
-                Log.d("Tag", "idemo servicei se ucitavaju");
-                serviceAdapter.notifyDataSetChanged();
-                viewModel.setData(services);
+                if (response.isSuccessful() && response.body() != null) {
+                    services = response.body().services;
+                    serviceAdapter.notifyDataSetChanged();
+                    viewModel.setData(services);
+                }
             }
 
             @Override

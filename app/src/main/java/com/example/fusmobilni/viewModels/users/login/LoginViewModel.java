@@ -7,9 +7,17 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.fusmobilni.clients.ClientUtils;
 import com.example.fusmobilni.core.CustomSharedPrefs;
+import com.example.fusmobilni.interfaces.ILoginCallback;
 import com.example.fusmobilni.model.users.User;
 import com.example.fusmobilni.model.enums.UserType;
+import com.example.fusmobilni.requests.auth.LoginRequest;
+import com.example.fusmobilni.responses.auth.LoginResponse;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class LoginViewModel extends AndroidViewModel {
     private final MutableLiveData<String> _email = new MutableLiveData<>();
@@ -62,45 +70,33 @@ public class LoginViewModel extends AndroidViewModel {
         super(application);
     }
 
-    public void login() {
+    public void login(ILoginCallback callback) {
         _isLoading.setValue(true);
-
-        // TODO: Call backend here
-        if ("admin@gmail.com".equals(_email.getValue()) && "123".equals(_password.getValue())) {
-            setRole(UserType.ADMIN);
-            writeUserToPref();
-            setLoginSuccess(true);
-        } else if ("au@gmail.com".equals(_email.getValue()) && "123".equals(_password.getValue())) {
-            setRole(UserType.AUTHENTICATED_USER);
-            writeUserToPref();
-            setLoginSuccess(true);
-        } else if ("eo@gmail.com".equals(_email.getValue()) && "123".equals(_password.getValue())) {
-            setRole(UserType.EVENT_ORGANIZER);
-            writeUserToPref();
-            setLoginSuccess(true);
-        } else if ("sp@gmail.com".equals(_email.getValue()) && "123".equals(_password.getValue())) {
-            setRole(UserType.SERVICE_PROVIDER);
-            writeUserToPref();
-            setLoginSuccess(true);
-        } else {
-            _loginSuccess.setValue(false);
-        }
-        _isLoading.setValue(false);
+        Call<LoginResponse> request = ClientUtils.authService.login(new LoginRequest(_email.getValue(), _password.getValue()));
+        request.enqueue(new Callback<>() {
+            @Override
+            public void onResponse(@NonNull Call<LoginResponse> call, @NonNull Response<LoginResponse> response) {
+                if(response.isSuccessful()){
+                    writeUserToPref(response.body());
+                    _isLoading.setValue(false);
+                    callback.onSuccess(response.body());
+                }else{
+                    callback.onFailure(new Throwable("Login failed!"));
+                    _isLoading.setValue(false);
+                }
+            }
+            @Override
+            public void onFailure(@NonNull Call<LoginResponse> call, @NonNull Throwable t) {
+                callback.onFailure(t);
+                _isLoading.setValue(false);
+            }
+        });
     }
 
-    private void writeUserToPref() {
+    private void writeUserToPref(LoginResponse response) {
         Context appContext = getApplication();
         CustomSharedPrefs prefs = CustomSharedPrefs.getInstance(appContext);
-        // TODO: created dummy user here replace with the real one later!
-        User user = new User();
-        user.setId(1L);
-        user.setFirstName("Milan");
-        user.setLastName("Lazarevic");
-        user.setEmail(getEmail().getValue());
-        user.setJwt("myToken123");
-        user.setRole(getRole().getValue());
-        user.setAvatar("https://w7.pngwing.com/pngs/340/946/png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes-thumbnail.png");
-        prefs.saveUser(user);
+        prefs.saveUser(response);
     }
 
 }
