@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fusmobilni.R;
+import com.example.fusmobilni.fragments.items.reviews.OnReviewActionListener;
 import com.example.fusmobilni.responses.items.ItemReviewResponse;
 
 import java.io.IOException;
@@ -21,14 +22,23 @@ import java.util.List;
 
 public class ItemReviewApprovalAdapter extends RecyclerView.Adapter<ItemReviewApprovalAdapter.ItemReviewApprovalAdapterViewHolder> {
     List<ItemReviewResponse> reviews = new ArrayList<>();
+    private final OnReviewActionListener listener;
 
-    public ItemReviewApprovalAdapter() {
+    public ItemReviewApprovalAdapter(OnReviewActionListener listener) {
+        this.listener = listener;
         reviews = new ArrayList<>();
     }
 
-    public ItemReviewApprovalAdapter(List<ItemReviewResponse> responses) {
+    public ItemReviewApprovalAdapter(List<ItemReviewResponse> responses, OnReviewActionListener listener) {
         reviews = new ArrayList<>(responses);
+        this.listener = listener;
     }
+
+    public void removeReview(ItemReviewResponse review) {
+        reviews.removeIf(item -> item.getId().equals(review.getId()));
+        notifyDataSetChanged();
+    }
+
 
     @NonNull
     @Override
@@ -57,9 +67,14 @@ public class ItemReviewApprovalAdapter extends RecyclerView.Adapter<ItemReviewAp
             }
         }
         holder.approveButton.setOnClickListener(v -> {
-
+            if (listener != null) {
+                listener.onApprove(grade);
+            }
         });
         holder.declineButton.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onDecline(grade);
+            }
         });
     }
 
@@ -83,6 +98,17 @@ public class ItemReviewApprovalAdapter extends RecyclerView.Adapter<ItemReviewAp
 
         public ItemReviewApprovalAdapterViewHolder(@NonNull View itemView) {
             super(itemView);
+            eoImage = itemView.findViewById(R.id.eoImageView);
+            eoName = itemView.findViewById(R.id.eoNameTextView);
+            reviewContent = itemView.findViewById(R.id.textViewReviewContent);
+            reviewDate = itemView.findViewById(R.id.textViewReviewDate);
+            star1 = itemView.findViewById(R.id.star1);
+            star2 = itemView.findViewById(R.id.star2);
+            star3 = itemView.findViewById(R.id.star3);
+            star4 = itemView.findViewById(R.id.star4);
+            star5 = itemView.findViewById(R.id.star5);
+            approveButton = itemView.findViewById(R.id.approveReviewButton);
+            declineButton = itemView.findViewById(R.id.declineReviewButton);
         }
     }
 }

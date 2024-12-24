@@ -48,7 +48,8 @@ public class FailiureDialogFragment extends DialogFragment {
                              Bundle savedInstanceState) {
         _binding = FragmentFailiureDialogBinding.inflate(inflater,container,false);
         View root = _binding.getRoot();
-
+        _binding.successMessage.setText(_title);
+        _binding.subMessage.setText(_message);
         return root;
     }
 }
