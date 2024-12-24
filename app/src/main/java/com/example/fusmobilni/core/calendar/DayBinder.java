@@ -3,17 +3,17 @@ package com.example.fusmobilni.core.calendar;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
-import androidx.navigation.Navigation;
 
 import com.example.fusmobilni.R;
-import com.example.fusmobilni.model.event.Event;
+import com.example.fusmobilni.interfaces.ICalendarCallback;
+import com.example.fusmobilni.responses.events.home.EventHomeResponse;
+import com.example.fusmobilni.responses.events.home.EventsHomeResponse;
 import com.kizitonwose.calendar.core.CalendarDay;
 import com.kizitonwose.calendar.core.DayPosition;
 import com.kizitonwose.calendar.view.MonthDayBinder;
@@ -23,16 +23,18 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class DayBinder implements MonthDayBinder<DayViewContainer> {
-    private ArrayList<Event> _userEvents;
-    private Map<LocalDate, Event> eventMap;
+    private List<EventHomeResponse> _userEvents;
+    private Map<LocalDate, List<EventHomeResponse>> eventMap;
+    private ICalendarCallback callback;
     private Context _context;
-    public DayBinder(ArrayList<Event> events, Context context){
+    public DayBinder(List<EventHomeResponse> events, Context context, ICalendarCallback callback){
         this._userEvents = events;
         this._context = context;
-        // TODO after fetching the real data remove this and just use the preprocessing in the setter
+        this.callback = callback;
         preprocessEvents();
     }
     @NonNull
@@ -44,17 +46,16 @@ public class DayBinder implements MonthDayBinder<DayViewContainer> {
     public void bind(@NonNull DayViewContainer container, @NonNull CalendarDay day) {
         container.textView.setText(String.valueOf(day.getDate().getDayOfMonth()));
 
-        Event event = eventMap.get(day.getDate());
-        if(event != null){
+        List<EventHomeResponse> events = eventMap.get(day.getDate());
+        if(events != null){
             container.textView.setBackgroundResource(R.drawable.circle_today);
             container.textView.setTextColor(Color.WHITE);
-            // TODO here redirect to the concrete event page!
             container.textView.setOnClickListener(v -> {
-                Toast.makeText(container.textView.getContext(),
-                        event.getTitle(), Toast.LENGTH_SHORT).show();
-                Bundle bundle = new Bundle();
-                bundle.putParcelable("event", event);
-                Navigation.findNavController(container.textView).navigate(R.id.action_userCalendarFragment_to_eventDetailsFragment, bundle);
+                callback.onCalendarDateClick(new EventsHomeResponse(events));
+                //TODO
+//                Bundle bundle = new Bundle();
+//                bundle.putParcelable("event", event);
+//                Navigation.findNavController(container.textView).navigate(R.id.action_userCalendarFragment_to_eventDetailsFragment, bundle);
             });
         }else{
             container.textView.setBackground(null);
@@ -70,13 +71,13 @@ public class DayBinder implements MonthDayBinder<DayViewContainer> {
     }
 
     private void preprocessEvents() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         eventMap = new HashMap<>();
 
-        for (Event event : _userEvents) {
+        for (EventHomeResponse event : _userEvents) {
             try {
                 LocalDate date = LocalDate.parse(event.getDate(), formatter);
-                eventMap.put(date, event);
+                eventMap.computeIfAbsent(date, k -> new ArrayList<>()).add(event);
             } catch (DateTimeParseException e) {
                 Log.e("EventPreprocess", "Invalid date format: " + event.getDate(), e);
                 Toast.makeText(_context,
@@ -85,11 +86,4 @@ public class DayBinder implements MonthDayBinder<DayViewContainer> {
             }
         }
     }
-
-    public void setUserEvents(ArrayList<Event> userEvents) {
-        this._userEvents = userEvents;
-        preprocessEvents();
-    }
-
-
 }

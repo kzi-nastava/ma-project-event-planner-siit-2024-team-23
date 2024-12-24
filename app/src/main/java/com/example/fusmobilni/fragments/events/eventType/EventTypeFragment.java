@@ -12,24 +12,33 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.fusmobilni.R;
 import com.example.fusmobilni.adapters.events.eventType.EventTypeAdapter;
+import com.example.fusmobilni.clients.ClientUtils;
 import com.example.fusmobilni.databinding.FragmentEventTypeBinding;
 import com.example.fusmobilni.interfaces.EventTypeListener;
 import com.example.fusmobilni.model.event.eventTypes.EventType;
-import com.example.fusmobilni.model.event.eventTypes.SuggestedCategories;
+import com.example.fusmobilni.model.event.eventTypes.EventTypeStatus;
 import com.example.fusmobilni.model.items.category.OfferingsCategory;
+import com.example.fusmobilni.requests.categories.GetCategoriesResponse;
+import com.example.fusmobilni.requests.categories.GetCategoryResponse;
+import com.example.fusmobilni.requests.eventTypes.EventTypeUpdateRequest;
+import com.example.fusmobilni.responses.events.GetEventTypesWithCategoriesResponse;
 import com.example.fusmobilni.viewModels.events.eventTypes.EventTypeViewModel;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.stream.Collectors;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class EventTypeFragment extends Fragment implements EventTypeListener {
     private FragmentEventTypeBinding _binding;
     private EventTypeViewModel _eventTypeViewModel;
+    private RecyclerView _recyclerView;
     private final ArrayList<EventType> _eventTypes = new ArrayList<>();
     private final ArrayList<OfferingsCategory> _offeringCategory = new ArrayList<>();
     private EventTypeAdapter _eventTypeAdapter;
@@ -52,62 +61,84 @@ public class EventTypeFragment extends Fragment implements EventTypeListener {
         _binding = FragmentEventTypeBinding.inflate(getLayoutInflater());
         View view = _binding.getRoot();
         _eventTypeViewModel = new ViewModelProvider(requireActivity()).get(EventTypeViewModel.class);
-        RecyclerView recyclerView = _binding.eventsRecycleView;
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        _recyclerView = _binding.eventsRecycleView;
+        _recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         populateData();
-        this._eventTypeAdapter = new EventTypeAdapter(this._eventTypes, this);
-        recyclerView.setAdapter(_eventTypeAdapter);
+
         _binding.floatingActionButton.setOnClickListener(v-> {
             _eventTypeViewModel.cleanUp();
+            _eventTypeViewModel.setIsUpdating(false);
             Navigation.findNavController(view).navigate(R.id.eventTypeCreationForm);
         });
         return view;
     }
     private void populateData() {
-        _offeringCategory.add(new OfferingsCategory(1L, "Sport", "Sport je jako zanimljiv i zabavan"));
-        _offeringCategory.add(new OfferingsCategory(2L, "Food", "Sport je jako zanimljiv i zabavan"));
-        _offeringCategory.add(new OfferingsCategory(3L, "Slavlje", "Sport je jako zanimljiv i zabavan"));
-        _offeringCategory.add(new OfferingsCategory(4L, "Hronologija", "Sport je jako zanimljiv i zabavan"));
-        _offeringCategory.add(new OfferingsCategory(5L, "Jelo", "Sport je jako zanimljiv i zabavan"));
-        _eventTypes.add(new EventType(
-                1L,
-                "Sports Event",
-                "An event centered around sports activities.",
-                new SuggestedCategories(new ArrayList<>(List.of(_offeringCategory.get(1), _offeringCategory.get(4))))
-        ));
-        _eventTypes.add(new EventType(
-                2L,
-                "Food Festival",
-                "A festival showcasing various cuisines and food culture.",
-                new SuggestedCategories(new ArrayList<>(List.of(_offeringCategory.get(1), _offeringCategory.get(4))))
-        ));
-        _eventTypes.add(new EventType(
-                3L,
-                "Birthday Party",
-                "A celebration for someone's birthday.",
-                new SuggestedCategories(new ArrayList<>(List.of(_offeringCategory.get(1), _offeringCategory.get(4))))
-        ));
-        _eventTypes.add(new EventType(
-                4L,
-                "Historical Conference",
-                "A conference focusing on historical topics and events.",
-                new SuggestedCategories(new ArrayList<>(List.of(_offeringCategory.get(1), _offeringCategory.get(4))))
-        ));
-        _eventTypes.add(new EventType(
-                5L,
-                "Community Gathering",
-                "An event for bringing the community together.",
-                new SuggestedCategories(new ArrayList<>(List.of(_offeringCategory.get(1), _offeringCategory.get(4))))
-        ));
+        Call<GetCategoriesResponse> request = ClientUtils.categoryService.findAll();
+        request.enqueue(new Callback<>() {
+            @Override
+            public void onResponse(@NonNull Call<GetCategoriesResponse> call, @NonNull Response<GetCategoriesResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    _offeringCategory.clear();
+                    for (GetCategoryResponse cat : response.body().categories) {
+                        _offeringCategory.add(new OfferingsCategory(cat.id, cat.name, cat.description));
+                    }
+                    _eventTypeViewModel.setAllCategories(_offeringCategory);
+                    populateEvents();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<GetCategoriesResponse> call, @NonNull Throwable t) {
+                Toast.makeText(requireContext(), "Error fetching categories from server!", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
+    private void populateEvents(){
+        Call<GetEventTypesWithCategoriesResponse> request = ClientUtils.eventTypeService.findAllWIthSuggestedCategories();
+        request.enqueue(new Callback<>() {
+            @Override
+            public void onResponse(@NonNull Call<GetEventTypesWithCategoriesResponse> call, @NonNull Response<GetEventTypesWithCategoriesResponse> response) {
+                if(response.isSuccessful() && response.body() != null){
+                    _eventTypes.clear();
+                    _eventTypes.addAll(response.body().eventTypes);
+                }
+                _eventTypeAdapter = new EventTypeAdapter(_eventTypes, EventTypeFragment.this);
+                _recyclerView.setAdapter(_eventTypeAdapter);
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<GetEventTypesWithCategoriesResponse> call, @NonNull Throwable t) {
+            }
+        });
+    }
+
+
 
     @Override
     public void onDeleteEventType(int position) {
         EventType eventType = this._eventTypes.get(position);
-        boolean isActive = !eventType.getActive();
+        EventTypeStatus isActive = eventType.getActive().equals(EventTypeStatus.ACTIVATED) ? EventTypeStatus.DEACTIVATED: EventTypeStatus.ACTIVATED;
         eventType.setActive(isActive);
-        _eventTypeViewModel.setIsUpdating(isActive);
-        _eventTypeAdapter.updateItem(position, eventType);
+        ArrayList<Long> categories = eventType.getSuggestedCategories().categories.stream()
+                .map(OfferingsCategory::getId).collect(Collectors.toCollection(ArrayList::new));
+
+        Call<EventType> request = ClientUtils.eventTypeService.updateEventType(eventType.getId(),
+                new EventTypeUpdateRequest(eventType.getName(), eventType.getDescription(), categories, eventType.isActive()));
+        request.enqueue(new Callback<>() {
+            @Override
+            public void onResponse(@NonNull Call<EventType> call, @NonNull Response<EventType> response) {
+                if(response.isSuccessful() && response.body() != null){
+                    _eventTypeViewModel.setIsUpdating(response.body().getActive().equals(EventTypeStatus.ACTIVATED));
+                    _eventTypeAdapter.updateItem(position, response.body());
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<EventType> call, @NonNull Throwable t) {
+                Toast.makeText(requireContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
 
     @Override

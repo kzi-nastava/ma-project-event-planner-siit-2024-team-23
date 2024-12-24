@@ -15,6 +15,8 @@ import android.widget.Toast;
 
 import com.example.fusmobilni.R;
 import com.example.fusmobilni.databinding.FragmentEventTypeCreationFormBinding;
+import com.example.fusmobilni.interfaces.IEventTypeCallback;
+import com.example.fusmobilni.model.event.eventTypes.EventType;
 import com.example.fusmobilni.model.items.category.OfferingsCategory;
 import com.example.fusmobilni.viewModels.events.eventTypes.EventTypeViewModel;
 import com.google.android.material.button.MaterialButton;
@@ -26,15 +28,15 @@ import java.util.List;
 
 public class EventTypeCreationForm extends Fragment {
     private FragmentEventTypeCreationFormBinding _binding;
-    private ArrayList<OfferingsCategory> _offeringCategory = new ArrayList<>();
+    private List<OfferingsCategory> _offeringCategory = new ArrayList<>();
     private ChipGroup _selectedCategoriesChipGroup;
-    private List<OfferingsCategory> _selectedCategories = new ArrayList<>();
+    private final List<OfferingsCategory> _selectedCategories = new ArrayList<>();
     private EventTypeViewModel _eventTypeViewModel;
 
     public EventTypeCreationForm() {
         // Required empty public constructor
     }
-    public static EventTypeCreationForm newInstance(String param1, String param2) {
+    public static EventTypeCreationForm newInstance() {
         return new EventTypeCreationForm();
     }
 
@@ -62,26 +64,18 @@ public class EventTypeCreationForm extends Fragment {
 
         addCategoryButton.setOnClickListener(v -> showCategorySelectionDialog());
 
-        _binding.cancelButton.setOnClickListener(v -> {
-            Navigation.findNavController(view).navigate(R.id.eventTypeCreation_to_eventType);
-        });
+        _binding.cancelButton.setOnClickListener(v -> Navigation.findNavController(view).navigate(R.id.eventTypeCreation_to_eventType));
 
-        _binding.submitButton.setOnClickListener(v -> {
-            setValues();
-            //create and clean up the viewModel
-            Navigation.findNavController(view).navigate(R.id.eventTypeCreation_to_eventType);
-        });
+        _binding.submitButton.setOnClickListener(v -> setValuesAndSubmit());
 
         return view;
     }
 
     private void populateInputs() {
-            _eventTypeViewModel.getName().observe(getViewLifecycleOwner(), name -> {
-                _binding.nameInput.setText(String.valueOf(name));
-            });
-            _eventTypeViewModel.getDescription().observe(getViewLifecycleOwner(), description -> {
-                _binding.descriptionInput.setText(String.valueOf(description));
-            });
+            _eventTypeViewModel.getName().observe(getViewLifecycleOwner(), name ->
+                    _binding.nameInput.setText(String.valueOf(name)));
+            _eventTypeViewModel.getDescription().observe(getViewLifecycleOwner(), description ->
+                    _binding.descriptionInput.setText(String.valueOf(description)));
             _eventTypeViewModel.getSuggestedCategories().observe(getViewLifecycleOwner(), suggestedCategories -> {
                 _selectedCategoriesChipGroup.removeAllViews();
                 _selectedCategories.clear();
@@ -103,18 +97,25 @@ public class EventTypeCreationForm extends Fragment {
             });
     }
 
-    private void setValues() {
+    private void setValuesAndSubmit() {
         _eventTypeViewModel.setName(String.valueOf(_binding.nameInput.getText()));
         _eventTypeViewModel.setDescription(String.valueOf(_binding.descriptionInput.getText()));
-        _eventTypeViewModel.setSuggestedCategories(_selectedCategories);
+        _eventTypeViewModel.submitForm(_selectedCategories, new IEventTypeCallback() {
+            @Override
+            public void onSuccess(EventType eventType) {
+                Toast.makeText(requireContext(), "Success!" , Toast.LENGTH_SHORT).show();
+                Navigation.findNavController(_binding.getRoot()).navigate(R.id.eventTypeCreation_to_eventType);
+            }
+
+            @Override
+            public void onFailure(Throwable throwable) {
+                Toast.makeText(requireContext(), "Error: " + throwable.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void populateData(){
-        _offeringCategory.add(new OfferingsCategory(1L, "Sport", "Sport je jako zanimljiv i zabavan"));
-        _offeringCategory.add(new OfferingsCategory(2L, "Food", "Sport je jako zanimljiv i zabavan"));
-        _offeringCategory.add(new OfferingsCategory(3L, "Slavlje", "Sport je jako zanimljiv i zabavan"));
-        _offeringCategory.add(new OfferingsCategory(4L, "Hronologija", "Sport je jako zanimljiv i zabavan"));
-        _offeringCategory.add(new OfferingsCategory(5L, "Jelo", "Sport je jako zanimljiv i zabavan"));
+        _offeringCategory = _eventTypeViewModel.getAllCategories().getValue();
     }
     private void showCategorySelectionDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());

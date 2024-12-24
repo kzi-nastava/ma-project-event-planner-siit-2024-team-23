@@ -42,8 +42,23 @@
 
     </com.google.android.material.button.MaterialButtonToggleGroup>
 
+    <TextView
+        android:id="@+id/emptyMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20sp"
+        android:text="@string/empty_events"
+        android:textAlignment="center"
+        android:textSize="20sp"
+        android:visibility="gone" />
 
     <!-- RecyclerView to display content -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view_loading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/fragment_loading_card_horizontal" />
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"

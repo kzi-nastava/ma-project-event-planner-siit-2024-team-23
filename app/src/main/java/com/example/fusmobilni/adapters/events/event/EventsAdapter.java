@@ -7,17 +7,26 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fusmobilni.R;
+import com.example.fusmobilni.clients.ClientUtils;
+import com.example.fusmobilni.core.CustomSharedPrefs;
+import com.example.fusmobilni.requests.users.favorites.FavoriteEventRequest;
+import com.example.fusmobilni.responses.auth.LoginResponse;
 import com.example.fusmobilni.responses.events.home.EventHomeResponse;
 import com.example.fusmobilni.responses.events.home.EventsHomeResponse;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsViewHolder> {
     private static HashMap MonthMap = new HashMap<String, String>();
@@ -85,6 +94,25 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
         } else {
             holder.numberGoing.setText("");
         }
+        holder.favoriteIcon.setOnClickListener(v -> {
+            CustomSharedPrefs prefs = CustomSharedPrefs.getInstance();
+            LoginResponse user = prefs.getUser();
+            Call<Void> request = ClientUtils.userService.addEventToFavorites(user.getId(), new FavoriteEventRequest(event.id, user.getId()));
+            request.enqueue(new Callback<Void>() {
+                @Override
+                public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
+                    if(response.isSuccessful()){
+                        Toast.makeText(v.getContext(), "Success!", Toast.LENGTH_SHORT).show();
+                        holder.favoriteIcon.setImageResource(R.drawable.ic_heart_full);
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
+
+                }
+            });
+        });
     }
 
     @Override
@@ -104,6 +132,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
         public ImageView attendieThree;
         public TextView description;
         public ImageView _image;
+        public ImageView favoriteIcon;
 
         public EventsViewHolder(@NonNull View itemView) {
 
@@ -118,6 +147,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
             attendieThree = itemView.findViewById(R.id.attendieThree);
             description = itemView.findViewById(R.id.textViewEventDescription);
             _image = itemView.findViewById(R.id.imageBanner);
+            favoriteIcon = itemView.findViewById(R.id.bookmarkIcon);
         }
     }
 

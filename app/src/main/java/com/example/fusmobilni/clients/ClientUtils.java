@@ -15,7 +15,9 @@ import com.example.fusmobilni.clients.services.items.pricelist.PriceListService;
 import com.example.fusmobilni.clients.services.products.ProductsService;
 import com.example.fusmobilni.clients.services.serviceOfferings.ServiceOfferingReservationService;
 import com.example.fusmobilni.clients.services.serviceOfferings.ServiceOfferingService;
+import com.example.fusmobilni.clients.users.UserService;
 import com.example.fusmobilni.core.CustomSharedPrefs;
+import com.example.fusmobilni.model.users.User;
 
 import java.util.concurrent.TimeUnit;
 
@@ -45,8 +47,8 @@ public class ClientUtils {
             authService = retrofit.create(AuthService.class);
             serviceReservationService = retrofit.create(ServiceOfferingReservationService.class);
             itemsService = retrofit.create(ItemsService.class);
+            userService = retrofit.create(UserService.class);
             priceListService = retrofit.create(PriceListService.class);
-
         }
     }
 
@@ -99,6 +101,7 @@ public class ClientUtils {
     public static AuthService authService;
     public static ServiceOfferingReservationService serviceReservationService;
     public static ItemsService itemsService;
+    public static UserService userService;
 
     public static PriceListService priceListService;
 
