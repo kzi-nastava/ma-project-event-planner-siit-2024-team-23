@@ -46,7 +46,7 @@ public class ClientUtils {
             fastRegisterService = retrofit.create(FastRegisterService.class);
             authService = retrofit.create(AuthService.class);
             serviceReservationService = retrofit.create(ServiceOfferingReservationService.class);
-            itemsService = retrofit.create(ItemsService.class);
+            itemsService = retrofit.create(ItemsService.class)
             userService = retrofit.create(UserService.class);
             priceListService = retrofit.create(PriceListService.class);
         }
@@ -102,6 +102,7 @@ public class ClientUtils {
     public static ServiceOfferingReservationService serviceReservationService;
     public static ItemsService itemsService;
     public static UserService userService;
+    public static PriceListService priceListService;
 
     public static PriceListService priceListService;
 
