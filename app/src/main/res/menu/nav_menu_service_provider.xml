@@ -21,7 +21,10 @@
                     android:id="@+id/services_fragment"
                     android:icon="@drawable/ic_notification"
                     android:title="@string/services" />
-
+                <item
+                    android:id="@+id/price_list_fragment"
+                    android:icon="@drawable/ic_notification"
+                    android:title="@string/price_list" />
             </menu>
 
         </item>
