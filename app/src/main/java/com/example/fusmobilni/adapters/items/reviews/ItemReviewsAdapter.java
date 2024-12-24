@@ -12,18 +12,16 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fusmobilni.R;
-import com.example.fusmobilni.responses.items.ItemGradeResponse;
-
-import org.w3c.dom.Text;
+import com.example.fusmobilni.responses.items.ItemReviewResponse;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ItemReviewsAdapter extends RecyclerView.Adapter<ItemReviewsAdapter.ItemReviewsViewHolder> {
-    List<ItemGradeResponse> _grades;
+    List<ItemReviewResponse> _grades;
 
-    public ItemReviewsAdapter(List<ItemGradeResponse> grades) {
+    public ItemReviewsAdapter(List<ItemReviewResponse> grades) {
         _grades = new ArrayList<>(grades);
     }
 
@@ -40,7 +38,7 @@ public class ItemReviewsAdapter extends RecyclerView.Adapter<ItemReviewsAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull ItemReviewsViewHolder holder, int position) {
-        ItemGradeResponse grade = _grades.get(position);
+        ItemReviewResponse grade = _grades.get(position);
         try {
             holder.eoImage.setImageURI(convertToUrisFromBase64(holder.eoImage.getContext(), grade.getEventOrganizer().getImage()));
         } catch (IOException e) {

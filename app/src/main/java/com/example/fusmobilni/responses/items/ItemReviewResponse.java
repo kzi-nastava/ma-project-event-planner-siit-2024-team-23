@@ -1,10 +1,6 @@
 package com.example.fusmobilni.responses.items;
 
-import com.example.fusmobilni.responses.auth.EventOrganizerResponse;
-
-import java.time.LocalDate;
-
-public class ItemGradeResponse {
+public class ItemReviewResponse {
     public Long id;
     public int grade;
     public EventOrganizerReviewResponse eventOrganizer;
@@ -51,7 +47,7 @@ public class ItemGradeResponse {
         this.id = id;
     }
 
-    public ItemGradeResponse(String content, String date, EventOrganizerReviewResponse eventOrganizer, int grade, Long id) {
+    public ItemReviewResponse(String content, String date, EventOrganizerReviewResponse eventOrganizer, int grade, Long id) {
         this.content = content;
         this.date = date;
         this.eventOrganizer = eventOrganizer;

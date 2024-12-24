@@ -178,7 +178,7 @@
     <fragment
         android:id="@+id/updateProfileFragment"
         android:name="com.example.fusmobilni.fragments.users.profile.UpdateProfileFragment"
-        android:label=""
+        android:label="Profile update"
         tools:layout="@layout/fragment_update_profile">
         <action
             android:id="@+id/action_updateProfileFragment_to_viewProfileFragment"
@@ -411,4 +411,39 @@
     <action
         android:id="@+id/action_chatOverviews_toChat"
         app:destination="@id/chat_layout_fragment"/>
+    <fragment
+        android:id="@+id/itemReviewApprovalFragment"
+        android:name="com.example.fusmobilni.fragments.admin.ItemReviewApprovalFragment"
+        android:label="Create event"
+        tools:layout="@layout/fragment_item_review_approval">
+
+    </fragment>
+    <action
+        android:id="@+id/action_to_itemr_review_approval"
+        app:destination="@id/itemReviewApprovalFragment" />
+
+
+    <fragment
+        android:id="@+id/price_list_fragment"
+        android:name="com.example.fusmobilni.fragments.items.pricelist.PriceListFragment"
+        android:label=""
+        tools:layout="@layout/fragment_price_list">
+    </fragment>
+
+    <fragment
+        android:id="@+id/price_list_edit_fragment"
+        android:name="com.example.fusmobilni.fragments.items.pricelist.EditPriceListItemFragment"
+        android:label=""
+        tools:layout="@layout/fragment_edit_price_list_item">
+    </fragment>
+
+    <action
+        android:id="@+id/action_priceList_toPriceListEdit"
+        app:destination="@id/price_list_edit_fragment" />
+
+    <action
+        android:id="@+id/action_priceListEdit_toPriceList"
+        app:destination="@id/price_list_fragment" />
+
+
 </navigation>

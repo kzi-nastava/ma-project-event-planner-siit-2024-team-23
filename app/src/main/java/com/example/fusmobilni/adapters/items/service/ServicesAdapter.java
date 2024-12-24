@@ -11,13 +11,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fusmobilni.R;
+import com.example.fusmobilni.clients.ClientUtils;
+import com.example.fusmobilni.core.CustomSharedPrefs;
 import com.example.fusmobilni.model.items.service.Service;
+import com.example.fusmobilni.requests.users.favorites.FavoriteEventRequest;
+import com.example.fusmobilni.requests.users.favorites.FavoriteServiceRequest;
+import com.example.fusmobilni.responses.auth.LoginResponse;
 import com.example.fusmobilni.responses.items.services.home.ServiceHomeResponse;
 import com.google.android.material.card.MaterialCardView;
 
@@ -25,6 +31,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ServicesAdapter extends RecyclerView.Adapter<ServicesAdapter.ServicesViewHolder> {
     private List<ServiceHomeResponse> serviceList;
@@ -52,7 +62,25 @@ public class ServicesAdapter extends RecyclerView.Adapter<ServicesAdapter.Servic
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        holder.favoriteIcon.setOnClickListener(v -> {
+            CustomSharedPrefs prefs = CustomSharedPrefs.getInstance();
+            LoginResponse user = prefs.getUser();
+            Call<Void> request = ClientUtils.userService.addToServiceFavorites(user.getId(), new FavoriteServiceRequest(service.getId(), user.getId()));
+            request.enqueue(new Callback<>() {
+                @Override
+                public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
+                    if (response.isSuccessful()) {
+                        Toast.makeText(v.getContext(), "Success!", Toast.LENGTH_SHORT).show();
+                        holder.favoriteIcon.setImageResource(R.drawable.ic_heart_full);
+                    }
+                }
 
+                @Override
+                public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
+
+                }
+            });
+        });
     }
 
     private Bundle createBundle(ServiceHomeResponse service) {
@@ -76,6 +104,7 @@ public class ServicesAdapter extends RecyclerView.Adapter<ServicesAdapter.Servic
         public TextView category;
         public ImageView image;
         MaterialCardView _card;
+        public ImageView favoriteIcon;
 
         public ServicesViewHolder(@NonNull View view) {
             super(view);
@@ -86,6 +115,7 @@ public class ServicesAdapter extends RecyclerView.Adapter<ServicesAdapter.Servic
             this.price = view.findViewById(R.id.price);
             this.category = view.findViewById(R.id.textViewCategory);
             this.image = view.findViewById(R.id.imageBanner);
+            this.favoriteIcon = view.findViewById(R.id.bookmarkIcon);
 
         }
     }

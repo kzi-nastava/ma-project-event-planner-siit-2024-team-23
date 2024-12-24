@@ -50,6 +50,7 @@ public class StepOneUpdateFragment extends Fragment implements FragmentValidatio
                             _captureImage.setBackground(null);
                             _captureImage.setImageURI(uri);
                             _captureImage.setImageTintList(null);
+                            _updateProfileViewModel.setImageUri(uri);
 
                             try {
                                 _image = getBitmapFromUri(requireContext(), uri);
@@ -105,6 +106,8 @@ public class StepOneUpdateFragment extends Fragment implements FragmentValidatio
                 city -> Objects.requireNonNull(_binding.cityInput.getEditText()).setText(city));
         _updateProfileViewModel.getAddress().observe(getViewLifecycleOwner(),
                 streetAddress -> Objects.requireNonNull(_binding.addressInput.getEditText()).setText(streetAddress));
+        _updateProfileViewModel.getStreetNumber().observe(getViewLifecycleOwner(),
+                streetNumber -> Objects.requireNonNull(_binding.addressNumberInput.getEditText()).setText(streetNumber));
         _updateProfileViewModel.getPhone().observe(getViewLifecycleOwner(),
                 phone -> Objects.requireNonNull(_binding.phoneInput.getEditText()).setText(phone));
         _updateProfileViewModel.getProfileImage().observe(getViewLifecycleOwner(), image -> {
@@ -131,6 +134,7 @@ public class StepOneUpdateFragment extends Fragment implements FragmentValidatio
         String email = Objects.requireNonNull(_binding.emailInput.getEditText()).getText().toString().trim();
         String city = Objects.requireNonNull(_binding.cityInput.getEditText()).getText().toString().trim();
         String address = Objects.requireNonNull(_binding.addressInput.getEditText()).getText().toString().trim();
+        String streetNumber = Objects.requireNonNull(_binding.addressNumberInput.getEditText()).getText().toString().trim();
         String phone = Objects.requireNonNull(_binding.phoneInput.getEditText()).getText().toString().trim();
 
 
@@ -181,6 +185,14 @@ public class StepOneUpdateFragment extends Fragment implements FragmentValidatio
             _binding.addressInput.setError(null);
             _binding.addressInput.setErrorEnabled(false);
         }
+        if (streetNumber.isEmpty()) {
+            _binding.addressNumberInput.setErrorEnabled(true);
+            _binding.addressNumberInput.setError("Required");
+            return false;
+        } else {
+            _binding.addressNumberInput.setError(null);
+            _binding.addressNumberInput.setErrorEnabled(false);
+        }
 
         if (phone.isEmpty()) {
             _binding.phoneInput.setErrorEnabled(true);
@@ -196,6 +208,7 @@ public class StepOneUpdateFragment extends Fragment implements FragmentValidatio
         _updateProfileViewModel.setName(name);
         _updateProfileViewModel.setLastName(lastName);
         _updateProfileViewModel.setEmail(email);
+        _updateProfileViewModel.setStreetNumber(streetNumber);
         if(_image != null) {
             _updateProfileViewModel.setProfileImage(convertBitmapToByteArray(_image));
         }

@@ -15,21 +15,9 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="20sp"
 
         >
-
-        <TextView
-            android:id="@+id/appName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:fontFamily="@font/poppins"
-            android:text="@string/update_profile"
-            android:textAlignment="textStart"
-            android:textColor="@color/text_800"
-            android:textSize="30sp" />
-
-
 
 
         <androidx.viewpager2.widget.ViewPager2

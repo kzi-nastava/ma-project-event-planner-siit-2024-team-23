@@ -91,22 +91,46 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Address Input -->
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/addressInput"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10sp"
-                android:hint="@string/living_address"
-                app:placeholderText="@string/address_placeholder"
-                app:startIconDrawable="@drawable/outline_location_on_24"
-                app:startIconTint="@color/text_500">
+                android:orientation="horizontal"
+                >
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:layout_width="match_parent"
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/addressInput"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:inputType="textPostalAddress" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:layout_marginBottom="10sp"
+                    android:hint="@string/living_address"
+                    app:placeholderText="@string/address_placeholder"
+                    android:layout_marginRight="10sp"
+                    app:startIconDrawable="@drawable/outline_location_on_24"
+                    app:startIconTint="@color/text_500">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textPostalAddress" />
+                </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/addressNumberInput"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10sp"
+                    android:hint="@string/living_address_number"
+                    app:placeholderText="@string/address_number_placeholder"
+                    app:startIconTint="@color/text_500">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="number" />
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
 
 
 
