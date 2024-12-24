@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel;
 
 public class ChatViewModel extends ViewModel {
     private MutableLiveData<Long> chatId = new MutableLiveData<>(null);
+    private MutableLiveData<Long> recipientId = new MutableLiveData<>(null);
     private MutableLiveData<String> recipientName = new MutableLiveData<>(null);
     private MutableLiveData<Uri> recipientAvatar = new MutableLiveData<Uri>(null);
 
@@ -34,15 +35,18 @@ public class ChatViewModel extends ViewModel {
         this.recipientAvatar.setValue(recipientAvatar);
     }
 
-    public void populate(Long chatId, String recipientName, Uri recipientAvatar) {
+    public void populate(Long chatId, String recipientName, Uri recipientAvatar, Long recipientId) {
         this.setChatId(chatId);
         this.setRecipientAvatar(recipientAvatar);
         this.setRecipientName(recipientName);
+        this.setRecipientId(recipientId);
     }
 
-    public void cleanUp() {
-        this.chatId = null;
-        this.recipientAvatar = null;
-        this.recipientName = null;
+    public MutableLiveData<Long> getRecipientId() {
+        return recipientId;
+    }
+
+    public void setRecipientId(Long recipientId) {
+        this.recipientId.setValue(recipientId);
     }
 }

@@ -1,5 +1,6 @@
 package com.example.fusmobilni.fragments.communication.chat;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -7,6 +8,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,13 +17,16 @@ import com.example.fusmobilni.R;
 import com.example.fusmobilni.adapters.communication.chats.ChatAdapter;
 import com.example.fusmobilni.adapters.communication.chats.ChatsOverviewAdapter;
 import com.example.fusmobilni.clients.ClientUtils;
+import com.example.fusmobilni.clients.webSockets.WebSocketClient;
 import com.example.fusmobilni.core.CustomSharedPrefs;
 import com.example.fusmobilni.databinding.FragmentChatBinding;
 import com.example.fusmobilni.databinding.FragmentChatsOverviewBinding;
+import com.example.fusmobilni.requests.communication.chat.MessageCreateRequest;
 import com.example.fusmobilni.responses.auth.LoginResponse;
 import com.example.fusmobilni.responses.communication.chat.messages.GetMessageResponse;
 import com.example.fusmobilni.responses.communication.chat.messages.GetMessagesResponse;
 import com.example.fusmobilni.viewModels.communication.chat.ChatViewModel;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +45,8 @@ public class ChatFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private ChatViewModel viewModel;
+
+    private WebSocketClient webSocketClient;
 
 
     public ChatFragment() {}
@@ -83,8 +90,30 @@ public class ChatFragment extends Fragment {
 
             }
         });
+        connectToSocket();
+        setUpButton(userId);
         return view;
     }
+
+    @SuppressLint("CheckResult")
+    private void connectToSocket() {
+        Gson gson = new Gson();
+        webSocketClient = new WebSocketClient();
+        webSocketClient.connect();
+        webSocketClient.subscribeToTopic("/socket-publisher/" + getSubscriptionExtension())
+                .subscribe(topicMessage -> {
+                    GetMessageResponse newMessage = gson.fromJson(topicMessage.getPayload(), GetMessageResponse.class);
+
+                    requireActivity().runOnUiThread(() -> {
+                        messages.add(newMessage);
+                        adapter.notifyItemInserted(messages.size() - 1);
+                        recyclerView.scrollToPosition(messages.size() - 1);
+                    });
+                }, throwable -> {
+                    Log.e("Tag", throwable.getMessage());
+                });
+    }
+
 
     private void initializeRecipientInfo() {
         binding.avatar.setImageURI(viewModel.getRecipientAvatar().getValue());
@@ -104,5 +133,31 @@ public class ChatFragment extends Fragment {
             return user.getId();
         }
         return null;
+    }
+
+    private void setUpButton(Long userId) {
+        Gson gson = new Gson();
+        binding.sendButton.setOnClickListener(v -> {
+            String messageContent = binding.messageInput.getText().toString();
+            MessageCreateRequest request = new MessageCreateRequest(
+                    userId,
+                    viewModel.getRecipientId().getValue(),
+                    viewModel.getChatId().getValue(),
+                    messageContent
+            );
+            webSocketClient.sendMessage("/socket-subscriber/send/message", gson.toJson(request));
+            binding.messageInput.setText("");
+        });
+    }
+
+    private String getSubscriptionExtension() {
+        if (getUserId() == null || viewModel.getRecipientId().getValue() == null) {
+            return "";
+        }
+        if (getUserId() <= viewModel.getRecipientId().getValue()) {
+            return getUserId() + "/" + viewModel.getRecipientId().getValue();
+        } else {
+            return viewModel.getRecipientId().getValue() + "/" + getUserId();
+        }
     }
 }

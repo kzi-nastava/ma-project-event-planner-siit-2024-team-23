@@ -103,9 +103,13 @@ public class ChatsOverviewFragment extends Fragment implements ChatListener {
 
     @Override
     public void onChatClick(int position) {
+        Long userId = getUserId();
+        if (userId == null) {
+            return;
+        }
         ChatOverview overview = this.chatOverviews.get(position);
         ChatGetResponse chat = this.chats.get(position);
-        viewModel.populate(chat.id, overview.name, overview.avatar);
+        viewModel.populate(chat.id, overview.name, overview.avatar, getRecipientId(chat, userId));
         Navigation.findNavController(binding.getRoot()).navigate(R.id.action_chatOverviews_toChat);
     }
 
@@ -115,6 +119,10 @@ public class ChatsOverviewFragment extends Fragment implements ChatListener {
             return user.getId();
         }
         return null;
+    }
+
+    private Long getRecipientId(ChatGetResponse chat, Long userId) {
+        return Objects.equals(chat.primaryUser.id, userId) ? chat.secondaryUser.id: chat.primaryUser.id;
     }
 
     private ChatOverview getOverviewFromChat(ChatGetResponse chat, Context context) throws IOException {
