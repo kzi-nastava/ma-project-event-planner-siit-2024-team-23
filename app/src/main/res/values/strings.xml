@@ -305,6 +305,9 @@
     <string name="living_address_number">No.</string>
     <string name="address_number_placeholder">33</string>
     <string name="empty_events">You don\'t have favorite events right now!</string>
+    <string name="price_list">Price List</string>
+    <string name="w_discount">w/ Discount</string>
+    <string name="edit_price_list_item">Edit Price List Item</string>
     <string-array name="privacy_type_options">
         <item>Private</item>
         <item>Public</item>

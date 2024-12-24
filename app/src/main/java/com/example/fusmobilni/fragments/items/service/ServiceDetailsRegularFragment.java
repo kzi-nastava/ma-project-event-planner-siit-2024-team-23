@@ -86,10 +86,12 @@ public class ServiceDetailsRegularFragment extends Fragment {
         _binding.textViewOrganizerNameServiceDetails.setText(_service.getProvider().getFirstName() + " " + _service.getProvider().getLastName());
         _binding.textViewServiceDescriptionDetails.setText(_service.getDescription());
         _binding.price.setText(String.valueOf(_service.getPrice()));
-        try {
-            _binding.imageView5.setImageURI(convertToUrisFromBase64(getContext(), _service.getProvider().getImage()));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        if (_service.getProvider().getImage() != null) {
+            try {
+                _binding.imageView5.setImageURI(convertToUrisFromBase64(getContext(), _service.getProvider().getImage()));
+            } catch (IOException e) {
+
+            }
         }
         try {
             _binding.imageView4.setImageURI(convertToUrisFromBase64(getContext(), _service.getImage()));
