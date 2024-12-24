@@ -399,6 +399,16 @@
         android:name="com.example.fusmobilni.fragments.communication.chat.ChatsOverviewFragment"
         android:label=""
         tools:layout="@layout/fragment_chats_overview">
-
     </fragment>
+
+    <fragment
+        android:id="@+id/chat_layout_fragment"
+        android:name="com.example.fusmobilni.fragments.communication.chat.ChatFragment"
+        android:label=""
+        tools:layout="@layout/fragment_chat">
+    </fragment>
+
+    <action
+        android:id="@+id/action_chatOverviews_toChat"
+        app:destination="@id/chat_layout_fragment"/>
 </navigation>

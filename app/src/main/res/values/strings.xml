@@ -304,6 +304,7 @@
     <string name="images_are_required">Images are required</string>
     <string name="living_address_number">No.</string>
     <string name="address_number_placeholder">33</string>
+    <string name="sendM">Send</string>
     <string-array name="privacy_type_options">
         <item>Private</item>
         <item>Public</item>

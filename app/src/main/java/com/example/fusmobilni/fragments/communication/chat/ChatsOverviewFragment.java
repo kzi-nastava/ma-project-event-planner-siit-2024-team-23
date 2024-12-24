@@ -5,6 +5,8 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -24,6 +26,8 @@ import com.example.fusmobilni.model.communication.chat.ChatOverview;
 import com.example.fusmobilni.responses.auth.LoginResponse;
 import com.example.fusmobilni.responses.communication.chat.ChatGetResponse;
 import com.example.fusmobilni.responses.communication.chat.ChatsGetResponse;
+import com.example.fusmobilni.viewModels.communication.chat.ChatViewModel;
+import com.example.fusmobilni.viewModels.users.serviceProvider.ServiceProviderViewModel;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -42,6 +46,7 @@ public class ChatsOverviewFragment extends Fragment implements ChatListener {
     private List<ChatGetResponse> chats = new ArrayList<>();
     private RecyclerView recyclerView;
     private ChatsOverviewAdapter adapter;
+    private ChatViewModel viewModel;
 
     public ChatsOverviewFragment() {}
 
@@ -65,6 +70,7 @@ public class ChatsOverviewFragment extends Fragment implements ChatListener {
         if (userId == null) {
             return view;
         }
+        viewModel = new ViewModelProvider(requireActivity()).get(ChatViewModel.class);
         initializeRecycler();
 
         Call<ChatsGetResponse> callback = ClientUtils.chatService.findByUserId(userId);
@@ -72,6 +78,8 @@ public class ChatsOverviewFragment extends Fragment implements ChatListener {
             @Override
             public void onResponse(Call<ChatsGetResponse> call, Response<ChatsGetResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
+                    chats.clear();
+                    chatOverviews.clear();
                     chats = response.body().chats;
                     for (ChatGetResponse chat: chats) {
                         try {
@@ -95,7 +103,10 @@ public class ChatsOverviewFragment extends Fragment implements ChatListener {
 
     @Override
     public void onChatClick(int position) {
-
+        ChatOverview overview = this.chatOverviews.get(position);
+        ChatGetResponse chat = this.chats.get(position);
+        viewModel.populate(chat.id, overview.name, overview.avatar);
+        Navigation.findNavController(binding.getRoot()).navigate(R.id.action_chatOverviews_toChat);
     }
 
     private Long getUserId() {
