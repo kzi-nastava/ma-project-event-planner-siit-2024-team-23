@@ -243,7 +243,7 @@ public class MultiStepServiceFormOne extends Fragment {
             }
             if (viewModel.getCustomCategoryDescription().getValue().isEmpty()) {
                 binding.customCategoryDescriptionLabel.setErrorEnabled(true);
-                binding.customCategoryDescriptionLabel.setError("Rqeuired");
+                binding.customCategoryDescriptionLabel.setError("Required");
                 return false;
             }
         }

@@ -11,6 +11,7 @@ import com.example.fusmobilni.clients.services.events.EventsService;
 import com.example.fusmobilni.clients.services.events.inivtations.InvitationsService;
 import com.example.fusmobilni.clients.services.fastRegister.FastRegisterService;
 import com.example.fusmobilni.clients.services.items.ItemsService;
+import com.example.fusmobilni.clients.services.items.pricelist.PriceListService;
 import com.example.fusmobilni.clients.services.products.ProductsService;
 import com.example.fusmobilni.clients.services.serviceOfferings.ServiceOfferingReservationService;
 import com.example.fusmobilni.clients.services.serviceOfferings.ServiceOfferingService;
@@ -44,6 +45,7 @@ public class ClientUtils {
             authService = retrofit.create(AuthService.class);
             serviceReservationService = retrofit.create(ServiceOfferingReservationService.class);
             itemsService = retrofit.create(ItemsService.class);
+            priceListService = retrofit.create(PriceListService.class);
 
         }
     }
@@ -97,5 +99,7 @@ public class ClientUtils {
     public static AuthService authService;
     public static ServiceOfferingReservationService serviceReservationService;
     public static ItemsService itemsService;
+
+    public static PriceListService priceListService;
 
 }
