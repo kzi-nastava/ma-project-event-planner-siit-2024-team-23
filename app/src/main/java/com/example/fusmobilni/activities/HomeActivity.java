@@ -188,6 +188,18 @@ public class HomeActivity extends AppCompatActivity {
         return NavigationUI.onNavDestinationSelected(item, _navController) || super.onOptionsItemSelected(item);
     }
 
+    @ExperimentalBadgeUtils
+    private void addBadge(MenuItem menuItem, int count) {
+
+        // Get or create the BadgeDrawable
+        BadgeDrawable badgeDrawable = BadgeDrawable.create(this);
+        badgeDrawable.setNumber(count); // Set badge number
+        badgeDrawable.setVisible(true); // Show the badge
+        // Attach the badge to the menu item
+        BadgeUtils.attachBadgeDrawable(badgeDrawable,_topToolbar,menuItem.getItemId());
+
+    }
+
     public void findUnreadNotificationsCount() {
         CustomSharedPrefs prefs = CustomSharedPrefs.getInstance();
 
@@ -204,15 +216,8 @@ public class HomeActivity extends AppCompatActivity {
                     if (menuItem == null) {
                         return;
                     }
-                    View view = menuItem.getActionView();
-
-                    BadgeDrawable badge = BadgeDrawable.create(getBaseContext());
-                    badge.setNumber(response.body().getUnreadCount());
-                    badge.setVisible(true);
-
-                    View iconView = _topToolbar.findViewById(menuItem.getItemId());
-                    if (iconView != null) {
-                        BadgeUtils.attachBadgeDrawable(badge, iconView);
+                    if (response.body().getUnreadCount() > 0) {
+                        addBadge(menuItem, response.body().getUnreadCount());
                     }
                 }
 
