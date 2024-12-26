@@ -3,9 +3,7 @@ package com.example.fusmobilni.activities;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -36,7 +34,7 @@ public class VerifyEmailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ClientUtils.initalize(CustomSharedPrefs.getInstance(getApplicationContext()));
+        ClientUtils.initialize(CustomSharedPrefs.getInstance(getApplicationContext()));
 
         _binding = ActivityVerifyEmailBinding.inflate(getLayoutInflater());
         setContentView(R.layout.activity_verify_email);

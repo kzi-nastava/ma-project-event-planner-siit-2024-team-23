@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:checkableBehavior="single">
-        <item
-            android:title="@string/home">
+        <item android:title="@string/home">
             <menu>
 
                 <item
@@ -25,6 +24,7 @@
                     android:id="@+id/price_list_fragment"
                     android:icon="@drawable/ic_notification"
                     android:title="@string/price_list" />
+
             </menu>
 
         </item>
@@ -32,9 +32,7 @@
     </group>
 
     <group android:checkableBehavior="single">
-        <item
-            android:title="@string/notifications"
-            >
+        <item android:title="@string/notifications">
             <menu>
                 <item
                     android:id="@+id/messages_fragment"
@@ -43,16 +41,14 @@
                 <item
                     android:id="@+id/notifications_fragment"
                     android:icon="@drawable/ic_notification"
-                    android:title="@string/notifications" />
+                    android:title="Notifications" />
             </menu>
         </item>
     </group>
 
     <!--    todo-->
     <group android:checkableBehavior="single">
-        <item
-            android:title="@string/my_products"
-            >
+        <item android:title="@string/my_products">
             <menu>
                 <item
                     android:id="@+id/products_fragments"
@@ -76,9 +72,7 @@
 
 
     <group android:checkableBehavior="single">
-        <item
-            android:title="@string/profile"
-            >
+        <item android:title="@string/profile">
             <menu>
                 <!--todo-->
                 <item

@@ -4,8 +4,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.OptIn;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,16 +18,26 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
+
 import com.example.fusmobilni.R;
 import com.example.fusmobilni.clients.ClientUtils;
 import com.example.fusmobilni.core.CustomSharedPrefs;
 import com.example.fusmobilni.databinding.ActivityHomeBinding;
 import com.example.fusmobilni.model.enums.UserType;
 import com.example.fusmobilni.responses.auth.LoginResponse;
+import com.example.fusmobilni.responses.items.notifications.ItemReviewNotificationUnreadCountResponse;
+import com.google.android.material.badge.BadgeDrawable;
+import com.google.android.material.badge.BadgeUtils;
+import com.google.android.material.badge.ExperimentalBadgeUtils;
 import com.google.android.material.navigation.NavigationView;
+
 import androidx.activity.OnBackPressedCallback;
 
 import java.util.Objects;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class HomeActivity extends AppCompatActivity {
     private ActivityHomeBinding _binding;
@@ -43,7 +55,7 @@ public class HomeActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
 
-        ClientUtils.initalize(CustomSharedPrefs.getInstance(getApplicationContext()));
+        ClientUtils.initialize(CustomSharedPrefs.getInstance(getApplicationContext()));
 
         _binding = ActivityHomeBinding.inflate(getLayoutInflater());
         setContentView(_binding.getRoot());
@@ -73,7 +85,7 @@ public class HomeActivity extends AppCompatActivity {
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                if(_drawer.isDrawerOpen(GravityCompat.START)){
+                if (_drawer.isDrawerOpen(GravityCompat.START)) {
                     _drawer.closeDrawer(GravityCompat.START);
                     return;
                 }
@@ -127,6 +139,7 @@ public class HomeActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(_navigationView, _navController);
         NavigationUI.setupActionBarWithNavController(this, _navController, _topAppBarConfiguration);
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.toolbar_menu, menu);
@@ -150,9 +163,10 @@ public class HomeActivity extends AppCompatActivity {
             // If not logged in, use a default icon
             profileItem.setIcon(R.drawable.ic_person_white);
         }
-
+        findUnreadNotificationsCount();
         return true;
     }
+
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         _navController = Navigation.findNavController(this, R.id.fragment_nav_content_main);
@@ -174,6 +188,44 @@ public class HomeActivity extends AppCompatActivity {
         return NavigationUI.onNavDestinationSelected(item, _navController) || super.onOptionsItemSelected(item);
     }
 
+    public void findUnreadNotificationsCount() {
+        CustomSharedPrefs prefs = CustomSharedPrefs.getInstance();
+
+        if (prefs.getUser() == null) {
+            return;
+        }
+        Call<ItemReviewNotificationUnreadCountResponse> call = ClientUtils.itemReviewNotificationsService.countUnreadByUserId(prefs.getUser().getId());
+        call.enqueue(new Callback<>() {
+            @OptIn(markerClass = ExperimentalBadgeUtils.class)
+            @Override
+            public void onResponse(Call<ItemReviewNotificationUnreadCountResponse> call, Response<ItemReviewNotificationUnreadCountResponse> response) {
+                if (response.isSuccessful()) {
+                    MenuItem menuItem = _topToolbar.getMenu().findItem(R.id.notifications_fragment);
+                    if (menuItem == null) {
+                        return;
+                    }
+                    View view = menuItem.getActionView();
+
+                    BadgeDrawable badge = BadgeDrawable.create(getBaseContext());
+                    badge.setNumber(response.body().getUnreadCount());
+                    badge.setVisible(true);
+
+                    View iconView = _topToolbar.findViewById(menuItem.getItemId());
+                    if (iconView != null) {
+                        BadgeUtils.attachBadgeDrawable(badge, iconView);
+                    }
+                }
+
+
+            }
+
+            @Override
+            public void onFailure(Call<ItemReviewNotificationUnreadCountResponse> call, Throwable t) {
+
+            }
+        });
+    }
+
     @Override
     public boolean onSupportNavigateUp() {
         _navController = Navigation.findNavController(this, R.id.fragment_nav_content_main);
@@ -183,7 +235,7 @@ public class HomeActivity extends AppCompatActivity {
     private void setupDrawerMenu(UserType userRole) {
         Menu menu = _navigationView.getMenu();
         menu.clear();
-        switch (userRole){
+        switch (userRole) {
             case ADMIN:
                 _navigationView.inflateMenu(R.menu.nav_menu_admin);
                 break;

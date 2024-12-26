@@ -44,7 +44,7 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ClientUtils.initalize(CustomSharedPrefs.getInstance(getApplicationContext()));
+        ClientUtils.initialize(CustomSharedPrefs.getInstance(getApplicationContext()));
 
         ActivityRegisterBinding binding = ActivityRegisterBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());

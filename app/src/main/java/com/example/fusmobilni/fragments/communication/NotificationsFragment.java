@@ -3,12 +3,27 @@ package com.example.fusmobilni.fragments.communication;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.fusmobilni.R;
+import com.example.fusmobilni.adapters.serviceProvider.NotificationsAdapter;
+import com.example.fusmobilni.clients.ClientUtils;
+import com.example.fusmobilni.core.CustomSharedPrefs;
+import com.example.fusmobilni.databinding.FragmentNotificationsBinding;
+import com.example.fusmobilni.fragments.dialogs.SpinnerDialogFragment;
+import com.example.fusmobilni.model.UserNotification;
+import com.example.fusmobilni.responses.items.notifications.ItemReviewNotificationResponse;
+import com.example.fusmobilni.responses.items.notifications.ItemReviewNotificationsResponse;
+
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -16,34 +31,20 @@ import com.example.fusmobilni.R;
  * create an instance of this fragment.
  */
 public class NotificationsFragment extends Fragment {
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private FragmentNotificationsBinding _binding;
+    private NotificationsAdapter _adapter;
+    private RecyclerView _notificationsView;
+    private Long userId;
+    private SpinnerDialogFragment _loader;
 
     public NotificationsFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment NotificationsFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static NotificationsFragment newInstance(String param1, String param2) {
         NotificationsFragment fragment = new NotificationsFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+
         fragment.setArguments(args);
         return fragment;
     }
@@ -52,8 +53,7 @@ public class NotificationsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+
         }
     }
 
@@ -61,6 +61,67 @@ public class NotificationsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_notifications, container, false);
+        _binding = FragmentNotificationsBinding.inflate(inflater, container, false);
+        View root = _binding.getRoot();
+        initializeDialogs();
+        _notificationsView = _binding.notificationRecycler;
+        CustomSharedPrefs prefs = CustomSharedPrefs.getInstance();
+        userId = prefs.getUser().getId();
+        _adapter = new NotificationsAdapter();
+        _notificationsView.setAdapter(_adapter);
+
+        fetchNotifications();
+
+        return root;
+    }
+    private void initializeDialogs() {
+        _loader = new SpinnerDialogFragment();
+        _loader.setCancelable(false);
+
+    }
+
+    @Override
+    public void onDestroyView() {
+        if (_adapter.existsUnread()) {
+            readAllUnreadNotifications();
+        }
+        super.onDestroyView();
+    }
+
+    public void readAllUnreadNotifications() {
+        Call<Void> call = ClientUtils.itemReviewNotificationsService.readAllByUserId(userId);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+
+            }
+        });
+    }
+
+    public void fetchNotifications() {
+        _loader.show(getFragmentManager(), "loading_spinner");
+        Call<ItemReviewNotificationsResponse> call = ClientUtils.itemReviewNotificationsService.findAllByUserId(userId);
+        call.enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<ItemReviewNotificationsResponse> call, Response<ItemReviewNotificationsResponse> response) {
+                if (response.isSuccessful()) {
+                    List<ItemReviewNotificationResponse> notificationsResponseList = response.body().getNotifications();
+                    for (UserNotification n : notificationsResponseList) {
+                        _adapter.appendNotification(n);
+                    }
+                    _notificationsView.setAdapter(_adapter);
+                    _loader.dismiss();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ItemReviewNotificationsResponse> call, Throwable t) {
+
+            }
+        });
     }
 }

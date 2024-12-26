@@ -29,7 +29,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ClientUtils.initalize(CustomSharedPrefs.getInstance(getApplicationContext()));
+        ClientUtils.initialize(CustomSharedPrefs.getInstance(getApplicationContext()));
 
         _binding = ActivityLoginBinding.inflate(getLayoutInflater());
         _loginViewModel = new ViewModelProvider(this).get(LoginViewModel.class);

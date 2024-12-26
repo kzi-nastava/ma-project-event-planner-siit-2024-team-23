@@ -19,7 +19,7 @@ public class SplashScreenActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
 
-        ClientUtils.initalize(CustomSharedPrefs.getInstance(getApplicationContext()));
+        ClientUtils.initialize(CustomSharedPrefs.getInstance(getApplicationContext()));
 
         setContentView(R.layout.activity_main);
         int SPLASH_TIME_OUT = 3000;
