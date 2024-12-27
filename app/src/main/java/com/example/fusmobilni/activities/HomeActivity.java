@@ -212,11 +212,11 @@ public class HomeActivity extends AppCompatActivity {
         CustomSharedPrefs prefs = CustomSharedPrefs.getInstance();
 
         _notificationViewModel = new ViewModelProvider(this).get(NotificationViewModel.class);
-
         if (prefs.getUser() == null) {
             return;
         }
         _notificationViewModel.setUserId(prefs.getUser().getId());
+        _notificationViewModel.connectToSocket(this);
         _notificationViewModel.getCountUnread().observe(this, v -> {
             if (_notificationViewModel.getCountUnread().getValue() > 0) {
                 MenuItem menuItem = _topToolbar.getMenu().findItem(R.id.notifications_fragment);
