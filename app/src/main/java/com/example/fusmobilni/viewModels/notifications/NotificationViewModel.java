@@ -1,21 +1,19 @@
 package com.example.fusmobilni.viewModels.notifications;
 
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
+import android.annotation.SuppressLint;
+import android.util.Log;
+
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.fusmobilni.BuildConfig;
-import com.example.fusmobilni.R;
 import com.example.fusmobilni.clients.ClientUtils;
+import com.example.fusmobilni.clients.webSockets.NotificationWebSocketClient;
 import com.example.fusmobilni.responses.notifications.NotificationResponse;
 import com.example.fusmobilni.responses.notifications.NotificationsResponse;
 
-//import org.springframework.messaging.simp.stomp.StompHeaders;
-//import org.springframework.messaging.simp.stomp.StompSession;
-//import org.springframework.messaging.simp.stomp.StompSessionHandlerAdapter;
-//import org.springframework.web.socket.client.WebSocketClient;
-//import org.springframework.web.socket.client.standard.StandardWebSocketClient;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +27,27 @@ public class NotificationViewModel extends ViewModel {
 
     MutableLiveData<Integer> countUnread = new MutableLiveData<>(0);
     MutableLiveData<Long> userId = new MutableLiveData<>(null);
+    NotificationWebSocketClient chatWebSocketClient;
 
+    @SuppressLint("CheckResult")
+    public void connectToSocket(FragmentActivity activity) {
+        Gson gson = new Gson();
+        chatWebSocketClient = new NotificationWebSocketClient();
+        chatWebSocketClient.connect();
+        chatWebSocketClient.subscribeToTopic("/user/" + userId.getValue() + "/notifications")
+                .subscribe(stompMessage -> {
+                            NotificationResponse newNotification = gson.fromJson(stompMessage.getPayload(), NotificationResponse.class);
+                            activity.runOnUiThread(() -> {
+                                List<NotificationResponse> n = notifications.getValue();
+                                n.add(newNotification);
+                                notifications.setValue(n);
+                                countUnread();
+                            });
+                        }, throwable -> {
+                            Log.e("Tag", throwable.getMessage());
+                        }
+                );
+    }
 
     public void fetchNotifications() {
         if (userId == null || userId.getValue() == null) {

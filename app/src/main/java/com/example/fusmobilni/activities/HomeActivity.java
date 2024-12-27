@@ -1,9 +1,11 @@
 package com.example.fusmobilni.activities;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -16,6 +18,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
+
 import com.example.fusmobilni.R;
 import com.example.fusmobilni.clients.ClientUtils;
 import com.example.fusmobilni.core.CustomSharedPrefs;
@@ -197,6 +200,7 @@ public class HomeActivity extends AppCompatActivity {
         notificationsBadge = BadgeDrawable.create(this);
         notificationsBadge.setNumber(count); // Set badge number
         notificationsBadge.setVisible(true); // Show the badge
+        notificationsBadge.setBadgeTextColor(Color.WHITE);
         // Attach the badge to the menu item
         BadgeUtils.attachBadgeDrawable(notificationsBadge, _topToolbar, menuItem.getItemId());
 
@@ -212,11 +216,11 @@ public class HomeActivity extends AppCompatActivity {
         CustomSharedPrefs prefs = CustomSharedPrefs.getInstance();
 
         _notificationViewModel = new ViewModelProvider(this).get(NotificationViewModel.class);
-
         if (prefs.getUser() == null) {
             return;
         }
         _notificationViewModel.setUserId(prefs.getUser().getId());
+        _notificationViewModel.connectToSocket(this);
         _notificationViewModel.getCountUnread().observe(this, v -> {
             if (_notificationViewModel.getCountUnread().getValue() > 0) {
                 MenuItem menuItem = _topToolbar.getMenu().findItem(R.id.notifications_fragment);

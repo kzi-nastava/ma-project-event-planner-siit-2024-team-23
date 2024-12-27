@@ -115,6 +115,7 @@ public class NotificationsFragment extends Fragment {
             _adapter.appendNotification(n);
         }
         _notificationsView.setAdapter(_adapter);
+        _notificationsView.scrollToPosition(_notificationsViewModel.getNotifications().getValue().size() - 1);
         _loader.dismiss();
     }
 
