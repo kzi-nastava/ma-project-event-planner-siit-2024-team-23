@@ -268,6 +268,10 @@ public class EventDetailsFragment extends Fragment {
 
     private void initializeFavoriteButton() {
         _binding.favoriteButton.setOnClickListener(v -> {
+            if(user == null){
+                Toast.makeText(v.getContext(), "You must be logged in first!", Toast.LENGTH_SHORT).show();
+                return;
+            }
             Call<Void> request = ClientUtils.userService.addEventToFavorites(user.getId(), new FavoriteEventRequest(event.getId(), user.getId()));
             request.enqueue(new Callback<>() {
                 @Override

@@ -2,14 +2,17 @@ package com.example.fusmobilni.adapters.events.event;
 
 import static com.example.fusmobilni.adapters.AdapterUtils.convertToUrisFromBase64;
 
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageSwitcher;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fusmobilni.R;
@@ -61,6 +64,7 @@ public class EventsHorizontalAdapter extends RecyclerView.Adapter<EventsHorizont
         public ImageView attendieOne;
         public ImageView attendieTwo;
         public ImageView attendieThree;
+        public LinearLayout eventCard;
 
         TextView _eventType;
 
@@ -76,6 +80,7 @@ public class EventsHorizontalAdapter extends RecyclerView.Adapter<EventsHorizont
             attendieThree = itemView.findViewById(R.id.attendieThree);
             _eventType = itemView.findViewById(R.id.textViewEventType);
             _image = itemView.findViewById(R.id.imageBannerHorizontal);
+            eventCard = itemView.findViewById(R.id.eventCard);
         }
     }
 
@@ -96,6 +101,11 @@ public class EventsHorizontalAdapter extends RecyclerView.Adapter<EventsHorizont
         holder.monthYear.setText(MonthMap.get(dateParts[1]) + " " + dateParts[0]);
         holder.location.setText(event.getLocation().getCity() + ", " + event.getLocation().getStreet() + " " + event.getLocation().getStreetNumber());
         holder._eventType.setText(event.getType().getName());
+        holder.eventCard.setOnClickListener(v -> {
+            Bundle bundle = new Bundle();
+            bundle.putLong("eventId", event.getId());
+            Navigation.findNavController(v).navigate(R.id.action_eventOrganizerEventDetailsFragment_to_eventDetailsFragment, bundle);
+        });
         try {
             holder._image.setImageURI(convertToUrisFromBase64(holder._image.getContext(), event.getImage()));
             holder._image.setScaleType(ImageView.ScaleType.CENTER_CROP);
