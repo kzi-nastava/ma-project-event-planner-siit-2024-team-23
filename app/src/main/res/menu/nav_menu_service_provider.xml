@@ -35,7 +35,7 @@
         <item android:title="@string/notifications">
             <menu>
                 <item
-                    android:id="@+id/messages_fragment"
+                    android:id="@+id/chat_fragment"
                     android:icon="@drawable/outline_message_24"
                     android:title="@string/messages" />
                 <item
