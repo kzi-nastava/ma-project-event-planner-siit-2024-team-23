@@ -1,9 +1,7 @@
 package com.example.fusmobilni.clients;
 
-import android.content.Context;
-
 import com.example.fusmobilni.BuildConfig;
-import com.example.fusmobilni.clients.auth.AuthService;
+import com.example.fusmobilni.clients.services.auth.AuthService;
 import com.example.fusmobilni.clients.services.categories.CategoryService;
 import com.example.fusmobilni.clients.services.categories.proposals.ProposalService;
 import com.example.fusmobilni.clients.services.communication.chat.ChatService;
@@ -13,12 +11,12 @@ import com.example.fusmobilni.clients.services.events.inivtations.InvitationsSer
 import com.example.fusmobilni.clients.services.fastRegister.FastRegisterService;
 import com.example.fusmobilni.clients.services.items.ItemsService;
 import com.example.fusmobilni.clients.services.items.pricelist.PriceListService;
+import com.example.fusmobilni.clients.services.items.reviews.notifications.NotificationsService;
 import com.example.fusmobilni.clients.services.products.ProductsService;
 import com.example.fusmobilni.clients.services.serviceOfferings.ServiceOfferingReservationService;
 import com.example.fusmobilni.clients.services.serviceOfferings.ServiceOfferingService;
 import com.example.fusmobilni.clients.users.UserService;
 import com.example.fusmobilni.core.CustomSharedPrefs;
-import com.example.fusmobilni.model.users.User;
 
 import java.util.concurrent.TimeUnit;
 
@@ -33,7 +31,7 @@ public class ClientUtils {
 
     private static Retrofit retrofit;
 
-    public static void initalize(CustomSharedPrefs sharedPrefs) {
+    public static void initialize(CustomSharedPrefs sharedPrefs) {
         if (retrofit == null) {
             retrofit = createRetrofitInstance(sharedPrefs);
 
@@ -52,6 +50,7 @@ public class ClientUtils {
             itemsService = retrofit.create(ItemsService.class);
             userService = retrofit.create(UserService.class);
             priceListService = retrofit.create(PriceListService.class);
+            notificationsService = retrofit.create(NotificationsService.class);
         }
     }
 
@@ -59,7 +58,7 @@ public class ClientUtils {
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
-        OkHttpClient okHttpClient = getClient( sharedPrefs);
+        OkHttpClient okHttpClient = getClient(sharedPrefs);
 
         return new Retrofit.Builder()
                 .baseUrl(SERVICE_API_PATH)
@@ -109,6 +108,5 @@ public class ClientUtils {
 
     public static UserService userService;
     public static PriceListService priceListService;
-
-
+    public static NotificationsService notificationsService;
 }

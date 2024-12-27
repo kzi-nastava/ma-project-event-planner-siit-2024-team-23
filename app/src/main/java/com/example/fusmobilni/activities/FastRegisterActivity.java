@@ -3,7 +3,6 @@ package com.example.fusmobilni.activities;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
@@ -26,7 +25,6 @@ import com.example.fusmobilni.fragments.users.register.fast.HashInvalidFragment;
 import com.example.fusmobilni.fragments.users.register.fast.StepOneFastRegistrationFragment;
 import com.example.fusmobilni.fragments.users.register.fast.StepTwoFastRegistrationFragment;
 import com.example.fusmobilni.interfaces.FragmentValidation;
-import com.example.fusmobilni.requests.auth.AuthenticatedUserRequest;
 import com.example.fusmobilni.requests.register.fast.FastRegisterRequest;
 import com.example.fusmobilni.responses.FastRegisterInvitationResponse;
 import com.example.fusmobilni.responses.geoCoding.GeoCodingResponse;
@@ -61,7 +59,7 @@ public class FastRegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ClientUtils.initalize(CustomSharedPrefs.getInstance(getApplicationContext()));
+        ClientUtils.initialize(CustomSharedPrefs.getInstance(getApplicationContext()));
 
         _binding = ActivityFastRegisterBinding.inflate(getLayoutInflater());
         setContentView(_binding.getRoot());
