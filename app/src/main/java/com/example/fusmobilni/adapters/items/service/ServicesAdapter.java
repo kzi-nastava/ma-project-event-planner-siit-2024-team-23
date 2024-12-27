@@ -65,6 +65,10 @@ public class ServicesAdapter extends RecyclerView.Adapter<ServicesAdapter.Servic
         holder.favoriteIcon.setOnClickListener(v -> {
             CustomSharedPrefs prefs = CustomSharedPrefs.getInstance();
             LoginResponse user = prefs.getUser();
+            if(user == null) {
+                Toast.makeText(v.getContext(), "You must be logged in first!", Toast.LENGTH_SHORT).show();
+                return;
+            }
             Call<Void> request = ClientUtils.userService.addToServiceFavorites(user.getId(), new FavoriteServiceRequest(service.getId(), user.getId()));
             request.enqueue(new Callback<>() {
                 @Override

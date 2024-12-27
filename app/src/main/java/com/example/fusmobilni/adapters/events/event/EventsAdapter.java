@@ -106,6 +106,10 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
         holder.favoriteIcon.setOnClickListener(v -> {
             CustomSharedPrefs prefs = CustomSharedPrefs.getInstance();
             LoginResponse user = prefs.getUser();
+            if (user == null ){
+                Toast.makeText(v.getContext(), "You must be logged in first!", Toast.LENGTH_SHORT).show();
+                return;
+            }
             Call<Void> request = ClientUtils.userService.addEventToFavorites(user.getId(), new FavoriteEventRequest(event.id, user.getId()));
             request.enqueue(new Callback<Void>() {
                 @Override
