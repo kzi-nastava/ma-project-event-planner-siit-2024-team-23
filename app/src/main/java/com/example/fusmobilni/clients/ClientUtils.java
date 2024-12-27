@@ -1,7 +1,5 @@
 package com.example.fusmobilni.clients;
 
-import android.content.Context;
-
 import com.example.fusmobilni.BuildConfig;
 import com.example.fusmobilni.clients.auth.AuthService;
 import com.example.fusmobilni.clients.services.categories.CategoryService;
@@ -16,9 +14,8 @@ import com.example.fusmobilni.clients.services.items.pricelist.PriceListService;
 import com.example.fusmobilni.clients.services.products.ProductsService;
 import com.example.fusmobilni.clients.services.serviceOfferings.ServiceOfferingReservationService;
 import com.example.fusmobilni.clients.services.serviceOfferings.ServiceOfferingService;
-import com.example.fusmobilni.clients.users.UserService;
+import com.example.fusmobilni.clients.services.users.UserService;
 import com.example.fusmobilni.core.CustomSharedPrefs;
-import com.example.fusmobilni.model.users.User;
 
 import java.util.concurrent.TimeUnit;
 

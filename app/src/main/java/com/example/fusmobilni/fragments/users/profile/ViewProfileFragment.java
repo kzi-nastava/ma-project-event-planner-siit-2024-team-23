@@ -1,6 +1,7 @@
 package com.example.fusmobilni.fragments.users.profile;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 
@@ -23,6 +24,9 @@ import com.example.fusmobilni.responses.auth.LoginResponse;
 import com.example.fusmobilni.responses.auth.UserAvatarResponse;
 import com.google.android.material.tabs.TabLayout;
 
+import java.io.IOException;
+
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -53,17 +57,24 @@ public class ViewProfileFragment extends Fragment {
         NestedScrollView contentScrollView = _binding.contentScrollView;
         loadFragment(new UserFavEventsFragment());
 
-        Call<UserAvatarResponse> request = ClientUtils.authService.findProfileImage();
+        Call<ResponseBody> request = ClientUtils.authService.findProfileImage();
         request.enqueue(new Callback<>() {
             @Override
-            public void onResponse(@NonNull Call<UserAvatarResponse> call, @NonNull Response<UserAvatarResponse> response) {
+            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
                 if(response.isSuccessful() && response.body() != null){
-                    byte[] imageBytes = Base64.decode(response.body().getAvatar(), Base64.DEFAULT);
-                    _binding.profilePicture.setImageBitmap(BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length));
+                    try{
+                        byte[] imageBytes = response.body().bytes();
+                        Bitmap bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
+                        if(bitmap != null){
+                            _binding.profilePicture.setImageBitmap(bitmap);
+                        }
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
             }
             @Override
-            public void onFailure(@NonNull Call<UserAvatarResponse> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
             }
         });
         CustomSharedPrefs prefs = CustomSharedPrefs.getInstance();

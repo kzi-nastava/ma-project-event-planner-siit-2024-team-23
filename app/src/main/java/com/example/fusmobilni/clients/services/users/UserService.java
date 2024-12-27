@@ -1,4 +1,4 @@
-package com.example.fusmobilni.clients.users;
+package com.example.fusmobilni.clients.services.users;
 
 import com.example.fusmobilni.requests.users.favorites.FavoriteEventRequest;
 import com.example.fusmobilni.requests.users.favorites.FavoriteProductRequest;
