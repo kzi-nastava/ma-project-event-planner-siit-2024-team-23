@@ -1,5 +1,7 @@
 package com.example.fusmobilni.responses.location;
 
+import androidx.annotation.NonNull;
+
 public class LocationResponse {
     public String city;
     public String street;
@@ -53,5 +55,11 @@ public class LocationResponse {
 
     public void setStreetNumber(String streetNumber) {
         this.streetNumber = streetNumber;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return city + ", " + street + " " + streetNumber;
     }
 }

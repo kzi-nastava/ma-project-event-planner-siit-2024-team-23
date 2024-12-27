@@ -13,21 +13,24 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.fusmobilni.R;
 import com.example.fusmobilni.interfaces.EOEventClickListener;
 import com.example.fusmobilni.model.event.Event;
+import com.example.fusmobilni.responses.events.home.EventHomeResponse;
+import com.example.fusmobilni.responses.events.home.EventPreviewResponse;
+import com.example.fusmobilni.responses.events.home.EventsHomeResponse;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class EventOrganizerEventAdapter extends RecyclerView.Adapter<EventOrganizerEventAdapter.EventViewHolder>{
         private final EOEventClickListener eventClickListener;
-        private List<Event> eventList;
+        private List<EventPreviewResponse> eventList;
 
 
 
-        public EventOrganizerEventAdapter(List<Event> eventList, EOEventClickListener clickListener) {
+        public EventOrganizerEventAdapter(List<EventPreviewResponse> eventList, EOEventClickListener clickListener) {
             this.eventList = eventList;
             this.eventClickListener = clickListener;
         }
-        public void setData(List<Event> list) {
+        public void setData(List<EventPreviewResponse> list) {
             this.eventList = new ArrayList<>(list);
             notifyDataSetChanged();
         }
@@ -42,10 +45,10 @@ public class EventOrganizerEventAdapter extends RecyclerView.Adapter<EventOrgani
 
         @Override
         public void onBindViewHolder(@NonNull EventOrganizerEventAdapter.EventViewHolder holder, int position) {
-            Event event = eventList.get(position);
+            EventPreviewResponse event = eventList.get(position);
             holder.title.setText(event.getTitle());
-            holder.day.setText(event.getDay());
-            holder.monthYear.setText(String.format("%s %s", event.getMonth(), event.getYear()));
+            holder.day.setText(R.string.see);
+            holder.monthYear.setText(R.string.details);
             holder.location.setText(event.getLocation());
             holder.eventCard.setOnClickListener(v -> eventClickListener.onEventClick(position));
             holder.editButton.setOnClickListener(v-> eventClickListener.onEditClick(position));
@@ -57,7 +60,7 @@ public class EventOrganizerEventAdapter extends RecyclerView.Adapter<EventOrgani
             return eventList.size();
         }
 
-        public void updateServiceList(List<Event> newServiceList) {
+        public void updateServiceList(List<EventPreviewResponse> newServiceList) {
             this.eventList = new ArrayList<>(newServiceList);
             notifyDataSetChanged();
         }

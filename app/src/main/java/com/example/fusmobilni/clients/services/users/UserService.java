@@ -5,6 +5,7 @@ import com.example.fusmobilni.requests.users.favorites.FavoriteProductRequest;
 import com.example.fusmobilni.requests.users.favorites.FavoriteServiceRequest;
 import com.example.fusmobilni.responses.events.home.EventHomeResponse;
 import com.example.fusmobilni.responses.events.home.EventsHomeResponse;
+import com.example.fusmobilni.responses.events.home.EventsPreviewResponse;
 import com.example.fusmobilni.responses.register.regular.RegisterResponse;
 import com.example.fusmobilni.responses.users.UserFavoriteEventsResponse;
 import com.example.fusmobilni.responses.users.UserFavoriteProductsResponse;
@@ -49,6 +50,9 @@ public interface UserService {
     Call<Void> addToProductFavorites(@Path("id") Long id, @Body FavoriteProductRequest request);
     @GET("events/users/{id}")
     Call<EventsHomeResponse> findEventsForUser(@Path("id") Long id);
+
+    @GET("event-organizers/{id}/events")
+    Call<EventsPreviewResponse> findEventsForEventOrganizer(@Path("id") Long id);
 
 
 }

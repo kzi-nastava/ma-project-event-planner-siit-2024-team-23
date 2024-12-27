@@ -1,28 +1,59 @@
 package com.example.fusmobilni.fragments.events.event;
 
+import android.content.ActivityNotFoundException;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
+import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.fusmobilni.R;
 import com.example.fusmobilni.adapters.events.AgendaActivityAdapter;
+import com.example.fusmobilni.adapters.events.EventComponentAdapter;
+import com.example.fusmobilni.clients.ClientUtils;
+import com.example.fusmobilni.core.CustomSharedPrefs;
 import com.example.fusmobilni.databinding.FragmentEventDetailsBinding;
 import com.example.fusmobilni.model.event.AgendaActivity;
 import com.example.fusmobilni.model.event.Event;
+import com.example.fusmobilni.requests.users.favorites.FavoriteEventRequest;
+import com.example.fusmobilni.responses.auth.LoginResponse;
+import com.example.fusmobilni.responses.events.EventDetailsResponse;
+import com.example.fusmobilni.responses.events.components.EventComponentsResponse;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.sql.Blob;
 import java.sql.Time;
 import java.util.ArrayList;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class EventDetailsFragment extends Fragment {
     private FragmentEventDetailsBinding _binding;
     private boolean favorite = false;
     private AgendaActivityAdapter _adapter;
-    private ArrayList<AgendaActivity> agenda = new ArrayList<>();
+    private EventComponentAdapter _eventComponentAdapter;
+    private EventDetailsResponse event;
+    private LoginResponse user;
 
     public EventDetailsFragment() {
         // Required empty public constructor
@@ -44,101 +75,215 @@ public class EventDetailsFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
+        CustomSharedPrefs prefs = CustomSharedPrefs.getInstance();
+        user = prefs.getUser();
         _binding = FragmentEventDetailsBinding.inflate(inflater, container, false);
         View root = _binding.getRoot();
-        assert getArguments() != null;
-        Event event = getArguments().getParcelable("event");
-        _binding.eventDetailsText.setText(event.getTitle());
-        _binding.textViewEventLocationHorizontal.setText(event.getLocation());
-        _binding.textViewOrganizerEventDetails.setText(R.string.ibrahimovic);
-        _binding.imageView5.setImageResource(R.drawable.person);
-        _binding.textViewEventDescriptionDetails.setText(event.getDescription());
+        if(getArguments() == null){
+            Toast.makeText(requireContext(), "Something went wrong with event or invalid event id is provided!",
+                    Toast.LENGTH_LONG).show();
+        }
+        _binding.generatePdfBtn.setOnClickListener(v -> onGeneratePdfClick());
+        animateFavoriteButton();
         initializeFavoriteButton();
-        agenda = fillAgenda();
-        _adapter = new AgendaActivityAdapter(agenda);
-        _binding.eventActivitiesRecycleView.setAdapter(_adapter);
+        Long eventId = getArguments().getLong("eventId");
+        fetchData(eventId);
+        fetchEventImage(eventId);
         return root;
+    }
+
+    private void onGeneratePdfClick() {
+        Call<ResponseBody> request = ClientUtils.eventsService.downloadEventPdf(event.getId());
+        request.enqueue(new Callback<>() {
+            @Override
+            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    new Thread(() -> {
+                        try {
+                            String fileName = "event_details_" + event.getId() + "_" + System.currentTimeMillis() + ".pdf";
+                            File file = new File(requireContext().getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), fileName);
+
+                            try (InputStream inputStream = response.body().byteStream();
+                                 FileOutputStream outputStream = new FileOutputStream(file)) {
+                                byte[] buffer = new byte[4096];
+                                int read;
+                                while ((read = inputStream.read(buffer)) != -1) {
+                                    outputStream.write(buffer, 0, read);
+                                }
+                                outputStream.flush();
+                            }
+
+                            // Notify download complete
+                            new Handler(Looper.getMainLooper()).post(() -> {
+                                Toast.makeText(requireContext(), "PDF downloaded: " + fileName, Toast.LENGTH_LONG).show();
+                                openPdf(requireContext(), file);
+                            });
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            new Handler(Looper.getMainLooper()).post(() ->
+                                    Toast.makeText(requireContext(), "Download failed", Toast.LENGTH_SHORT).show()
+                            );
+                        }
+                    }).start();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
+                Toast.makeText(requireContext(), "Download failed: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    private static void openPdf(Context context, File file) {
+        Uri uri = FileProvider.getUriForFile(context, context.getApplicationContext().getPackageName() + ".provider", file);
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setDataAndType(uri, "application/pdf");
+        intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        try {
+            context.startActivity(intent);
+        } catch (ActivityNotFoundException e) {
+            Toast.makeText(context, "No PDF viewer installed", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void fetchEventImage(Long eventId) {
+        Call<ResponseBody> request = ClientUtils.eventsService.findEventImage(eventId);
+        request.enqueue(new Callback<>() {
+            @Override
+            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
+                if(response.isSuccessful() && response.body() != null){
+                    new Thread(() -> {
+                        try (ResponseBody responseBody = response.body()) {
+                            Bitmap bitmap = BitmapFactory.decodeStream(responseBody.byteStream());
+                            _binding.eventImage.post(() -> _binding.eventImage.setImageBitmap(bitmap));
+                        }
+                    }).start();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
+                Log.e("EventRepository", "Failed to load image: " + t.getMessage());
+                _binding.eventImage.post(() -> _binding.eventImage.setImageResource(R.drawable.event_image_placeholder));
+            }
+        });
+    }
+
+    private void fetchData(Long eventId) {
+        Call<EventDetailsResponse> request = ClientUtils.eventsService.findEventById(eventId);
+        request.enqueue(new Callback<>() {
+            @Override
+            public void onResponse(@NonNull Call<EventDetailsResponse> call, @NonNull Response<EventDetailsResponse> response) {
+                if (response.isSuccessful() && response.body() != null){
+                    event = response.body();
+                    _binding.eventDetailsText.setText(event.getTitle());
+                    _binding.textViewEventLocationHorizontal.setText(event.getLocation().toString());
+                    _binding.textViewOrganizerNameServiceDetails.setText(String.format("%s %s.", event.getEventOrganizer().firstName, event.getEventOrganizer().getLastName().charAt(0)));
+                    _binding.textViewEventDescriptionDetails.setText(event.getDescription());
+                    if(event.getAgendas().isEmpty()){
+                        _binding.eventActivitiesRecycleView.setVisibility(View.GONE);
+                        _binding.eventAgendaLbl.setVisibility(View.GONE);
+                    }else{
+                        _binding.eventActivitiesRecycleView.setVisibility(View.VISIBLE);
+                        _binding.eventAgendaLbl.setVisibility(View.VISIBLE);
+                        _adapter = new AgendaActivityAdapter(event.getAgendas());
+                        _binding.eventActivitiesRecycleView.setAdapter(_adapter);
+                    }
+                    fetchEventOrganizerImage(event.getEventOrganizer().id);
+                    fetchEventComponents(event.getId());
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<EventDetailsResponse> call, @NonNull Throwable t) {
+                Toast.makeText(requireContext(), "Cannot fetch event data!", Toast.LENGTH_LONG).show();
+            }
+        });
+
+    }
+
+    private void fetchEventComponents(Long id) {
+        Call<EventComponentsResponse> request = ClientUtils.eventsService.findComponentsByEventId(id);
+        request.enqueue(new Callback<>() {
+            @Override
+            public void onResponse(@NonNull Call<EventComponentsResponse> call, @NonNull Response<EventComponentsResponse> response) {
+                if(response.isSuccessful() && response.body() != null){
+                    if(response.body().components.isEmpty()){
+                        _binding.componentsLbl.setVisibility(View.GONE);
+                        _binding.eventComponentsRV.setVisibility(View.GONE);
+                    }else{
+                        _binding.componentsLbl.setVisibility(View.VISIBLE);
+                        _binding.eventComponentsRV.setVisibility(View.VISIBLE);
+                        _eventComponentAdapter = new EventComponentAdapter(response.body().components);
+                        _binding.eventComponentsRV.setAdapter(_eventComponentAdapter);
+                    }
+
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<EventComponentsResponse> call, @NonNull Throwable t) {
+
+            }
+        });
+    }
+
+    private void fetchEventOrganizerImage(Long id) {
+        Call<ResponseBody> request = ClientUtils.authService.findProfileImageByUserId(id);
+        request.enqueue(new Callback<>() {
+            @Override
+            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
+                if(response.isSuccessful() && response.body() != null){
+                    new Thread(() -> {
+                        try (ResponseBody responseBody = response.body()) {
+                            Bitmap bitmap = BitmapFactory.decodeStream(responseBody.byteStream());
+                            _binding.eoProfileImage.post(() -> _binding.eoProfileImage.setImageBitmap(bitmap));
+                        }
+                    }).start();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
+                Log.e("AuthRepository", "Failed to load image: " + t.getMessage());
+                _binding.eoProfileImage.post(() -> _binding.eoProfileImage.setImageResource(R.drawable.person));
+            }
+        });
+    }
+
+    private void animateFavoriteButton(){
+        _binding.favoriteButton.animate()
+                .alpha(0f)
+                .setDuration(100)
+                .withEndAction(() -> {
+                    _binding.favoriteButton.setIconResource(favorite ? R.drawable.ic_heart_full : R.drawable.ic_heart);
+
+                    _binding.favoriteButton.animate()
+                            .alpha(1f)
+                            .setDuration(100)
+                            .start();
+                })
+                .start();
     }
 
     private void initializeFavoriteButton() {
         _binding.favoriteButton.setOnClickListener(v -> {
-            favorite = !favorite;
-            _binding.favoriteButton.animate()
-                    .alpha(0f)
-                    .setDuration(100)
-                    .withEndAction(() -> {
-                        _binding.favoriteButton.setIconResource(favorite ? R.drawable.ic_heart_full : R.drawable.ic_heart);
+            Call<Void> request = ClientUtils.userService.addEventToFavorites(user.getId(), new FavoriteEventRequest(event.getId(), user.getId()));
+            request.enqueue(new Callback<>() {
+                @Override
+                public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
+                    if(response.isSuccessful()){
+                        Toast.makeText(v.getContext(), "Success!", Toast.LENGTH_SHORT).show();
+                        favorite = !favorite;
+                       animateFavoriteButton();
+                    }
+                }
 
-                        _binding.favoriteButton.animate()
-                                .alpha(1f)
-                                .setDuration(100)
-                                .start();
-                    })
-                    .start();
+                @Override
+                public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
+
+                }
+            });
         });
     }
-
-    private ArrayList<AgendaActivity> fillAgenda() {
-        ArrayList<AgendaActivity> a = new ArrayList<>();
-        a.add(new AgendaActivity(
-                1L,
-                Time.valueOf("09:00:00"),
-                Time.valueOf("10:00:00"),
-                "Welcome and Opening Remarks",
-                "Kick off the event with opening speeches and a warm welcome."
-        ));
-        a.add(new AgendaActivity(
-                2L,
-                Time.valueOf("10:00:00"),
-                Time.valueOf("11:00:00"),
-                "Keynote Speech",
-                "A renowned speaker shares insights on the event's theme."
-        ));
-        a.add(new AgendaActivity(
-                3L,
-                Time.valueOf("11:15:00"),
-                Time.valueOf("12:15:00"),
-                "Panel Discussion",
-                "Industry leaders discuss trends and challenges."
-        ));
-        a.add(new AgendaActivity(
-                4L,
-                Time.valueOf("12:15:00"),
-                Time.valueOf("13:30:00"),
-                "Lunch Break",
-                "Enjoy a buffet lunch and network with other attendees."
-        ));
-        a.add(new AgendaActivity(
-                5L,
-                Time.valueOf("13:30:00"),
-                Time.valueOf("14:30:00"),
-                "Workshop: Innovation in Action",
-                "An interactive workshop on implementing innovative ideas."
-        ));
-        a.add(new AgendaActivity(
-                6L,
-                Time.valueOf("14:45:00"),
-                Time.valueOf("15:45:00"),
-                "Breakout Sessions",
-                "Choose from multiple sessions focused on specific topics."
-        ));
-        a.add(new AgendaActivity(
-                7L,
-                Time.valueOf("16:00:00"),
-                Time.valueOf("16:30:00"),
-                "Coffee Break",
-                "Relax and recharge with refreshments."
-        ));
-        a.add(new AgendaActivity(
-                8L,
-                Time.valueOf("16:30:00"),
-                Time.valueOf("17:30:00"),
-                "Closing Ceremony",
-                "Wrap up the event with final remarks and a thank you to participants."
-        ));
-
-        return a;
-    }
-
 }

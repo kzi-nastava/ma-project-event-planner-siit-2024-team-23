@@ -6,6 +6,7 @@ import com.example.fusmobilni.requests.events.event.CreateAgendaActivityRequest;
 import com.example.fusmobilni.requests.events.event.CreateEventRequest;
 import com.example.fusmobilni.requests.events.event.EventComponentReservationRequest;
 import com.example.fusmobilni.requests.items.BuyItemRequest;
+import com.example.fusmobilni.responses.events.EventDetailsResponse;
 import com.example.fusmobilni.responses.events.EventTypeResponse;
 import com.example.fusmobilni.responses.events.EventTypesResponse;
 import com.example.fusmobilni.responses.events.GetEventByIdResponse;
@@ -16,16 +17,20 @@ import com.example.fusmobilni.responses.events.filter.EventLocationsResponse;
 import com.example.fusmobilni.responses.events.filter.EventsPaginationResponse;
 import com.example.fusmobilni.responses.events.home.EventsHomeResponse;
 
+import java.sql.Blob;
 import java.util.Map;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
+import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 import retrofit2.http.QueryMap;
+import retrofit2.http.Streaming;
 
 public interface EventsService {
 
@@ -80,4 +85,16 @@ public interface EventsService {
 
     @POST("events/{eventId}/components/service-reservation")
     Call<Void> createComponentWithReservation(@Path("eventId") Long eventId, @Body EventComponentReservationRequest request);
+
+    @GET("events/{id}")
+    Call<EventDetailsResponse> findEventById(@Path("id") Long id);
+
+    @GET("events/{id}/image")
+    @Streaming
+    @Headers("Accept: image/jpeg")
+    Call<ResponseBody> findEventImage(@Path("id") Long id);
+
+    @GET("events/{id}/event-details/pdf")
+    @Streaming
+    Call<ResponseBody> downloadEventPdf(@Path("id") Long id);
 }
