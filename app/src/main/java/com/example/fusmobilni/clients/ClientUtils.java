@@ -1,7 +1,7 @@
 package com.example.fusmobilni.clients;
 
 import com.example.fusmobilni.BuildConfig;
-import com.example.fusmobilni.clients.auth.AuthService;
+import com.example.fusmobilni.clients.services.auth.AuthService;
 import com.example.fusmobilni.clients.services.categories.CategoryService;
 import com.example.fusmobilni.clients.services.categories.proposals.ProposalService;
 import com.example.fusmobilni.clients.services.eventTypes.EventTypeService;
@@ -10,7 +10,7 @@ import com.example.fusmobilni.clients.services.events.inivtations.InvitationsSer
 import com.example.fusmobilni.clients.services.fastRegister.FastRegisterService;
 import com.example.fusmobilni.clients.services.items.ItemsService;
 import com.example.fusmobilni.clients.services.items.pricelist.PriceListService;
-import com.example.fusmobilni.clients.services.items.reviews.notifications.ItemReviewNotificationsService;
+import com.example.fusmobilni.clients.services.items.reviews.notifications.NotificationsService;
 import com.example.fusmobilni.clients.services.products.ProductsService;
 import com.example.fusmobilni.clients.services.serviceOfferings.ServiceOfferingReservationService;
 import com.example.fusmobilni.clients.services.serviceOfferings.ServiceOfferingService;
@@ -47,7 +47,7 @@ public class ClientUtils {
             itemsService = retrofit.create(ItemsService.class);
             userService = retrofit.create(UserService.class);
             priceListService = retrofit.create(PriceListService.class);
-            itemReviewNotificationsService = retrofit.create(ItemReviewNotificationsService.class);
+            notificationsService = retrofit.create(NotificationsService.class);
         }
     }
 
@@ -102,6 +102,6 @@ public class ClientUtils {
     public static ItemsService itemsService;
     public static UserService userService;
     public static PriceListService priceListService;
-    public static ItemReviewNotificationsService itemReviewNotificationsService;
+    public static NotificationsService notificationsService;
 
 }

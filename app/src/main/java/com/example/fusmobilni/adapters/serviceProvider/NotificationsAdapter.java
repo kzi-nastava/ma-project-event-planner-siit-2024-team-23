@@ -13,8 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fusmobilni.R;
 import com.example.fusmobilni.model.UserNotification;
-import com.example.fusmobilni.model.users.User;
-import com.example.fusmobilni.responses.items.notifications.ItemReviewNotificationResponse;
+import com.example.fusmobilni.responses.notifications.NotificationResponse;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -23,10 +22,14 @@ import java.util.List;
 public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int TYPE_ITEM_REVIEW = 0;
     private static final int TYPE_ITEM_REVIEW_UNREAD = 1;
-    private List<UserNotification> items = new ArrayList<>();
+    private List<NotificationResponse> items = new ArrayList<>();
+
+    public void clearAdapter() {
+        items = new ArrayList<>();
+    }
 
     public boolean existsUnread() {
-        for (UserNotification notification : items) {
+        for (NotificationResponse notification : items) {
             if (!notification.isSeen()) {
                 return true;
             }
@@ -38,18 +41,18 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
         this.items = new ArrayList<>();
     }
 
-    public NotificationsAdapter(List<UserNotification> items) {
+    public NotificationsAdapter(List<NotificationResponse> items) {
         this.items = items;
 
     }
 
-    public void unshiftNotifications(List<UserNotification> items) {
-        for (UserNotification item : items) {
+    public void unshiftNotifications(List<NotificationResponse> items) {
+        for (NotificationResponse item : items) {
             appendNotification(item);
         }
     }
 
-    public void appendNotification(UserNotification item) {
+    public void appendNotification(NotificationResponse item) {
         this.items.add(0, item);
         notifyDataSetChanged();
     }
@@ -72,21 +75,21 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
         if (viewType == TYPE_ITEM_REVIEW) {
             ItemReviewNotificationsViewHolder viewHolder = (ItemReviewNotificationsViewHolder) holder;
-            ItemReviewNotificationResponse notification = (ItemReviewNotificationResponse) items.get(position);
+            NotificationResponse notification = (NotificationResponse) items.get(position);
             viewHolder.notificationText.setText(notification.getContent());
             viewHolder.timeStamp.setText(notification.getTimeStamp());
             try {
-                viewHolder.eoImage.setImageURI(convertToUrisFromBase64(viewHolder.eoImage.getContext(), notification.getEoImage()));
+                viewHolder.eoImage.setImageURI(convertToUrisFromBase64(viewHolder.eoImage.getContext(), notification.getImage()));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         } else if (viewType == TYPE_ITEM_REVIEW_UNREAD) {
             ItemReviewNotificationsViewHolder viewHolder = (ItemReviewNotificationsViewHolder) holder;
-            ItemReviewNotificationResponse notification = (ItemReviewNotificationResponse) items.get(position);
+            NotificationResponse notification = (NotificationResponse) items.get(position);
             viewHolder.notificationText.setText(notification.getContent());
             viewHolder.timeStamp.setText(notification.getTimeStamp());
             try {
-                viewHolder.eoImage.setImageURI(convertToUrisFromBase64(viewHolder.eoImage.getContext(), notification.getEoImage()));
+                viewHolder.eoImage.setImageURI(convertToUrisFromBase64(viewHolder.eoImage.getContext(), notification.getImage()));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -95,8 +98,8 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     @Override
     public int getItemViewType(int position) {
-        if (items.get(position) instanceof ItemReviewNotificationResponse) {
-            ItemReviewNotificationResponse notification = (ItemReviewNotificationResponse) items.get(position);
+        if (items.get(position) instanceof NotificationResponse) {
+            NotificationResponse notification = (NotificationResponse) items.get(position);
             if (notification.seen) {
 
                 return TYPE_ITEM_REVIEW;
@@ -112,20 +115,6 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
         return items.size();
     }
 
-    //    public static class ItemReviewNotificationsUnreadViewHolder extends RecyclerView.ViewHolder {
-//        TextView timeStamp;
-//        TextView notificationText;
-//        ImageView eoImage;
-//
-//        public ItemReviewNotificationsUnreadViewHolder(@NonNull View itemView) {
-//            super(itemView);
-//            timeStamp = itemView.findViewById(R.id.notificationTimeStamp);
-//            notificationText = itemView.findViewById(R.id.textViewItemReviewNotification);
-//            eoImage = itemView.findViewById(R.id.eoImageView);
-//
-//        }
-//
-//    }
     public static class ItemReviewNotificationsViewHolder extends RecyclerView.ViewHolder {
         TextView timeStamp;
         TextView notificationText;

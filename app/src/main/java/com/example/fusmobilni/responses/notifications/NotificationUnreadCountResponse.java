@@ -1,9 +1,9 @@
-package com.example.fusmobilni.responses.items.notifications;
+package com.example.fusmobilni.responses.notifications;
 
-public class ItemReviewNotificationUnreadCountResponse {
+public class NotificationUnreadCountResponse {
     public int unreadCount;
 
-    public ItemReviewNotificationUnreadCountResponse(int unreadCount) {
+    public NotificationUnreadCountResponse(int unreadCount) {
         this.unreadCount = unreadCount;
     }
 

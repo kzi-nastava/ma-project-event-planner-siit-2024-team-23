@@ -3,21 +3,20 @@ package com.example.fusmobilni.fragments.communication;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.fusmobilni.R;
 import com.example.fusmobilni.adapters.serviceProvider.NotificationsAdapter;
 import com.example.fusmobilni.clients.ClientUtils;
 import com.example.fusmobilni.core.CustomSharedPrefs;
 import com.example.fusmobilni.databinding.FragmentNotificationsBinding;
 import com.example.fusmobilni.fragments.dialogs.SpinnerDialogFragment;
-import com.example.fusmobilni.model.UserNotification;
-import com.example.fusmobilni.responses.items.notifications.ItemReviewNotificationResponse;
-import com.example.fusmobilni.responses.items.notifications.ItemReviewNotificationsResponse;
+import com.example.fusmobilni.responses.notifications.NotificationResponse;
+import com.example.fusmobilni.viewModels.notifications.NotificationViewModel;
 
 import java.util.List;
 
@@ -36,6 +35,7 @@ public class NotificationsFragment extends Fragment {
     private RecyclerView _notificationsView;
     private Long userId;
     private SpinnerDialogFragment _loader;
+    private NotificationViewModel _notificationsViewModel;
 
     public NotificationsFragment() {
         // Required empty public constructor
@@ -64,6 +64,7 @@ public class NotificationsFragment extends Fragment {
         _binding = FragmentNotificationsBinding.inflate(inflater, container, false);
         View root = _binding.getRoot();
         initializeDialogs();
+        _notificationsViewModel = new ViewModelProvider(getActivity()).get(NotificationViewModel.class);
         _notificationsView = _binding.notificationRecycler;
         CustomSharedPrefs prefs = CustomSharedPrefs.getInstance();
         userId = prefs.getUser().getId();
@@ -74,6 +75,7 @@ public class NotificationsFragment extends Fragment {
 
         return root;
     }
+
     private void initializeDialogs() {
         _loader = new SpinnerDialogFragment();
         _loader.setCancelable(false);
@@ -89,10 +91,13 @@ public class NotificationsFragment extends Fragment {
     }
 
     public void readAllUnreadNotifications() {
-        Call<Void> call = ClientUtils.itemReviewNotificationsService.readAllByUserId(userId);
+        Call<Void> call = ClientUtils.notificationsService.readAllByUserId(userId);
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    _notificationsViewModel.readAll();
+                }
             }
 
             @Override
@@ -102,26 +107,21 @@ public class NotificationsFragment extends Fragment {
         });
     }
 
-    public void fetchNotifications() {
+    public void displayNotifications() {
         _loader.show(getFragmentManager(), "loading_spinner");
-        Call<ItemReviewNotificationsResponse> call = ClientUtils.itemReviewNotificationsService.findAllByUserId(userId);
-        call.enqueue(new Callback<>() {
-            @Override
-            public void onResponse(Call<ItemReviewNotificationsResponse> call, Response<ItemReviewNotificationsResponse> response) {
-                if (response.isSuccessful()) {
-                    List<ItemReviewNotificationResponse> notificationsResponseList = response.body().getNotifications();
-                    for (UserNotification n : notificationsResponseList) {
-                        _adapter.appendNotification(n);
-                    }
-                    _notificationsView.setAdapter(_adapter);
-                    _loader.dismiss();
-                }
-            }
+        _adapter.clearAdapter();
+        List<NotificationResponse> notifications = _notificationsViewModel.getNotifications().getValue();
+        for (NotificationResponse n : notifications) {
+            _adapter.appendNotification(n);
+        }
+        _notificationsView.setAdapter(_adapter);
+        _loader.dismiss();
+    }
 
-            @Override
-            public void onFailure(Call<ItemReviewNotificationsResponse> call, Throwable t) {
-
-            }
+    public void fetchNotifications() {
+        displayNotifications();
+        _notificationsViewModel.getNotifications().observe(getViewLifecycleOwner(), v -> {
+            displayNotifications();
         });
     }
 }

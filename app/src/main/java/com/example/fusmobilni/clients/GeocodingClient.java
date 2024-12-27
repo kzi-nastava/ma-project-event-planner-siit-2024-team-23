@@ -1,7 +1,6 @@
 package com.example.fusmobilni.clients;
 
-import com.example.fusmobilni.BuildConfig;
-import com.example.fusmobilni.clients.geoCoding.GeoCodingService;
+import com.example.fusmobilni.clients.services.geoCoding.GeoCodingService;
 
 import java.util.concurrent.TimeUnit;
 

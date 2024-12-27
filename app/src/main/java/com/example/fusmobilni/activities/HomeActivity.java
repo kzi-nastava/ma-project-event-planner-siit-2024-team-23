@@ -4,28 +4,25 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-
 import androidx.annotation.NonNull;
-import androidx.annotation.OptIn;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
-
 import com.example.fusmobilni.R;
 import com.example.fusmobilni.clients.ClientUtils;
 import com.example.fusmobilni.core.CustomSharedPrefs;
 import com.example.fusmobilni.databinding.ActivityHomeBinding;
 import com.example.fusmobilni.model.enums.UserType;
 import com.example.fusmobilni.responses.auth.LoginResponse;
-import com.example.fusmobilni.responses.items.notifications.ItemReviewNotificationUnreadCountResponse;
+import com.example.fusmobilni.viewModels.notifications.NotificationViewModel;
 import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.badge.BadgeUtils;
 import com.google.android.material.badge.ExperimentalBadgeUtils;
@@ -35,12 +32,9 @@ import androidx.activity.OnBackPressedCallback;
 
 import java.util.Objects;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
 public class HomeActivity extends AppCompatActivity {
     private ActivityHomeBinding _binding;
+    private NotificationViewModel _notificationViewModel;
     private AppBarConfiguration _topAppBarConfiguration;
     private DrawerLayout _drawer;
     private NavigationView _navigationView;
@@ -48,6 +42,7 @@ public class HomeActivity extends AppCompatActivity {
     private Toolbar _topToolbar;
     private ActionBar _actionBar;
     private ActionBarDrawerToggle _actionBarDrawerToggle;
+    private BadgeDrawable notificationsBadge;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,8 +106,14 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
+    @Override
     protected void onStart() {
         super.onStart();
+
         _navController = Navigation.findNavController(this, R.id.fragment_nav_content_main);
         _navController.addOnDestinationChangedListener((navController, navDestination, bundle) -> {
             int id = navDestination.getId();
@@ -140,6 +141,7 @@ public class HomeActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, _navController, _topAppBarConfiguration);
     }
 
+    @ExperimentalBadgeUtils
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.toolbar_menu, menu);
@@ -163,7 +165,7 @@ public class HomeActivity extends AppCompatActivity {
             // If not logged in, use a default icon
             profileItem.setIcon(R.drawable.ic_person_white);
         }
-        findUnreadNotificationsCount();
+        initializeNotifications();
         return true;
     }
 
@@ -192,43 +194,45 @@ public class HomeActivity extends AppCompatActivity {
     private void addBadge(MenuItem menuItem, int count) {
 
         // Get or create the BadgeDrawable
-        BadgeDrawable badgeDrawable = BadgeDrawable.create(this);
-        badgeDrawable.setNumber(count); // Set badge number
-        badgeDrawable.setVisible(true); // Show the badge
+        notificationsBadge = BadgeDrawable.create(this);
+        notificationsBadge.setNumber(count); // Set badge number
+        notificationsBadge.setVisible(true); // Show the badge
         // Attach the badge to the menu item
-        BadgeUtils.attachBadgeDrawable(badgeDrawable,_topToolbar,menuItem.getItemId());
+        BadgeUtils.attachBadgeDrawable(notificationsBadge, _topToolbar, menuItem.getItemId());
 
     }
 
-    public void findUnreadNotificationsCount() {
+    @ExperimentalBadgeUtils
+    private void resetBadge(MenuItem menuItem) {
+        BadgeUtils.detachBadgeDrawable(notificationsBadge, _topToolbar, menuItem.getItemId());
+    }
+
+    @ExperimentalBadgeUtils
+    public void initializeNotifications() {
         CustomSharedPrefs prefs = CustomSharedPrefs.getInstance();
+
+        _notificationViewModel = new ViewModelProvider(this).get(NotificationViewModel.class);
 
         if (prefs.getUser() == null) {
             return;
         }
-        Call<ItemReviewNotificationUnreadCountResponse> call = ClientUtils.itemReviewNotificationsService.countUnreadByUserId(prefs.getUser().getId());
-        call.enqueue(new Callback<>() {
-            @OptIn(markerClass = ExperimentalBadgeUtils.class)
-            @Override
-            public void onResponse(Call<ItemReviewNotificationUnreadCountResponse> call, Response<ItemReviewNotificationUnreadCountResponse> response) {
-                if (response.isSuccessful()) {
-                    MenuItem menuItem = _topToolbar.getMenu().findItem(R.id.notifications_fragment);
-                    if (menuItem == null) {
-                        return;
-                    }
-                    if (response.body().getUnreadCount() > 0) {
-                        addBadge(menuItem, response.body().getUnreadCount());
-                    }
+        _notificationViewModel.setUserId(prefs.getUser().getId());
+        _notificationViewModel.getCountUnread().observe(this, v -> {
+            if (_notificationViewModel.getCountUnread().getValue() > 0) {
+                MenuItem menuItem = _topToolbar.getMenu().findItem(R.id.notifications_fragment);
+                if (menuItem == null) {
+                    return;
                 }
-
-
-            }
-
-            @Override
-            public void onFailure(Call<ItemReviewNotificationUnreadCountResponse> call, Throwable t) {
-
+                addBadge(menuItem, _notificationViewModel.getCountUnread().getValue());
+            } else {
+                MenuItem menuItem = _topToolbar.getMenu().findItem(R.id.notifications_fragment);
+                if (menuItem == null) {
+                    return;
+                }
+                resetBadge(menuItem);
             }
         });
+
     }
 
     @Override

@@ -1,4 +1,4 @@
-package com.example.fusmobilni.clients.geoCoding;
+package com.example.fusmobilni.clients.services.geoCoding;
 
 import com.example.fusmobilni.responses.geoCoding.GeoCodingResponse;
 
