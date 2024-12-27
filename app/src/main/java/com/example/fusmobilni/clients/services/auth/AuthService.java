@@ -1,4 +1,4 @@
-package com.example.fusmobilni.clients.auth;
+package com.example.fusmobilni.clients.services.auth;
 
 import com.example.fusmobilni.requests.auth.LoginRequest;
 import com.example.fusmobilni.requests.register.fast.FastRegisterRequest;
