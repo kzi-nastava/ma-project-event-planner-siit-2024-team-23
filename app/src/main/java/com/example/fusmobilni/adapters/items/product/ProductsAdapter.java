@@ -62,6 +62,10 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
         holder._favoriteIcon.setOnClickListener(v -> {
             CustomSharedPrefs prefs = CustomSharedPrefs.getInstance();
             LoginResponse user = prefs.getUser();
+            if(user == null) {
+                Toast.makeText(v.getContext(), "You must be logged in first!", Toast.LENGTH_SHORT).show();
+                return;
+            }
             Call<Void> request = ClientUtils.userService.addToProductFavorites(user.getId(), new FavoriteProductRequest(product.getId(), user.getId()));
             request.enqueue(new Callback<>() {
                 @Override

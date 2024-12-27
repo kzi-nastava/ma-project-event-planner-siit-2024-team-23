@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fusmobilni.R;
 import com.example.fusmobilni.model.event.AgendaActivity;
+import com.example.fusmobilni.responses.events.components.AgendaActivityResponse;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -17,10 +18,10 @@ import java.util.Locale;
 
 public class AgendaActivityAdapter extends RecyclerView.Adapter<AgendaActivityAdapter.AgendaViewHolder> {
 
-    private final List<AgendaActivity> agendaActivities;
+    private final List<AgendaActivityResponse> agendaActivities;
     private final SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
 
-    public AgendaActivityAdapter(List<AgendaActivity> agendaActivities) {
+    public AgendaActivityAdapter(List<AgendaActivityResponse> agendaActivities) {
         this.agendaActivities = agendaActivities;
     }
 
@@ -34,12 +35,12 @@ public class AgendaActivityAdapter extends RecyclerView.Adapter<AgendaActivityAd
 
     @Override
     public void onBindViewHolder(@NonNull AgendaViewHolder holder, int position) {
-        AgendaActivity activity = agendaActivities.get(position);
+        AgendaActivityResponse activity = agendaActivities.get(position);
 
         // Bind data to views
-        holder.title.setText(activity.getTitle());
-        holder.description.setText(activity.getDescription());
-        String timeRange = timeFormat.format(activity.getStartTime()) + " - " + timeFormat.format(activity.getEndTime());
+        holder.title.setText(activity.title);
+        holder.description.setText(activity.description);
+        String timeRange = activity.startTime + " - " + activity.endTime;
         holder.timeRange.setText(timeRange);
 
     }

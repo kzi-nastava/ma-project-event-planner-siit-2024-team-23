@@ -2,14 +2,17 @@ package com.example.fusmobilni.adapters.events.event;
 
 import static com.example.fusmobilni.adapters.AdapterUtils.convertToUrisFromBase64;
 
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fusmobilni.R;
@@ -18,6 +21,7 @@ import com.example.fusmobilni.core.CustomSharedPrefs;
 import com.example.fusmobilni.requests.users.favorites.FavoriteEventRequest;
 import com.example.fusmobilni.responses.auth.LoginResponse;
 import com.example.fusmobilni.responses.events.home.EventHomeResponse;
+import com.example.fusmobilni.responses.events.home.EventPreviewResponse;
 import com.example.fusmobilni.responses.events.home.EventsHomeResponse;
 
 import java.io.IOException;
@@ -94,9 +98,18 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
         } else {
             holder.numberGoing.setText("");
         }
+        holder.eventCard.setOnClickListener(v -> {
+            Bundle bundle = new Bundle();
+            bundle.putLong("eventId", event.getId());
+            Navigation.findNavController(v).navigate(R.id.action_eventOrganizerEventDetailsFragment_to_eventDetailsFragment, bundle);
+        });
         holder.favoriteIcon.setOnClickListener(v -> {
             CustomSharedPrefs prefs = CustomSharedPrefs.getInstance();
             LoginResponse user = prefs.getUser();
+            if (user == null ){
+                Toast.makeText(v.getContext(), "You must be logged in first!", Toast.LENGTH_SHORT).show();
+                return;
+            }
             Call<Void> request = ClientUtils.userService.addEventToFavorites(user.getId(), new FavoriteEventRequest(event.id, user.getId()));
             request.enqueue(new Callback<Void>() {
                 @Override
@@ -133,6 +146,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
         public TextView description;
         public ImageView _image;
         public ImageView favoriteIcon;
+        public LinearLayout eventCard;
 
         public EventsViewHolder(@NonNull View itemView) {
 
@@ -148,6 +162,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
             description = itemView.findViewById(R.id.textViewEventDescription);
             _image = itemView.findViewById(R.id.imageBanner);
             favoriteIcon = itemView.findViewById(R.id.bookmarkIcon);
+            eventCard = itemView.findViewById(R.id.eventCard);
         }
     }
 

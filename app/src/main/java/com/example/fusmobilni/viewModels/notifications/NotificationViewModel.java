@@ -12,6 +12,7 @@ import com.example.fusmobilni.clients.ClientUtils;
 import com.example.fusmobilni.clients.webSockets.NotificationWebSocketClient;
 import com.example.fusmobilni.responses.notifications.NotificationResponse;
 import com.example.fusmobilni.responses.notifications.NotificationsResponse;
+
 import com.google.gson.Gson;
 
 import java.util.ArrayList;

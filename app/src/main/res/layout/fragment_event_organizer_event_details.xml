@@ -14,25 +14,34 @@
         app:layout_constraintGuide_begin="80dp" />
 
 
-    <androidx.core.widget.NestedScrollView
+<!--    <androidx.core.widget.NestedScrollView-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="700sp"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@id/guideline2">-->
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/eventsRecycleView"
         android:layout_width="match_parent"
-        android:layout_height="700sp"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/guideline2">
-
+        app:layout_constraintTop_toTopOf="parent"
+        tools:listitem="@layout/fragment_e_o_event_card_horizontal" />
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/eventsRecycleView"
+            android:id="@+id/events_list_loading"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:listitem="@layout/fragment_e_o_event_card_horizontal" />
-    </androidx.core.widget.NestedScrollView>
+            tools:listitem="@layout/fragment_loading_card_horizontal" />
+<!--    </androidx.core.widget.NestedScrollView>-->
+
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/floating_action_button"

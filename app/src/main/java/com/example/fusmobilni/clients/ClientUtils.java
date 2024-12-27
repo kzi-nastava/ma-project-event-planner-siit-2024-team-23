@@ -15,7 +15,7 @@ import com.example.fusmobilni.clients.services.items.reviews.notifications.Notif
 import com.example.fusmobilni.clients.services.products.ProductsService;
 import com.example.fusmobilni.clients.services.serviceOfferings.ServiceOfferingReservationService;
 import com.example.fusmobilni.clients.services.serviceOfferings.ServiceOfferingService;
-import com.example.fusmobilni.clients.users.UserService;
+import com.example.fusmobilni.clients.services.users.UserService;
 import com.example.fusmobilni.core.CustomSharedPrefs;
 
 import java.util.concurrent.TimeUnit;

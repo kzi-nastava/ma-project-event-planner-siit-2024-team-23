@@ -319,10 +319,10 @@
         <action
             android:id="@+id/action_eventOrganizerEventDetailsFragment_to_createEventFragment"
             app:destination="@id/createEventFragment" />
-        <action
-            android:id="@+id/action_eventOrganizerEventDetailsFragment_to_eventDetailsFragment"
-            app:destination="@id/eventDetailsFragment" />
     </fragment>
+    <action
+        android:id="@+id/action_eventOrganizerEventDetailsFragment_to_eventDetailsFragment"
+        app:destination="@id/eventDetailsFragment" />
     <fragment
         android:id="@+id/event_types_fragment"
         android:name="com.example.fusmobilni.fragments.events.eventType.EventTypeFragment"
