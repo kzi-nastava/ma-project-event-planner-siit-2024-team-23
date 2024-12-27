@@ -13,14 +13,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.fusmobilni.R;
 import com.example.fusmobilni.adapters.communication.chats.ChatAdapter;
-import com.example.fusmobilni.adapters.communication.chats.ChatsOverviewAdapter;
 import com.example.fusmobilni.clients.ClientUtils;
-import com.example.fusmobilni.clients.webSockets.WebSocketClient;
+import com.example.fusmobilni.clients.webSockets.ChatWebSocketClient;
 import com.example.fusmobilni.core.CustomSharedPrefs;
 import com.example.fusmobilni.databinding.FragmentChatBinding;
-import com.example.fusmobilni.databinding.FragmentChatsOverviewBinding;
 import com.example.fusmobilni.requests.communication.chat.MessageCreateRequest;
 import com.example.fusmobilni.responses.auth.LoginResponse;
 import com.example.fusmobilni.responses.communication.chat.messages.GetMessageResponse;
@@ -46,7 +43,7 @@ public class ChatFragment extends Fragment {
     private RecyclerView recyclerView;
     private ChatViewModel viewModel;
 
-    private WebSocketClient webSocketClient;
+    private ChatWebSocketClient chatWebSocketClient;
 
 
     public ChatFragment() {}
@@ -98,9 +95,9 @@ public class ChatFragment extends Fragment {
     @SuppressLint("CheckResult")
     private void connectToSocket() {
         Gson gson = new Gson();
-        webSocketClient = new WebSocketClient();
-        webSocketClient.connect();
-        webSocketClient.subscribeToTopic("/socket-publisher/" + getSubscriptionExtension())
+        chatWebSocketClient = new ChatWebSocketClient();
+        chatWebSocketClient.connect();
+        chatWebSocketClient.subscribeToTopic("/socket-publisher/" + getSubscriptionExtension())
                 .subscribe(topicMessage -> {
                     GetMessageResponse newMessage = gson.fromJson(topicMessage.getPayload(), GetMessageResponse.class);
 
@@ -145,7 +142,7 @@ public class ChatFragment extends Fragment {
                     viewModel.getChatId().getValue(),
                     messageContent
             );
-            webSocketClient.sendMessage("/socket-subscriber/send/message", gson.toJson(request));
+            chatWebSocketClient.sendMessage("/socket-subscriber/send/message", gson.toJson(request));
             binding.messageInput.setText("");
         });
     }
