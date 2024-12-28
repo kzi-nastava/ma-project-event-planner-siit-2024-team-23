@@ -193,6 +193,13 @@
                     android:textFontWeight="?attr/motionDurationLong4"
                     android:textSize="24sp" />
 
+                <LinearLayout
+                    android:id="@+id/buttonsHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="horizontal"
+                    android:padding="0dp">
 
                     <Button
                         android:id="@+id/generatePdfBtn"
@@ -209,6 +216,26 @@
                         app:icon="@drawable/outline_shopping_bag_24"
                         app:iconGravity="end"
                         app:iconSize="24dp" />
+
+                    <Button
+                        android:id="@+id/editBtn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="6dp"
+                        android:fontFamily="@font/poppins"
+                        android:paddingTop="8dp"
+                        android:paddingBottom="8dp"
+                        android:text="@string/edit"
+                        android:textAlignment="center"
+                        android:textFontWeight="600"
+                        app:cornerRadius="8dp"
+                        app:icon="@drawable/car_ui_icon_edit"
+                        app:iconGravity="end"
+                        app:iconSize="24dp" />
+
+
+
+                </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/serviceLocationHorizontal"

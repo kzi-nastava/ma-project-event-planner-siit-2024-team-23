@@ -11,6 +11,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import android.os.Environment;
 import android.os.Handler;
@@ -89,6 +90,7 @@ public class EventDetailsFragment extends Fragment {
         Long eventId = getArguments().getLong("eventId");
         fetchData(eventId);
         fetchEventImage(eventId);
+        setUpEditButton();
         return root;
     }
 
@@ -288,6 +290,15 @@ public class EventDetailsFragment extends Fragment {
 
                 }
             });
+        });
+    }
+
+    private void setUpEditButton() {
+        _binding.editBtn.setOnClickListener(v -> {
+            Bundle bundle = new Bundle();
+            bundle.putInt("currFragment", 1);
+            bundle.putLong("eventId", event.getId());
+            Navigation.findNavController(_binding.getRoot()).navigate(R.id.action_eventDetails_toBudgetPlanning, bundle);
         });
     }
 }

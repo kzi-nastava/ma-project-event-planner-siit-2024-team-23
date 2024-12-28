@@ -179,16 +179,6 @@
                         app:strokeWidth="2dp"
                         android:layout_marginEnd="5dp"
                         android:layout_gravity="end"/>
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/editButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/edit"
-                        android:backgroundTint="@color/primary_blue_900"
-                        android:textColor="@color/white"
-                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                         />
                 </LinearLayout>
 
             </LinearLayout>

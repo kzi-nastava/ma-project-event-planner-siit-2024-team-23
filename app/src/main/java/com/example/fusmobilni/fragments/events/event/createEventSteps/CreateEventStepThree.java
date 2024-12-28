@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.fusmobilni.R;
+import com.example.fusmobilni.adapters.events.AgendaActivityAdapter;
 import com.example.fusmobilni.adapters.events.AgendaActivityEditableAdapter;
 import com.example.fusmobilni.clients.ClientUtils;
 import com.example.fusmobilni.databinding.FragmentCreateEventStepThreeBinding;
@@ -67,10 +68,13 @@ public class CreateEventStepThree extends Fragment implements FragmentValidation
         request.enqueue(new Callback<AgendaActivitiesResponse>() {
             @Override
             public void onResponse(Call<AgendaActivitiesResponse> call, Response<AgendaActivitiesResponse> response) {
-                if(response.isSuccessful()) {
+                if(response.isSuccessful() && response.body() != null) {
                     agenda.clear();
-                    response.body().eventActivities.stream().map(a -> agenda.add(a.toAgenda()));
-                    _adapter.notifyDataSetChanged();
+                    for (AgendaActivityResponse a: response.body().eventActivities) {
+                        agenda.add(a.toAgenda());
+                    }
+                    _adapter = new AgendaActivityEditableAdapter(agenda, _eventViewModel.eventId);
+                    _binding.eventActivitiesRecycleView.setAdapter(_adapter);
                 } else {
                     Log.d("Tag", "dodavanje "+  String.valueOf(response.code()));
                 }

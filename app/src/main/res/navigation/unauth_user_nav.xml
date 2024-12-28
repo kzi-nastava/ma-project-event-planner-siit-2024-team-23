@@ -442,4 +442,8 @@
     <action
         android:id="@+id/action_priceListEdit_toPriceList"
         app:destination="@id/price_list_fragment" />
+
+    <action
+        android:id="@+id/action_eventDetails_toBudgetPlanning"
+        app:destination="@id/stepTwoFragment"/>
 </navigation>

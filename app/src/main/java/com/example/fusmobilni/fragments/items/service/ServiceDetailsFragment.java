@@ -2,6 +2,7 @@ package com.example.fusmobilni.fragments.items.service;
 
 import static com.example.fusmobilni.adapters.AdapterUtils.convertToUrisFromBase64;
 
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -93,17 +94,24 @@ public class ServiceDetailsFragment extends Fragment {
         _binding.bookServiceButton.setOnClickListener(v -> {
             Navigation.findNavController(v).navigate(R.id.action_service_details_to_service_reservation, createBundle());
         });
+        Uri providerImage = null;
         try {
-            _binding.imageView5.setImageURI(convertToUrisFromBase64(getContext(), _service.getProvider().getImage()));
+            providerImage = convertToUrisFromBase64(getContext(), _service.getProvider().getImage());
         } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        try {
-            _binding.imageView4.setImageURI(convertToUrisFromBase64(getContext(), _service.getImage()));
-        } catch (IOException e) {
+            providerImage = null;
+        } catch (NullPointerException ex) {
 
         }
-
+        _binding.imageView5.setImageURI(providerImage);
+        Uri serviceImage = null;
+        try {
+            serviceImage = convertToUrisFromBase64(getContext(), _service.getImage());
+        } catch (IOException e) {
+            serviceImage = null;
+        } catch (NullPointerException ex) {
+            
+        }
+        _binding.imageView4.setImageURI(serviceImage);
         initializeGradesAccordion();
         initializeFavoriteButton();
         checkIfBought();
