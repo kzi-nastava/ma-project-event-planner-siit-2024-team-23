@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:padding="16dp">
 
-    <!-- Title -->
     <TextView
         android:id="@+id/tvTitle"
         android:layout_width="match_parent"
@@ -17,7 +16,22 @@
         android:gravity="center_horizontal"
         android:paddingBottom="8dp" />
 
-    <!-- Header Row -->
+    <Button
+        android:id="@+id/generatePdfBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="6dp"
+        android:fontFamily="@font/poppins"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:text="@string/generate_pdf"
+        android:textAlignment="center"
+        android:textFontWeight="600"
+        app:cornerRadius="8dp"
+        app:icon="@drawable/outline_shopping_bag_24"
+        app:iconGravity="end"
+        app:iconSize="24dp" />
+
     <LinearLayout
         android:id="@+id/headerRow"
         android:layout_width="match_parent"
