@@ -10,7 +10,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.fusmobilni.R;
+import com.example.fusmobilni.adapters.items.reviews.ItemReviewApprovalAdapter;
 import com.example.fusmobilni.databinding.FragmentEventReviewApprovalBinding;
+import com.example.fusmobilni.fragments.dialogs.FailiureDialogFragment;
+import com.example.fusmobilni.fragments.dialogs.SpinnerDialogFragment;
+import com.example.fusmobilni.fragments.dialogs.SuccessDialogFragment;
+import com.example.fusmobilni.viewModels.admin.ReviewApprovalViewModel;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -21,6 +26,11 @@ public class EventReviewApprovalFragment extends Fragment {
 
 
     private FragmentEventReviewApprovalBinding _binding;
+    private ReviewApprovalViewModel _viewModel;
+    private ItemReviewApprovalAdapter _adapter;
+    private SpinnerDialogFragment _loader;
+    private FailiureDialogFragment _failure;
+    private SuccessDialogFragment _success;
 
     public EventReviewApprovalFragment() {
         // Required empty public constructor

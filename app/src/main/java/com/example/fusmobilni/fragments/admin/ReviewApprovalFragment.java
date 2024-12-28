@@ -1,6 +1,5 @@
 package com.example.fusmobilni.fragments.admin;
 
-import android.content.ClipData;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -17,6 +16,7 @@ import com.example.fusmobilni.databinding.FragmentReviewApprovalBinding;
 import com.example.fusmobilni.fragments.dialogs.FailiureDialogFragment;
 import com.example.fusmobilni.fragments.dialogs.SpinnerDialogFragment;
 import com.example.fusmobilni.fragments.dialogs.SuccessDialogFragment;
+import com.example.fusmobilni.responses.events.review.EventReviewsResponse;
 import com.example.fusmobilni.responses.items.ItemReviewsResponse;
 import com.example.fusmobilni.viewModels.admin.ReviewApprovalViewModel;
 import com.google.android.material.tabs.TabLayout;
@@ -62,7 +62,6 @@ public class ReviewApprovalFragment extends Fragment {
         _binding = FragmentReviewApprovalBinding.inflate(inflater, container, false);
         View root = _binding.getRoot();
         _viewModel = new ViewModelProvider(requireParentFragment()).get(ReviewApprovalViewModel.class);
-        _viewModel.setTest(true);
         initializeDialogs();
         fetchPendingReviews();
         initializeTabs();
@@ -86,7 +85,7 @@ public class ReviewApprovalFragment extends Fragment {
         ItemReviewApprovalFragment fragment = new ItemReviewApprovalFragment();
         adapter.addFragment(fragment, arrayList.get(0));
         EventReviewApprovalFragment eventReviewApprovalFragment = new EventReviewApprovalFragment();
-        adapter.addFragment(eventReviewApprovalFragment,arrayList.get(1));
+        adapter.addFragment(eventReviewApprovalFragment, arrayList.get(1));
 
         viewPager.setAdapter(adapter);
     }
@@ -120,8 +119,37 @@ public class ReviewApprovalFragment extends Fragment {
         _failure = new FailiureDialogFragment();
     }
 
-
     public void fetchPendingReviews() {
+        fetchPendingItemReviews();
+        fetchPendingEventReviews();
+    }
+
+    public void fetchPendingEventReviews() {
+        _loader.show(getFragmentManager(), "loading_spinner");
+        Call<EventReviewsResponse> call = ClientUtils.eventReviewService.findAllPendingReviews();
+        call.enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<EventReviewsResponse> call, Response<EventReviewsResponse> response) {
+                if (!response.isSuccessful()) {
+                    openFailiureWindow("Failed to load reviews");
+
+                    return;
+                }
+
+                _viewModel.setEventReviews(response.body().reviews);
+                _loader.dismiss();
+
+
+            }
+
+            @Override
+            public void onFailure(Call<EventReviewsResponse> call, Throwable t) {
+                openFailiureWindow("Failed to load reviews");
+            }
+        });
+    }
+
+    public void fetchPendingItemReviews() {
         _loader.show(getFragmentManager(), "loading_spinner");
         Call<ItemReviewsResponse> call = ClientUtils.itemsService.findPendingReviews();
         call.enqueue(new Callback<>() {
