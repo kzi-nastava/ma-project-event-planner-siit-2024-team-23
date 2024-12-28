@@ -412,15 +412,15 @@
         android:id="@+id/action_chatOverviews_toChat"
         app:destination="@id/chat_layout_fragment"/>
     <fragment
-        android:id="@+id/itemReviewApprovalFragment"
-        android:name="com.example.fusmobilni.fragments.admin.ItemReviewApprovalFragment"
+        android:id="@+id/reviewApprovalFragment"
+        android:name="com.example.fusmobilni.fragments.admin.ReviewApprovalFragment"
         android:label="Create event"
-        tools:layout="@layout/fragment_item_review_approval">
+        tools:layout="@layout/fragment_review_approval">
 
     </fragment>
     <action
         android:id="@+id/action_to_itemr_review_approval"
-        app:destination="@id/itemReviewApprovalFragment" />
+        app:destination="@id/reviewApprovalFragment" />
 
 
     <fragment
