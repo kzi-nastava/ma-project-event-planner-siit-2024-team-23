@@ -450,4 +450,15 @@
     <action
         android:id="@+id/action_eventDetails_toBudgetPlanning"
         app:destination="@id/stepTwoFragment"/>
+
+    <fragment
+        android:id="@+id/company_overview_fragment"
+        android:name="com.example.fusmobilni.fragments.items.company.CompanyOverviewFragment"
+        android:label=""
+        tools:layout="@layout/fragment_company_overview">
+    </fragment>
+
+    <action
+        android:id="@+id/action_toCompanyOverview"
+        app:destination="@id/company_overview_fragment"/>
 </navigation>

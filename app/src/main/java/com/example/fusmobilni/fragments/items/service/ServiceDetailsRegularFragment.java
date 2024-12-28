@@ -73,6 +73,7 @@ public class ServiceDetailsRegularFragment extends Fragment {
 
         getServiceForOverview();
         _binding.button2.setOnClickListener(v -> createChat());
+        _binding.textViewOrganizerNameServiceDetails.setOnClickListener(v -> visitCompany());
         return root;
     }
 
@@ -224,5 +225,11 @@ public class ServiceDetailsRegularFragment extends Fragment {
 
             }
         });
+    }
+
+    private void visitCompany() {
+        Bundle bundle = new Bundle();
+        bundle.putLong("spId", _service.getProvider().getId());
+        Navigation.findNavController(_binding.getRoot()).navigate(R.id.action_toCompanyOverview, bundle);
     }
 }

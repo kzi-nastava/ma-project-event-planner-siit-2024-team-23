@@ -122,6 +122,7 @@ public class ChatFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new ChatAdapter(messages, userId);
         recyclerView.setAdapter(adapter);
+        recyclerView.scrollToPosition(messages.size()-1);
     }
 
     private Long getUserId() {
