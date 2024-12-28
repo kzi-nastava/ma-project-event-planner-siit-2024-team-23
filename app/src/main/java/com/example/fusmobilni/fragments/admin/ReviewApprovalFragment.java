@@ -61,7 +61,8 @@ public class ReviewApprovalFragment extends Fragment {
         // Inflate the layout for this fragment
         _binding = FragmentReviewApprovalBinding.inflate(inflater, container, false);
         View root = _binding.getRoot();
-        _viewModel = new ViewModelProvider(this).get(ReviewApprovalViewModel.class);
+        _viewModel = new ViewModelProvider(requireParentFragment()).get(ReviewApprovalViewModel.class);
+        _viewModel.setTest(true);
         initializeDialogs();
         fetchPendingReviews();
         initializeTabs();
@@ -84,6 +85,8 @@ public class ReviewApprovalFragment extends Fragment {
         adapter.setContext(this.getContext());
         ItemReviewApprovalFragment fragment = new ItemReviewApprovalFragment();
         adapter.addFragment(fragment, arrayList.get(0));
+        EventReviewApprovalFragment eventReviewApprovalFragment = new EventReviewApprovalFragment();
+        adapter.addFragment(eventReviewApprovalFragment,arrayList.get(1));
 
         viewPager.setAdapter(adapter);
     }

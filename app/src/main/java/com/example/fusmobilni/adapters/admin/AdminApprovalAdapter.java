@@ -54,7 +54,7 @@ public class AdminApprovalAdapter extends FragmentPagerAdapter {
         Drawable drawable = ContextCompat.getDrawable(context, imageList[position]);
         drawable.setBounds(0, 0, drawable.getIntrinsicWidth(),
                 drawable.getIntrinsicHeight());
-        SpannableString spannableString = new SpannableString("" + stringArrayList.get(position));
+        SpannableString spannableString = new SpannableString("  " + stringArrayList.get(position));
 
         // Initialize image span
         ImageSpan imageSpan = new ImageSpan(drawable, ImageSpan.ALIGN_BOTTOM);

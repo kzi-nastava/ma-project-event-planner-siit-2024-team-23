@@ -11,6 +11,15 @@ import java.util.List;
 public class ReviewApprovalViewModel extends ViewModel {
 
     MutableLiveData<List<ItemReviewResponse>> itemReviews = new MutableLiveData<>(new ArrayList<>());
+    MutableLiveData<Boolean> test = new MutableLiveData<>(false);
+
+    public MutableLiveData<Boolean> getTest() {
+        return test;
+    }
+
+    public void setTest(Boolean test) {
+        this.test.setValue(test);
+    }
 
     public MutableLiveData<List<ItemReviewResponse>> getItemReviews() {
         return itemReviews;
