@@ -1,5 +1,6 @@
 package com.example.fusmobilni.fragments.items.product;
 
+import android.content.ClipData;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -16,10 +17,13 @@ import android.widget.Toast;
 
 import com.example.fusmobilni.R;
 import com.example.fusmobilni.clients.ClientUtils;
+import com.example.fusmobilni.core.CustomSharedPrefs;
 import com.example.fusmobilni.databinding.FragmentProductDetailsBinding;
 import com.example.fusmobilni.model.items.item.ItemDetails;
 import com.example.fusmobilni.model.items.product.Product;
+import com.example.fusmobilni.requests.communication.chat.ChatCreateRequest;
 import com.example.fusmobilni.requests.items.BuyItemRequest;
+import com.example.fusmobilni.responses.auth.LoginResponse;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -40,6 +44,7 @@ public class ProductDetailsFragment extends Fragment {
     private Long productId;
     private Long eventId;
     private double estimatedBudget;
+    private ItemDetails product;
 
     private boolean favorite = false;
 
@@ -76,7 +81,7 @@ public class ProductDetailsFragment extends Fragment {
         request.enqueue(new Callback<ItemDetails>() {
             @Override
             public void onResponse(Call<ItemDetails> call, Response<ItemDetails> response) {
-                ItemDetails product = response.body();
+                product = response.body();
                 _binding.productDetailsText.setText(product.getName());
                 _binding.productsHorizontalPrice.setText(String.valueOf(product.getPrice()));
                 _binding.textViewOrganizerNameProductDetails.setText(product.getServiceProvider().getLastName());
@@ -95,6 +100,8 @@ public class ProductDetailsFragment extends Fragment {
             }
 
         });
+
+        _binding.button2.setOnClickListener(v -> createChat());
 
         _binding.buyProductButton.setOnClickListener(v->{
             BuyItemRequest buyItemRequest = new BuyItemRequest(productId, estimatedBudget, "", "", eventId);
@@ -155,4 +162,29 @@ public class ProductDetailsFragment extends Fragment {
         return Uri.fromFile(tempFile);
     }
 
+    private Long getUserId() {
+        LoginResponse user = CustomSharedPrefs.getInstance(getContext()).getUser();
+        if (user == null)
+            return null;
+        return user.getId();
+    }
+
+    private void createChat() {
+        Long userId = getUserId();
+        if (userId == null) {
+            return;
+        }
+        ChatCreateRequest request = new ChatCreateRequest(userId, product.getServiceProvider().getId());
+        ClientUtils.chatService.create(userId, request).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                Navigation.findNavController(_binding.getRoot()).navigate(R.id.action_toChatsFragment);
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+
+            }
+        });
+    }
 }

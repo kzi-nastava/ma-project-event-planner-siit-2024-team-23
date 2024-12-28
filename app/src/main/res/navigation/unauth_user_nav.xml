@@ -401,6 +401,10 @@
         tools:layout="@layout/fragment_chats_overview">
     </fragment>
 
+    <action
+        android:id="@+id/action_toChatsFragment"
+        app:destination="@id/chat_fragment"/>
+
     <fragment
         android:id="@+id/chat_layout_fragment"
         android:name="com.example.fusmobilni.fragments.communication.chat.ChatFragment"

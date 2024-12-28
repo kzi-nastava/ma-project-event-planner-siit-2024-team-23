@@ -30,6 +30,7 @@ import com.example.fusmobilni.core.CustomSharedPrefs;
 import com.example.fusmobilni.databinding.FragmentEventDetailsBinding;
 import com.example.fusmobilni.model.event.AgendaActivity;
 import com.example.fusmobilni.model.event.Event;
+import com.example.fusmobilni.requests.communication.chat.ChatCreateRequest;
 import com.example.fusmobilni.requests.users.favorites.FavoriteEventRequest;
 import com.example.fusmobilni.responses.auth.LoginResponse;
 import com.example.fusmobilni.responses.events.EventDetailsResponse;
@@ -91,6 +92,7 @@ public class EventDetailsFragment extends Fragment {
         fetchData(eventId);
         fetchEventImage(eventId);
         setUpEditButton();
+        _binding.button2.setOnClickListener(v -> createChat());
         return root;
     }
 
@@ -299,6 +301,32 @@ public class EventDetailsFragment extends Fragment {
             bundle.putInt("currFragment", 1);
             bundle.putLong("eventId", event.getId());
             Navigation.findNavController(_binding.getRoot()).navigate(R.id.action_eventDetails_toBudgetPlanning, bundle);
+        });
+    }
+
+    private Long getUserId() {
+        LoginResponse user = CustomSharedPrefs.getInstance(getContext()).getUser();
+        if (user == null)
+            return null;
+        return user.getId();
+    }
+
+    private void createChat() {
+        Long userId = getUserId();
+        if (userId == null) {
+            return;
+        }
+        ChatCreateRequest request = new ChatCreateRequest(userId, event.getEventOrganizer().getId());
+        ClientUtils.chatService.create(userId, request).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                Navigation.findNavController(_binding.getRoot()).navigate(R.id.action_toChatsFragment);
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+
+            }
         });
     }
 }

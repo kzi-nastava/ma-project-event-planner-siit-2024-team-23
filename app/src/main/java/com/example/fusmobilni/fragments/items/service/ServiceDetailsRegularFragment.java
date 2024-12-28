@@ -15,8 +15,11 @@ import android.widget.Toast;
 import com.example.fusmobilni.R;
 import com.example.fusmobilni.adapters.items.reviews.ItemReviewsAdapter;
 import com.example.fusmobilni.clients.ClientUtils;
+import com.example.fusmobilni.core.CustomSharedPrefs;
 import com.example.fusmobilni.databinding.FragmentServiceDetailsRegularBinding;
 import com.example.fusmobilni.fragments.dialogs.SpinnerDialogFragment;
+import com.example.fusmobilni.requests.communication.chat.ChatCreateRequest;
+import com.example.fusmobilni.responses.auth.LoginResponse;
 import com.example.fusmobilni.responses.items.IsBoughtItemResponse;
 import com.example.fusmobilni.responses.items.services.ServiceOverviewResponse;
 import com.example.fusmobilni.responses.location.LocationResponse;
@@ -69,6 +72,7 @@ public class ServiceDetailsRegularFragment extends Fragment {
         initializeDialogs();
 
         getServiceForOverview();
+        _binding.button2.setOnClickListener(v -> createChat());
         return root;
     }
 
@@ -194,5 +198,31 @@ public class ServiceDetailsRegularFragment extends Fragment {
             }
         });
 
+    }
+
+    private Long getUserId() {
+        LoginResponse user = CustomSharedPrefs.getInstance(getContext()).getUser();
+        if (user == null)
+            return null;
+        return user.getId();
+    }
+
+    private void createChat() {
+        Long userId = getUserId();
+        if (userId == null) {
+            return;
+        }
+        ChatCreateRequest request = new ChatCreateRequest(userId, _service.getProvider().getId());
+        ClientUtils.chatService.create(userId, request).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                Navigation.findNavController(_binding.getRoot()).navigate(R.id.action_toChatsFragment);
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+
+            }
+        });
     }
 }
