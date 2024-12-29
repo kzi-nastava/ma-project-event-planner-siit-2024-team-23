@@ -129,11 +129,29 @@
         android:id="@+id/service_creation_step_three"
         android:name="com.example.fusmobilni.fragments.items.service.Forms.MultiStepServiceFormThree"
         android:label="ServiceCreationStepThree"
-        android:layout="@layout/fragment_multi_step_service_form_three"></fragment>
+        android:layout="@layout/fragment_multi_step_service_form_three"/>
+    <fragment
+        android:id="@+id/product_creation_step_three"
+        android:name="com.example.fusmobilni.fragments.items.product.Forms.MultiStepProductFormThree"
+        android:label="Step 3:"
+        android:layout="@layout/fragment_multi_step_service_form_three"/>
+    <fragment
+        android:id="@+id/product_creation_step_two"
+        android:name="com.example.fusmobilni.fragments.items.product.Forms.MultiStepProductFormTwo"
+        android:label="Step 2:"
+        android:layout="@layout/fragment_multi_step_service_form_two"/>
+    <fragment
+        android:id="@+id/product_creation_step_one"
+        android:name="com.example.fusmobilni.fragments.items.product.Forms.MultiStepProductFormOne"
+        android:label="Step 1:"
+        android:layout="@layout/fragment_multi_step_service_form_one"/>
 
     <action
         android:id="@+id/action_serviceView_toServiceCreationStepOne"
         app:destination="@id/service_creation_step_one" />
+    <action
+        android:id="@+id/action_productView_toProductCreationStepOne"
+        app:destination="@id/product_creation_step_one" />
 
     <action
         android:id="@+id/action_serviceCreation_toServiceView"
@@ -158,6 +176,21 @@
     <action
         android:id="@+id/action_serviceCreationStepThree_toServiceView"
         app:destination="@id/services_fragment" />
+    <action
+        android:id="@+id/action_productCreationStepOne_toProductCreationStepTwo"
+        app:destination="@id/product_creation_step_two" />
+    <action
+        android:id="@+id/action_productCreationStepTwo_toProductCreationStepOne"
+        app:destination="@id/product_creation_step_one" />
+    <action
+        android:id="@+id/action_productCreationStepTwo_toProductCreationStepThree"
+        app:destination="@id/product_creation_step_three" />
+    <action
+        android:id="@+id/action_productCreationStepThree_toProductCreationStepTwo"
+        app:destination="@id/product_creation_step_two" />
+    <action
+        android:id="@+id/action_productCreationStepThree_toProductView"
+        app:destination="@id/products_fragment" />
     <fragment
         android:id="@+id/products_search_fragment"
         android:name="com.example.fusmobilni.fragments.items.product.filters.ProductSearchFragment"

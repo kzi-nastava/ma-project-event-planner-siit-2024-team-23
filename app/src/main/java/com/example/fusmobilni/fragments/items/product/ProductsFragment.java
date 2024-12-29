@@ -2,65 +2,212 @@ package com.example.fusmobilni.fragments.items.product;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.os.Handler;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
 
 import com.example.fusmobilni.R;
+import com.example.fusmobilni.adapters.users.serviceProvider.ServiceProviderProductAdapter;
+import com.example.fusmobilni.adapters.users.serviceProvider.ServiceProviderServiceAdapter;
+import com.example.fusmobilni.clients.ClientUtils;
+import com.example.fusmobilni.core.CustomSharedPrefs;
+import com.example.fusmobilni.databinding.FragmentServiceViewBinding;
+import com.example.fusmobilni.fragments.items.product.filters.ProductFilterFragment;
+import com.example.fusmobilni.fragments.users.filters.ServiceProviderFilterFragment;
+import com.example.fusmobilni.interfaces.DeleteServiceListener;
+import com.example.fusmobilni.requests.products.GetProductResponse;
+import com.example.fusmobilni.requests.services.GetServiceResponse;
+import com.example.fusmobilni.requests.services.ServiceFilterRequest;
+import com.example.fusmobilni.requests.services.cardView.GetServiceCardResponse;
+import com.example.fusmobilni.requests.services.cardView.GetServicesCardResponse;
+import com.example.fusmobilni.responses.auth.LoginResponse;
+import com.example.fusmobilni.responses.items.products.home.ProductHomeResponse;
+import com.example.fusmobilni.responses.items.products.home.ProductsHomeResponse;
+import com.example.fusmobilni.viewModels.items.product.ProductViewModel;
+import com.example.fusmobilni.viewModels.items.service.ServiceViewModel;
+import com.example.fusmobilni.viewModels.users.serviceProvider.ServiceProviderViewModel;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link ProductsFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class ProductsFragment extends Fragment {
+import java.util.ArrayList;
+import java.util.List;
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+
+public class ProductsFragment extends Fragment implements DeleteServiceListener {
+    private FragmentServiceViewBinding binding;
+    private static final long DEBOUNCE_DELAY = 300;
+    private Handler handler = new Handler();
+    private ServiceProviderProductAdapter serviceAdapter;
+    private View deleteModal;
+    private List<ProductHomeResponse> products = new ArrayList<>();
+    private ProductViewModel viewModel;
 
     public ProductsFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ProductsFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static ProductsFragment newInstance(String param1, String param2) {
-        ProductsFragment fragment = new ProductsFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
+    public static ProductsFragment newInstance() {
+        return new ProductsFragment();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_products, container, false);
+        binding = FragmentServiceViewBinding.inflate(inflater, container, false);
+        View view = binding.getRoot();
+        requireActivity().getViewModelStore().clear();
+        viewModel = new ViewModelProvider(requireActivity()).get(ProductViewModel.class);
+        setUpAdapter();
+        viewModel.setData(products);
+        LoginResponse user = CustomSharedPrefs.getInstance(getContext()).getUser();
+        Long userId = null;
+        if (user == null) {
+            return view;
+        }
+        userId = user.getId();
+        Call<ProductsHomeResponse> response = ClientUtils.productsService.findAllByServiceProvider(userId,new ServiceFilterRequest());
+        response.enqueue(new Callback<>() {
+            @Override
+            public void onResponse(@NonNull Call<ProductsHomeResponse> call, @NonNull Response<ProductsHomeResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    products = response.body().products;
+                    serviceAdapter.notifyDataSetChanged();
+                    viewModel.setData(products);
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ProductsHomeResponse> call, @NonNull Throwable t) {
+            }
+        });
+
+        binding.floatingActionButton.setOnClickListener(v -> {
+            Navigation.findNavController(view).navigate(R.id.action_productView_toProductCreationStepOne);
+        });
+        setUpSearch();
+        binding.filterBtn.setOnClickListener(v -> openFilterFragment());
+
+        viewModel.getSearchConstraint().observe(getViewLifecycleOwner(),observer->{
+            serviceAdapter.setData(viewModel.getProducts().getValue());
+        });
+
+        viewModel.getProducts().observe(getViewLifecycleOwner(),observer->{
+            serviceAdapter.setData(viewModel.getProducts().getValue());
+        });
+        return view;
+    }
+
+    private void openFilterFragment() {
+        Bundle bundle = new Bundle();
+        bundle.putDouble("minValue", 0);
+        bundle.putDouble("maxValue", 10000);
+        ProductFilterFragment filterFragment = new ProductFilterFragment();
+        filterFragment.setArguments(bundle);
+
+        filterFragment.show(getParentFragmentManager(), filterFragment.getTag());
+    }
+
+    @Override
+    public void onDeleteService(int position) {
+        deleteModal = binding.getRoot().findViewById(R.id.nigger);
+        TextView deleteLabel = deleteModal.findViewById(R.id.deleteLabel);
+        deleteLabel.setText(R.string.product_delete_label);
+        binding.modalBackground.setVisibility(View.VISIBLE);
+        deleteModal.setVisibility(View.VISIBLE);
+        Button cancelButton = deleteModal.findViewById(R.id.cancelButton);
+        Button confirmButton = deleteModal.findViewById(R.id.confirmButton);
+
+        cancelButton.setOnClickListener(v -> {
+            binding.modalBackground.setVisibility(View.INVISIBLE);
+            deleteModal.setVisibility(View.INVISIBLE);
+        });
+
+        confirmButton.setOnClickListener(v -> {
+            Long id = this.products.get(position).id;
+            Call<Void> response = ClientUtils.productsService.delete(id);
+            response.enqueue(new Callback<>() {
+                @Override
+                public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
+                    products.remove(position);
+                    viewModel.setData(products);
+                    serviceAdapter.notifyItemRemoved(position);
+                    serviceAdapter.notifyItemRangeChanged(position, products.size());
+                    binding.modalBackground.setVisibility(View.INVISIBLE);
+                    deleteModal.setVisibility(View.INVISIBLE);
+                }
+
+                @Override
+                public void onFailure(Call<Void> call, Throwable t) {
+
+                }
+            });
+        });
+    }
+
+    @Override
+    public void onUpdateService(int position) {
+        ProductHomeResponse service = products.get(position);
+        Call<GetProductResponse> findById = ClientUtils.productsService.findById(service.id);
+        findById.enqueue(new Callback<>() {
+            @Override
+            public void onResponse(@NonNull Call<GetProductResponse> call, @NonNull Response<GetProductResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    ProductViewModel viewModel = new ViewModelProvider(requireActivity()).get(ProductViewModel.class);
+                    viewModel.populate(response.body(), getContext());
+                    Navigation.findNavController(binding.getRoot()).navigate(R.id.action_productView_toProductCreationStepOne);
+                }
+            }
+            @Override
+            public void onFailure(Call<GetProductResponse> call, Throwable t) {
+
+            }
+        });
+    }
+
+    private void setUpAdapter() {
+        binding.recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        serviceAdapter = new ServiceProviderProductAdapter(products, this);
+        binding.recyclerView.setAdapter(serviceAdapter);
+    }
+
+    private void setUpSearch() {
+        binding.searchServices.getEditText().addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                handler.removeCallbacksAndMessages(null);
+                handler.postDelayed(() -> {
+                    viewModel.setSearchConstraint(s.toString(), requireContext());
+                }, DEBOUNCE_DELAY);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
     }
 }
