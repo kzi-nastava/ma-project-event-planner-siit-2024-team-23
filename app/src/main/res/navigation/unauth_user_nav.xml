@@ -73,7 +73,7 @@
     <!-- Notifications Section -->
     <fragment
         android:id="@+id/notifications_fragment"
-        android:name="com.example.fusmobilni.fragments.communication.NotificationsFragment"
+        android:name="com.example.fusmobilni.fragments.communication.notifications.NotificationsFragment"
         android:label="Notifications"
         tools:layout="@layout/fragment_notifications">
         <action
@@ -129,22 +129,22 @@
         android:id="@+id/service_creation_step_three"
         android:name="com.example.fusmobilni.fragments.items.service.Forms.MultiStepServiceFormThree"
         android:label="ServiceCreationStepThree"
-        android:layout="@layout/fragment_multi_step_service_form_three"/>
+        android:layout="@layout/fragment_multi_step_service_form_three" />
     <fragment
         android:id="@+id/product_creation_step_three"
         android:name="com.example.fusmobilni.fragments.items.product.Forms.MultiStepProductFormThree"
         android:label="Step 3:"
-        android:layout="@layout/fragment_multi_step_service_form_three"/>
+        android:layout="@layout/fragment_multi_step_service_form_three" />
     <fragment
         android:id="@+id/product_creation_step_two"
         android:name="com.example.fusmobilni.fragments.items.product.Forms.MultiStepProductFormTwo"
         android:label="Step 2:"
-        android:layout="@layout/fragment_multi_step_service_form_two"/>
+        android:layout="@layout/fragment_multi_step_service_form_two" />
     <fragment
         android:id="@+id/product_creation_step_one"
         android:name="com.example.fusmobilni.fragments.items.product.Forms.MultiStepProductFormOne"
         android:label="Step 1:"
-        android:layout="@layout/fragment_multi_step_service_form_one"/>
+        android:layout="@layout/fragment_multi_step_service_form_one" />
 
     <action
         android:id="@+id/action_serviceView_toServiceCreationStepOne"
@@ -196,6 +196,11 @@
         android:name="com.example.fusmobilni.fragments.items.product.filters.ProductSearchFragment"
         android:label="Browse Products"
         tools:layout="@layout/fragment_product_search" />
+    <fragment
+        android:id="@+id/event_review_fragment"
+        android:name="com.example.fusmobilni.fragments.events.event.reviews.EventReviewFormFragment"
+        android:label=""
+        tools:layout="@layout/fragment_event_review_form" />
     <fragment
         android:id="@+id/item_review_fragment"
         android:name="com.example.fusmobilni.fragments.items.reviews.ItemReviewFormFragment"
@@ -431,23 +436,21 @@
         android:id="@+id/chat_fragment"
         android:name="com.example.fusmobilni.fragments.communication.chat.ChatsOverviewFragment"
         android:label=""
-        tools:layout="@layout/fragment_chats_overview">
-    </fragment>
+        tools:layout="@layout/fragment_chats_overview"></fragment>
 
     <action
         android:id="@+id/action_toChatsFragment"
-        app:destination="@id/chat_fragment"/>
+        app:destination="@id/chat_fragment" />
 
     <fragment
         android:id="@+id/chat_layout_fragment"
         android:name="com.example.fusmobilni.fragments.communication.chat.ChatFragment"
         android:label=""
-        tools:layout="@layout/fragment_chat">
-    </fragment>
+        tools:layout="@layout/fragment_chat"></fragment>
 
     <action
         android:id="@+id/action_chatOverviews_toChat"
-        app:destination="@id/chat_layout_fragment"/>
+        app:destination="@id/chat_layout_fragment" />
     <fragment
         android:id="@+id/reviewApprovalFragment"
         android:name="com.example.fusmobilni.fragments.admin.ReviewApprovalFragment"
@@ -482,16 +485,17 @@
 
     <action
         android:id="@+id/action_eventDetails_toBudgetPlanning"
-        app:destination="@id/stepTwoFragment"/>
-
+        app:destination="@id/stepTwoFragment" />
+    <action
+        android:id="@+id/action_to_event_review"
+        app:destination="@id/event_review_fragment"/>
     <fragment
         android:id="@+id/company_overview_fragment"
         android:name="com.example.fusmobilni.fragments.items.company.CompanyOverviewFragment"
         android:label=""
-        tools:layout="@layout/fragment_company_overview">
-    </fragment>
+        tools:layout="@layout/fragment_company_overview"></fragment>
 
     <action
         android:id="@+id/action_toCompanyOverview"
-        app:destination="@id/company_overview_fragment"/>
+        app:destination="@id/company_overview_fragment" />
 </navigation>

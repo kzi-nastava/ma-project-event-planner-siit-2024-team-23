@@ -156,6 +156,9 @@ public class ServiceDetailsRegularFragment extends Fragment {
     }
 
     private void showSnackBar() {
+        if (getUserId() == null) {
+            return;
+        }
         View rootView = getActivity().getWindow().getDecorView().findViewById(android.R.id.content);
         snackbar = Snackbar.make(rootView, "You have recently reserved this item, give us a review", Snackbar.LENGTH_INDEFINITE);
         snackbar.setAction("Review", new View.OnClickListener() {
@@ -167,8 +170,10 @@ public class ServiceDetailsRegularFragment extends Fragment {
                 }else{
                     args.putString("itemName", _product.getName());
                 }
-                args.putLong("itemId", itemId);
-                args.putLong("eoId", 224L);
+                
+                args.putLong("itemId", _serviceId);
+                args.putLong("eoId", getUserId());
+
                 Navigation.findNavController(getView()).navigate(R.id.action_to_item_review_form, args);
             }
         });

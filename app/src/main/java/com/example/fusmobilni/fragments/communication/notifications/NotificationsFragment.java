@@ -1,9 +1,10 @@
-package com.example.fusmobilni.fragments.communication;
+package com.example.fusmobilni.fragments.communication.notifications;
 
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
@@ -15,6 +16,7 @@ import com.example.fusmobilni.clients.ClientUtils;
 import com.example.fusmobilni.core.CustomSharedPrefs;
 import com.example.fusmobilni.databinding.FragmentNotificationsBinding;
 import com.example.fusmobilni.fragments.dialogs.SpinnerDialogFragment;
+import com.example.fusmobilni.responses.auth.LoginResponse;
 import com.example.fusmobilni.responses.notifications.NotificationResponse;
 import com.example.fusmobilni.viewModels.notifications.NotificationViewModel;
 
@@ -66,14 +68,21 @@ public class NotificationsFragment extends Fragment {
         initializeDialogs();
         _notificationsViewModel = new ViewModelProvider(getActivity()).get(NotificationViewModel.class);
         _notificationsView = _binding.notificationRecycler;
+        initializeUserExisting();
+
+        return root;
+    }
+
+    private void initializeUserExisting() {
         CustomSharedPrefs prefs = CustomSharedPrefs.getInstance();
+        if (prefs.getUser() == null) {
+            return;
+        }
         userId = prefs.getUser().getId();
         _adapter = new NotificationsAdapter();
         _notificationsView.setAdapter(_adapter);
 
         fetchNotifications();
-
-        return root;
     }
 
     private void initializeDialogs() {
@@ -84,7 +93,9 @@ public class NotificationsFragment extends Fragment {
 
     @Override
     public void onDestroyView() {
-        if (_adapter.existsUnread()) {
+        LoginResponse user = CustomSharedPrefs.getInstance().getUser();
+
+        if (user != null && _adapter.existsUnread()) {
             readAllUnreadNotifications();
         }
         super.onDestroyView();
@@ -92,7 +103,7 @@ public class NotificationsFragment extends Fragment {
 
     public void readAllUnreadNotifications() {
         Call<Void> call = ClientUtils.notificationsService.readAllByUserId(userId);
-        call.enqueue(new Callback<Void>() {
+        call.enqueue(new Callback<>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccessful()) {
