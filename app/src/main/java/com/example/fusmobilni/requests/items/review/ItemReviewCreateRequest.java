@@ -1,4 +1,4 @@
-package com.example.fusmobilni.requests.items;
+package com.example.fusmobilni.requests.items.review;
 
 public class ItemReviewCreateRequest {
     public String content;

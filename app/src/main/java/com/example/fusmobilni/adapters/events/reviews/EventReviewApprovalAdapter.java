@@ -1,4 +1,4 @@
-package com.example.fusmobilni.adapters.items.reviews;
+package com.example.fusmobilni.adapters.events.reviews;
 
 import static com.example.fusmobilni.adapters.AdapterUtils.convertToUrisFromBase64;
 
@@ -13,50 +13,45 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fusmobilni.R;
+import com.example.fusmobilni.fragments.events.event.reviews.OnEventReviewActionListener;
 import com.example.fusmobilni.fragments.items.reviews.OnItemReviewActionListener;
-import com.example.fusmobilni.responses.items.ItemReviewResponse;
+import com.example.fusmobilni.responses.events.review.EventReviewResponse;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ItemReviewApprovalAdapter extends RecyclerView.Adapter<ItemReviewApprovalAdapter.ItemReviewApprovalAdapterViewHolder> {
-    List<ItemReviewResponse> reviews = new ArrayList<>();
-    private final OnItemReviewActionListener listener;
+public class EventReviewApprovalAdapter extends RecyclerView.Adapter<EventReviewApprovalAdapter.EventReviewApprovalAdapterViewHolder> {
+    List<EventReviewResponse> reviews = new ArrayList<>();
 
-    public ItemReviewApprovalAdapter(OnItemReviewActionListener listener) {
+    private final OnEventReviewActionListener listener;
+    public EventReviewApprovalAdapter(OnEventReviewActionListener listener) {
         this.listener = listener;
         reviews = new ArrayList<>();
     }
-
-    public ItemReviewApprovalAdapter(List<ItemReviewResponse> responses, OnItemReviewActionListener listener) {
+    public EventReviewApprovalAdapter(List<EventReviewResponse> responses, OnEventReviewActionListener listener) {
         reviews = new ArrayList<>(responses);
         this.listener = listener;
-    }
-
-    public void removeReview(ItemReviewResponse review) {
-        reviews.removeIf(item -> item.getId().equals(review.getId()));
-        notifyDataSetChanged();
     }
 
 
     @NonNull
     @Override
-    public ItemReviewApprovalAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_item_review_approve, parent, false);
-        return new ItemReviewApprovalAdapterViewHolder(view);
+    public EventReviewApprovalAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_event_review_approve, parent, false);
+        return new EventReviewApprovalAdapterViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ItemReviewApprovalAdapterViewHolder holder, int position) {
-        ItemReviewResponse grade = reviews.get(position);
+    public void onBindViewHolder(@NonNull EventReviewApprovalAdapterViewHolder holder, int position) {
+        EventReviewResponse grade = reviews.get(position);
         try {
-            holder.eoImage.setImageURI(convertToUrisFromBase64(holder.eoImage.getContext(), grade.getEventOrganizer().getImage()));
+            holder.userImage.setImageURI(convertToUrisFromBase64(holder.userImage.getContext(), grade.getUser().getAvatar()));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
         holder.reviewDate.setText(grade.getDate());
-        holder.eoName.setText(grade.getEventOrganizer().getFirstName() + " " + grade.getEventOrganizer().getLastName());
+        holder.userName.setText(grade.getUser().getFirstName() + " " + grade.getUser().getLastName());
         holder.reviewContent.setText(grade.getContent());
         ImageView[] attendees = {holder.star1, holder.star2, holder.star3, holder.star4, holder.star5};
         for (int i = 0; i < attendees.length; ++i) {
@@ -83,9 +78,9 @@ public class ItemReviewApprovalAdapter extends RecyclerView.Adapter<ItemReviewAp
         return reviews.size();
     }
 
-    public static class ItemReviewApprovalAdapterViewHolder extends RecyclerView.ViewHolder {
-        ImageView eoImage;
-        TextView eoName;
+    public static class EventReviewApprovalAdapterViewHolder extends RecyclerView.ViewHolder {
+        ImageView userImage;
+        TextView userName;
         TextView reviewDate;
         TextView reviewContent;
         ImageView star1;
@@ -96,10 +91,10 @@ public class ItemReviewApprovalAdapter extends RecyclerView.Adapter<ItemReviewAp
         Button approveButton;
         Button declineButton;
 
-        public ItemReviewApprovalAdapterViewHolder(@NonNull View itemView) {
+        public EventReviewApprovalAdapterViewHolder(@NonNull View itemView) {
             super(itemView);
-            eoImage = itemView.findViewById(R.id.eoImageView);
-            eoName = itemView.findViewById(R.id.eoNameTextView);
+            userImage = itemView.findViewById(R.id.userImageView);
+            userName = itemView.findViewById(R.id.userNameTextView);
             reviewContent = itemView.findViewById(R.id.textViewReviewContent);
             reviewDate = itemView.findViewById(R.id.textViewReviewDate);
             star1 = itemView.findViewById(R.id.star1);

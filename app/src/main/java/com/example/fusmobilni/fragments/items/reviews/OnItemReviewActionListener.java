@@ -2,7 +2,7 @@ package com.example.fusmobilni.fragments.items.reviews;
 
 import com.example.fusmobilni.responses.items.ItemReviewResponse;
 
-public interface OnReviewActionListener {
+public interface OnItemReviewActionListener {
 
     void onApprove(ItemReviewResponse review);
 

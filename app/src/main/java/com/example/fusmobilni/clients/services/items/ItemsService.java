@@ -2,8 +2,8 @@ package com.example.fusmobilni.clients.services.items;
 
 import com.example.fusmobilni.model.items.item.ItemDetails;
 import com.example.fusmobilni.requests.events.event.GetItemsByCategoryAndPrice;
-import com.example.fusmobilni.requests.items.ItemReviewCreateRequest;
-import com.example.fusmobilni.requests.items.ItemReviewUpdateStateRequest;
+import com.example.fusmobilni.requests.items.review.ItemReviewCreateRequest;
+import com.example.fusmobilni.requests.items.review.ItemReviewUpdateStateRequest;
 import com.example.fusmobilni.responses.events.GetItemsResponse;
 import com.example.fusmobilni.responses.items.IsBoughtItemResponse;
 import com.example.fusmobilni.responses.items.ItemReviewResponse;

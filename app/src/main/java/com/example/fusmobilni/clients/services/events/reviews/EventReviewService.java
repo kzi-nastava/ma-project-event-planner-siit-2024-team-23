@@ -14,5 +14,5 @@ public interface EventReviewService {
     Call<EventReviewsResponse> findAllPendingReviews();
 
     @PUT("admin/events/reviews/adminApproval")
-    Call<EventReviewsResponse> updateEventReviewState(@Body EventReviewUpdateStateRequest request);
+    Call<EventReviewResponse> updateEventReviewState(@Body EventReviewUpdateStateRequest request);
 }

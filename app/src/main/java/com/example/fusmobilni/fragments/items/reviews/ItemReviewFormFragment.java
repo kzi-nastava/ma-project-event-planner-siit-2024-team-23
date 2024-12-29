@@ -11,14 +11,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.fusmobilni.R;
 import com.example.fusmobilni.adapters.items.reviews.ItemReviewFormAdapter;
 import com.example.fusmobilni.clients.ClientUtils;
 import com.example.fusmobilni.databinding.FragmentItemReviewFormBinding;
 import com.example.fusmobilni.fragments.dialogs.FailiureDialogFragment;
 import com.example.fusmobilni.fragments.dialogs.SpinnerDialogFragment;
 import com.example.fusmobilni.fragments.dialogs.SuccessDialogFragment;
-import com.example.fusmobilni.requests.items.ItemReviewCreateRequest;
+import com.example.fusmobilni.requests.items.review.ItemReviewCreateRequest;
 
 import retrofit2.Call;
 import retrofit2.Callback;

@@ -15,7 +15,6 @@ import com.example.fusmobilni.clients.ClientUtils;
 import com.example.fusmobilni.databinding.FragmentReviewApprovalBinding;
 import com.example.fusmobilni.fragments.dialogs.FailiureDialogFragment;
 import com.example.fusmobilni.fragments.dialogs.SpinnerDialogFragment;
-import com.example.fusmobilni.fragments.dialogs.SuccessDialogFragment;
 import com.example.fusmobilni.responses.events.review.EventReviewsResponse;
 import com.example.fusmobilni.responses.items.ItemReviewsResponse;
 import com.example.fusmobilni.viewModels.admin.ReviewApprovalViewModel;
@@ -32,7 +31,6 @@ public class ReviewApprovalFragment extends Fragment {
     private FragmentReviewApprovalBinding _binding;
     private SpinnerDialogFragment _loader;
     private FailiureDialogFragment _failure;
-    private SuccessDialogFragment _success;
     private ReviewApprovalViewModel _viewModel;
     ViewPager viewPager;
     private TabLayout tabLayout;
@@ -62,6 +60,8 @@ public class ReviewApprovalFragment extends Fragment {
         _binding = FragmentReviewApprovalBinding.inflate(inflater, container, false);
         View root = _binding.getRoot();
         _viewModel = new ViewModelProvider(requireParentFragment()).get(ReviewApprovalViewModel.class);
+        _viewModel.setEventReviewsLoaded(false);
+        _viewModel.setItemReviewsLoaded(false);
         initializeDialogs();
         fetchPendingReviews();
         initializeTabs();
@@ -90,17 +90,6 @@ public class ReviewApprovalFragment extends Fragment {
         viewPager.setAdapter(adapter);
     }
 
-    void openSuccessWindow(String message) {
-        if (_loader != null) {
-            _loader.dismiss();
-        }
-        Bundle args = new Bundle();
-        args.putString("Title", "Success");
-        args.putString("Message", message);
-        _success.setArguments(args);
-        _success.show(getParentFragmentManager(), "success_dialog");
-    }
-
     void openFailiureWindow(String message) {
         if (_loader != null) {
             _loader.dismiss();
@@ -115,17 +104,26 @@ public class ReviewApprovalFragment extends Fragment {
     private void initializeDialogs() {
         _loader = new SpinnerDialogFragment();
         _loader.setCancelable(false);
-        _success = new SuccessDialogFragment();
         _failure = new FailiureDialogFragment();
     }
 
     public void fetchPendingReviews() {
+        _viewModel.getItemReviewsLoaded().observe(getViewLifecycleOwner(), v -> {
+            if (_viewModel.getEventReviewsLoaded().getValue() && _viewModel.getItemReviewsLoaded().getValue()) {
+                _loader.dismiss();
+            }
+        });
+        _viewModel.getEventReviewsLoaded().observe(getViewLifecycleOwner(), v -> {
+            if (_viewModel.getEventReviewsLoaded().getValue() && _viewModel.getItemReviewsLoaded().getValue()) {
+                _loader.dismiss();
+            }
+        });
+        _loader.show(getFragmentManager(), "loading_spinner");
         fetchPendingItemReviews();
         fetchPendingEventReviews();
     }
 
     public void fetchPendingEventReviews() {
-        _loader.show(getFragmentManager(), "loading_spinner");
         Call<EventReviewsResponse> call = ClientUtils.eventReviewService.findAllPendingReviews();
         call.enqueue(new Callback<>() {
             @Override
@@ -137,9 +135,7 @@ public class ReviewApprovalFragment extends Fragment {
                 }
 
                 _viewModel.setEventReviews(response.body().reviews);
-                _loader.dismiss();
-
-
+                _viewModel.setEventReviewsLoaded(true);
             }
 
             @Override
@@ -150,21 +146,17 @@ public class ReviewApprovalFragment extends Fragment {
     }
 
     public void fetchPendingItemReviews() {
-        _loader.show(getFragmentManager(), "loading_spinner");
         Call<ItemReviewsResponse> call = ClientUtils.itemsService.findPendingReviews();
         call.enqueue(new Callback<>() {
             @Override
             public void onResponse(Call<ItemReviewsResponse> call, Response<ItemReviewsResponse> response) {
                 if (!response.isSuccessful()) {
                     openFailiureWindow("Failed to load reviews");
-
                     return;
                 }
 
                 _viewModel.setItemReviews(response.body().getItemReviews());
-                _loader.dismiss();
-
-
+                _viewModel.setItemReviewsLoaded(true);
             }
 
             @Override

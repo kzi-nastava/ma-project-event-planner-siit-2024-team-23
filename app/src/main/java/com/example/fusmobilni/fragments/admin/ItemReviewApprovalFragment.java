@@ -15,9 +15,9 @@ import com.example.fusmobilni.databinding.FragmentItemReviewApprovalBinding;
 import com.example.fusmobilni.fragments.dialogs.FailiureDialogFragment;
 import com.example.fusmobilni.fragments.dialogs.SpinnerDialogFragment;
 import com.example.fusmobilni.fragments.dialogs.SuccessDialogFragment;
-import com.example.fusmobilni.fragments.items.reviews.OnReviewActionListener;
-import com.example.fusmobilni.requests.items.AcceptanceState;
-import com.example.fusmobilni.requests.items.ItemReviewUpdateStateRequest;
+import com.example.fusmobilni.fragments.items.reviews.OnItemReviewActionListener;
+import com.example.fusmobilni.requests.items.review.AcceptanceState;
+import com.example.fusmobilni.requests.items.review.ItemReviewUpdateStateRequest;
 import com.example.fusmobilni.responses.items.ItemReviewResponse;
 import com.example.fusmobilni.viewModels.admin.ReviewApprovalViewModel;
 
@@ -69,7 +69,7 @@ public class ItemReviewApprovalFragment extends Fragment {
         initializeDialogs();
         _viewModel = new ViewModelProvider(requireParentFragment()).get(ReviewApprovalViewModel.class);
         _viewModel.getItemReviews().observe(getViewLifecycleOwner(), v -> {
-            _adapter = new ItemReviewApprovalAdapter(_viewModel.getItemReviews().getValue(), new OnReviewActionListener() {
+            _adapter = new ItemReviewApprovalAdapter(_viewModel.getItemReviews().getValue(), new OnItemReviewActionListener() {
                 @Override
                 public void onApprove(ItemReviewResponse review) {
                     approveReview(review);

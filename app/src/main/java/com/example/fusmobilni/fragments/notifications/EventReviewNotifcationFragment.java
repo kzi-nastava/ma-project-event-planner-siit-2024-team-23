@@ -1,4 +1,4 @@
-package com.example.fusmobilni.fragments.items.reviews;
+package com.example.fusmobilni.fragments.notifications;
 
 import android.os.Bundle;
 
@@ -10,15 +10,18 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.fusmobilni.R;
-import com.example.fusmobilni.databinding.FragmentItemReviewNotificationBinding;
-import com.example.fusmobilni.databinding.FragmentItemReviewNotificationUnreadBinding;
+import com.example.fusmobilni.databinding.FragmentEventReviewNotifcationBinding;
 
-public class ItemReviewNotificationUnreadFragment extends Fragment {
+public class EventReviewNotifcationFragment extends Fragment {
 
-    private FragmentItemReviewNotificationUnreadBinding _binding;
+    private FragmentEventReviewNotifcationBinding _binding;
 
-    public static ItemReviewNotificationUnreadFragment newInstance(String param1, String param2) {
-        ItemReviewNotificationUnreadFragment fragment = new ItemReviewNotificationUnreadFragment();
+    public EventReviewNotifcationFragment() {
+        // Required empty public constructor
+    }
+
+    public static EventReviewNotifcationFragment newInstance(String param1, String param2) {
+        EventReviewNotifcationFragment fragment = new EventReviewNotifcationFragment();
         Bundle args = new Bundle();
 
         fragment.setArguments(args);
@@ -36,7 +39,7 @@ public class ItemReviewNotificationUnreadFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        _binding = FragmentItemReviewNotificationUnreadBinding.inflate(inflater, container, false);
+        _binding = FragmentEventReviewNotifcationBinding.inflate(inflater, container, false);
         View root = _binding.getRoot();
         return root;
     }

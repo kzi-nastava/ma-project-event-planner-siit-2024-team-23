@@ -3,6 +3,7 @@ package com.example.fusmobilni.viewModels.admin;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.fusmobilni.clients.services.events.reviews.EventReviewService;
 import com.example.fusmobilni.responses.events.review.EventReviewResponse;
 import com.example.fusmobilni.responses.items.ItemReviewResponse;
 
@@ -43,7 +44,11 @@ public class ReviewApprovalViewModel extends ViewModel {
     public MutableLiveData<List<ItemReviewResponse>> getItemReviews() {
         return itemReviews;
     }
-
+    public void removeEventReview(EventReviewResponse review){
+        List<EventReviewResponse> reviews = eventReviews.getValue();
+        reviews.removeIf(item -> item.getId().equals(review.getId()));
+        eventReviews.setValue(reviews);
+    }
     public void removeItemReview(ItemReviewResponse review) {
         List<ItemReviewResponse> reviews = itemReviews.getValue();
         reviews.removeIf(item -> item.getId().equals(review.getId()));

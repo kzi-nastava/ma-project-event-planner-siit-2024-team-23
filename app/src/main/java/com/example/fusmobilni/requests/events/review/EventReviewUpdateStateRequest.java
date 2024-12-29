@@ -1,6 +1,5 @@
 package com.example.fusmobilni.requests.events.review;
 
-import com.example.fusmobilni.requests.items.AcceptanceState;
 
 public class EventReviewUpdateStateRequest {
     public Long id;
