@@ -9,6 +9,7 @@ import com.example.fusmobilni.requests.services.GetServicesResponse;
 import com.example.fusmobilni.requests.services.ServiceFilterRequest;
 import com.example.fusmobilni.requests.services.cardView.GetServiceCardResponse;
 import com.example.fusmobilni.requests.services.cardView.GetServicesCardResponse;
+import com.example.fusmobilni.responses.items.products.home.ProductHomeResponse;
 
 import java.util.ArrayList;
 import java.util.List;

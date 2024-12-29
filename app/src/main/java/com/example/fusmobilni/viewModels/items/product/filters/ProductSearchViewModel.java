@@ -26,8 +26,8 @@ public class ProductSearchViewModel extends ViewModel {
     private MutableLiveData<List<LocationResponse>> _locations = new MutableLiveData<>(new ArrayList<>());
     private MutableLiveData<List<CategoryResponse>> _categories = new MutableLiveData<>(new ArrayList<>());
     private MutableLiveData<CategoryResponse> _category = new MutableLiveData<>(null);
-    private MutableLiveData<Double> _minSelectedPrice = new MutableLiveData<>(Double.MIN_VALUE);
-    private MutableLiveData<Double> _maxSelectedPrice = new MutableLiveData<>(Double.MAX_VALUE);
+    private MutableLiveData<Double> _minSelectedPrice = new MutableLiveData<>(0D);
+    private MutableLiveData<Double> _maxSelectedPrice = new MutableLiveData<>(10000D);
     private MutableLiveData<Integer> _currentPage = new MutableLiveData<>(0);
     private MutableLiveData<Integer> _pageSize = new MutableLiveData<>(5);
 
