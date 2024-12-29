@@ -5,10 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    tools:context=".fragments.notifications.ItemReviewNotificationFragment">
-
-    <!-- TODO: Update blank fragment layout -->
-
+    tools:context=".fragments.notifications.EventReviewNotificationUnreadFragment">
 
     <TextView
         android:id="@+id/notificationTimeStamp"
@@ -31,7 +28,7 @@
             android:layout_height="match_parent">
 
             <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/eoImageView"
+                android:id="@+id/userImageView"
                 android:layout_width="64dp"
                 android:layout_height="64dp"
                 android:layout_marginStart="12dp"
@@ -48,7 +45,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
-            android:id="@+id/textViewItemReviewNotification"
+            android:id="@+id/textViewEvenReviewNotification"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingVertical="4dp"
@@ -56,8 +53,14 @@
             android:paddingRight="12dp"
             android:paddingBottom="12dp"
             android:text="TextView"
+            android:textFontWeight="600"
             android:textSize="18sp" />
     </LinearLayout>
 
-
+    <View
+        android:id="@+id/view2"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="6dp"
+        android:background="@color/primary_blue_900" />
 </LinearLayout>

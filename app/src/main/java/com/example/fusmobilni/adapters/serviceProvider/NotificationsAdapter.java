@@ -22,6 +22,8 @@ import java.util.List;
 public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int TYPE_ITEM_REVIEW = 0;
     private static final int TYPE_ITEM_REVIEW_UNREAD = 1;
+    private static final int TYPE_EVENT_REVIEW = 2;
+    private static final int TYPE_EVENT_REVIEW_UNREAD = 3;
     private List<NotificationResponse> items = new ArrayList<>();
 
     public void clearAdapter() {
@@ -64,9 +66,18 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
         if (viewType == TYPE_ITEM_REVIEW_UNREAD) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_item_review_notification_unread, parent, false);
             return new ItemReviewNotificationsViewHolder(view);
+        } else if (viewType == TYPE_ITEM_REVIEW) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_item_review_notification, parent, false);
+            return new ItemReviewNotificationsViewHolder(view);
+        } else if (viewType == TYPE_EVENT_REVIEW_UNREAD) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_event_review_notification_unread, parent, false);
+            return new EventReviewNotificationsViewHolder(view);
         }
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_item_review_notification, parent, false);
-        return new ItemReviewNotificationsViewHolder(view);
+        else{
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_event_review_notifcation, parent, false);
+            return new EventReviewNotificationsViewHolder(view);
+        }
+
     }
 
     @Override
@@ -75,7 +86,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
         if (viewType == TYPE_ITEM_REVIEW) {
             ItemReviewNotificationsViewHolder viewHolder = (ItemReviewNotificationsViewHolder) holder;
-            NotificationResponse notification = (NotificationResponse) items.get(position);
+            NotificationResponse notification = items.get(position);
             viewHolder.notificationText.setText(notification.getContent());
             viewHolder.timeStamp.setText(notification.getTimeStamp());
             try {
@@ -85,11 +96,32 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
             }
         } else if (viewType == TYPE_ITEM_REVIEW_UNREAD) {
             ItemReviewNotificationsViewHolder viewHolder = (ItemReviewNotificationsViewHolder) holder;
-            NotificationResponse notification = (NotificationResponse) items.get(position);
+            NotificationResponse notification = items.get(position);
             viewHolder.notificationText.setText(notification.getContent());
             viewHolder.timeStamp.setText(notification.getTimeStamp());
             try {
                 viewHolder.eoImage.setImageURI(convertToUrisFromBase64(viewHolder.eoImage.getContext(), notification.getImage()));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        else if(viewType == TYPE_EVENT_REVIEW_UNREAD){
+            EventReviewNotificationsViewHolder viewHolder = (EventReviewNotificationsViewHolder) holder;
+            NotificationResponse notificationResponse = items.get(position);
+            viewHolder.notificationText.setText(notificationResponse.getContent());
+            viewHolder.timeStamp.setText(notificationResponse.getTimeStamp());
+            try {
+                viewHolder.userImage.setImageURI(convertToUrisFromBase64(viewHolder.userImage.getContext(), notificationResponse.getImage()));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        } else if(viewType == TYPE_EVENT_REVIEW){
+            EventReviewNotificationsViewHolder viewHolder = (EventReviewNotificationsViewHolder) holder;
+            NotificationResponse notificationResponse = items.get(position);
+            viewHolder.notificationText.setText(notificationResponse.getContent());
+            viewHolder.timeStamp.setText(notificationResponse.getTimeStamp());
+            try {
+                viewHolder.userImage.setImageURI(convertToUrisFromBase64(viewHolder.userImage.getContext(), notificationResponse.getImage()));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -113,6 +145,20 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
     @Override
     public int getItemCount() {
         return items.size();
+    }
+
+    public static class EventReviewNotificationsViewHolder extends RecyclerView.ViewHolder {
+        TextView timeStamp;
+        TextView notificationText;
+        ImageView userImage;
+
+        public EventReviewNotificationsViewHolder(@NonNull View itemView) {
+            super(itemView);
+            timeStamp = itemView.findViewById(R.id.notificationTimeStamp);
+            notificationText = itemView.findViewById(R.id.textViewEventReviewNotification);
+            userImage = itemView.findViewById(R.id.userImageView);
+
+        }
     }
 
     public static class ItemReviewNotificationsViewHolder extends RecyclerView.ViewHolder {

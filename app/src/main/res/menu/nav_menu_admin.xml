@@ -21,7 +21,10 @@
                     android:id="@+id/services_fragment"
                     android:icon="@drawable/ic_notification"
                     android:title="@string/services" />
-
+                <item
+                    android:id="@id/reviewApprovalFragment"
+                    android:icon="@drawable/outline_check_circle_24"
+                    android:title="Approve Reviews" />
             </menu>
 
         </item>

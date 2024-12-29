@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.admin.ItemReviewApprovalFragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".fragments.admin.EventReviewApprovalFragment">
+
 
 
     <androidx.core.widget.NestedScrollView
@@ -13,12 +13,13 @@
         android:layout_height="match_parent">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/itemReviewRecycler"
+            android:id="@+id/eventReviewRecycler"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:scrollbars="none"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/fragment_item_review_approve" />
+            tools:listitem="@layout/fragment_event_review_approve" />
     </androidx.core.widget.NestedScrollView>
+
 </FrameLayout>
