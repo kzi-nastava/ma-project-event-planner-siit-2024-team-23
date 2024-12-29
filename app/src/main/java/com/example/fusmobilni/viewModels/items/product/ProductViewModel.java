@@ -355,14 +355,14 @@ public class ProductViewModel extends ViewModel {
             Log.d("tag", image.toString());
         }
         try {
-            Call<GetServiceResponse> call = ClientUtils.serviceOfferingService.update(jsonRequestBody, sendImages.getValue(), serviceId);
+            Call<GetProductResponse> call = ClientUtils.productsService.update(jsonRequestBody, sendImages.getValue(), serviceId);
             call.enqueue(new Callback<>() {
                 @Override
-                public void onResponse(@NonNull Call<GetServiceResponse> call, @NonNull Response<GetServiceResponse> response) {
+                public void onResponse(@NonNull Call<GetProductResponse> call, @NonNull Response<GetProductResponse> response) {
                 }
 
                 @Override
-                public void onFailure(@NonNull Call<GetServiceResponse> call, @NonNull Throwable t) {
+                public void onFailure(@NonNull Call<GetProductResponse> call, @NonNull Throwable t) {
                 }
             });
         } catch (Exception e) {
@@ -390,14 +390,14 @@ public class ProductViewModel extends ViewModel {
             throw new RuntimeException(e);
         }
 
-        Call<GetServiceResponse> call = ClientUtils.serviceOfferingService.create(jsonRequestBody, sendImages.getValue());
+        Call<GetProductResponse> call = ClientUtils.productsService.create(jsonRequestBody, sendImages.getValue());
         call.enqueue(new Callback<>() {
             @Override
-            public void onResponse(@NonNull Call<GetServiceResponse> call, @NonNull Response<GetServiceResponse> response) {
+            public void onResponse(@NonNull Call<GetProductResponse> call, @NonNull Response<GetProductResponse> response) {
             }
 
             @Override
-            public void onFailure(@NonNull Call<GetServiceResponse> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<GetProductResponse> call, @NonNull Throwable t) {
             }
         });
     }
@@ -431,7 +431,7 @@ public class ProductViewModel extends ViewModel {
             throw new RuntimeException(e);
         }
 
-        Call<Void> call = ClientUtils.serviceOfferingService.createProposal(jsonRequestBody, sendImages.getValue());
+        Call<Void> call = ClientUtils.productsService.createProposal(jsonRequestBody, sendImages.getValue());
         call.enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {

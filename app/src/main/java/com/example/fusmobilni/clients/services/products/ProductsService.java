@@ -81,7 +81,7 @@ public interface ProductsService {
     @POST("service-providers/{id}/products")
     Call<ProductsHomeResponse> findAllByServiceProvider(@Path("id") Long id, @Body ServiceFilterRequest request);
 
-    @GET("services/{id}")
+    @GET("products/{id}")
     Call<GetProductResponse> findById(@Path("id") long id);
 
 

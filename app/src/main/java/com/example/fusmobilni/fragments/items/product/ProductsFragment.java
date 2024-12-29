@@ -100,7 +100,7 @@ public class ProductsFragment extends Fragment implements DeleteServiceListener 
         });
 
         binding.floatingActionButton.setOnClickListener(v -> {
-            Navigation.findNavController(view).navigate(R.id.action_serviceView_toServiceCreationStepOne);
+            Navigation.findNavController(view).navigate(R.id.action_productView_toProductCreationStepOne);
         });
         setUpSearch();
         binding.filterBtn.setOnClickListener(v -> openFilterFragment());
@@ -169,10 +169,10 @@ public class ProductsFragment extends Fragment implements DeleteServiceListener 
         findById.enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<GetProductResponse> call, @NonNull Response<GetProductResponse> response) {
-                if (response.isSuccessful()) {
+                if (response.isSuccessful() && response.body() != null) {
                     ProductViewModel viewModel = new ViewModelProvider(requireActivity()).get(ProductViewModel.class);
                     viewModel.populate(response.body(), getContext());
-                    Navigation.findNavController(binding.getRoot()).navigate(R.id.action_serviceView_toServiceCreationStepOne);
+                    Navigation.findNavController(binding.getRoot()).navigate(R.id.action_productView_toProductCreationStepOne);
                 }
             }
             @Override
