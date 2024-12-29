@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.example.fusmobilni.R;
 import com.example.fusmobilni.adapters.users.serviceProvider.ServiceProviderProductAdapter;
@@ -127,6 +128,8 @@ public class ProductsFragment extends Fragment implements DeleteServiceListener 
     @Override
     public void onDeleteService(int position) {
         deleteModal = binding.getRoot().findViewById(R.id.nigger);
+        TextView deleteLabel = deleteModal.findViewById(R.id.deleteLabel);
+        deleteLabel.setText(R.string.product_delete_label);
         binding.modalBackground.setVisibility(View.VISIBLE);
         deleteModal.setVisibility(View.VISIBLE);
         Button cancelButton = deleteModal.findViewById(R.id.cancelButton);

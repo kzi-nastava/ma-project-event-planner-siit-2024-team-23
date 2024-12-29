@@ -87,8 +87,10 @@ public class ProductFilterFragment extends BottomSheetDialogFragment {
                 ArrayList<String> categoryNames = categories.categories.stream()
                         .map(category -> category.name)
                         .collect(Collectors.toCollection(ArrayList::new));
-                ArrayAdapter<String> categoryAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, categoryNames);
+                if(getContext() != null){
+                    ArrayAdapter<String> categoryAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, categoryNames);
                 categoryDropdown.setAdapter(categoryAdapter);
+                }
             }
 
             @Override

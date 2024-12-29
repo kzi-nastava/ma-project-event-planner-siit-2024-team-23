@@ -322,6 +322,7 @@
     <string name="this_is_a_sample_company_description_it_describes_the_company_s_details">This is a sample company description. It describes the company\'s details.</string>
     <string name="by_john_doe">By John Doe</string>
     <string name="report">Report</string>
+    <string name="product_delete_label">Are you sure you want to delete product?</string>
     <string-array name="privacy_type_options">
         <item>Private</item>
         <item>Public</item>
