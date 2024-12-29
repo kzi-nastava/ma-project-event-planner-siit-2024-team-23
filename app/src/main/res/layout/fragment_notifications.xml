@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="12dp"
-    tools:context=".fragments.communication.NotificationsFragment">
+    tools:context=".fragments.communication.notifications.NotificationsFragment">
 
     <TextView
         android:id="@+id/textView12"

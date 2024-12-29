@@ -1,4 +1,4 @@
-package com.example.fusmobilni.adapters.items.reviews;
+package com.example.fusmobilni.adapters.shared;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,16 +9,15 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fusmobilni.R;
-import com.example.fusmobilni.fragments.items.reviews.ItemReviewFormFragment;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ItemReviewFormAdapter extends RecyclerView.Adapter<ItemReviewFormAdapter.ItemReviewFormAdapterViewHolder> {
+public class ReviewFormAdapter extends RecyclerView.Adapter<ReviewFormAdapter.ReviewFormAdapterViewHolder> {
     List<Boolean> stars = new ArrayList<>();
     int amount;
 
-    public ItemReviewFormAdapter() {
+    public ReviewFormAdapter() {
         stars = new ArrayList<>();
         for (int i = 0; i < 5; ++i) {
             stars.add(false);
@@ -44,13 +43,13 @@ public class ItemReviewFormAdapter extends RecyclerView.Adapter<ItemReviewFormAd
 
     @NonNull
     @Override
-    public ItemReviewFormAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ReviewFormAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_review_form_stars, parent, false);
-        return new ItemReviewFormAdapterViewHolder(view);
+        return new ReviewFormAdapterViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ItemReviewFormAdapterViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ReviewFormAdapterViewHolder holder, int position) {
         Boolean selected = stars.get(position);
         holder.star2.setImageResource((selected) ? R.drawable.ic_star_fill : R.drawable.ic_star);
         holder.star2.setOnClickListener(v -> {
@@ -63,11 +62,11 @@ public class ItemReviewFormAdapter extends RecyclerView.Adapter<ItemReviewFormAd
         return stars.size();
     }
 
-    public static class ItemReviewFormAdapterViewHolder extends RecyclerView.ViewHolder {
+    public static class ReviewFormAdapterViewHolder extends RecyclerView.ViewHolder {
 
         ImageView star2;
 
-        public ItemReviewFormAdapterViewHolder(@NonNull View itemView) {
+        public ReviewFormAdapterViewHolder(@NonNull View itemView) {
             super(itemView);
 
             star2 = itemView.findViewById(R.id.star2);

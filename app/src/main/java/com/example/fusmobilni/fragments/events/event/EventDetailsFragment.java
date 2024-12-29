@@ -34,7 +34,9 @@ import com.example.fusmobilni.requests.communication.chat.ChatCreateRequest;
 import com.example.fusmobilni.requests.users.favorites.FavoriteEventRequest;
 import com.example.fusmobilni.responses.auth.LoginResponse;
 import com.example.fusmobilni.responses.events.EventDetailsResponse;
+import com.example.fusmobilni.responses.events.attendance.HasAttendedResponse;
 import com.example.fusmobilni.responses.events.components.EventComponentsResponse;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -56,6 +58,8 @@ public class EventDetailsFragment extends Fragment {
     private EventComponentAdapter _eventComponentAdapter;
     private EventDetailsResponse event;
     private LoginResponse user;
+
+    Snackbar snackbar;
 
     public EventDetailsFragment() {
         // Required empty public constructor
@@ -81,7 +85,7 @@ public class EventDetailsFragment extends Fragment {
         user = prefs.getUser();
         _binding = FragmentEventDetailsBinding.inflate(inflater, container, false);
         View root = _binding.getRoot();
-        if(getArguments() == null){
+        if (getArguments() == null) {
             Toast.makeText(requireContext(), "Something went wrong with event or invalid event id is provided!",
                     Toast.LENGTH_LONG).show();
         }
@@ -138,6 +142,7 @@ public class EventDetailsFragment extends Fragment {
             }
         });
     }
+
     private static void openPdf(Context context, File file) {
         Uri uri = FileProvider.getUriForFile(context, context.getApplicationContext().getPackageName() + ".provider", file);
         Intent intent = new Intent(Intent.ACTION_VIEW);
@@ -150,12 +155,36 @@ public class EventDetailsFragment extends Fragment {
         }
     }
 
+    private void checkIfHasAttended() {
+        if (getUserId() == null) {
+            return;
+        }
+        Call<HasAttendedResponse> call = ClientUtils.attendanceService.checkIfUserHasAttended(event.getId(), getUserId());
+        call.enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<HasAttendedResponse> call, Response<HasAttendedResponse> response) {
+                if (!response.isSuccessful()) {
+                    return;
+                }
+                if (!response.body().isHasAttended()) {
+                    return;
+                }
+                showSnackBar();
+            }
+
+            @Override
+            public void onFailure(Call<HasAttendedResponse> call, Throwable t) {
+
+            }
+        });
+    }
+
     private void fetchEventImage(Long eventId) {
         Call<ResponseBody> request = ClientUtils.eventsService.findEventImage(eventId);
         request.enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
-                if(response.isSuccessful() && response.body() != null){
+                if (response.isSuccessful() && response.body() != null) {
                     new Thread(() -> {
                         try (ResponseBody responseBody = response.body()) {
                             Bitmap bitmap = BitmapFactory.decodeStream(responseBody.byteStream());
@@ -178,16 +207,16 @@ public class EventDetailsFragment extends Fragment {
         request.enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<EventDetailsResponse> call, @NonNull Response<EventDetailsResponse> response) {
-                if (response.isSuccessful() && response.body() != null){
+                if (response.isSuccessful() && response.body() != null) {
                     event = response.body();
                     _binding.eventDetailsText.setText(event.getTitle());
                     _binding.textViewEventLocationHorizontal.setText(event.getLocation().toString());
                     _binding.textViewOrganizerNameServiceDetails.setText(String.format("%s %s.", event.getEventOrganizer().firstName, event.getEventOrganizer().getLastName().charAt(0)));
                     _binding.textViewEventDescriptionDetails.setText(event.getDescription());
-                    if(event.getAgendas().isEmpty()){
+                    if (event.getAgendas().isEmpty()) {
                         _binding.eventActivitiesRecycleView.setVisibility(View.GONE);
                         _binding.eventAgendaLbl.setVisibility(View.GONE);
-                    }else{
+                    } else {
                         _binding.eventActivitiesRecycleView.setVisibility(View.VISIBLE);
                         _binding.eventAgendaLbl.setVisibility(View.VISIBLE);
                         _adapter = new AgendaActivityAdapter(event.getAgendas());
@@ -195,6 +224,7 @@ public class EventDetailsFragment extends Fragment {
                     }
                     fetchEventOrganizerImage(event.getEventOrganizer().id);
                     fetchEventComponents(event.getId());
+                    checkIfHasAttended();
                 }
             }
 
@@ -211,11 +241,11 @@ public class EventDetailsFragment extends Fragment {
         request.enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<EventComponentsResponse> call, @NonNull Response<EventComponentsResponse> response) {
-                if(response.isSuccessful() && response.body() != null){
-                    if(response.body().components.isEmpty()){
+                if (response.isSuccessful() && response.body() != null) {
+                    if (response.body().components.isEmpty()) {
                         _binding.componentsLbl.setVisibility(View.GONE);
                         _binding.eventComponentsRV.setVisibility(View.GONE);
-                    }else{
+                    } else {
                         _binding.componentsLbl.setVisibility(View.VISIBLE);
                         _binding.eventComponentsRV.setVisibility(View.VISIBLE);
                         _eventComponentAdapter = new EventComponentAdapter(response.body().components);
@@ -237,7 +267,7 @@ public class EventDetailsFragment extends Fragment {
         request.enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
-                if(response.isSuccessful() && response.body() != null){
+                if (response.isSuccessful() && response.body() != null) {
                     new Thread(() -> {
                         try (ResponseBody responseBody = response.body()) {
                             Bitmap bitmap = BitmapFactory.decodeStream(responseBody.byteStream());
@@ -255,7 +285,7 @@ public class EventDetailsFragment extends Fragment {
         });
     }
 
-    private void animateFavoriteButton(){
+    private void animateFavoriteButton() {
         _binding.favoriteButton.animate()
                 .alpha(0f)
                 .setDuration(100)
@@ -270,9 +300,28 @@ public class EventDetailsFragment extends Fragment {
                 .start();
     }
 
+    private void showSnackBar() {
+        if (getUserId() == null) {
+            return;
+        }
+        View rootView = getActivity().getWindow().getDecorView().findViewById(android.R.id.content);
+        snackbar = Snackbar.make(rootView, "You have attended this event, give us a review", Snackbar.LENGTH_INDEFINITE);
+        snackbar.setAction("Review", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle args = new Bundle();
+                args.putString("eventName", event.getTitle());
+                args.putLong("eventId", event.getId());
+                args.putLong("userId", getUserId());
+                Navigation.findNavController(getView()).navigate(R.id.action_to_event_review, args);
+            }
+        });
+        snackbar.show();
+    }
+
     private void initializeFavoriteButton() {
         _binding.favoriteButton.setOnClickListener(v -> {
-            if(user == null){
+            if (user == null) {
                 Toast.makeText(v.getContext(), "You must be logged in first!", Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -280,10 +329,10 @@ public class EventDetailsFragment extends Fragment {
             request.enqueue(new Callback<>() {
                 @Override
                 public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
-                    if(response.isSuccessful()){
+                    if (response.isSuccessful()) {
                         Toast.makeText(v.getContext(), "Success!", Toast.LENGTH_SHORT).show();
                         favorite = !favorite;
-                       animateFavoriteButton();
+                        animateFavoriteButton();
                     }
                 }
 
