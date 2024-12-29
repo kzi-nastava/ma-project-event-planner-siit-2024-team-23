@@ -4,8 +4,10 @@ import com.example.fusmobilni.requests.products.GetProductResponse;
 import com.example.fusmobilni.requests.services.GetServiceResponse;
 import com.example.fusmobilni.requests.services.ServiceFilterRequest;
 import com.example.fusmobilni.requests.services.cardView.GetServicesCardResponse;
+import com.example.fusmobilni.responses.events.GetItemResponse;
 import com.example.fusmobilni.responses.events.filter.EventsPaginationResponse;
 import com.example.fusmobilni.responses.items.CategoriesResponse;
+import com.example.fusmobilni.responses.items.products.ProductOverviewResponse;
 import com.example.fusmobilni.responses.items.products.filter.ProductsMinMaxPriceResponse;
 import com.example.fusmobilni.responses.items.products.filter.ProductsPaginationResponse;
 import com.example.fusmobilni.responses.items.products.home.ProductsHomeResponse;
@@ -83,6 +85,8 @@ public interface ProductsService {
 
     @GET("products/{id}")
     Call<GetProductResponse> findById(@Path("id") long id);
+    @GET("items/{id}")
+    Call<ProductOverviewResponse> findOverviewById(@Path("id") long id);
 
 
 

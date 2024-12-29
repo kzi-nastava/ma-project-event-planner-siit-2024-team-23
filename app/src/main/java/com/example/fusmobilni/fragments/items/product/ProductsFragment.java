@@ -32,6 +32,7 @@ import com.example.fusmobilni.requests.services.ServiceFilterRequest;
 import com.example.fusmobilni.requests.services.cardView.GetServiceCardResponse;
 import com.example.fusmobilni.requests.services.cardView.GetServicesCardResponse;
 import com.example.fusmobilni.responses.auth.LoginResponse;
+import com.example.fusmobilni.responses.items.products.ProductOverviewResponse;
 import com.example.fusmobilni.responses.items.products.home.ProductHomeResponse;
 import com.example.fusmobilni.responses.items.products.home.ProductsHomeResponse;
 import com.example.fusmobilni.viewModels.items.product.ProductViewModel;
