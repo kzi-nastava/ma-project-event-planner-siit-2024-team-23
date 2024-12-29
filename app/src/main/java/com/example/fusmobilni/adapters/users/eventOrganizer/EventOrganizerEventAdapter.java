@@ -51,7 +51,6 @@ public class EventOrganizerEventAdapter extends RecyclerView.Adapter<EventOrgani
             holder.monthYear.setText(R.string.details);
             holder.location.setText(event.getLocation());
             holder.eventCard.setOnClickListener(v -> eventClickListener.onEventClick(position));
-            holder.editButton.setOnClickListener(v-> eventClickListener.onEditClick(position));
             holder.statsButton.setOnClickListener(v-> eventClickListener.onStatsClick(position));
         }
 
@@ -79,7 +78,6 @@ public static class EventViewHolder extends RecyclerView.ViewHolder {
         monthYear = itemView.findViewById(R.id.textViewMonthAndYearHorizontal);
         location = itemView.findViewById(R.id.textViewEventLocationHorizontal);
         eventCard = itemView.findViewById(R.id.eventCard);
-        editButton = itemView.findViewById(R.id.editButton);
         statsButton = itemView.findViewById(R.id.statsButton);
     }
 }
