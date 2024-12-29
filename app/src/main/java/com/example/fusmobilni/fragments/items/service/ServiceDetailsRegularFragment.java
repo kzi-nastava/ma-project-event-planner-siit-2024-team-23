@@ -167,11 +167,13 @@ public class ServiceDetailsRegularFragment extends Fragment {
                 Bundle args = new Bundle();
                 if(isService){
                     args.putString("itemName", _service.getName());
+                    args.putLong("itemId", _service.getId());
                 }else{
                     args.putString("itemName", _product.getName());
+                    args.putLong("itemId", _product.getId());
                 }
                 
-                args.putLong("itemId", _serviceId);
+
                 args.putLong("eoId", getUserId());
 
                 Navigation.findNavController(getView()).navigate(R.id.action_to_item_review_form, args);
