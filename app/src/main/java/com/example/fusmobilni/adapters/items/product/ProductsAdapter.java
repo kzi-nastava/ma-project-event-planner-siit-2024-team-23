@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fusmobilni.R;
@@ -54,6 +55,9 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
         holder._location.setText(product.getLocation().getCity() + ", " + product.getLocation().getStreet() + " " + product.getLocation().getStreetNumber());
         holder._price.setText(String.valueOf(product.getPrice()));
         holder.category.setText(product.getCategory().getName());
+        holder._card.setOnClickListener(v-> {
+            Navigation.findNavController(v).navigate(R.id.action_service_card_to_service_details_regular, createBundle(product));
+        });
         try {
             holder._image.setImageURI(convertToUrisFromBase64(holder._image.getContext(),product.getImage()));
         } catch (IOException e) {
@@ -85,11 +89,9 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
 
     }
 
-    private Bundle createBundle(Product product, boolean displayPurchase) {
-
+    private Bundle createBundle(ProductHomeResponse product) {
         Bundle bundle = new Bundle();
-        bundle.putParcelable("product", product);
-        bundle.putBoolean("displayPurchase", displayPurchase);
+        bundle.putLong("productId", product.getId());
         return bundle;
     }
 
