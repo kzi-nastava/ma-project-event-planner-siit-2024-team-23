@@ -4,14 +4,13 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.fusmobilni.adapters.serviceProvider.NotificationsAdapter;
+import com.example.fusmobilni.adapters.communication.notifications.NotificationsAdapter;
 import com.example.fusmobilni.clients.ClientUtils;
 import com.example.fusmobilni.core.CustomSharedPrefs;
 import com.example.fusmobilni.databinding.FragmentNotificationsBinding;
