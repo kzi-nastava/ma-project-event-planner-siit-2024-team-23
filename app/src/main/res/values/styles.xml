@@ -5,4 +5,9 @@
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">50%</item>
     </style>
+    <style name="CustomPopupMenuStyle" parent="Widget.AppCompat.PopupMenu">
+        <item name="android:popupBackground">@color/white</item>
+        <item name="android:itemTextAppearance">@color/accent_red</item>
+        <item name="android:textColor">@color/accent_red</item>
+    </style>
 </resources>

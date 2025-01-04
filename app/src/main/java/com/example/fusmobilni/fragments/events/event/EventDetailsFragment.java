@@ -263,6 +263,7 @@ public class EventDetailsFragment extends Fragment {
     }
 
     private void fetchEventOrganizerImage(Long id) {
+        initializeUserProfileActions();
         Call<ResponseBody> request = ClientUtils.authService.findProfileImageByUserId(id);
         request.enqueue(new Callback<>() {
             @Override
@@ -274,6 +275,7 @@ public class EventDetailsFragment extends Fragment {
                             _binding.eoProfileImage.post(() -> _binding.eoProfileImage.setImageBitmap(bitmap));
                         }
                     }).start();
+
                 }
             }
 
@@ -351,6 +353,18 @@ public class EventDetailsFragment extends Fragment {
             bundle.putLong("eventId", event.getId());
             Navigation.findNavController(_binding.getRoot()).navigate(R.id.action_eventDetails_toBudgetPlanning, bundle);
         });
+    }
+
+    private void initializeUserProfileActions() {
+        _binding.eoProfileImage.setOnClickListener(v -> {
+            Navigation.findNavController(v).navigate(R.id.action_toForeignUserProfile, createUserProfileBundle());
+        });
+    }
+
+    private Bundle createUserProfileBundle() {
+        Bundle bundle = new Bundle();
+        bundle.putLong("userId", event.getEventOrganizer().getId());
+        return bundle;
     }
 
     private Long getUserId() {

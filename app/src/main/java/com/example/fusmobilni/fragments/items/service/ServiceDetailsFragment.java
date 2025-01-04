@@ -66,6 +66,18 @@ public class ServiceDetailsFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
+    private void initializeUserProfileActions() {
+        _binding.imageView5.setOnClickListener(v -> {
+            Navigation.findNavController(v).navigate(R.id.action_toForeignUserProfile, createUserProfileBundle());
+        });
+    }
+
+    private Bundle createUserProfileBundle() {
+        Bundle bundle = new Bundle();
+        bundle.putLong("userId", _service.getProvider().getId());
+        return bundle;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -118,6 +130,7 @@ public class ServiceDetailsFragment extends Fragment {
         initializeGradesAccordion();
         initializeFavoriteButton();
         checkIfBought();
+        initializeUserProfileActions();
     }
 
     private void initializeGradesAccordion() {
@@ -148,7 +161,9 @@ public class ServiceDetailsFragment extends Fragment {
     }
 
     private void showSnackBar() {
-        if(getUserId()==null){return;}
+        if (getUserId() == null) {
+            return;
+        }
         View rootView = getActivity().getWindow().getDecorView().findViewById(android.R.id.content);
         snackbar = Snackbar.make(rootView, "You have reserved this item, give us a review", Snackbar.LENGTH_INDEFINITE);
         snackbar.setAction("Review", new View.OnClickListener() {
