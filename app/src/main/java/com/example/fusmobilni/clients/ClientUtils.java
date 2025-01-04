@@ -5,6 +5,7 @@ import com.example.fusmobilni.clients.services.auth.AuthService;
 import com.example.fusmobilni.clients.services.categories.CategoryService;
 import com.example.fusmobilni.clients.services.categories.proposals.ProposalService;
 import com.example.fusmobilni.clients.services.communication.chat.ChatService;
+import com.example.fusmobilni.clients.services.communication.reports.ReportsService;
 import com.example.fusmobilni.clients.services.eventTypes.EventTypeService;
 import com.example.fusmobilni.clients.services.events.EventsService;
 import com.example.fusmobilni.clients.services.events.attendance.AttendanceService;
@@ -55,6 +56,7 @@ public class ClientUtils {
             notificationsService = retrofit.create(NotificationsService.class);
             eventReviewService = retrofit.create(EventReviewService.class);
             attendanceService = retrofit.create(AttendanceService.class);
+            reportsService = retrofit.create(ReportsService.class);
         }
     }
 
@@ -115,5 +117,5 @@ public class ClientUtils {
     public static NotificationsService notificationsService;
 
     public static AttendanceService attendanceService;
-
+    public static ReportsService reportsService;
 }

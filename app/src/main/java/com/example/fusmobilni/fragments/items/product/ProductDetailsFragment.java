@@ -92,6 +92,7 @@ public class ProductDetailsFragment extends Fragment {
                     throw new RuntimeException(e);
                 }
                 _binding.imageView5.setImageResource(R.drawable.person);
+                initializeUserProfileActions();
             }
 
             @Override
@@ -128,7 +129,17 @@ public class ProductDetailsFragment extends Fragment {
         initializeFavoriteButton();
         return view;
     }
+    private void initializeUserProfileActions() {
+        _binding.imageView5.setOnClickListener(v -> {
+            Navigation.findNavController(v).navigate(R.id.action_toForeignUserProfile, createUserProfileBundle());
+        });
+    }
 
+    private Bundle createUserProfileBundle() {
+        Bundle bundle = new Bundle();
+        bundle.putLong("userId", product.getServiceProvider().getId());
+        return bundle;
+    }
     private void initializeFavoriteButton() {
         _binding.favoriteButton.setOnClickListener(v -> {
             favorite = !favorite;

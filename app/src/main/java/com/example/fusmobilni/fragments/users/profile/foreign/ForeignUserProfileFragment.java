@@ -22,6 +22,7 @@ import android.widget.ImageView;
 import com.example.fusmobilni.R;
 import com.example.fusmobilni.adapters.admin.AdminApprovalAdapter;
 import com.example.fusmobilni.clients.ClientUtils;
+import com.example.fusmobilni.core.CustomSharedPrefs;
 import com.example.fusmobilni.databinding.FragmentForeignUserProfileBinding;
 import com.example.fusmobilni.fragments.dialogs.SpinnerDialogFragment;
 import com.example.fusmobilni.responses.users.UserProfileResponse;
@@ -114,6 +115,7 @@ public class ForeignUserProfileFragment extends Fragment {
         _binding.userEmail.setText(profileResponse.getEmail());
         _binding.userName.setText(profileResponse.getFirstName() + " " + profileResponse.getLastName());
         initializeBlockAndReportControls();
+        shouldMainControlsBeVisible();
     }
 
     void initializeBlockAndReportControls() {
@@ -121,6 +123,18 @@ public class ForeignUserProfileFragment extends Fragment {
         overflow.setOnClickListener(v -> {
             showPopupMenu(v);
         });
+        setReportAndBlockControlsVisibility();
+    }
+
+    private void shouldMainControlsBeVisible() {
+        CustomSharedPrefs prefs = CustomSharedPrefs.getInstance();
+
+        boolean loggedIn = prefs != null && prefs.getUser() != null;
+        boolean gradable = profileResponse.isGradable();
+        boolean notSameUser = prefs != null && prefs.getUser() != null && !prefs.getUser().getId().equals(profileResponse.getId());
+
+        _binding.messageButton.setVisibility(loggedIn && notSameUser ? View.VISIBLE : View.GONE);
+        _binding.gradeButton.setVisibility(loggedIn && notSameUser && gradable ? View.VISIBLE : View.GONE);
     }
 
     private void showPopupMenu(View anchor) {
@@ -137,7 +151,7 @@ public class ForeignUserProfileFragment extends Fragment {
                 return true;
 
             } else if (item.getItemId() == R.id.action_report) {
-                Navigation.findNavController(anchor).navigate(R.id.action_to_report_form);
+                Navigation.findNavController(anchor).navigate(R.id.action_to_report_form, createReportBundle());
                 popupMenu.dismiss();
                 return true;
             } else {
@@ -146,6 +160,20 @@ public class ForeignUserProfileFragment extends Fragment {
         });
 
         popupMenu.show();
+    }
+
+    private void setReportAndBlockControlsVisibility() {
+        CustomSharedPrefs prefs = CustomSharedPrefs.getInstance();
+        boolean shouldBeVisible = prefs != null && prefs.getUser() != null;
+
+        boolean notSameUser = prefs != null && prefs.getUser() != null && !prefs.getUser().getId().equals(profileResponse.getId());
+        _binding.overflowMenuIcon.setVisibility(shouldBeVisible && notSameUser ? View.VISIBLE : View.GONE);
+    }
+
+    private Bundle createReportBundle() {
+        Bundle bundle = new Bundle();
+        bundle.putLong("reportedId", profileResponse.getId());
+        return bundle;
     }
 
     void initializeTabs() {

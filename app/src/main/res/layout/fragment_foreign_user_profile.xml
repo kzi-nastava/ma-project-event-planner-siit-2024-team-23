@@ -107,7 +107,7 @@
 
         <!-- Follow Button -->
         <Button
-            android:id="@+id/updateProfile"
+            android:id="@+id/gradeButton"
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -120,7 +120,7 @@
 
         <!-- Message Button -->
         <Button
-            android:id="@+id/calendarButton"
+            android:id="@+id/messageButton"
             style="@style/CustomToggleButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
