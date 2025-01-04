@@ -488,13 +488,36 @@
         app:destination="@id/stepTwoFragment" />
     <action
         android:id="@+id/action_to_event_review"
-        app:destination="@id/event_review_fragment"/>
+        app:destination="@id/event_review_fragment" />
     <fragment
         android:id="@+id/company_overview_fragment"
         android:name="com.example.fusmobilni.fragments.items.company.CompanyOverviewFragment"
         android:label=""
-        tools:layout="@layout/fragment_company_overview"></fragment>
-
+        tools:layout="@layout/fragment_company_overview" />
+    <fragment
+        android:id="@+id/block_form_fragment"
+        android:name="com.example.fusmobilni.fragments.communication.blocks.BlockFormFragment"
+        android:label=""
+        tools:layout="@layout/fragment_block_form" />
+    <fragment
+        android:id="@+id/report_form_fragment"
+        android:name="com.example.fusmobilni.fragments.communication.reports.ReportFormFragment"
+        android:label=""
+        tools:layout="@layout/fragment_report_form" />
+    <fragment
+        android:id="@+id/foreign_user_profile_fragment"
+        android:name="com.example.fusmobilni.fragments.users.profile.foreign.ForeignUserProfileFragment"
+        android:label=""
+        tools:layout="@layout/fragment_foreign_user_profile" />
+    <action
+        android:id="@+id/action_toForeignUserProfile"
+        app:destination="@id/foreign_user_profile_fragment" />
+    <action
+        android:id="@+id/action_to_block_form"
+        app:destination="@id/block_form_fragment" />
+    <action
+        android:id="@+id/action_to_report_form"
+        app:destination="@id/report_form_fragment" />
     <action
         android:id="@+id/action_toCompanyOverview"
         app:destination="@id/company_overview_fragment" />

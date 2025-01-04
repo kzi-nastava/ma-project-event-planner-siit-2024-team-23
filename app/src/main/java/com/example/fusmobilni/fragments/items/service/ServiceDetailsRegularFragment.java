@@ -78,14 +78,14 @@ public class ServiceDetailsRegularFragment extends Fragment {
         _binding = FragmentServiceDetailsRegularBinding.inflate(inflater, container, false);
         View root = _binding.getRoot();
         initializeDialogs();
-        if(getArguments() != null){
+        if (getArguments() != null) {
             long serviceId = getArguments().getLong("serviceId", -1);
             long productId = getArguments().getLong("productId", -1);
-            if(serviceId != -1){
+            if (serviceId != -1) {
                 itemId = serviceId;
                 isService = true;
                 getServiceForOverview();
-            }else{
+            } else {
                 itemId = productId;
                 isService = false;
                 getServiceForOverview();
@@ -98,6 +98,18 @@ public class ServiceDetailsRegularFragment extends Fragment {
         return root;
     }
 
+    private void initializeUserProfileActions() {
+        _binding.imageView5.setOnClickListener(v -> {
+            Navigation.findNavController(v).navigate(R.id.action_toForeignUserProfile, createUserProfileBundle());
+        });
+    }
+
+    private Bundle createUserProfileBundle() {
+        Bundle bundle = new Bundle();
+        bundle.putLong("userId", _service.getProvider().getId());
+        return bundle;
+    }
+
     private void initializeDialogs() {
         _loader = new SpinnerDialogFragment();
         _loader.setCancelable(false);
@@ -105,7 +117,7 @@ public class ServiceDetailsRegularFragment extends Fragment {
     }
 
     private void initializePageSuccessful() {
-        if(isService){
+        if (isService) {
             _binding.serviceDetailsText.setText(_service.getName());
             LocationResponse location = _service.getProvider().getCompanyLocation();
             _binding.textViewServiceLocationHorizontal.setText(location.getCity() + ", " + location.getStreet() + " " + location.getStreetNumber());
@@ -125,7 +137,7 @@ public class ServiceDetailsRegularFragment extends Fragment {
             } catch (IOException e) {
 
             }
-        }else{
+        } else {
             _binding.serviceDetailsText.setText(_product.getName());
             LocationResponse location = _product.getProvider().getCompanyLocation();
             _binding.textViewServiceLocationHorizontal.setText(location.getCity() + ", " + location.getStreet() + " " + location.getStreetNumber());
@@ -153,6 +165,9 @@ public class ServiceDetailsRegularFragment extends Fragment {
         initializeFavoriteButton();
 
         checkIfBought();
+
+        initializeUserProfileActions();
+
     }
 
     private void showSnackBar() {
@@ -165,14 +180,14 @@ public class ServiceDetailsRegularFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Bundle args = new Bundle();
-                if(isService){
+                if (isService) {
                     args.putString("itemName", _service.getName());
                     args.putLong("itemId", _service.getId());
-                }else{
+                } else {
                     args.putString("itemName", _product.getName());
                     args.putLong("itemId", _product.getId());
                 }
-                
+
 
                 args.putLong("eoId", getUserId());
 
@@ -207,7 +222,7 @@ public class ServiceDetailsRegularFragment extends Fragment {
             _binding.expandForGrades.setVisibility(View.GONE);
             return;
         }
-        if(!isService && _product.getGrades().isEmpty()){
+        if (!isService && _product.getGrades().isEmpty()) {
             _binding.expandForGrades.setVisibility(View.GONE);
             return;
         }
@@ -237,11 +252,11 @@ public class ServiceDetailsRegularFragment extends Fragment {
             request.enqueue(new Callback<>() {
                 @Override
                 public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
-                    if(response.isSuccessful()){
+                    if (response.isSuccessful()) {
                         Toast.makeText(v.getContext(), "Success!", Toast.LENGTH_SHORT).show();
                         favorite = !favorite;
                         animateFavoriteButton();
-                    }else{
+                    } else {
                         Toast.makeText(v.getContext(), "Something went wrong!", Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -271,7 +286,7 @@ public class ServiceDetailsRegularFragment extends Fragment {
 
     private void getServiceForOverview() {
         _loader.show(requireActivity().getSupportFragmentManager(), "loading_spinner");
-        if(isService){
+        if (isService) {
             Call<ServiceOverviewResponse> call = ClientUtils.serviceOfferingService.findServiceForOverview(itemId);
             call.enqueue(new Callback<>() {
                 @Override
@@ -283,12 +298,13 @@ public class ServiceDetailsRegularFragment extends Fragment {
                     _loader.dismiss();
                     initializePageSuccessful();
                 }
+
                 @Override
                 public void onFailure(Call<ServiceOverviewResponse> call, Throwable t) {
                     Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_LONG).show();
                 }
             });
-        }else{
+        } else {
             Call<ProductOverviewResponse> call = ClientUtils.productsService.findOverviewById(itemId);
             call.enqueue(new Callback<>() {
                 @Override
@@ -300,6 +316,7 @@ public class ServiceDetailsRegularFragment extends Fragment {
                     _loader.dismiss();
                     initializePageSuccessful();
                 }
+
                 @Override
                 public void onFailure(@NonNull Call<ProductOverviewResponse> call, @NonNull Throwable t) {
                     Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_LONG).show();
@@ -322,7 +339,7 @@ public class ServiceDetailsRegularFragment extends Fragment {
         if (userId == null) {
             return;
         }
-        ChatCreateRequest request = new ChatCreateRequest(userId,isService ? _service.getProvider().getId() : _product.getProvider().getId());
+        ChatCreateRequest request = new ChatCreateRequest(userId, isService ? _service.getProvider().getId() : _product.getProvider().getId());
         ClientUtils.chatService.create(userId, request).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
