@@ -11,6 +11,7 @@ import com.example.fusmobilni.responses.register.fast.FastRegisterResponse;
 import com.example.fusmobilni.responses.register.regular.RegisterResponse;
 
 import java.util.List;
+import java.util.Objects;
 
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -39,7 +40,7 @@ public interface AuthService {
     Call<RegisterResponse> register(@Part("data") RequestBody request, @Part MultipartBody.Part image);
 
     @POST("auth/login")
-    Call<LoginResponse> login(@Body LoginRequest request);
+    Call<Object> login(@Body LoginRequest request);
 
     @GET("users/user-avatar")
     @Streaming

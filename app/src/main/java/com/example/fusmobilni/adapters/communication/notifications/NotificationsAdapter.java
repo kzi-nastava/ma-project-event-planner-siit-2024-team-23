@@ -141,7 +141,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-        } else if (viewType == TYPE_EVENT_REVIEW_UNREAD) {
+        } else if (viewType == TYPE_EVENT_UPDATE_UNREAD) {
             EventUpdateNotificationsViewHolder viewHolder = (EventUpdateNotificationsViewHolder) holder;
             NotificationResponse notificationResponse = items.get(position);
             viewHolder.notificationText.setText(notificationResponse.getContent());

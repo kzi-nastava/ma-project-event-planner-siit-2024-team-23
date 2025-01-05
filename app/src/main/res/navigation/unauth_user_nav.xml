@@ -509,6 +509,14 @@
         android:name="com.example.fusmobilni.fragments.users.profile.foreign.ForeignUserProfileFragment"
         android:label=""
         tools:layout="@layout/fragment_foreign_user_profile" />
+    <fragment
+        android:id="@+id/report_approval_fragment"
+        android:name="com.example.fusmobilni.fragments.admin.ReportApprovalFragment"
+        android:label=""
+        tools:layout="@layout/fragment_report_approval" />
+    <action
+        android:id="@+id/action_to_report_approval"
+        app:destination="@+id/report_approval_fragment" />
     <action
         android:id="@+id/action_toForeignUserProfile"
         app:destination="@id/foreign_user_profile_fragment" />
