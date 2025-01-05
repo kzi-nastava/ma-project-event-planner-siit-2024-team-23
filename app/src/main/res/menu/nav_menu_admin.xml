@@ -25,6 +25,10 @@
                     android:id="@id/reviewApprovalFragment"
                     android:icon="@drawable/outline_check_circle_24"
                     android:title="Approve Reviews" />
+                <item
+                    android:id="@id/report_approval_fragment"
+                    android:icon="@drawable/outline_check_circle_24"
+                    android:title="Approve Reports" />
             </menu>
 
         </item>
