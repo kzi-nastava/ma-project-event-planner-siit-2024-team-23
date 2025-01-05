@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
+
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -11,13 +12,16 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
+
 import com.example.fusmobilni.R;
 import com.example.fusmobilni.clients.ClientUtils;
 import com.example.fusmobilni.core.CustomSharedPrefs;
 import com.example.fusmobilni.databinding.ActivityLoginBinding;
 import com.example.fusmobilni.interfaces.ILoginCallback;
 import com.example.fusmobilni.responses.auth.LoginResponse;
+import com.example.fusmobilni.responses.auth.SuspensionResponse;
 import com.example.fusmobilni.viewModels.users.login.LoginViewModel;
+
 import java.util.Objects;
 
 public class LoginActivity extends AppCompatActivity {
@@ -44,7 +48,7 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         _loginViewModel.getIsLoading().observe(this, isLoading -> {
-            if(isLoading != null){
+            if (isLoading != null) {
                 _binding.loading.setVisibility(isLoading ? View.VISIBLE : View.GONE);
                 _binding.buttonWithArrow.setEnabled(!isLoading);
                 int color = ContextCompat.getColor(this, isLoading ?
@@ -59,13 +63,13 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        _binding.buttonWithArrow.setOnClickListener(v->{
-            if(validate()){
+        _binding.buttonWithArrow.setOnClickListener(v -> {
+            if (validate()) {
                 login();
             }
         });
 
-        _binding.registerText.setOnClickListener(v->{
+        _binding.registerText.setOnClickListener(v -> {
             Intent intent = new Intent(this, RegisterActivity.class);
             startActivity(intent);
             // prevent going back once the register process is finished
@@ -73,7 +77,7 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    private void handleLoginSuccess(Boolean isSuccess){
+    private void handleLoginSuccess(Boolean isSuccess) {
         if (isSuccess) {
             Toast.makeText(LoginActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
@@ -84,7 +88,7 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    private void login(){
+    private void login() {
         String email = Objects.requireNonNull(_binding.emailInput.getEditText()).getText().toString().trim();
         String password = Objects.requireNonNull(_binding.passwordInput.getEditText()).getText().toString().trim();
 
@@ -102,12 +106,18 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Throwable throwable) {
-                Toast.makeText(LoginActivity.this, "Login failure!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, "Login failure!", Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onSuspension(SuspensionResponse response) {
+                Toast.makeText(LoginActivity.this, response.getMessage() + " " + response.getTimeTillExpiry(), Toast.LENGTH_LONG).show();
+
             }
         });
     }
 
-    private boolean validate(){
+    private boolean validate() {
         String email = Objects.requireNonNull(_binding.emailInput.getEditText()).getText().toString().trim();
         String password = Objects.requireNonNull(_binding.passwordInput.getEditText()).getText().toString().trim();
 
@@ -115,13 +125,11 @@ public class LoginActivity extends AppCompatActivity {
             _binding.emailInput.setErrorEnabled(true);
             _binding.emailInput.setError("Email is required");
             return false;
-        }
-        else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+        } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             _binding.emailInput.setErrorEnabled(true);
             _binding.emailInput.setError("Invalid email format");
             return false;
-        }
-        else {
+        } else {
             _binding.emailInput.setError(null);
             _binding.emailInput.setErrorEnabled(false);
         }

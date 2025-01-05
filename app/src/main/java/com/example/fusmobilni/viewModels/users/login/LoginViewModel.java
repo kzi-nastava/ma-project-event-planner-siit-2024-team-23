@@ -14,6 +14,11 @@ import com.example.fusmobilni.model.users.User;
 import com.example.fusmobilni.model.enums.UserType;
 import com.example.fusmobilni.requests.auth.LoginRequest;
 import com.example.fusmobilni.responses.auth.LoginResponse;
+import com.example.fusmobilni.responses.auth.SuspensionResponse;
+import com.google.gson.Gson;
+import com.google.gson.internal.LinkedTreeMap;
+
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -72,21 +77,35 @@ public class LoginViewModel extends AndroidViewModel {
 
     public void login(ILoginCallback callback) {
         _isLoading.setValue(true);
-        Call<LoginResponse> request = ClientUtils.authService.login(new LoginRequest(_email.getValue(), _password.getValue()));
+        Call<Object> request = ClientUtils.authService.login(new LoginRequest(_email.getValue(), _password.getValue()));
         request.enqueue(new Callback<>() {
             @Override
-            public void onResponse(@NonNull Call<LoginResponse> call, @NonNull Response<LoginResponse> response) {
-                if(response.isSuccessful()){
-                    writeUserToPref(response.body());
-                    _isLoading.setValue(false);
-                    callback.onSuccess(response.body());
-                }else{
+            public void onResponse(@NonNull Call<Object> call, @NonNull Response<Object> response) {
+                if (response.isSuccessful()) {
+                    LinkedTreeMap<String, Object> map = (LinkedTreeMap<String, Object>) response.body();
+                    Gson gson = new Gson();
+                    if (map.containsKey("jwt")) {
+                        LoginResponse loginResponse = gson.fromJson(gson.toJson(map), LoginResponse.class);
+                        writeUserToPref(loginResponse);
+                        _isLoading.setValue(false);
+                        callback.onSuccess(loginResponse);
+                    } else if (map.containsKey("message")) {
+                        SuspensionResponse suspensionResponse = gson.fromJson(gson.toJson(map), SuspensionResponse.class);
+                        _isLoading.setValue(false);
+                        callback.onSuspension(suspensionResponse);
+                    } else {
+                        callback.onFailure(new Throwable("Login failed!"));
+                        _isLoading.setValue(false);
+                    }
+
+                } else {
                     callback.onFailure(new Throwable("Login failed!"));
                     _isLoading.setValue(false);
                 }
             }
+
             @Override
-            public void onFailure(@NonNull Call<LoginResponse> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<Object> call, @NonNull Throwable t) {
                 callback.onFailure(t);
                 _isLoading.setValue(false);
             }
