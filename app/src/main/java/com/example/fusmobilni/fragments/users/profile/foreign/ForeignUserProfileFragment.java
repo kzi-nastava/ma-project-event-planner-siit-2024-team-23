@@ -18,19 +18,26 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.example.fusmobilni.R;
 import com.example.fusmobilni.adapters.admin.AdminApprovalAdapter;
 import com.example.fusmobilni.clients.ClientUtils;
 import com.example.fusmobilni.core.CustomSharedPrefs;
 import com.example.fusmobilni.databinding.FragmentForeignUserProfileBinding;
+import com.example.fusmobilni.fragments.communication.blocks.BlockModalFragment;
+import com.example.fusmobilni.fragments.dialogs.FailiureDialogFragment;
 import com.example.fusmobilni.fragments.dialogs.SpinnerDialogFragment;
+import com.example.fusmobilni.fragments.dialogs.SuccessDialogFragment;
+import com.example.fusmobilni.interfaces.BlockDialogResultListener;
+import com.example.fusmobilni.requests.communication.blocks.BlockCreateRequest;
 import com.example.fusmobilni.responses.users.UserProfileResponse;
 import com.example.fusmobilni.viewModels.users.ForeignProfileViewModel;
 import com.google.android.material.tabs.TabLayout;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -41,7 +48,7 @@ import retrofit2.Response;
  * Use the {@link ForeignUserProfileFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ForeignUserProfileFragment extends Fragment {
+public class ForeignUserProfileFragment extends Fragment implements BlockDialogResultListener {
 
     private FragmentForeignUserProfileBinding _binding;
     private SpinnerDialogFragment _loader;
@@ -51,6 +58,11 @@ public class ForeignUserProfileFragment extends Fragment {
     private TabLayout tabLayout;
     private UserProfileResponse profileResponse;
     private ForeignProfileViewModel viewModel;
+
+    private boolean blockState = false;
+    private BlockModalFragment blockDialog;
+    private SuccessDialogFragment _success;
+    private FailiureDialogFragment _failure;
 
     public ForeignUserProfileFragment() {
         // Required empty public constructor
@@ -85,8 +97,9 @@ public class ForeignUserProfileFragment extends Fragment {
 
     public void fetchUserProfile() {
         _loader.show(requireActivity().getSupportFragmentManager(), "loading_spinner");
-
-        Call<UserProfileResponse> call = ClientUtils.userService.findUserProfile(userId);
+        CustomSharedPrefs prefs = CustomSharedPrefs.getInstance();
+        Long requesterId = (prefs != null && prefs.getUser() != null) ? prefs.getUser().getId() : null;
+        Call<UserProfileResponse> call = ClientUtils.userService.findUserProfile(userId, requesterId);
         call.enqueue(new Callback<>() {
             @Override
             public void onResponse(Call<UserProfileResponse> call, Response<UserProfileResponse> response) {
@@ -95,6 +108,8 @@ public class ForeignUserProfileFragment extends Fragment {
                 }
                 profileResponse = response.body();
                 _loader.dismiss();
+
+                blockState = profileResponse.isBlocked();
                 initializeProfile();
                 initializeTabs();
             }
@@ -142,22 +157,42 @@ public class ForeignUserProfileFragment extends Fragment {
 
         PopupMenu popupMenu = new PopupMenu(themeWrapper, anchor);
         MenuInflater inflater = popupMenu.getMenuInflater();
-        inflater.inflate(R.menu.block_report_menu, popupMenu.getMenu());
+        if (!blockState) {
+            inflater.inflate(R.menu.block_report_menu, popupMenu.getMenu());
 
-        popupMenu.setOnMenuItemClickListener(item -> {
-            if (item.getItemId() == R.id.action_block) {
-                Navigation.findNavController(anchor).navigate(R.id.action_to_block_form);
-                popupMenu.dismiss();
-                return true;
+            popupMenu.setOnMenuItemClickListener(item -> {
+                if (item.getItemId() == R.id.action_block) {
+                    blockDialog.show(getFragmentManager(), "block_dialog");
+                    popupMenu.dismiss();
+                    return true;
 
-            } else if (item.getItemId() == R.id.action_report) {
-                Navigation.findNavController(anchor).navigate(R.id.action_to_report_form, createReportBundle());
-                popupMenu.dismiss();
-                return true;
-            } else {
-                return false;
-            }
-        });
+                } else if (item.getItemId() == R.id.action_report) {
+                    Navigation.findNavController(anchor).navigate(R.id.action_to_report_form, createReportBundle());
+                    popupMenu.dismiss();
+                    return true;
+                } else {
+                    return false;
+                }
+            });
+        } else {
+            inflater.inflate(R.menu.ublock_report_menu, popupMenu.getMenu());
+
+            popupMenu.setOnMenuItemClickListener(item -> {
+                if (item.getItemId() == R.id.action_unblock) {
+                    blockDialog.show(getFragmentManager(), "block_dialog");
+                    popupMenu.dismiss();
+                    return true;
+
+                } else if (item.getItemId() == R.id.action_report) {
+                    Navigation.findNavController(anchor).navigate(R.id.action_to_report_form, createReportBundle());
+                    popupMenu.dismiss();
+                    return true;
+                } else {
+                    return false;
+                }
+            });
+        }
+
 
         popupMenu.show();
     }
@@ -245,6 +280,95 @@ public class ForeignUserProfileFragment extends Fragment {
     private void initializeDialogs() {
         _loader = new SpinnerDialogFragment();
         _loader.setCancelable(false);
+        blockDialog = new BlockModalFragment();
+        _success = new SuccessDialogFragment();
+        _failure = new FailiureDialogFragment();
+        blockDialog.setTargetFragment(this, 0); // Set this fragment as the target
+    }
 
+    void blockUser() {
+        CustomSharedPrefs prefs = CustomSharedPrefs.getInstance();
+        if (prefs == null || prefs.getUser() == null) {
+            return;
+        }
+        BlockCreateRequest request = new BlockCreateRequest(profileResponse.getId(), prefs.getUser().getId());
+        Call<Object> call = ClientUtils.blockService.createBlock(request);
+        call.enqueue(new Callback<Object>() {
+            @Override
+            public void onResponse(Call<Object> call, Response<Object> response) {
+                if (!response.isSuccessful()) {
+                    openFailureWindow("Failed to block user");
+                    return;
+                }
+                openSuccessWindow("User blocked");
+                blockState = true;
+            }
+
+            @Override
+            public void onFailure(Call<Object> call, Throwable t) {
+                openFailureWindow("Failed to block user");
+
+            }
+        });
+    }
+
+    void unblockUser() {
+        CustomSharedPrefs prefs = CustomSharedPrefs.getInstance();
+        if (prefs == null || prefs.getUser() == null) {
+            return;
+        }
+
+        Call<Object> call = ClientUtils.blockService.unblock(profileResponse.getId(), prefs.getUser().getId());
+        call.enqueue(new Callback<Object>() {
+            @Override
+            public void onResponse(Call<Object> call, Response<Object> response) {
+                if (!response.isSuccessful()) {
+                    openFailureWindow("Failed to unblock user");
+                    return;
+                }
+                openSuccessWindow("User unblocked");
+                blockState = false;
+            }
+
+            @Override
+            public void onFailure(Call<Object> call, Throwable t) {
+                openFailureWindow("Failed to unblock user");
+
+            }
+        });
+
+    }
+
+    void openSuccessWindow(String message) {
+        if (_loader != null) {
+            _loader.dismiss();
+        }
+        Bundle args = new Bundle();
+        args.putString("Title", "Success");
+        args.putString("Message", message);
+        _success.setArguments(args);
+        _success.show(getParentFragmentManager(), "success_dialog");
+    }
+
+    void openFailureWindow(String message) {
+        if (_loader != null) {
+            _loader.dismiss();
+        }
+        Bundle args = new Bundle();
+        args.putString("Title", "Failiure");
+        args.putString("Message", message);
+        _failure.setArguments(args);
+        _failure.show(getParentFragmentManager(), "failiure_dialog");
+    }
+
+    @Override
+    public void onBlockDialogResult(boolean result) {
+        if (result) {
+            if (!blockState) {
+                blockUser();
+            } else {
+                unblockUser();
+            }
+        }
     }
 }

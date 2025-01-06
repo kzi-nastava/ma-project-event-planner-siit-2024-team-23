@@ -13,6 +13,7 @@ public class UserProfileResponse {
     public String firstName;
     public String lastName;
     public String role;
+    public boolean blocked;
     public boolean gradable;
     public String userAvatar;
     public List<UserReviewResponse> userReviews;
@@ -20,7 +21,8 @@ public class UserProfileResponse {
     public List<EventReviewResponse> eventReviews;
     public LocationResponse location;
 
-    public UserProfileResponse(String email, List<EventReviewResponse> eventReviews, String firstName, boolean gradable, Long id, List<ItemReviewResponse> itemReviews, String lastName, LocationResponse location, String role, String userAvatar, List<UserReviewResponse> userReviews) {
+    public UserProfileResponse(boolean blocked, String email, List<EventReviewResponse> eventReviews, String firstName, boolean gradable, Long id, List<ItemReviewResponse> itemReviews, String lastName, LocationResponse location, String role, String userAvatar, List<UserReviewResponse> userReviews) {
+        this.blocked = blocked;
         this.email = email;
         this.eventReviews = eventReviews;
         this.firstName = firstName;
@@ -33,6 +35,16 @@ public class UserProfileResponse {
         this.userAvatar = userAvatar;
         this.userReviews = userReviews;
     }
+
+    public boolean isBlocked() {
+        return blocked;
+    }
+
+    public void setBlocked(boolean blocked) {
+        this.blocked = blocked;
+    }
+
+
 
     public void setEmail(String email) {
         this.email = email;
