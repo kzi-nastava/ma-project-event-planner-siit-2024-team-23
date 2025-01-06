@@ -25,6 +25,7 @@ import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Part;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface UserService {
     @GET("users/user-info")
@@ -67,7 +68,7 @@ public interface UserService {
 
 
     @GET("users/user-profile/{userId}")
-    Call<UserProfileResponse> findUserProfile(@Path("userId") Long userId);
+    Call<UserProfileResponse> findUserProfile(@Path("userId") Long userId, @Query("requesterId") Long requesterId);
 
 
 }
