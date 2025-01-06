@@ -489,6 +489,14 @@
     <action
         android:id="@+id/action_to_event_review"
         app:destination="@id/event_review_fragment" />
+    <action
+        android:id="@+id/action_to_event_statistics"
+        app:destination="@id/event_statistics" />
+    <fragment
+        android:id="@+id/event_statistics"
+        android:name="com.example.fusmobilni.fragments.events.event.stats.EventStatisticsFragment"
+        android:label="Statistics"
+        tools:layout="@layout/fragment_event_statistics" />
     <fragment
         android:id="@+id/company_overview_fragment"
         android:name="com.example.fusmobilni.fragments.items.company.CompanyOverviewFragment"

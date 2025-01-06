@@ -16,6 +16,7 @@ import com.example.fusmobilni.responses.events.components.EventComponentsRespons
 import com.example.fusmobilni.responses.events.filter.EventLocationsResponse;
 import com.example.fusmobilni.responses.events.filter.EventsPaginationResponse;
 import com.example.fusmobilni.responses.events.home.EventsHomeResponse;
+import com.example.fusmobilni.responses.events.statistics.EventStatisticsResponse;
 
 import java.sql.Blob;
 import java.util.Map;
@@ -97,4 +98,11 @@ public interface EventsService {
     @GET("events/{id}/event-details/pdf")
     @Streaming
     Call<ResponseBody> downloadEventPdf(@Path("id") Long id);
+
+    @GET("statistics/{eventId}")
+    Call<EventStatisticsResponse> findStatisticsForEvent(@Path("eventId") Long id);
+
+    @GET("events/{id}/event-statistics/pdf")
+    @Streaming
+    Call<ResponseBody> downloadEventStatisticsPdf(@Path("id") Long id);
 }
