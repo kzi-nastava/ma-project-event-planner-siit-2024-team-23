@@ -21,6 +21,7 @@ import com.example.fusmobilni.adapters.items.product.ProductsAdapter;
 import com.example.fusmobilni.adapters.items.service.ServicesAdapter;
 import com.example.fusmobilni.adapters.loading.LoadingCardVerticalAdapter;
 import com.example.fusmobilni.clients.ClientUtils;
+import com.example.fusmobilni.core.CustomSharedPrefs;
 import com.example.fusmobilni.databinding.FragmentHomeBinding;
 import com.example.fusmobilni.model.event.Event;
 import com.example.fusmobilni.model.items.product.Product;
@@ -156,8 +157,9 @@ public class HomeFragment extends Fragment {
     }
 
     private void fetchEvents() {
-
-        Call<EventsHomeResponse> call = ClientUtils.eventsService.findTopFiveEvents(null);
+        CustomSharedPrefs prefs = CustomSharedPrefs.getInstance();
+        Long userId = (prefs != null && prefs.getUser() != null) ? prefs.getUser().getId() : null;
+        Call<EventsHomeResponse> call = ClientUtils.eventsService.findTopFiveEvents(userId);
         call.enqueue(new Callback<>() {
             @Override
 
