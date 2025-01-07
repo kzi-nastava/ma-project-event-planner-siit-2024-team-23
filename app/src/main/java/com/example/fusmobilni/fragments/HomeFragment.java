@@ -116,7 +116,9 @@ public class HomeFragment extends Fragment {
     }
 
     private void fetchProducts() {
-        Call<ProductsHomeResponse> call = ClientUtils.productsService.findTopFiveProducts(null);
+        CustomSharedPrefs prefs = CustomSharedPrefs.getInstance();
+        Long userId = (prefs != null && prefs.getUser() != null) ? prefs.getUser().getId() : null;
+        Call<ProductsHomeResponse> call = ClientUtils.productsService.findTopFiveProducts(userId);
         call.enqueue(new Callback<>() {
             @Override
             public void onResponse(Call<ProductsHomeResponse> call, Response<ProductsHomeResponse> response) {
@@ -136,7 +138,9 @@ public class HomeFragment extends Fragment {
     }
 
     private void fetchServices() {
-        Call<ServicesHomeResponse> call = ClientUtils.serviceOfferingService.findTopFiveServices(null);
+        CustomSharedPrefs prefs = CustomSharedPrefs.getInstance();
+        Long userId = (prefs != null && prefs.getUser() != null) ? prefs.getUser().getId() : null;
+        Call<ServicesHomeResponse> call = ClientUtils.serviceOfferingService.findTopFiveServices(userId);
         call.enqueue(new Callback<>() {
             @Override
             public void onResponse(Call<ServicesHomeResponse> call, Response<ServicesHomeResponse> response) {

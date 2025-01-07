@@ -64,7 +64,7 @@ public interface ServiceOfferingService {
     Call<GetServiceResponse> findById(@Path("id") long id);
 
     @GET("services/top-five-services")
-    Call<ServicesHomeResponse> findTopFiveServices(@Query("city") String city);
+    Call<ServicesHomeResponse> findTopFiveServices(@Query("userId") Long userId);
 
     @GET("services/browse")
     Call<ServicesPaginationResponse> findFilteredAndPaginated(
@@ -93,7 +93,6 @@ public interface ServiceOfferingService {
 
     @GET("services/reservation/{id}")
     Call<ServiceReservationResponse> findServiceForReservation(@Path("id") Long id);
-
 
 
 }
