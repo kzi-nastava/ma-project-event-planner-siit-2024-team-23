@@ -51,7 +51,6 @@ public class EventOrganizerEventAdapter extends RecyclerView.Adapter<EventOrgani
             holder.monthYear.setText(R.string.details);
             holder.location.setText(event.getLocation());
             holder.eventCard.setOnClickListener(v -> eventClickListener.onEventClick(position));
-            holder.statsButton.setOnClickListener(v-> eventClickListener.onStatsClick(position));
         }
 
         @Override
@@ -70,7 +69,6 @@ public static class EventViewHolder extends RecyclerView.ViewHolder {
     TextView day;
     TextView monthYear;
     TextView location;
-    Button editButton, statsButton;
     public EventViewHolder(@NonNull View itemView) {
         super(itemView);
         title = itemView.findViewById(R.id.textViewEventNameHorizontal);
@@ -78,7 +76,6 @@ public static class EventViewHolder extends RecyclerView.ViewHolder {
         monthYear = itemView.findViewById(R.id.textViewMonthAndYearHorizontal);
         location = itemView.findViewById(R.id.textViewEventLocationHorizontal);
         eventCard = itemView.findViewById(R.id.eventCard);
-        statsButton = itemView.findViewById(R.id.statsButton);
     }
 }
 }

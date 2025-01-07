@@ -333,6 +333,7 @@
     <string name="avg_grade">Avg. grade</string>
     <string name="average_grade">3.33</string>
     <string name="grade_statistics">Grade statistics</string>
+    <string name="deactivateAccount">Deactivate</string>
     <string-array name="privacy_type_options">
         <item>Private</item>
         <item>Public</item>
