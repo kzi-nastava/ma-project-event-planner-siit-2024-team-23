@@ -36,7 +36,7 @@ import retrofit2.http.Streaming;
 public interface EventsService {
 
     @GET("events/top-five-events")
-    Call<EventsHomeResponse> findTopFiveEvents(@Query("city") String city);
+    Call<EventsHomeResponse> findTopFiveEvents(@Query("userId") Long userId);
 
     @GET("events/browse")
     Call<EventsPaginationResponse> findFilteredAndPaginated(
@@ -60,7 +60,8 @@ public interface EventsService {
     @POST("events")
     Call<GetEventResponse> create(
             @Body CreateEventRequest request
-            );
+    );
+
     @GET("events/{id}")
     Call<GetEventByIdResponse> findById(@Path("id") Long id);
 
@@ -71,6 +72,7 @@ public interface EventsService {
     @DELETE("events/{id}/event-components/{componentId}")
     Call<Void> removeComponentFromEvent(@Path("id") Long id,
                                         @Path("componentId") Long componentId);
+
     @GET("events/{id}/event-components")
     Call<EventComponentsResponse> findComponentsByEventId(@Path("id") Long id);
 
