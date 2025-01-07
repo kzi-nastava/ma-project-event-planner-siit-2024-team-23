@@ -73,6 +73,33 @@
 
                 </androidx.cardview.widget.CardView>
 
+                <androidx.cardview.widget.CardView
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="20dp"
+                    app:cardBackgroundColor="#003949AB"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="10dp"
+                    app:cardMaxElevation="10dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <Button
+                        android:id="@+id/statsButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40sp"
+                        android:layout_margin="6dp"
+                        android:fontFamily="@font/poppins"
+                        android:paddingTop="4dp"
+                        android:paddingBottom="4dp"
+                        android:text="@string/stats"
+                        android:textAlignment="center"
+                        app:cornerRadius="8dp" />
+
+
+                </androidx.cardview.widget.CardView>
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <com.google.android.material.card.MaterialCardView

@@ -189,7 +189,7 @@
     <string name="customCategoryName">Custom Category Name</string>
     <string name="customCategoryDescription">Custom Category Description</string>
     <string name="service_creation_form">Service Creation Form</string>
-    <string name="category">Category</string>
+    <string name="category">Category my own category description</string>
     <string name="event_type">Event Type</string>
     <string name="name">Name</string>
     <string name="description">Description</string>
@@ -323,6 +323,16 @@
     <string name="by_john_doe">By John Doe</string>
     <string name="report">Report</string>
     <string name="product_delete_label">Are you sure you want to delete product?</string>
+    <string name="statsBtn">Stats</string>
+    <string name="milan_lazarevic">Milan Lazarevic</string>
+    <string name="visitors_count">Visitors count</string>
+    <string name="visitors_count_number">4</string>
+    <string name="statistics">Statistics</string>
+    <string name="total_budget_spent">Total budget spent</string>
+    <string name="budget_spent">599.95$</string>
+    <string name="avg_grade">Avg. grade</string>
+    <string name="average_grade">3.33</string>
+    <string name="grade_statistics">Grade statistics</string>
     <string-array name="privacy_type_options">
         <item>Private</item>
         <item>Public</item>

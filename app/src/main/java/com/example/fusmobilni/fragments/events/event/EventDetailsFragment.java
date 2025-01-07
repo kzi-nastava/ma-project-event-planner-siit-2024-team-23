@@ -28,8 +28,10 @@ import com.example.fusmobilni.adapters.events.EventComponentAdapter;
 import com.example.fusmobilni.clients.ClientUtils;
 import com.example.fusmobilni.core.CustomSharedPrefs;
 import com.example.fusmobilni.databinding.FragmentEventDetailsBinding;
+import com.example.fusmobilni.model.enums.UserType;
 import com.example.fusmobilni.model.event.AgendaActivity;
 import com.example.fusmobilni.model.event.Event;
+import com.example.fusmobilni.model.users.User;
 import com.example.fusmobilni.requests.communication.chat.ChatCreateRequest;
 import com.example.fusmobilni.requests.users.favorites.FavoriteEventRequest;
 import com.example.fusmobilni.responses.auth.LoginResponse;
@@ -45,6 +47,7 @@ import java.io.InputStream;
 import java.sql.Blob;
 import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Objects;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -97,7 +100,29 @@ public class EventDetailsFragment extends Fragment {
         fetchEventImage(eventId);
         setUpEditButton();
         _binding.button2.setOnClickListener(v -> createChat());
+        _binding.statsButton.setOnClickListener(v->{
+            Toast.makeText(requireContext(), "Klik", Toast.LENGTH_SHORT).show();
+            Bundle bundle = new Bundle();
+            bundle.putLong("eventId", eventId);
+            Navigation.findNavController(requireView()).navigate(R.id.action_to_event_statistics, bundle);
+        });
         return root;
+    }
+
+    private boolean isEventOwner() {
+        LoginResponse user = CustomSharedPrefs.getInstance().getUser();
+        if(user == null || event == null){
+            return false;
+        }
+        return event.getEventOrganizer().getId().equals(user.getId());
+    }
+
+    private boolean isAdmin() {
+        LoginResponse user = CustomSharedPrefs.getInstance().getUser();
+        if(user == null || event == null){
+            return false;
+        }
+        return user.getRole().equals(UserType.ADMIN);
     }
 
     private void onGeneratePdfClick() {
@@ -221,6 +246,12 @@ public class EventDetailsFragment extends Fragment {
                         _binding.eventAgendaLbl.setVisibility(View.VISIBLE);
                         _adapter = new AgendaActivityAdapter(event.getAgendas());
                         _binding.eventActivitiesRecycleView.setAdapter(_adapter);
+                    }
+                    if(isAdmin() || isEventOwner()) {
+                        _binding.statsButton.setVisibility(View.VISIBLE);
+                    }
+                    else{
+                        _binding.statsButton.setVisibility(View.GONE);
                     }
                     fetchEventOrganizerImage(event.getEventOrganizer().id);
                     fetchEventComponents(event.getId());
