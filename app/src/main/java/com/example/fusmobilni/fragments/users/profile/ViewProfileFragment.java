@@ -1,11 +1,13 @@
 package com.example.fusmobilni.fragments.users.profile;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
@@ -14,12 +16,15 @@ import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.fusmobilni.R;
 import com.example.fusmobilni.activities.HomeActivity;
 import com.example.fusmobilni.clients.ClientUtils;
 import com.example.fusmobilni.core.CustomSharedPrefs;
 import com.example.fusmobilni.databinding.FragmentViewProfileBinding;
+import com.example.fusmobilni.model.enums.UserType;
+import com.example.fusmobilni.model.users.User;
 import com.example.fusmobilni.responses.auth.LoginResponse;
 import com.example.fusmobilni.responses.auth.UserAvatarResponse;
 import com.google.android.material.tabs.TabLayout;
@@ -112,8 +117,61 @@ public class ViewProfileFragment extends Fragment {
         _binding.logout.setOnClickListener(v -> logout());
         _binding.updateProfile.setOnClickListener(v-> onUpdateClick());
         _binding.calendarButton.setOnClickListener(v->onCalendarClick());
+        _binding.deactivateBtn.setOnClickListener(v-> showDeactivateConfirmationDialog());
+        _binding.deactivateBtn.setVisibility(isDeactivateBtnVisible() ? View.VISIBLE : View.GONE);
         return  view;
     }
+
+    private boolean isDeactivateBtnVisible() {
+        CustomSharedPrefs prefs = CustomSharedPrefs.getInstance();
+        LoginResponse user = prefs.getUser();
+        return user.getRole().equals(UserType.EVENT_ORGANIZER) || user.getRole().equals(UserType.SERVICE_PROVIDER);
+    }
+
+    private void showDeactivateConfirmationDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        builder.setTitle("Deactivate Account");
+        builder.setMessage("Are you sure you want to deactivate your account?");
+
+        builder.setPositiveButton("Yes", (dialog, which) -> {
+            onDeactivateClick(dialog);
+        });
+
+        builder.setNegativeButton("No", (dialog, which) -> {
+            dialog.dismiss();
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    private void onDeactivateClick(DialogInterface dialog) {
+        Call<Void> request = ClientUtils.userService.deactivateUserProfile();
+        request.enqueue(new Callback<>() {
+            @Override
+            public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
+                if(response.isSuccessful()){
+                    dialog.dismiss();
+                    Toast.makeText(requireContext(), "Your account is now deactivated", Toast.LENGTH_SHORT).show();
+                    logout();
+                }else{
+                    dialog.dismiss();
+                    if(response.raw().code() == 403){
+                        Toast.makeText(requireContext(), "You have reserved services or events in future. You cannot deactivate account!", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(requireContext(), "Error occurred try again later!", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
+                dialog.dismiss();
+                Toast.makeText(requireContext(), "Error occurred try again later!" + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     private void logout() {
         CustomSharedPrefs sharedPrefs = CustomSharedPrefs.getInstance();
         sharedPrefs.clearAll();

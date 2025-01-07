@@ -19,6 +19,7 @@ import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
@@ -69,6 +70,9 @@ public interface UserService {
 
     @GET("users/user-profile/{userId}")
     Call<UserProfileResponse> findUserProfile(@Path("userId") Long userId, @Query("requesterId") Long requesterId);
+
+    @DELETE("users/deactivate-profile")
+    Call<Void> deactivateUserProfile();
 
 
 }

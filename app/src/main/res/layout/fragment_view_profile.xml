@@ -13,12 +13,11 @@
         android:layout_width="96dp"
         android:layout_height="96dp"
         android:layout_margin="5dp"
-        android:layout_marginTop="24dp"
         android:elevation="10dp"
         app:cardCornerRadius="80dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/deactivateBtn">
 
         <ImageView
             android:id="@+id/profilePicture"
@@ -72,6 +71,7 @@
                 android:textColor="@color/text_600"
                 android:textSize="16sp"
                 android:textStyle="bold" />
+
         </LinearLayout>
 
         <!-- Divider -->
@@ -138,15 +138,16 @@
         app:tabTextColor="@color/text_700">
 
 
-
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/events_favourite" />
+
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/item_favourite" />
+
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -161,6 +162,21 @@
         android:contentDescription="@string/logout"
         android:src="@drawable/outline_logout_24"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/deactivateBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="24dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:fontFamily="@font/poppins"
+        android:text="@string/deactivateAccount"
+        android:textAlignment="center"
+        android:textColor="@color/accent_red"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
