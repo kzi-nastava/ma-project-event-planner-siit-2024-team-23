@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.fusmobilni.clients.ClientUtils;
+import com.example.fusmobilni.core.CustomSharedPrefs;
 import com.example.fusmobilni.responses.items.CategoryResponse;
 import com.example.fusmobilni.responses.items.products.filter.ProductPaginationResponse;
 import com.example.fusmobilni.responses.items.products.filter.ProductsPaginationResponse;
@@ -39,6 +40,10 @@ public class ProductSearchViewModel extends ViewModel {
 
     public void doFilter() {
         Map<String, String> queryParams = new HashMap<>();
+        CustomSharedPrefs prefs = CustomSharedPrefs.getInstance();
+        if (prefs != null && prefs.getUser() != null) {
+            queryParams.put("userId", String.valueOf(prefs.getUser().getId()));
+        }
         if (!_constraint.getValue().isEmpty())
             queryParams.put("constraint", _constraint.getValue());
         if (_category.getValue() != null)

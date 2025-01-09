@@ -33,7 +33,7 @@ import retrofit2.http.QueryMap;
 
 public interface ProductsService {
     @GET("products/top-five-products")
-    Call<ProductsHomeResponse> findTopFiveProducts(@Query("city") String city);
+    Call<ProductsHomeResponse> findTopFiveProducts(@Query("userId") Long userId);
 
     @GET("products/browse")
     Call<ProductsPaginationResponse> findFilteredAndPaginated(
@@ -85,11 +85,9 @@ public interface ProductsService {
 
     @GET("products/{id}")
     Call<GetProductResponse> findById(@Path("id") long id);
+
     @GET("items/{id}")
     Call<ProductOverviewResponse> findOverviewById(@Path("id") long id);
-
-
-
 
 
 }
