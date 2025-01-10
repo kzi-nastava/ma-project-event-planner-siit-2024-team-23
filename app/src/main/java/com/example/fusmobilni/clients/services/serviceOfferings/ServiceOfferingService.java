@@ -7,6 +7,7 @@ import com.example.fusmobilni.requests.services.ServiceFilterRequest;
 import com.example.fusmobilni.requests.services.cardView.GetServicesCardResponse;
 import com.example.fusmobilni.responses.events.filter.EventsPaginationResponse;
 import com.example.fusmobilni.responses.items.CategoriesResponse;
+import com.example.fusmobilni.responses.items.services.ServiceOfferingReservationsResponse;
 import com.example.fusmobilni.responses.items.services.ServiceOverviewResponse;
 import com.example.fusmobilni.responses.items.services.ServiceReservationResponse;
 import com.example.fusmobilni.responses.items.services.filter.ServiceLocationsResponse;
@@ -14,6 +15,8 @@ import com.example.fusmobilni.responses.items.services.filter.ServicesMinMaxPric
 import com.example.fusmobilni.responses.items.services.filter.ServicesPaginationResponse;
 import com.example.fusmobilni.responses.items.services.home.ServicesHomeResponse;
 
+import java.io.IOException;
+import java.nio.file.AccessDeniedException;
 import java.util.List;
 import java.util.Map;
 
@@ -94,5 +97,12 @@ public interface ServiceOfferingService {
     @GET("services/reservation/{id}")
     Call<ServiceReservationResponse> findServiceForReservation(@Path("id") Long id);
 
+    @POST("services/reservation/{id}/accept-reservation")
+    Call<Void> acceptReservation(@Path("id") Long id);
 
+    @POST("services/reservation/{id}/decline-reservation")
+    Call<Void> declineReservation(@Path("id") Long id);
+
+    @GET("services/reservations/{providerId}")
+    Call<ServiceOfferingReservationsResponse> findReservationsByProviderId(@Path("providerId") Long providerId);
 }

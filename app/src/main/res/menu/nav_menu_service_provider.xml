@@ -46,24 +46,11 @@
         </item>
     </group>
 
-    <!--    todo-->
     <group android:checkableBehavior="single">
         <item android:title="@string/my_products">
             <menu>
                 <item
-                    android:id="@+id/products_fragments"
-                    android:icon="@drawable/outline_message_24"
-                    android:title="@string/my_products" />
-                <item
-                    android:id="@+id/services_fragments"
-                    android:icon="@drawable/outline_message_24"
-                    android:title="@string/my_services" />
-                <item
-                    android:id="@+id/pricelist_fragments"
-                    android:icon="@drawable/outline_message_24"
-                    android:title="@string/pricelist" />
-                <item
-                    android:id="@+id/reservations_fragments"
+                    android:id="@+id/reservations_fragment"
                     android:icon="@drawable/outline_message_24"
                     android:title="@string/my_reservations" />
             </menu>
