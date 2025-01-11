@@ -1,5 +1,6 @@
 package com.example.fusmobilni.requests.services;
 
+import com.example.fusmobilni.model.enums.DurationType;
 import com.example.fusmobilni.model.enums.ReservationConfirmation;
 import java.util.List;
 
@@ -16,18 +17,28 @@ public class GetServiceResponse {
     private boolean isAvailable;
     private boolean isVisible;
     private int duration;
+    private DurationType durationType;
+    private int minDuration;
+    private int maxDuration;
     private int reservationDeadline;
     private int cancellationDeadline;
     private ReservationConfirmation reservationConfirmation;
     List<String> images;
 
-    public GetServiceResponse(Long id, List<String> images, ReservationConfirmation reservationConfirmation, int cancellationDeadline, int reservationDeadline, int duration, boolean isVisible, boolean isAvailable, String specificities, Long serviceProviderId, double discount, double price, List<Long> eventTypeIds, Long categoryId, String description, String name) {
+    public GetServiceResponse(Long id, List<String> images, ReservationConfirmation reservationConfirmation,
+                              int cancellationDeadline, int reservationDeadline, int duration, DurationType durationType,
+                              int minDuration, int maxDuration, boolean isVisible, boolean isAvailable, String specificities,
+                              Long serviceProviderId, double discount, double price, List<Long> eventTypeIds,
+                              Long categoryId, String description, String name) {
         this.id = id;
         this.images = images;
         this.reservationConfirmation = reservationConfirmation;
         this.cancellationDeadline = cancellationDeadline;
         this.reservationDeadline = reservationDeadline;
         this.duration = duration;
+        this.durationType = durationType;
+        this.minDuration = minDuration;
+        this.maxDuration = maxDuration;
         this.isVisible = isVisible;
         this.isAvailable = isAvailable;
         this.specificities = specificities;
@@ -166,5 +177,29 @@ public class GetServiceResponse {
 
     public void setImages(List<String> images) {
         this.images = images;
+    }
+
+    public DurationType getDurationType() {
+        return durationType;
+    }
+
+    public void setDurationType(DurationType durationType) {
+        this.durationType = durationType;
+    }
+
+    public int getMinDuration() {
+        return minDuration;
+    }
+
+    public void setMinDuration(int minDuration) {
+        this.minDuration = minDuration;
+    }
+
+    public int getMaxDuration() {
+        return maxDuration;
+    }
+
+    public void setMaxDuration(int maxDuration) {
+        this.maxDuration = maxDuration;
     }
 }

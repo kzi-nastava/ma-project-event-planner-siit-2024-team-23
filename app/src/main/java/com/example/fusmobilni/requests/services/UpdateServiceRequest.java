@@ -1,5 +1,6 @@
 package com.example.fusmobilni.requests.services;
 
+import com.example.fusmobilni.model.enums.DurationType;
 import com.example.fusmobilni.model.enums.ReservationConfirmation;
 
 public class UpdateServiceRequest {
@@ -13,13 +14,18 @@ public class UpdateServiceRequest {
     private boolean isAvailable;
     private boolean isVisible;
     private int duration;
+    private DurationType durationType;
+
+    private int  minDuration;
+    private int maxDuration;
     private int reservationDeadline;
     private int cancellationDeadline;
     private ReservationConfirmation reservationConfirmation;
 
     public UpdateServiceRequest(String name, String description, String eventTypeIds,
                                 double price, double discount, Long serviceProviderId, String specificities,
-                                boolean isAvailable, boolean isVisible, int duration, int reservationDeadline,
+                                boolean isAvailable, boolean isVisible, int duration,
+                                DurationType durationType, int minDuration, int maxDuration,int reservationDeadline,
                                 int cancellationDeadline, ReservationConfirmation reservationConfirmation) {
         this.name = name;
         this.description = description;
@@ -31,6 +37,9 @@ public class UpdateServiceRequest {
         this.isVisible = isVisible;
         this.isAvailable = isAvailable;
         this.duration = duration;
+        this.durationType = durationType;
+        this.minDuration = minDuration;
+        this.maxDuration = maxDuration;
         this.discount = discount;
         this.price = price;
         this.serviceProviderId = serviceProviderId;

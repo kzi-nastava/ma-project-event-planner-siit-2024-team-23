@@ -199,7 +199,7 @@
     <string name="choose_images">Choose Images</string>
     <string name="finish">Finish</string>
     <string name="specificities">Specificities</string>
-    <string name="service_duration">Service Duration (Hours)</string>
+    <string name="service_duration">Service Duration (Minutes)</string>
     <string name="reservation_deadline">Reservation Deadline (Days)</string>
     <string name="cancellation_deadline">Cancellation Deadline (Days)</string>
     <string name="visibility">Visibility</string>
@@ -336,6 +336,8 @@
     <string name="deactivateAccount">Deactivate</string>
     <string name="accept">Accept</string>
     <string name="decline">Decline</string>
+    <string name="min_service_duration_minutes">Min service duration (Minutes)</string>
+    <string name="max_service_duration_minutes">Max service duration (Minutes)</string>
     <string-array name="privacy_type_options">
         <item>Private</item>
         <item>Public</item>

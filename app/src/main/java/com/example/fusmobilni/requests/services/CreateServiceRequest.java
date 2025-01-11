@@ -1,5 +1,6 @@
 package com.example.fusmobilni.requests.services;
 
+import com.example.fusmobilni.model.enums.DurationType;
 import com.example.fusmobilni.model.enums.ReservationConfirmation;
 
 public class CreateServiceRequest {
@@ -14,13 +15,18 @@ public class CreateServiceRequest {
     private boolean isAvailable;
     private boolean isVisible;
     private int duration;
+    private DurationType durationType;
+
+    private int  minDuration;
+    private int maxDuration;
     private int reservationDeadline;
     private int cancellationDeadline;
     private ReservationConfirmation reservationConfirmation;
 
     public CreateServiceRequest(String name, String description, Long categoryId, String eventTypeIds,
                                 double price, double discount, Long serviceProviderId, String specificities,
-                                boolean isAvailable, boolean isVisible, int duration, int reservationDeadline,
+                                boolean isAvailable, boolean isVisible, int duration,
+                                DurationType durationType, int minDuration, int maxDuration, int reservationDeadline,
                                 int cancellationDeadline, ReservationConfirmation reservationConfirmation) {
         this.name = name;
         this.description = description;
@@ -33,6 +39,9 @@ public class CreateServiceRequest {
         this.isVisible = isVisible;
         this.isAvailable = isAvailable;
         this.duration = duration;
+        this.durationType = durationType;
+        this.minDuration = minDuration;
+        this.maxDuration = maxDuration;
         this.discount = discount;
         this.price = price;
         this.serviceProviderId = serviceProviderId;
@@ -148,5 +157,28 @@ public class CreateServiceRequest {
 
     public void setReservationConfirmation(ReservationConfirmation reservationConfirmation) {
         this.reservationConfirmation = reservationConfirmation;
+    }
+    public DurationType getDurationType() {
+        return durationType;
+    }
+
+    public void setDurationType(DurationType durationType) {
+        this.durationType = durationType;
+    }
+
+    public int getMinDuration() {
+        return minDuration;
+    }
+
+    public void setMinDuration(int minDuration) {
+        this.minDuration = minDuration;
+    }
+
+    public int getMaxDuration() {
+        return maxDuration;
+    }
+
+    public void setMaxDuration(int maxDuration) {
+        this.maxDuration = maxDuration;
     }
 }

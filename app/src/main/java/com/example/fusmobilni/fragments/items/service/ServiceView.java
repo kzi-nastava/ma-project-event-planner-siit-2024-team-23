@@ -160,7 +160,7 @@ public class ServiceView extends Fragment implements DeleteServiceListener {
         findById.enqueue(new Callback<GetServiceResponse>() {
             @Override
             public void onResponse(Call<GetServiceResponse> call, Response<GetServiceResponse> response) {
-                if (response.isSuccessful()) {
+                if (response.isSuccessful() && response.body() != null) {
                     ServiceViewModel viewModel = new ViewModelProvider(requireActivity()).get(ServiceViewModel.class);
                     viewModel.populate(response.body(), getContext());
                     Navigation.findNavController(binding.getRoot()).navigate(R.id.action_serviceView_toServiceCreationStepOne);

@@ -1,5 +1,6 @@
 package com.example.fusmobilni.requests.services;
 
+import com.example.fusmobilni.model.enums.DurationType;
 import com.example.fusmobilni.model.enums.ReservationConfirmation;
 
 public class CreateProposalRequest {
@@ -16,13 +17,20 @@ public class CreateProposalRequest {
     private boolean isAvailable;
     private boolean isVisible;
     private int duration;
+
+    private DurationType durationType;
+
+    private int  minDuration;
+    private int maxDuration;
     private int reservationDeadline;
     private int cancellationDeadline;
     private ReservationConfirmation reservationConfirmation;
 
     public CreateProposalRequest(String categoryName, String categoryDescription, String name, String description, String eventTypeIds,
                                 double price, double discount, Long serviceProviderId, String specificities,
-                                boolean isAvailable, boolean isVisible, int duration, int reservationDeadline,
+                                boolean isAvailable, boolean isVisible, int duration,
+                                 DurationType durationType, int minDuration, int maxDuration,
+                                 int reservationDeadline,
                                 int cancellationDeadline, ReservationConfirmation reservationConfirmation) {
         this.categoryName = categoryName;
         this.categoryDescription = categoryDescription;
@@ -35,6 +43,9 @@ public class CreateProposalRequest {
         this.specificities = specificities;
         this.isVisible = isVisible;
         this.isAvailable = isAvailable;
+        this.durationType = durationType;
+        this.minDuration = minDuration;
+        this.maxDuration = maxDuration;
         this.duration = duration;
         this.discount = discount;
         this.price = price;
@@ -159,5 +170,29 @@ public class CreateProposalRequest {
 
     public void setCategoryDescription(String categoryDescription) {
         this.categoryDescription = categoryDescription;
+    }
+
+    public DurationType getDurationType() {
+        return durationType;
+    }
+
+    public void setDurationType(DurationType durationType) {
+        this.durationType = durationType;
+    }
+
+    public int getMinDuration() {
+        return minDuration;
+    }
+
+    public void setMinDuration(int minDuration) {
+        this.minDuration = minDuration;
+    }
+
+    public int getMaxDuration() {
+        return maxDuration;
+    }
+
+    public void setMaxDuration(int maxDuration) {
+        this.maxDuration = maxDuration;
     }
 }
