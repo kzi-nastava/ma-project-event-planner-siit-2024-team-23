@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModel;
 import com.example.fusmobilni.clients.ClientUtils;
 import com.example.fusmobilni.core.CustomSharedPrefs;
 import com.example.fusmobilni.helper.UriConverter;
+import com.example.fusmobilni.model.enums.DurationType;
 import com.example.fusmobilni.model.enums.ReservationConfirmation;
 import com.example.fusmobilni.requests.eventTypes.GetEventTypesResponse;
 import com.example.fusmobilni.requests.services.CreateProposalRequest;
@@ -38,6 +39,7 @@ import retrofit2.Response;
 
 public class ServiceViewModel extends ViewModel {
 
+
     private final MutableLiveData<String> category = new MutableLiveData<>("");
     private final MutableLiveData<String> name = new MutableLiveData<>("");
     private final MutableLiveData<String> description = new MutableLiveData<>("");
@@ -55,6 +57,9 @@ public class ServiceViewModel extends ViewModel {
     private final MutableLiveData<Boolean> isVisible = new MutableLiveData<>(true);
     private final MutableLiveData<Boolean> isAvailable = new MutableLiveData<>(true);
     private final MutableLiveData<Integer> duration = new MutableLiveData<>(0);
+    private final MutableLiveData<DurationType> durationType = new MutableLiveData<>(DurationType.FIXED);
+    private final MutableLiveData<Integer> minDuration = new MutableLiveData<>(0);
+    private final MutableLiveData<Integer> maxDuration = new MutableLiveData<>(0);
     private final MutableLiveData<Integer> cancellationDeadline = new MutableLiveData<>(0);
     private final MutableLiveData<Integer> reservationDeadline = new MutableLiveData<>(0);
     private final MutableLiveData<Boolean> isAutomaticReservation = new MutableLiveData<>(false);
@@ -104,12 +109,31 @@ public class ServiceViewModel extends ViewModel {
     public void setIsVisible(Boolean value) { isVisible.setValue(value); }
     public void setIsAvailable(Boolean value) { isAvailable.setValue(value); }
     public void setDuration(Integer value) { duration.setValue(value); }
+    public void setDurationType(DurationType durationType) {
+        this.durationType.setValue(durationType);
+    }
+    public void setMinDuration(Integer value) { minDuration.setValue(value); }
+    public void setMaxDuration(Integer value) { maxDuration.setValue(value); }
+
+
     public void setCancellationDeadline(Integer value) { cancellationDeadline.setValue(value); }
     public void setReservationDeadline(Integer value) { reservationDeadline.setValue(value); }
     public void setIsAutomaticReservation(Boolean value) { isAutomaticReservation.setValue(value); }
 
     public void setEventTypes(List<String> selectedEventTypes) {
         eventTypes.setValue(selectedEventTypes);
+    }
+
+    public MutableLiveData<DurationType> getDurationType() {
+        return durationType;
+    }
+
+    public MutableLiveData<Integer> getMinDuration() {
+        return minDuration;
+    }
+
+    public MutableLiveData<Integer> getMaxDuration() {
+        return maxDuration;
     }
 
     public void clearImageUris() {
@@ -145,6 +169,9 @@ public class ServiceViewModel extends ViewModel {
                 isVisible.setValue(service.isVisible());
                 isAvailable.setValue(service.isAvailable());
                 duration.setValue(service.getDuration());
+                durationType.setValue(service.getDurationType());
+                minDuration.setValue(service.getMinDuration());
+                maxDuration.setValue(service.getMaxDuration());
                 cancellationDeadline.setValue(service.getCancellationDeadline());
                 reservationDeadline.setValue(service.getReservationDeadline());
                 isAutomaticReservation.setValue(
@@ -248,7 +275,9 @@ public class ServiceViewModel extends ViewModel {
         UpdateServiceRequest request = new UpdateServiceRequest(
                 name.getValue(), description.getValue(), eventTypeIds.getValue(),
                 price.getValue(), discount.getValue(), userId, specificities.getValue(),
-                isVisible.getValue(), isAvailable.getValue(), duration.getValue(), reservationDeadline.getValue(),
+                isVisible.getValue(), isAvailable.getValue(), duration.getValue(),
+                durationType.getValue(), minDuration.getValue(), maxDuration.getValue(),
+                reservationDeadline.getValue(),
                 cancellationDeadline.getValue(), reservationConfirmation.getValue()
         );
         String json = gson.toJson(request);
@@ -285,7 +314,9 @@ public class ServiceViewModel extends ViewModel {
         CreateServiceRequest request = new CreateServiceRequest(
                 name.getValue(), description.getValue(), categoryId.getValue(), eventTypeIds.getValue(),
                 price.getValue(), discount.getValue(), userId, specificities.getValue(),
-                isVisible.getValue(), isAvailable.getValue(), duration.getValue(), reservationDeadline.getValue(),
+                isVisible.getValue(), isAvailable.getValue(), duration.getValue(),
+                durationType.getValue(), minDuration.getValue(), maxDuration.getValue(),
+                reservationDeadline.getValue(),
                 cancellationDeadline.getValue(), reservationConfirmation.getValue()
         );
         String json = gson.toJson(request);
@@ -327,7 +358,9 @@ public class ServiceViewModel extends ViewModel {
                 customCategoryName.getValue(), customCategoryDescription.getValue(),
                 name.getValue(), description.getValue(), eventTypeIds.getValue(),
                 price.getValue(), discount.getValue(), userId, specificities.getValue(),
-                isVisible.getValue(), isAvailable.getValue(), duration.getValue(), reservationDeadline.getValue(),
+                isVisible.getValue(), isAvailable.getValue(), duration.getValue(),
+                durationType.getValue(), minDuration.getValue(), maxDuration.getValue(),
+                reservationDeadline.getValue(),
                 cancellationDeadline.getValue(), reservationConfirmation.getValue()
         );
         String json = gson.toJson(request);

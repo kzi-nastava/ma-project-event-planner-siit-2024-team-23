@@ -12,8 +12,11 @@ import android.view.ViewGroup;
 
 import com.example.fusmobilni.R;
 import com.example.fusmobilni.databinding.FragmentMultiStepServiceFormTwoBinding;
+import com.example.fusmobilni.model.enums.DurationType;
 import com.example.fusmobilni.model.enums.ReservationConfirmation;
 import com.example.fusmobilni.viewModels.items.service.ServiceViewModel;
+
+import java.time.Duration;
 
 
 public class MultiStepServiceFormTwo extends Fragment {
@@ -70,6 +73,8 @@ public class MultiStepServiceFormTwo extends Fragment {
         viewModel.setReservationDeadline(Integer.valueOf(String.valueOf(binding.reservationDeadlineInput.getText())));
         viewModel.setCancellationDeadline(Integer.valueOf(String.valueOf(binding.cancellationDeadlineInput.getText())));
         viewModel.setIsVisible(binding.visibilityCheckbox.isChecked());
+        viewModel.setMinDuration(Integer.valueOf(String.valueOf(binding.serviceMinDurationInput.getText())));
+        viewModel.setMaxDuration(Integer.valueOf(String.valueOf(binding.serviceMaxDurationInput.getText())));
         viewModel.setIsAvailable(binding.availabilityCheckbox.isChecked());
         if (binding.confirmationAutomatic.isChecked())
             viewModel.setIsAutomaticReservation(true);
@@ -87,6 +92,14 @@ public class MultiStepServiceFormTwo extends Fragment {
 
         viewModel.getDuration().observe(getViewLifecycleOwner(), duration -> {
             binding.serviceDurationInput.setText(String.valueOf(duration));
+        });
+
+        viewModel.getMinDuration().observe(getViewLifecycleOwner(), duration -> {
+            binding.serviceMinDurationInput.setText(String.valueOf(duration));
+        });
+
+        viewModel.getMaxDuration().observe(getViewLifecycleOwner(), duration -> {
+            binding.serviceMaxDurationInput.setText(String.valueOf(duration));
         });
 
         viewModel.getReservationDeadline().observe(getViewLifecycleOwner(), deadline -> {
@@ -138,6 +151,37 @@ public class MultiStepServiceFormTwo extends Fragment {
             return false;
         }
         return true;
+    }
+
+    private boolean validateDuration() {
+        if (viewModel.getDuration().getValue() == null &&
+        (viewModel.getMinDuration().getValue() == null || viewModel.getMaxDuration().getValue() == null)
+        ) {
+            binding.serviceDurationField.setError("Durations must be populated");
+            binding.serviceDurationField.setErrorEnabled(true);
+            binding.serviceMinDurationField.setError("Durations must be populated");
+            binding.serviceMinDurationField.setErrorEnabled(true);
+            binding.serviceMaxDurationField.setError("Durations must be populated");
+            binding.serviceMaxDurationField.setErrorEnabled(true);
+            return false;
+        }
+        if (viewModel.getDuration().getValue() != null && viewModel.getDuration().getValue() > 0) {
+            viewModel.setDurationType(DurationType.FIXED);
+            return true;
+        }
+        if (viewModel.getMinDuration().getValue() != null && viewModel.getMaxDuration().getValue() != null &&
+        viewModel.getMinDuration().getValue() >= 60 && viewModel.getMaxDuration().getValue() > viewModel.getMinDuration().getValue()
+        && viewModel.getMaxDuration().getValue() <= 300) {
+            viewModel.setDurationType(DurationType.VARIABLE);
+            return true;
+        }
+        binding.serviceDurationField.setError("Durations must be populated");
+        binding.serviceDurationField.setErrorEnabled(true);
+        binding.serviceMinDurationField.setError("Durations must be populated");
+        binding.serviceMinDurationField.setErrorEnabled(true);
+        binding.serviceMaxDurationField.setError("Durations must be populated");
+        binding.serviceMaxDurationField.setErrorEnabled(true);
+        return false;
     }
 
 }

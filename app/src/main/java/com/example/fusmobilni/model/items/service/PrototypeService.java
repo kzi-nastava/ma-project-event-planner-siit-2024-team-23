@@ -17,6 +17,9 @@ public class PrototypeService {
     private boolean isVisible;
     private boolean isAvailable;
     private Integer duration;
+    private boolean isFixedDuration;
+    private int minDuration;
+    private int maxDuration;
     private int cancellationDeadline;
     private int reservationDeadline;
     private boolean isAutomaticReservation;
@@ -165,4 +168,29 @@ public class PrototypeService {
     public void setEventTypes(ArrayList<String> eventTypes) {
         this.eventTypes = eventTypes;
     }
+
+    public boolean isFixedDuration() {
+        return isFixedDuration;
+    }
+
+    public void setFixedDuration(boolean fixedDuration) {
+        isFixedDuration = fixedDuration;
+    }
+
+    public void setMinDuration(int minDuration) {
+        this.minDuration = minDuration;
+    }
+
+    public void setMaxDuration(int maxDuration) {
+        this.maxDuration = maxDuration;
+    }
+
+    public int getMinDuration() {
+        return minDuration;
+    }
+
+    public int getMaxDuration() {
+        return maxDuration;
+    }
+
 }
