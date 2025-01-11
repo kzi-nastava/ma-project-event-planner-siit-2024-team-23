@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fusmobilni.R;
 import com.example.fusmobilni.clients.ClientUtils;
+import com.example.fusmobilni.interfaces.ReservationUpdateListener;
 import com.example.fusmobilni.model.enums.ReservationStatus;
 import com.example.fusmobilni.responses.items.services.ServiceOfferingReservationForEventResponse;
 import com.example.fusmobilni.responses.items.services.home.ServiceHomeResponse;
@@ -35,9 +36,13 @@ public class ServiceReservationOverviewAdapter extends RecyclerView.Adapter<Serv
 
     private Context context;
 
-    public ServiceReservationOverviewAdapter(List<ServiceOfferingReservationForEventResponse> reservations, Context context) {
+    private ReservationUpdateListener listener;
+
+    public ServiceReservationOverviewAdapter(List<ServiceOfferingReservationForEventResponse> reservations, Context context,
+                                             ReservationUpdateListener listener) {
         this.reservations = reservations;
         this.context = context;
+        this.listener = listener;
     }
     public void updateReservations(List<ServiceOfferingReservationForEventResponse> reservations){
         this.reservations = reservations;
@@ -89,7 +94,7 @@ public class ServiceReservationOverviewAdapter extends RecyclerView.Adapter<Serv
             public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
                 if(response.isSuccessful()){
                     Toast.makeText(context, "Reservation declined for: " + reservation.getServiceName(), Toast.LENGTH_SHORT).show();
-                    notifyItemChanged(position);
+                    listener.updateReservationsList();
                 }
             }
             @Override
@@ -106,7 +111,7 @@ public class ServiceReservationOverviewAdapter extends RecyclerView.Adapter<Serv
             public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
                 if(response.isSuccessful()){
                     Toast.makeText(context, "Reservation accepted for: " + reservation.getServiceName(), Toast.LENGTH_SHORT).show();
-                    notifyItemChanged(position);
+                    listener.updateReservationsList();
                 }
             }
 

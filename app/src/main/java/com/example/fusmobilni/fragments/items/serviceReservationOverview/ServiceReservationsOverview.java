@@ -17,6 +17,7 @@ import com.example.fusmobilni.adapters.loading.LoadingCardHorizontalAdapter;
 import com.example.fusmobilni.clients.ClientUtils;
 import com.example.fusmobilni.core.CustomSharedPrefs;
 import com.example.fusmobilni.databinding.FragmentServiceReservationsBinding;
+import com.example.fusmobilni.interfaces.ReservationUpdateListener;
 import com.example.fusmobilni.responses.auth.LoginResponse;
 import com.example.fusmobilni.responses.items.services.ServiceOfferingReservationForEventResponse;
 import com.example.fusmobilni.responses.items.services.ServiceOfferingReservationsResponse;
@@ -29,7 +30,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class ServiceReservationsOverview extends Fragment {
+public class ServiceReservationsOverview extends Fragment implements ReservationUpdateListener {
 
     private FragmentServiceReservationsBinding binding;
     private ServiceReservationOverviewAdapter adapter;
@@ -53,7 +54,7 @@ public class ServiceReservationsOverview extends Fragment {
         View view = binding.getRoot();
         initializeLoadingCards();
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
-        adapter = new ServiceReservationOverviewAdapter(new ArrayList<>(), requireContext());
+        adapter = new ServiceReservationOverviewAdapter(new ArrayList<>(), requireContext(), this);
         this.binding.recyclerView.setAdapter(adapter);
         fetchServices();
         return view;
@@ -92,5 +93,11 @@ public class ServiceReservationsOverview extends Fragment {
 
     private void initializeLoadingCards() {
         binding.eventsLoadingCards.setAdapter(new LoadingCardHorizontalAdapter(5));
+    }
+
+    @Override
+    public void updateReservationsList() {
+        initializeLoadingCards();
+        fetchServices();
     }
 }
