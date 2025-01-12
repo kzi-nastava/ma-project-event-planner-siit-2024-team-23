@@ -1,6 +1,8 @@
 package com.example.fusmobilni.responses.items.services;
 
+import com.example.fusmobilni.fragments.items.service.DurationType;
 import com.example.fusmobilni.responses.items.CategoryResponse;
+
 
 public class ServiceReservationResponse {
     public Long id;
@@ -9,14 +11,54 @@ public class ServiceReservationResponse {
     public Double price;
     public String image;
     public CategoryResponse category;
+    public DurationType durationType;
+    int duration;
+    int minDuration;
+    int maxDuration;
 
-    public ServiceReservationResponse(CategoryResponse category, String description, Long id, String name, Double price,String image) {
+    public ServiceReservationResponse(CategoryResponse category, String description, int duration, DurationType durationType, Long id, String image, int maxDuration, int minDuration, String name, Double price) {
         this.category = category;
         this.description = description;
+        this.duration = duration;
+        this.durationType = durationType;
         this.id = id;
+        this.image = image;
+        this.maxDuration = maxDuration;
+        this.minDuration = minDuration;
         this.name = name;
         this.price = price;
-        this.image = image;
+    }
+
+    public int getDuration() {
+        return duration;
+    }
+
+    public void setDuration(int duration) {
+        this.duration = duration;
+    }
+
+    public DurationType getDurationType() {
+        return durationType;
+    }
+
+    public void setDurationType(DurationType durationType) {
+        this.durationType = durationType;
+    }
+
+    public int getMaxDuration() {
+        return maxDuration;
+    }
+
+    public void setMaxDuration(int maxDuration) {
+        this.maxDuration = maxDuration;
+    }
+
+    public int getMinDuration() {
+        return minDuration;
+    }
+
+    public void setMinDuration(int minDuration) {
+        this.minDuration = minDuration;
     }
 
     public String getImage() {

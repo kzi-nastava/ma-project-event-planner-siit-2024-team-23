@@ -88,39 +88,65 @@ public class ServiceReservationFragment extends Fragment {
 
     }
 
+    private void initializeTimePickers() {
+        if (_service.getDurationType().equals(DurationType.FIXED)) {
+            _binding.hoursInputTo.setText("7");
+            _binding.minutesInputTo.setText(String.valueOf(_service.getDuration()));
+            initializeMainTimePicker(_hoursInputFrom, _minutesInputFrom, _binding.buttonPickTimeFrom, _hoursInputTo, _minutesInputTo);
+            return;
+        }
+        initializeTimePicker(_hoursInputFrom, _minutesInputFrom, _binding.buttonPickTimeFrom);
+        initializeTimePicker(_hoursInputTo, _minutesInputTo, _binding.buttonPickTimeTo);
+    }
+
     private void initializePageSuccessful() {
 
         _binding.textViewServiceDetailsTitleReservation.setText(_service.getName());
 
         _binding.hoursInputFrom.setText("7");
         _binding.minutesInputFrom.setText("0");
-        _binding.hoursInputTo.setText("7");
-        _binding.minutesInputTo.setText("0");
+
 
         initializeHoursAndMinutes();
+        initializeTimePickers();
 
-        initializeTimePicker(_hoursInputFrom, _minutesInputFrom, _binding.buttonPickTimeFrom);
-        initializeTimePicker(_hoursInputTo, _minutesInputTo, _binding.buttonPickTimeTo);
         try {
             _binding.imageView6.setImageURI(convertToUrisFromBase64(getContext(), _service.getImage()));
         } catch (IOException e) {
 
         }
         _binding.buttonApplyReservation.setOnClickListener(v -> {
-            if (checkTimeValid()) {
+            String success = checkTimeValid();
+            if (success.isEmpty() || success.isBlank()) {
                 checkTimeForReservation();
             } else {
-                openFailiureWindow("Time from must be before time to");
+                openFailiureWindow(success);
             }
         });
     }
 
-    private boolean checkTimeValid() {
+    private String checkTimeValid() {
+
         String timeFromString = convertTime(_hoursInputFrom, _minutesInputFrom);
         String timeToString = convertTime(_hoursInputTo, _minutesInputTo);
         LocalTime timeFrom = LocalTime.parse(timeFromString);
         LocalTime timeTo = LocalTime.parse(timeToString);
-        return timeFrom.isBefore(timeTo);
+        boolean isBefore = timeFrom.isBefore(timeTo);
+        if (_service.getDurationType().equals(DurationType.FIXED)) {
+            return !isBefore ? "Time from must be lower than time to" : "";
+        }
+
+        long durationMinutes = java.time.Duration.between(timeFrom, timeTo).toMinutes();
+        boolean isInTimeSpan = durationMinutes >= _service.getMinDuration() && durationMinutes <= _service.getMaxDuration();
+        if (!isBefore) {
+            return "Time from must be lower than time to";
+        }
+        if (!isInTimeSpan) {
+            return "Time span must be between " + String.valueOf(_service.getMinDuration()) + " and " + String.valueOf(_service.getMaxDuration());
+        }
+        return "";
+
+
     }
 
     private String convertTime(EditText hours, EditText minutes) {
@@ -250,6 +276,30 @@ public class ServiceReservationFragment extends Fragment {
         });
     }
 
+    private void initializeMainTimePicker(EditText inputHours, EditText inputMinutes, MaterialButton activator, EditText otherInputHours, EditText otherInputMinutes) {
+        MaterialTimePicker timePicker = new MaterialTimePicker.Builder().setTimeFormat(TimeFormat.CLOCK_12H).setHour(0).setMinute(0)
+                .setTitleText("Select time").build();
+        MaterialTimePicker finalTimePicker = timePicker;
+        timePicker.addOnPositiveButtonClickListener(v -> {
+            int hour = finalTimePicker.getHour();
+            int minute =
+                    Math.round(finalTimePicker.getMinute() / 5.0f) * 5;
+            inputHours.setText(String.valueOf(hour));
+            inputMinutes.setText(String.valueOf(minute));
+
+            int totalMinutes = hour * 60 + minute + _service.getDuration();
+            int otherHour = (totalMinutes / 60) % 24;
+            int otherMinutes = totalMinutes % 60;
+            otherInputHours.setText(String.valueOf(otherHour));
+            otherInputMinutes.setText(String.valueOf(otherMinutes));
+
+        });
+        activator.setOnClickListener(v -> {
+            finalTimePicker.show(getParentFragmentManager(), finalTimePicker.toString());
+        });
+
+    }
+
     private void initializeTimePicker(EditText inputHours, EditText inputMinutes, MaterialButton activator) {
         MaterialTimePicker timePicker = new MaterialTimePicker.Builder().setTimeFormat(TimeFormat.CLOCK_12H).setHour(0).setMinute(0)
                 .setTitleText("Select time").build();
@@ -275,6 +325,9 @@ public class ServiceReservationFragment extends Fragment {
         _minutesInputTo.setEnabled(false);
         _hoursInputFrom.setEnabled(false);
         _minutesInputFrom.setEnabled(false);
+        if (_service.getDurationType().equals(DurationType.FIXED)) {
+            _binding.buttonPickTimeTo.setEnabled(false);
+        }
 
     }
 
