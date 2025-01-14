@@ -380,6 +380,10 @@
                         app:layout_constraintTop_toTopOf="parent"
                         tools:listitem="@layout/fragment_event_component" />
                 </LinearLayout>
+                <org.osmdroid.views.MapView
+                    android:id="@+id/mapView"
+                    android:layout_width="match_parent"
+                    android:layout_height="380dp" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"

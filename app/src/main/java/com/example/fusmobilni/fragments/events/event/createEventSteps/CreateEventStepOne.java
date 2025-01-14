@@ -122,6 +122,9 @@ public class CreateEventStepOne extends Fragment  implements FragmentValidation 
         _binding.etEventTime.setText(body.getTime());
         _binding.etEventDate.setText(body.getDate());
         _binding.eventType.setText(body.getType().name);
+        _binding.cityInput.setText(body.getLocation().city);
+        _binding.etStreetAddress.setText(body.getLocation().street);
+        _binding.etStreetNumber.setText(body.getLocation().streetNumber);
         _binding.privacyType.setText(body.isPublic() ? "Public" : "Private");
         _binding.visitorsInput.setText(String.valueOf(body.getMaxParticipants()));
     }
@@ -213,6 +216,9 @@ public class CreateEventStepOne extends Fragment  implements FragmentValidation 
         String eventTime = Objects.requireNonNull(_binding.etEventTime.getText()).toString().trim();
         String maxVisitors = Objects.requireNonNull(_binding.maxVisitorsInput.getEditText()).getText().toString().trim();
         String privacyType = Objects.requireNonNull(_binding.privacyType.getText()).toString().trim();
+        String city = Objects.requireNonNull(_binding.cityInput.getText()).toString();
+        String streetAddress = Objects.requireNonNull(_binding.etStreetAddress.getText()).toString();
+        String streetNumber = Objects.requireNonNull(_binding.etStreetNumber.getText()).toString();
 
 
 
@@ -273,6 +279,14 @@ public class CreateEventStepOne extends Fragment  implements FragmentValidation 
             }
             _binding.etEventTime.setError(null);
         }
+        if (city.isEmpty() || streetAddress.isEmpty() || streetNumber.isEmpty()) {
+            _binding.eventCity.setErrorEnabled(true);
+            _binding.eventCity.setError("Event location is required");
+            return false;
+        } else {
+            _binding.eventCity.setError(null);
+            _binding.eventCity.setErrorEnabled(false);
+        }
 
         if (maxVisitors.isEmpty()) {
             _binding.maxVisitorsInput.setErrorEnabled(true);
@@ -305,6 +319,9 @@ public class CreateEventStepOne extends Fragment  implements FragmentValidation 
         _eventViewModel.setTime(eventTime);
         _eventViewModel.setMaxParticipants(Integer.valueOf(maxVisitors));
         _eventViewModel.setIsPublic(privacyType.equals("Public"));
+        _eventViewModel.setCity(city);
+        _eventViewModel.setStreetAddress(streetAddress);
+        _eventViewModel.setStreetNumber(streetNumber);
 
         return eventType != null;
     }

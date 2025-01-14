@@ -8,6 +8,8 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 
+import org.osmdroid.config.Configuration;
+
 import androidx.annotation.NonNull;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
@@ -29,9 +31,6 @@ import com.example.fusmobilni.clients.ClientUtils;
 import com.example.fusmobilni.core.CustomSharedPrefs;
 import com.example.fusmobilni.databinding.FragmentEventDetailsBinding;
 import com.example.fusmobilni.model.enums.UserType;
-import com.example.fusmobilni.model.event.AgendaActivity;
-import com.example.fusmobilni.model.event.Event;
-import com.example.fusmobilni.model.users.User;
 import com.example.fusmobilni.requests.communication.chat.ChatCreateRequest;
 import com.example.fusmobilni.requests.users.favorites.FavoriteEventRequest;
 import com.example.fusmobilni.responses.auth.LoginResponse;
@@ -40,14 +39,14 @@ import com.example.fusmobilni.responses.events.attendance.HasAttendedResponse;
 import com.example.fusmobilni.responses.events.components.EventComponentsResponse;
 import com.google.android.material.snackbar.Snackbar;
 
+import org.osmdroid.util.GeoPoint;
+import org.osmdroid.views.MapView;
+import org.osmdroid.views.overlay.Marker;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.sql.Blob;
-import java.sql.Time;
-import java.util.ArrayList;
-import java.util.Objects;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -92,6 +91,9 @@ public class EventDetailsFragment extends Fragment {
             Toast.makeText(requireContext(), "Something went wrong with event or invalid event id is provided!",
                     Toast.LENGTH_LONG).show();
         }
+        Context ctx = requireContext();
+        Configuration.getInstance().load(ctx, androidx.preference.PreferenceManager.getDefaultSharedPreferences(ctx));
+        Configuration.getInstance().setUserAgentValue(requireContext().getPackageName());
         _binding.generatePdfBtn.setOnClickListener(v -> onGeneratePdfClick());
         animateFavoriteButton();
         initializeFavoriteButton();
@@ -101,7 +103,6 @@ public class EventDetailsFragment extends Fragment {
         setUpEditButton();
         _binding.button2.setOnClickListener(v -> createChat());
         _binding.statsButton.setOnClickListener(v->{
-            Toast.makeText(requireContext(), "Klik", Toast.LENGTH_SHORT).show();
             Bundle bundle = new Bundle();
             bundle.putLong("eventId", eventId);
             Navigation.findNavController(requireView()).navigate(R.id.action_to_event_statistics, bundle);
@@ -187,8 +188,8 @@ public class EventDetailsFragment extends Fragment {
         Call<HasAttendedResponse> call = ClientUtils.attendanceService.checkIfUserHasAttended(event.getId(), getUserId());
         call.enqueue(new Callback<>() {
             @Override
-            public void onResponse(Call<HasAttendedResponse> call, Response<HasAttendedResponse> response) {
-                if (!response.isSuccessful()) {
+            public void onResponse(@NonNull Call<HasAttendedResponse> call, @NonNull Response<HasAttendedResponse> response) {
+                if (!response.isSuccessful() || response.body() == null) {
                     return;
                 }
                 if (!response.body().isHasAttended()) {
@@ -198,7 +199,7 @@ public class EventDetailsFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<HasAttendedResponse> call, Throwable t) {
+            public void onFailure(@NonNull Call<HasAttendedResponse> call, @NonNull Throwable t) {
 
             }
         });
@@ -238,6 +239,7 @@ public class EventDetailsFragment extends Fragment {
                     _binding.textViewEventLocationHorizontal.setText(event.getLocation().toString());
                     _binding.textViewOrganizerNameServiceDetails.setText(String.format("%s %s.", event.getEventOrganizer().firstName, event.getEventOrganizer().getLastName().charAt(0)));
                     _binding.textViewEventDescriptionDetails.setText(event.getDescription());
+                    setupMap(event.getLocation().latitude, event.getLocation().longitude);
                     if (event.getAgendas().isEmpty()) {
                         _binding.eventActivitiesRecycleView.setVisibility(View.GONE);
                         _binding.eventAgendaLbl.setVisibility(View.GONE);
@@ -267,6 +269,20 @@ public class EventDetailsFragment extends Fragment {
 
     }
 
+    private void setupMap(double latitude, double longitude) {
+        MapView map = _binding.mapView;
+        GeoPoint startPoint = new GeoPoint(latitude, longitude);
+
+        // Set up the map controller
+        map.getController().setZoom(15.0);
+        map.getController().setCenter(startPoint);
+        // Add a marker
+        Marker marker = new Marker(map);
+        marker.setPosition(startPoint);
+        marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+        marker.setTitle("Location");
+        map.getOverlays().add(marker);
+    }
     private void fetchEventComponents(Long id) {
         Call<EventComponentsResponse> request = ClientUtils.eventsService.findComponentsByEventId(id);
         request.enqueue(new Callback<>() {
@@ -339,15 +355,12 @@ public class EventDetailsFragment extends Fragment {
         }
         View rootView = getActivity().getWindow().getDecorView().findViewById(android.R.id.content);
         snackbar = Snackbar.make(rootView, "You have attended this event, give us a review", Snackbar.LENGTH_INDEFINITE);
-        snackbar.setAction("Review", new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Bundle args = new Bundle();
-                args.putString("eventName", event.getTitle());
-                args.putLong("eventId", event.getId());
-                args.putLong("userId", getUserId());
-                Navigation.findNavController(getView()).navigate(R.id.action_to_event_review, args);
-            }
+        snackbar.setAction("Review", v -> {
+            Bundle args = new Bundle();
+            args.putString("eventName", event.getTitle());
+            args.putLong("eventId", event.getId());
+            args.putLong("userId", getUserId());
+            Navigation.findNavController(requireView()).navigate(R.id.action_to_event_review, args);
         });
         snackbar.show();
     }
@@ -387,9 +400,8 @@ public class EventDetailsFragment extends Fragment {
     }
 
     private void initializeUserProfileActions() {
-        _binding.eoProfileImage.setOnClickListener(v -> {
-            Navigation.findNavController(v).navigate(R.id.action_toForeignUserProfile, createUserProfileBundle());
-        });
+        _binding.eoProfileImage.setOnClickListener(v ->
+                Navigation.findNavController(v).navigate(R.id.action_toForeignUserProfile, createUserProfileBundle()));
     }
 
     private Bundle createUserProfileBundle() {
@@ -411,14 +423,14 @@ public class EventDetailsFragment extends Fragment {
             return;
         }
         ChatCreateRequest request = new ChatCreateRequest(userId, event.getEventOrganizer().getId());
-        ClientUtils.chatService.create(userId, request).enqueue(new Callback<Void>() {
+        ClientUtils.chatService.create(userId, request).enqueue(new Callback<>() {
             @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
+            public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
                 Navigation.findNavController(_binding.getRoot()).navigate(R.id.action_toChatsFragment);
             }
 
             @Override
-            public void onFailure(Call<Void> call, Throwable t) {
+            public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
 
             }
         });

@@ -22,7 +22,7 @@ tools:context=".fragments.events.event.createEventSteps.CreateEventStepOne">
             android:layout_width="match_parent"
             android:id="@+id/eventTitleInput"
             android:layout_height="wrap_content"
-            android:layout_marginVertical="10dp"
+            android:layout_marginVertical="5dp"
             android:hint="@string/event_title_label"
             app:startIconDrawable="@drawable/outline_message_24">
             <com.google.android.material.textfield.TextInputEditText
@@ -38,7 +38,7 @@ tools:context=".fragments.events.event.createEventSteps.CreateEventStepOne">
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/eventDescriptionInput"
-            android:layout_marginVertical="10dp"
+            android:layout_marginVertical="5dp"
             android:hint="@string/description"
             app:startIconDrawable="@drawable/outline_message_24">
             <com.google.android.material.textfield.TextInputEditText
@@ -53,7 +53,7 @@ tools:context=".fragments.events.event.createEventSteps.CreateEventStepOne">
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginVertical="10dp"
+            android:layout_marginVertical="5dp"
             android:weightSum="2"
             android:layout_marginTop="8dp">
 
@@ -94,12 +94,70 @@ tools:context=".fragments.events.event.createEventSteps.CreateEventStepOne">
 
         </LinearLayout>
 
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/eventCity"
+            android:layout_marginVertical="5dp"
+            android:hint="@string/City"
+            app:startIconDrawable="@drawable/outline_location_on_24">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/cityInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textMultiLine" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Street address -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginVertical="5dp"
+            android:weightSum="2"
+            android:layout_marginTop="8dp">
+
+            <!-- Street address -->
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="@string/street_address"
+                >
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etStreetAddress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Time Picker -->
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="8dp"
+                android:hint="@string/street_number"
+                >
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etStreetNumber"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    />
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </LinearLayout>
+
         <!-- Max Visitors -->
         <com.google.android.material.textfield.TextInputLayout
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginVertical="10dp"
+            android:layout_marginVertical="5dp"
             android:id="@+id/maxVisitorsInput"
             android:hint="@string/max_visitors"
             app:startIconDrawable="@drawable/outline_person_24">
@@ -114,7 +172,7 @@ tools:context=".fragments.events.event.createEventSteps.CreateEventStepOne">
             android:id="@+id/privacyTypeLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginVertical="10dp"
+            android:layout_marginVertical="5dp"
             android:minHeight="50dp"
             android:hint="Privacy Type"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
@@ -134,7 +192,7 @@ tools:context=".fragments.events.event.createEventSteps.CreateEventStepOne">
             android:id="@+id/eventTypeLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginVertical="10dp"
+            android:layout_marginVertical="5dp"
             android:minHeight="50dp"
             android:hint="Event type"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">

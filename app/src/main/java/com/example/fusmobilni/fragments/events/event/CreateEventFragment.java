@@ -21,6 +21,7 @@ import com.example.fusmobilni.fragments.events.event.createEventSteps.CreateEven
 import com.example.fusmobilni.fragments.events.event.createEventSteps.CreateEventStepThree;
 import com.example.fusmobilni.fragments.events.event.createEventSteps.CreateEventStepTwo;
 import com.example.fusmobilni.fragments.events.event.createEventSteps.InvitationsFragment;
+import com.example.fusmobilni.interfaces.CreateEventListener;
 import com.example.fusmobilni.interfaces.FragmentValidation;
 import com.example.fusmobilni.requests.events.event.CreateEventRequest;
 import com.example.fusmobilni.viewModels.events.event.EventViewModel;
@@ -58,11 +59,6 @@ public class CreateEventFragment extends Fragment {
         View view = _binding.getRoot();
 
         _eventViewModel = new ViewModelProvider(requireActivity()).get(EventViewModel.class);
-        populateData();
-        populateInputs();
-        if(Boolean.TRUE.equals(_eventViewModel.getIsUpdating().getValue())) {
-            _binding.eventTitle.setText(R.string.update_event);
-        }
 
         _nextButton = _binding.nextButton;
         _backButton = _binding.backButton;
@@ -93,42 +89,49 @@ public class CreateEventFragment extends Fragment {
         });
         return view;
     }
-
-    private void populateInputs() {
-
-    }
-
-    private void populateData() {
-    }
-
     private void nextButtonClick() {
         int currentItem = _viewPager.getCurrentItem();
         if (currentItem <= _eventAdapter.getItemCount() - 1) {
             Fragment currentFragment = _fragments.get(currentItem);
 
-            if (((FragmentValidation) currentFragment).validate()){
+            if (((FragmentValidation) currentFragment).validate()) {
                 // http request
-                if(currentItem == 0){
-                    _eventViewModel.submit();
-                }
+                if(currentItem == 0) {
+                    _eventViewModel.submit(new CreateEventListener() {
+                        @Override
+                        public void onFailure(String message) {
+                            Toast.makeText(requireActivity(), "Error: " + message, Toast.LENGTH_SHORT).show();
+                        }
 
-                if(currentItem == _eventAdapter.getItemCount() - 1){
-                    _backButton.setVisibility(View.GONE);
-                    submitRegistration();
-                    _eventViewModel.eventId = null;
-                    return;
-                }
-                _backButton.setVisibility(View.VISIBLE);
-                _viewPager.setCurrentItem(currentItem + 1);
-                // if we are on fragment change btn text
-                if(_viewPager.getCurrentItem() == _eventAdapter.getItemCount() - 1){
-                    _nextButton.setText(R.string.finish);
-                }
-            }
+                        @Override
+                        public void onSuccess(String message) {
+                            Toast.makeText(requireActivity(), message, Toast.LENGTH_SHORT).show();
+                            continueToNextStep(currentItem);
+                        }
+                    });
+                } else {
+                    continueToNextStep(currentItem);
+                }}
+        }
+    }
+
+    private void continueToNextStep(int currentItem) {
+        if(currentItem == _eventAdapter.getItemCount() - 1) {
+            _backButton.setVisibility(View.GONE);
+            submitRegistration();
+            _eventViewModel.eventId = null;
+            return;
+        }
+        _backButton.setVisibility(View.VISIBLE);
+        _viewPager.setCurrentItem(currentItem + 1);
+
+        // if we are on fragment change btn text
+        if(_viewPager.getCurrentItem() == _eventAdapter.getItemCount() - 1) {
+            _nextButton.setText(R.string.finish);
         }
     }
     private void submitRegistration() {
-        Toast.makeText(getActivity(), "Profile updated successfully!", Toast.LENGTH_LONG).show();
+        Toast.makeText(getActivity(), "Event updated successfully!", Toast.LENGTH_LONG).show();
         Navigation.findNavController(_binding.getRoot()).navigate(R.id.action_createEventFragment_to_eventOrganizerEventDetailsFragment);
     }
 }
