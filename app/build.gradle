@@ -81,5 +81,6 @@ dependencies {
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.0'
     implementation libs.cardview
     implementation libs.mpandroidchart
+    implementation libs.osmdroid.android
 
 }

@@ -99,8 +99,8 @@ public class CreateEventStepTwo extends Fragment  implements FragmentValidation 
         Call<EventComponentsResponse> request = ClientUtils.eventsService.findComponentsByEventId(_eventViewModel.eventId);
         request.enqueue(new Callback<>() {
             @Override
-            public void onResponse(Call<EventComponentsResponse> call, Response<EventComponentsResponse> response) {
-                if (response.isSuccessful()) {
+            public void onResponse(@NonNull Call<EventComponentsResponse> call, @NonNull Response<EventComponentsResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
                     _suggestedCategoryOfferings.clear();
                     _suggestedCategoryOfferings.addAll(response.body().components);
                     _budgetPlaningAdapter.notifyDataSetChanged();
@@ -108,7 +108,7 @@ public class CreateEventStepTwo extends Fragment  implements FragmentValidation 
             }
 
             @Override
-            public void onFailure(Call<EventComponentsResponse> call, Throwable t) {
+            public void onFailure(@NonNull Call<EventComponentsResponse> call, @NonNull Throwable t) {
 
             }
         });
@@ -125,11 +125,11 @@ public class CreateEventStepTwo extends Fragment  implements FragmentValidation 
 
     private void populateCategories() {
         Call<GetCategoriesResponse> request = ClientUtils.categoryService.findAll();
-        request.enqueue(new Callback<GetCategoriesResponse>() {
+        request.enqueue(new Callback<>() {
             @Override
-            public void onResponse(Call<GetCategoriesResponse> call, Response<GetCategoriesResponse> response) {
+            public void onResponse(@NonNull Call<GetCategoriesResponse> call, @NonNull Response<GetCategoriesResponse> response) {
                 Log.d("Tag", String.valueOf(response.code()));
-                if (response.isSuccessful()) {
+                if (response.isSuccessful() && response.body() != null) {
                     _allcategories.clear();
                     for(GetCategoryResponse cat: response.body().categories) {
                         _allcategories.add(new OfferingsCategory(cat.id, cat.name, cat.description));
@@ -138,7 +138,7 @@ public class CreateEventStepTwo extends Fragment  implements FragmentValidation 
             }
 
             @Override
-            public void onFailure(Call<GetCategoriesResponse> call, Throwable t) {
+            public void onFailure(@NonNull Call<GetCategoriesResponse> call, @NonNull Throwable t) {
 
             }
         });

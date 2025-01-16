@@ -19,19 +19,6 @@
 
         >
 
-        <TextView
-            android:id="@+id/eventTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:fontFamily="@font/poppins"
-            android:text="@string/create_event"
-            android:textAlignment="textStart"
-            android:textColor="@color/text_800"
-            android:textSize="30sp" />
-
-
-
 
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/viewPager"

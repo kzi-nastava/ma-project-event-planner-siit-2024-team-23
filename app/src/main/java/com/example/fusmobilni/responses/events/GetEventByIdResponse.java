@@ -1,6 +1,7 @@
 package com.example.fusmobilni.responses.events;
 
 import com.example.fusmobilni.model.event.eventTypes.EventType;
+import com.example.fusmobilni.responses.location.LocationResponse;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -14,6 +15,15 @@ public class GetEventByIdResponse {
     private String date;
     private String time;
     private int maxParticipants;
+    private LocationResponse location;
+
+    public LocationResponse getLocation() {
+        return location;
+    }
+
+    public void setLocation(LocationResponse location) {
+        this.location = location;
+    }
 
     public Long getId() {
         return id;

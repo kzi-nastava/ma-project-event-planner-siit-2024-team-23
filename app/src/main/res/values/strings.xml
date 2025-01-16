@@ -338,6 +338,8 @@
     <string name="decline">Decline</string>
     <string name="min_service_duration_minutes">Min service duration (Minutes)</string>
     <string name="max_service_duration_minutes">Max service duration (Minutes)</string>
+    <string name="street_address">Street address</string>
+    <string name="street_number">No.</string>
     <string-array name="privacy_type_options">
         <item>Private</item>
         <item>Public</item>

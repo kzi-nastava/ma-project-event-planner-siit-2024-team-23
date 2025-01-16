@@ -1,20 +1,22 @@
 package com.example.fusmobilni.requests.events.event;
 
+import com.example.fusmobilni.responses.location.LocationResponse;
+
 public class CreateEventRequest {
     private String title;
-
     private String description;
     private int maxParticipants;
+    private LocationResponse location;
     private boolean isPublic;
-
     private String date;
     private String time;
     private Long eventOrganizerId;
     private Long eventTypeId;
 
-    public CreateEventRequest(String title, String description, int maxParticipants, boolean isPublic, String date, String time, Long eventOrganizerId, Long eventTypeId) {
+    public CreateEventRequest(String title, String description, int maxParticipants, boolean isPublic, String date, String time, Long eventOrganizerId, Long eventTypeId, LocationResponse location) {
         this.title = title;
         this.description = description;
+        this.location = location;
         this.maxParticipants = maxParticipants;
         this.isPublic = isPublic;
         this.date = date;
