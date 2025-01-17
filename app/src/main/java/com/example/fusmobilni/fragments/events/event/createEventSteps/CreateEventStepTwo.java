@@ -101,9 +101,11 @@ public class CreateEventStepTwo extends Fragment  implements FragmentValidation 
             @Override
             public void onResponse(@NonNull Call<EventComponentsResponse> call, @NonNull Response<EventComponentsResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    _suggestedCategoryOfferings.clear();
-                    _suggestedCategoryOfferings.addAll(response.body().components);
-                    _budgetPlaningAdapter.notifyDataSetChanged();
+                    if (response.body().components.size() > 0) {
+                        _suggestedCategoryOfferings.clear();
+                        _suggestedCategoryOfferings.addAll(response.body().components);
+                        _budgetPlaningAdapter.notifyDataSetChanged();
+                    }
                 }
             }
 
