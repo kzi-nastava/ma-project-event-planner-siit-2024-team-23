@@ -9,6 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fusmobilni.R;
@@ -49,14 +50,23 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MessageHolder>
     public void onBindViewHolder(@NonNull MessageHolder holder, int position) {
         GetMessageResponse message = this.messages.get(position);
         holder.content.setText(message.content);
+
         ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) holder.messageCard.getLayoutParams();
+
         if (Objects.equals(message.senderId, senderId)) {
+
             params.startToStart = ConstraintLayout.LayoutParams.UNSET;
             params.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID;
+            holder.messageCard.setCardBackgroundColor(ContextCompat.getColor(holder.messageCard.getContext(), R.color.primary_blue_900));
+            holder.content.setTextColor(ContextCompat.getColor(holder.messageCard.getContext(), android.R.color.white)); // Optional: Ensure text is white
         } else {
+
             params.startToStart = ConstraintLayout.LayoutParams.PARENT_ID;
             params.endToEnd = ConstraintLayout.LayoutParams.UNSET;
+            holder.messageCard.setCardBackgroundColor(ContextCompat.getColor(holder.messageCard.getContext(), android.R.color.white));
+            holder.content.setTextColor(ContextCompat.getColor(holder.messageCard.getContext(), R.color.primary_blue_900)); // Optional: Ensure text contrasts
         }
+
         holder.messageCard.setLayoutParams(params);
     }
 

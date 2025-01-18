@@ -62,9 +62,8 @@ public class CategoryProposalsPage extends Fragment implements CategoryProposalL
         request.enqueue(new Callback<GetProposalsResponse>() {
             @Override
             public void onResponse(Call<GetProposalsResponse> call, Response<GetProposalsResponse> response) {
-                if (response.isSuccessful()) {
+                if (response.isSuccessful()  && response.body() != null) {
                     proposals.clear();
-                    Log.d("Tag", String.valueOf(response.body().proposals.size()));
                     proposals.addAll(response.body().proposals);
                     adapter.notifyDataSetChanged();
                 }
@@ -89,7 +88,7 @@ public class CategoryProposalsPage extends Fragment implements CategoryProposalL
         request.enqueue(new Callback<GetProposalsResponse>() {
             @Override
             public void onResponse(Call<GetProposalsResponse> call, Response<GetProposalsResponse> response) {
-                if (response.isSuccessful()) {
+                if (response.isSuccessful() && response.body() != null) {
                     proposals.clear();
                     Log.d("Tag", String.valueOf(response.body().proposals.size()));
                     proposals.addAll(response.body().proposals);

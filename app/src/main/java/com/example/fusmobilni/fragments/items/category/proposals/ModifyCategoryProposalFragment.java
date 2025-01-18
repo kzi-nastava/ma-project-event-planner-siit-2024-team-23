@@ -57,13 +57,15 @@ public class ModifyCategoryProposalFragment extends Fragment {
         categoriesCall.enqueue(new Callback<GetCategoriesResponse>() {
             @Override
             public void onResponse(Call<GetCategoriesResponse> call, Response<GetCategoriesResponse> response) {
-                categories = response.body().categories;
-                categoryNames = categories.stream()
-                        .map(category -> category.name)
-                        .collect(Collectors.toCollection(ArrayList::new));
-                categoryNames.add("Custom");
-                ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, categoryNames);
-                binding.categoriesList.setAdapter(adapter);
+                if (response.isSuccessful() && response.body() != null) {
+                    categories = response.body().categories;
+                    categoryNames = categories.stream()
+                            .map(category -> category.name)
+                            .collect(Collectors.toCollection(ArrayList::new));
+                    categoryNames.add("Custom");
+                    ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, categoryNames);
+                    binding.categoriesList.setAdapter(adapter);
+                }
             }
 
             @Override

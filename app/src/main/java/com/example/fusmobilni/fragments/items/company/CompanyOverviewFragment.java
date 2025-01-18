@@ -74,6 +74,8 @@ public class CompanyOverviewFragment extends Fragment {
 
     private Long getUserId() {
         try {
+            if (getArguments() == null)
+                return null;
             return getArguments().getLong("spId");
         } catch (NullPointerException e) {
             return null;

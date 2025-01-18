@@ -61,13 +61,15 @@ public class MultiStepServiceFormOne extends Fragment {
         categoriesCall.enqueue(new Callback<GetCategoriesResponse>() {
             @Override
             public void onResponse(Call<GetCategoriesResponse> call, Response<GetCategoriesResponse> response) {
-                categories = response.body();
-                ArrayList<String> categoryNames = categories.categories.stream()
-                        .map(category -> category.name)
-                        .collect(Collectors.toCollection(ArrayList::new));
-                categoryNames.add("Custom");
-                ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, categoryNames);
-                binding.autoCompleteTextviewStep1.setAdapter(adapter);
+                if (response.isSuccessful() && response.body() != null) {
+                    categories = response.body();
+                    ArrayList<String> categoryNames = categories.categories.stream()
+                            .map(category -> category.name)
+                            .collect(Collectors.toCollection(ArrayList::new));
+                    categoryNames.add("Custom");
+                    ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, categoryNames);
+                    binding.autoCompleteTextviewStep1.setAdapter(adapter);
+                }
             }
 
             @Override
@@ -80,7 +82,9 @@ public class MultiStepServiceFormOne extends Fragment {
         eventTypesCall.enqueue(new Callback<GetEventTypesResponse>() {
             @Override
             public void onResponse(Call<GetEventTypesResponse> call, Response<GetEventTypesResponse> response) {
-                eventTypes = response.body();
+                if (response.isSuccessful() && response.body() != null) {
+                    eventTypes = response.body();
+                }
             }
 
             @Override

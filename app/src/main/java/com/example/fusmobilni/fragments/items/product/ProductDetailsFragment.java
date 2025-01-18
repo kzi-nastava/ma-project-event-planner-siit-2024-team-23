@@ -103,6 +103,7 @@ public class ProductDetailsFragment extends Fragment {
         });
 
         _binding.button2.setOnClickListener(v -> createChat());
+        _binding.textViewOrganizerNameProductDetails.setOnClickListener(v -> visitCompany());
 
         _binding.buyProductButton.setOnClickListener(v->{
             BuyItemRequest buyItemRequest = new BuyItemRequest(productId, estimatedBudget, "", "", eventId);
@@ -197,5 +198,11 @@ public class ProductDetailsFragment extends Fragment {
 
             }
         });
+    }
+
+    private void visitCompany() {
+        Bundle bundle = new Bundle();
+        bundle.putLong("spId", product.getServiceProvider().getId());
+        Navigation.findNavController(_binding.getRoot()).navigate(R.id.action_toCompanyOverview, bundle);
     }
 }
