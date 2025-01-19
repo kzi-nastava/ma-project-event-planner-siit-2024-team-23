@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
@@ -86,7 +87,10 @@ public class ModifyCategoryProposalFragment extends Fragment {
             if (validate()) {
                 viewModel.submit();
                 viewModel.cleanUp();
-                Navigation.findNavController(view).navigate(R.id.categoryModificationForm_toCategoryProposals);
+                NavOptions navOptions = new NavOptions.Builder()
+                        .setPopUpTo(R.id.categories_proposal_page, true)
+                        .build();
+                Navigation.findNavController(view).navigate(R.id.categoryModificationForm_toCategoryProposals, null, navOptions);
             }
         });
 
