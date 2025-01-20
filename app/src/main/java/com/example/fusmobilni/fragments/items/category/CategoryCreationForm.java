@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
@@ -52,7 +53,10 @@ public class CategoryCreationForm extends Fragment {
             setValues();
             if (validate()) {
                 viewModel.submit();
-                Navigation.findNavController(view).navigate(R.id.creationForm_toCategories);
+                NavOptions navOptions = new NavOptions.Builder()
+                        .setPopUpTo(R.id.categories_page, true)
+                        .build();
+                Navigation.findNavController(view).navigate(R.id.creationForm_toCategories, null, navOptions);
             }
         });
 

@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
@@ -57,13 +58,15 @@ public class ModifyCategoryProposalFragment extends Fragment {
         categoriesCall.enqueue(new Callback<GetCategoriesResponse>() {
             @Override
             public void onResponse(Call<GetCategoriesResponse> call, Response<GetCategoriesResponse> response) {
-                categories = response.body().categories;
-                categoryNames = categories.stream()
-                        .map(category -> category.name)
-                        .collect(Collectors.toCollection(ArrayList::new));
-                categoryNames.add("Custom");
-                ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, categoryNames);
-                binding.categoriesList.setAdapter(adapter);
+                if (response.isSuccessful() && response.body() != null) {
+                    categories = response.body().categories;
+                    categoryNames = categories.stream()
+                            .map(category -> category.name)
+                            .collect(Collectors.toCollection(ArrayList::new));
+                    categoryNames.add("Custom");
+                    ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, categoryNames);
+                    binding.categoriesList.setAdapter(adapter);
+                }
             }
 
             @Override
@@ -84,7 +87,10 @@ public class ModifyCategoryProposalFragment extends Fragment {
             if (validate()) {
                 viewModel.submit();
                 viewModel.cleanUp();
-                Navigation.findNavController(view).navigate(R.id.categoryModificationForm_toCategoryProposals);
+                NavOptions navOptions = new NavOptions.Builder()
+                        .setPopUpTo(R.id.categories_proposal_page, true)
+                        .build();
+                Navigation.findNavController(view).navigate(R.id.categoryModificationForm_toCategoryProposals, null, navOptions);
             }
         });
 

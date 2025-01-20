@@ -9,6 +9,7 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -89,7 +90,10 @@ public class MultiStepServiceFormThree extends Fragment implements ItemClickList
             if (validate()) {
                 viewModel.submit(getContext());
                 requireActivity().getViewModelStore().clear();
-                Navigation.findNavController(view).navigate(R.id.action_serviceCreationStepThree_toServiceView);
+                NavOptions navOptions = new NavOptions.Builder()
+                        .setPopUpTo(R.id.services_fragment, true)
+                        .build();
+                Navigation.findNavController(view).navigate(R.id.action_serviceCreationStepThree_toServiceView, null, navOptions);
             }
         });
 

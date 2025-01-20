@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -132,6 +133,9 @@ public class CreateEventFragment extends Fragment {
     }
     private void submitRegistration() {
         Toast.makeText(getActivity(), "Event updated successfully!", Toast.LENGTH_LONG).show();
-        Navigation.findNavController(_binding.getRoot()).navigate(R.id.action_createEventFragment_to_eventOrganizerEventDetailsFragment);
+        NavOptions navOptions = new NavOptions.Builder()
+                .setPopUpTo(R.id.eventOrganizerEventDetailsFragment, true)
+                .build();
+        Navigation.findNavController(_binding.getRoot()).navigate(R.id.action_createEventFragment_to_eventOrganizerEventDetailsFragment, null, navOptions);
     }
 }
