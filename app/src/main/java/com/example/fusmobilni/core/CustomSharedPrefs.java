@@ -34,6 +34,13 @@ public class CustomSharedPrefs {
         gson = new Gson();
     }
 
+    public void saveUserSynchronously(LoginResponse user) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        String userJson = gson.toJson(user);
+        editor.putString("user", userJson); // Example of saving role
+        editor.commit(); // Synchronous save
+    }
+
     public void saveUser(LoginResponse user) {
         String userJson = gson.toJson(user);
         saveString("user", userJson);

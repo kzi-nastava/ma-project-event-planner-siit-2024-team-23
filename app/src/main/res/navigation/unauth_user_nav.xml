@@ -467,18 +467,18 @@
         android:id="@+id/price_list_fragment"
         android:name="com.example.fusmobilni.fragments.items.pricelist.PriceListFragment"
         android:label=""
-        tools:layout="@layout/fragment_price_list"/>
+        tools:layout="@layout/fragment_price_list" />
 
     <fragment
         android:id="@+id/price_list_edit_fragment"
         android:name="com.example.fusmobilni.fragments.items.pricelist.EditPriceListItemFragment"
         android:label=""
-        tools:layout="@layout/fragment_edit_price_list_item"/>
+        tools:layout="@layout/fragment_edit_price_list_item" />
     <fragment
         android:id="@+id/reservations_fragment"
         android:name="com.example.fusmobilni.fragments.items.serviceReservationOverview.ServiceReservationsOverview"
         android:label="Reservations"
-        tools:layout="@layout/fragment_service_reservations"/>
+        tools:layout="@layout/fragment_service_reservations" />
 
     <action
         android:id="@+id/action_priceList_toPriceListEdit"
@@ -523,6 +523,11 @@
         android:label=""
         tools:layout="@layout/fragment_foreign_user_profile" />
     <fragment
+        android:id="@+id/upgrade_user_fragment"
+        android:name="com.example.fusmobilni.fragments.users.userUpgrade.UpgradeUserFragment"
+        android:label="Upgrade account"
+        tools:layout="@layout/fragment_upgrade_user" />
+    <fragment
         android:id="@+id/report_approval_fragment"
         android:name="com.example.fusmobilni.fragments.admin.ReportApprovalFragment"
         android:label=""
@@ -542,4 +547,7 @@
     <action
         android:id="@+id/action_toCompanyOverview"
         app:destination="@id/company_overview_fragment" />
+    <action
+        android:id="@+id/action_toAccountUpgrade"
+        app:destination="@+id/upgrade_user_fragment" />
 </navigation>
