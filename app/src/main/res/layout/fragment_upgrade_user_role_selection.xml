@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".fragments.users.userUpgrade.UpgradeUserRoleSelectionFragment">
+
+    <LinearLayout
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="37dp"
+            android:text="@string/choose_role" />
+
+        <Button
+            android:id="@+id/eventOrganizer"
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:layout_marginTop="20sp"
+            android:layout_marginBottom="10sp"
+            android:fontFamily="@font/poppins_bold"
+            android:text="@string/eventOrganizer"
+            android:textColor="@color/white" />
+
+        <Button
+            android:id="@+id/serviceProvider"
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:fontFamily="@font/poppins_bold"
+            android:text="@string/serviceProvider"
+            android:textColor="@color/white" />
+    </LinearLayout>
+</FrameLayout>

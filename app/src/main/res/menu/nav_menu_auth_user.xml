@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:checkableBehavior="single">
-        <item
-            android:title="@string/home">
+        <item android:title="@string/home">
             <menu>
 
                 <item
@@ -21,6 +20,10 @@
                     android:id="@+id/services_fragment"
                     android:icon="@drawable/ic_notification"
                     android:title="@string/services" />
+                <item
+                    android:id="@+id/upgrade_user_fragment"
+                    android:icon="@drawable/ic_notification"
+                    android:title="Upgrade account" />
 
             </menu>
 
@@ -28,33 +31,29 @@
 
     </group>
 
-        <group android:checkableBehavior="single">
-            <item
-                android:title="@string/notifications"
-                >
-                <menu>
-                    <item
-                        android:id="@+id/chat_fragment"
-                        android:icon="@drawable/outline_message_24"
-                        android:title="@string/messages" />
-                    <item
-                        android:id="@+id/notifications_fragment"
-                        android:icon="@drawable/ic_notification"
-                        android:title="@string/notifications" />
-                    <!--todo -->
-                    <item
-                        android:id="@+id/calendar_fragment"
-                        android:icon="@drawable/ic_notification"
-                        android:title="@string/calendar" />
-                </menu>
-            </item>
-        </group>
+    <group android:checkableBehavior="single">
+        <item android:title="@string/notifications">
+            <menu>
+                <item
+                    android:id="@+id/chat_fragment"
+                    android:icon="@drawable/outline_message_24"
+                    android:title="@string/messages" />
+                <item
+                    android:id="@+id/notifications_fragment"
+                    android:icon="@drawable/ic_notification"
+                    android:title="@string/notifications" />
+                <!--todo -->
+                <item
+                    android:id="@+id/calendar_fragment"
+                    android:icon="@drawable/ic_notification"
+                    android:title="@string/calendar" />
+            </menu>
+        </item>
+    </group>
 
 
     <group android:checkableBehavior="single">
-        <item
-            android:title="@string/profile"
-            >
+        <item android:title="@string/profile">
             <menu>
                 <!--todo-->
                 <item

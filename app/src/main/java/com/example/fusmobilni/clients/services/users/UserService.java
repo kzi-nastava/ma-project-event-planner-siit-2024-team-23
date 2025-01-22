@@ -1,5 +1,6 @@
 package com.example.fusmobilni.clients.services.users;
 
+import com.example.fusmobilni.requests.users.UpgradeUserRequest;
 import com.example.fusmobilni.requests.users.favorites.FavoriteEventRequest;
 import com.example.fusmobilni.requests.users.favorites.FavoriteProductRequest;
 import com.example.fusmobilni.requests.users.favorites.FavoriteServiceRequest;
@@ -7,6 +8,7 @@ import com.example.fusmobilni.responses.events.home.EventHomeResponse;
 import com.example.fusmobilni.responses.events.home.EventsHomeResponse;
 import com.example.fusmobilni.responses.events.home.EventsPreviewResponse;
 import com.example.fusmobilni.responses.register.regular.RegisterResponse;
+import com.example.fusmobilni.responses.users.UpgradedUserRoleResponse;
 import com.example.fusmobilni.responses.users.UserFavoriteEventsResponse;
 import com.example.fusmobilni.responses.users.UserFavoriteProductsResponse;
 import com.example.fusmobilni.responses.users.UserFavoriteServiceResponse;
@@ -74,5 +76,7 @@ public interface UserService {
     @DELETE("users/deactivate-profile")
     Call<Void> deactivateUserProfile();
 
+    @PUT("users/upgrade-user")
+    Call<UpgradedUserRoleResponse> upgradeUser(@Body UpgradeUserRequest request);
 
 }

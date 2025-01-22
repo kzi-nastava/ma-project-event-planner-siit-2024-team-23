@@ -3,7 +3,6 @@ package com.example.fusmobilni.viewModels.notifications;
 import android.annotation.SuppressLint;
 import android.util.Log;
 
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
