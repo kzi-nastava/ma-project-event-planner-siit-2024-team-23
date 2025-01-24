@@ -340,6 +340,7 @@
     <string name="max_service_duration_minutes">Max service duration (Minutes)</string>
     <string name="street_address">Street address</string>
     <string name="street_number">No.</string>
+    <string name="update_service_form">Update Service Form</string>
     <string-array name="privacy_type_options">
         <item>Private</item>
         <item>Public</item>

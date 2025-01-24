@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -159,7 +160,10 @@ public class UpdateProfileFragment extends Fragment {
             @Override
             public void onSuccess(UserInfoResponse response) {
                 Toast.makeText(getActivity(), "Profile updated successfully!", Toast.LENGTH_LONG).show();
-                Navigation.findNavController(_binding.getRoot()).navigate(R.id.action_updateProfileFragment_to_viewProfileFragment);
+                NavOptions navOptions = new NavOptions.Builder()
+                        .setPopUpTo(R.id.viewProfileFragment, true)
+                        .build();
+                Navigation.findNavController(_binding.getRoot()).navigate(R.id.action_updateProfileFragment_to_viewProfileFragment, null, navOptions);
                 _loader.dismiss();
             }
 

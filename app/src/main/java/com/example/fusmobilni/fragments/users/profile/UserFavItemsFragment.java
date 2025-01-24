@@ -104,7 +104,7 @@ public class UserFavItemsFragment extends Fragment {
                 if(response.isSuccessful() && response.body() != null){
                     products = response.body().getProducts().stream().map(product ->
                                     new ProductHomeResponse(product.getCategory(), product.getDescription(), product.getId(), product.getLocation(),
-                                            product.getName(), product.getPrice(), product.getImage())).
+                                            product.getName(), product.getPrice(), product.getImage(), true)).
                             collect(Collectors.toList());
                     productsHorizontalAdapter.setData(products);
                     listView.setAdapter(productsHorizontalAdapter);

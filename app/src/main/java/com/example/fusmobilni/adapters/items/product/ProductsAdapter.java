@@ -63,6 +63,9 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        if(product.isFavorite){
+            holder._favoriteIcon.setImageResource(R.drawable.ic_heart_full);
+        }
         holder._favoriteIcon.setOnClickListener(v -> {
             CustomSharedPrefs prefs = CustomSharedPrefs.getInstance();
             LoginResponse user = prefs.getUser();
@@ -76,7 +79,13 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
                 public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
                     if (response.isSuccessful()) {
                         Toast.makeText(v.getContext(), "Success!", Toast.LENGTH_SHORT).show();
-                        holder._favoriteIcon.setImageResource(R.drawable.ic_heart_full);
+                        if(product.isFavorite){
+                            product.isFavorite = false;
+                            holder._favoriteIcon.setImageResource(R.drawable.ic_heart);
+                        }else{
+                            product.isFavorite = true;
+                            holder._favoriteIcon.setImageResource(R.drawable.ic_heart_full);
+                        }
                     }
                 }
 

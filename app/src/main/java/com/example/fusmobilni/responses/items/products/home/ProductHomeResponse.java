@@ -11,8 +11,9 @@ public class ProductHomeResponse {
     public CategoryResponse category;
     public LocationResponse location;
     public String image;
+    public boolean isFavorite;
 
-    public ProductHomeResponse(CategoryResponse category, String description, Long id, LocationResponse location, String name, Double price,String image) {
+    public ProductHomeResponse(CategoryResponse category, String description, Long id, LocationResponse location, String name, Double price,String image, boolean isFavorite) {
         this.category = category;
         this.description = description;
         this.id = id;
@@ -20,6 +21,7 @@ public class ProductHomeResponse {
         this.name = name;
         this.price = price;
         this.image = image;
+        this.isFavorite = isFavorite;
     }
 
     public String getImage() {

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
@@ -104,7 +105,10 @@ public class EventTypeCreationForm extends Fragment {
             @Override
             public void onSuccess(EventType eventType) {
                 Toast.makeText(requireContext(), "Success!" , Toast.LENGTH_SHORT).show();
-                Navigation.findNavController(_binding.getRoot()).navigate(R.id.eventTypeCreation_to_eventType);
+                NavOptions navOptions = new NavOptions.Builder()
+                        .setPopUpTo(R.id.event_types_fragment, true)
+                        .build();
+                Navigation.findNavController(_binding.getRoot()).navigate(R.id.eventTypeCreation_to_eventType, null, navOptions);
             }
 
             @Override
