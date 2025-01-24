@@ -75,7 +75,7 @@ public class UserFavEventsFragment extends Fragment implements EventClickListene
                 if(response.isSuccessful() && response.body() != null){
                     events = response.body().getEvents().stream().map(event ->
                             new EventHomeResponse( event.date,event.description, event.getId(), event.isPublic,
-                                    event.location, event.numberGoing, event.title, event.type, event.image)).
+                                    event.location, event.numberGoing, event.title, event.type, event.image, true)).
                             collect(Collectors.toList());
                     ViewProfileEventAdapter eventsHorizontalAdapter = new ViewProfileEventAdapter(events, UserFavEventsFragment.this);
                     listView.setAdapter(eventsHorizontalAdapter);
@@ -113,9 +113,5 @@ public class UserFavEventsFragment extends Fragment implements EventClickListene
     public void onEventClick(int position) {
         EventHomeResponse event = events.get(position);
         Toast.makeText(getContext(), event.getTitle(), Toast.LENGTH_SHORT).show();
-//        TODO
-//        Bundle bundle = new Bundle();
-//        bundle.putParcelable("event", event);
-//        Navigation.findNavController(_binding.getRoot()).navigate(R.id.action_viewProfileFragment_to_eventDetailsFragment, bundle);
     }
 }

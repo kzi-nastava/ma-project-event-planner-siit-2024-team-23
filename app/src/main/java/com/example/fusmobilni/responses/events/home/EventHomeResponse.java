@@ -13,8 +13,9 @@ public class EventHomeResponse {
     public EventTypeResponse type;
     public String image;
     public int numberGoing;
+    public boolean isFavorite;
 
-    public EventHomeResponse(String date, String description, Long id, boolean isPublic, LocationResponse location, int numberGoing, String title, EventTypeResponse type, String image) {
+    public EventHomeResponse(String date, String description, Long id, boolean isPublic, LocationResponse location, int numberGoing, String title, EventTypeResponse type, String image, boolean isFavorite) {
         this.date = date;
         this.description = description;
         this.id = id;
@@ -24,6 +25,7 @@ public class EventHomeResponse {
         this.title = title;
         this.image = image;
         this.type = type;
+        this.isFavorite = isFavorite;
     }
 
     public String getImage() {

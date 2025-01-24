@@ -62,6 +62,9 @@ public class ServicesAdapter extends RecyclerView.Adapter<ServicesAdapter.Servic
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        if(service.getIsFavorite()){
+            holder.favoriteIcon.setImageResource(R.drawable.ic_heart_full);
+        }
         holder.favoriteIcon.setOnClickListener(v -> {
             CustomSharedPrefs prefs = CustomSharedPrefs.getInstance();
             LoginResponse user = prefs.getUser();
@@ -75,7 +78,13 @@ public class ServicesAdapter extends RecyclerView.Adapter<ServicesAdapter.Servic
                 public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
                     if (response.isSuccessful()) {
                         Toast.makeText(v.getContext(), "Success!", Toast.LENGTH_SHORT).show();
-                        holder.favoriteIcon.setImageResource(R.drawable.ic_heart_full);
+                        if(service.getIsFavorite()){
+                            service.setFavorite(false);
+                            holder.favoriteIcon.setImageResource(R.drawable.ic_heart);
+                        }else{
+                            service.setFavorite(false);
+                            holder.favoriteIcon.setImageResource(R.drawable.ic_heart_full);
+                        }
                     }
                 }
 

@@ -11,9 +11,10 @@ public class ServiceHomeResponse {
     String image;
     CategoryResponse category;
     LocationResponse location;
+    boolean isFavorite;
 
 
-    public ServiceHomeResponse(CategoryResponse category, String description, Long id, LocationResponse location, String name, Double price, String image) {
+    public ServiceHomeResponse(CategoryResponse category, String description, Long id, LocationResponse location, String name, Double price, String image, boolean isFavorite) {
         this.category = category;
         this.description = description;
         this.id = id;
@@ -21,6 +22,7 @@ public class ServiceHomeResponse {
         this.name = name;
         this.price = price;
         this.image = image;
+        this.isFavorite = isFavorite;
     }
 
     public String getImage() {
@@ -77,5 +79,13 @@ public class ServiceHomeResponse {
 
     public void setPrice(Double price) {
         this.price = price;
+    }
+
+    public boolean getIsFavorite() {
+        return isFavorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        isFavorite = favorite;
     }
 }

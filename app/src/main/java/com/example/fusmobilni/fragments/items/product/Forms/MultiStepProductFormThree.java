@@ -11,8 +11,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -39,7 +41,7 @@ public class MultiStepProductFormThree extends Fragment implements ItemClickList
 
     private ArrayList<Uri> imageUris = new ArrayList<>();
 
-    private int PICK_IMAGE_MULTIPLE = 1;
+    private final int PICK_IMAGE_MULTIPLE = 1;
 
     public MultiStepProductFormThree() {
         // Required empty public constructor
@@ -56,7 +58,7 @@ public class MultiStepProductFormThree extends Fragment implements ItemClickList
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentMultiStepServiceFormThreeBinding.inflate(inflater, container, false);
         viewModel = new ViewModelProvider(requireActivity()).get(ProductViewModel.class);
@@ -88,12 +90,15 @@ public class MultiStepProductFormThree extends Fragment implements ItemClickList
             if (validate()) {
                 viewModel.submit(getContext());
                 requireActivity().getViewModelStore().clear();
-                Navigation.findNavController(view).navigate(R.id.action_productCreationStepThree_toProductView);
+                NavOptions navOptions = new NavOptions.Builder()
+                        .setPopUpTo(R.id.products_fragment, true)
+                        .build();
+                Navigation.findNavController(view).navigate(R.id.action_productCreationStepThree_toProductView, null, navOptions);
             }
         });
 
-        if (viewModel.getIsUpdating().getValue()) {
-            binding.textView2.setText("Update Service Form");
+        if (Boolean.TRUE.equals(viewModel.getIsUpdating().getValue())) {
+            binding.textView2.setText(R.string.update_service_form);
         }
 
         return view;

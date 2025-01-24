@@ -103,6 +103,9 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
             bundle.putLong("eventId", event.getId());
             Navigation.findNavController(v).navigate(R.id.action_eventOrganizerEventDetailsFragment_to_eventDetailsFragment, bundle);
         });
+        if(event.isFavorite){
+            holder.favoriteIcon.setImageResource(R.drawable.ic_heart_full);
+        }
         holder.favoriteIcon.setOnClickListener(v -> {
             CustomSharedPrefs prefs = CustomSharedPrefs.getInstance();
             LoginResponse user = prefs.getUser();
@@ -116,7 +119,13 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
                 public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
                     if(response.isSuccessful()){
                         Toast.makeText(v.getContext(), "Success!", Toast.LENGTH_SHORT).show();
-                        holder.favoriteIcon.setImageResource(R.drawable.ic_heart_full);
+                        if(event.isFavorite){
+                            event.isFavorite = false;
+                            holder.favoriteIcon.setImageResource(R.drawable.ic_heart);
+                        }else{
+                            event.isFavorite = true;
+                            holder.favoriteIcon.setImageResource(R.drawable.ic_heart_full);
+                        }
                     }
                 }
 
@@ -147,6 +156,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
         public ImageView _image;
         public ImageView favoriteIcon;
         public LinearLayout eventCard;
+
 
         public EventsViewHolder(@NonNull View itemView) {
 
