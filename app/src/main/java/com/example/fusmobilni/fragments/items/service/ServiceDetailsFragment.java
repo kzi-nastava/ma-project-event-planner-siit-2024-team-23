@@ -180,7 +180,12 @@ public class ServiceDetailsFragment extends Fragment {
     }
 
     private void checkIfBought() {
-        Call<IsBoughtItemResponse> call = ClientUtils.itemsService.checkIfBought(_serviceId, 224L);
+        CustomSharedPrefs prefs = CustomSharedPrefs.getInstance();
+        if(prefs == null || prefs.getUser()==null)
+            return;
+
+        Call<IsBoughtItemResponse> call = ClientUtils.itemsService.checkIfBought(_serviceId, prefs.getUser().getId());
+
         call.enqueue(new Callback<>() {
             @Override
             public void onResponse(Call<IsBoughtItemResponse> call, Response<IsBoughtItemResponse> response) {
