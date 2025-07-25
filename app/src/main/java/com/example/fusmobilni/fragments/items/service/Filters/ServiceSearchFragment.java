@@ -114,7 +114,7 @@ public class ServiceSearchFragment extends Fragment {
             openFilterFragment();
         });
 
-        initalizepaginationspinner();
+        initalizePaginationSpinner();
 
         return view;
     }
@@ -165,15 +165,13 @@ public class ServiceSearchFragment extends Fragment {
 
     private void turnOffShimmer() {
 
-
         _binding.loadingCards.setAdapter(new LoadingCardHorizontalAdapter(0));
         _binding.nestedServiceCards.setVisibility(View.VISIBLE);
         _binding.nestedLoadingCards.setVisibility(View.GONE);
 
-
     }
 
-    private void initalizepaginationspinner() {
+    private void initalizePaginationSpinner() {
         _paginationSpinner = _binding.paginationSpinnerservice;
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this.getContext(), R.array.paginationPageSizes, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
