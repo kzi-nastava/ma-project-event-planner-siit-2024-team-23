@@ -118,6 +118,8 @@ public class EventDetailsFragment extends Fragment {
             public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
                 if (response.isSuccessful()){
                     Toast.makeText(requireContext(), "Your booking is successful! Check your calendar.", Toast.LENGTH_LONG).show();
+                }else{
+                    Toast.makeText(requireContext(), "Already booked!", Toast.LENGTH_LONG).show();
                 }
             }
 
