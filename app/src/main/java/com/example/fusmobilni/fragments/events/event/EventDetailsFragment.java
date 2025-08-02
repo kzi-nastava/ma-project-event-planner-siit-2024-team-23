@@ -47,6 +47,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Objects;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -107,7 +108,32 @@ public class EventDetailsFragment extends Fragment {
             bundle.putLong("eventId", eventId);
             Navigation.findNavController(requireView()).navigate(R.id.action_to_event_statistics, bundle);
         });
+        _binding.bookEventButton.setOnClickListener(v -> bookEvent());
         return root;
+    }
+
+    private void bookEvent(){
+        if (Objects.equals(user.getId(), event.getEventOrganizer().getId())){
+            Toast.makeText(requireContext(), "You cannot book your own event!", Toast.LENGTH_LONG).show();
+            return;
+        }
+        Call<Void> request = ClientUtils.attendanceService.bookEvent(event.getId());
+        request.enqueue(new Callback<>() {
+            @Override
+            public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
+                if (response.isSuccessful()){
+                    Toast.makeText(requireContext(), "Your booking is successful! Check your calendar.", Toast.LENGTH_LONG).show();
+                }else{
+                    Toast.makeText(requireContext(), "Already booked!", Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
+                Toast.makeText(requireContext(), "Cannot book an event " + t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+
     }
 
     private boolean isEventOwner() {
@@ -254,6 +280,9 @@ public class EventDetailsFragment extends Fragment {
                     }
                     else{
                         _binding.statsButton.setVisibility(View.GONE);
+                    }
+                    if (!isEventOwner()) {
+                        _binding.editBtn.setVisibility(View.GONE);
                     }
                     fetchEventOrganizerImage(event.getEventOrganizer().id);
                     fetchEventComponents(event.getId());
