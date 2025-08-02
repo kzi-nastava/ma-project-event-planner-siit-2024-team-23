@@ -47,6 +47,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Objects;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -112,6 +113,10 @@ public class EventDetailsFragment extends Fragment {
     }
 
     private void bookEvent(){
+        if (Objects.equals(user.getId(), event.getEventOrganizer().getId())){
+            Toast.makeText(requireContext(), "You cannot book your own event!", Toast.LENGTH_LONG).show();
+            return;
+        }
         Call<Void> request = ClientUtils.attendanceService.bookEvent(event.getId());
         request.enqueue(new Callback<>() {
             @Override
