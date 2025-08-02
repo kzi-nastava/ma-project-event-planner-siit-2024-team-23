@@ -1,6 +1,7 @@
 package com.example.fusmobilni.viewModels.notifications;
 
 import android.annotation.SuppressLint;
+import android.app.NotificationManager;
 import android.util.Log;
 
 import androidx.fragment.app.FragmentActivity;
@@ -9,6 +10,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.fusmobilni.clients.ClientUtils;
 import com.example.fusmobilni.clients.webSockets.NotificationWebSocketClient;
+import com.example.fusmobilni.helper.NotificationHelper;
 import com.example.fusmobilni.responses.notifications.NotificationResponse;
 import com.example.fusmobilni.responses.notifications.NotificationsResponse;
 
@@ -41,6 +43,8 @@ public class NotificationViewModel extends ViewModel {
                                 n.add(newNotification);
                                 notifications.setValue(n);
                                 countUnread();
+
+                                NotificationHelper.showNotification(activity, newNotification);
                             });
                         }, throwable -> {
                             Log.e("Tag", throwable.getMessage());
@@ -58,6 +62,7 @@ public class NotificationViewModel extends ViewModel {
             public void onResponse(Call<NotificationsResponse> call, Response<NotificationsResponse> response) {
                 if (response.isSuccessful()) {
                     notifications.setValue(response.body().getNotifications());
+
                 } else {
                     notifications.setValue(new ArrayList<>() {
                     });
