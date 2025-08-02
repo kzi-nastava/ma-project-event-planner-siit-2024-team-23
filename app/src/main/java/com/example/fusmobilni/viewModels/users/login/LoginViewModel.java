@@ -20,6 +20,7 @@ import com.google.gson.internal.LinkedTreeMap;
 
 import java.util.Objects;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

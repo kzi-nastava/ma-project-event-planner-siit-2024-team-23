@@ -3,6 +3,7 @@ package com.example.fusmobilni.activities;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
@@ -74,6 +75,11 @@ public class VerifyEmailActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     if (response.body().status.equals("ACCEPTED")) {
                         openSuccessWindow(response.body().getMessage());
+                        new Handler().postDelayed(()->{
+                            Intent intent = new Intent(VerifyEmailActivity.this, LoginActivity.class);
+                            startActivity(intent);
+                            finish();
+                        },2000);
                     } else {
                         openFailiureWindow(response.body().getMessage());
                     }

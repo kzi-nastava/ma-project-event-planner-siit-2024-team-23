@@ -13,11 +13,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fusmobilni.R;
 import com.example.fusmobilni.model.items.product.Product;
 import com.example.fusmobilni.responses.items.products.filter.ProductPaginationResponse;
+import com.example.fusmobilni.responses.items.services.home.ServiceHomeResponse;
 import com.google.android.material.card.MaterialCardView;
 
 import java.io.File;
@@ -85,6 +87,9 @@ public class ProductsResponseAdapter extends RecyclerView.Adapter<ProductsRespon
         holder._price.setText(String.valueOf(product.getPrice()));
         holder._location.setText(product.getLocation().getCity() + ", " + product.getLocation().getStreet() + " " + product.getLocation().getStreetNumber());
         holder._category.setText(product.getCategory().getName());
+        holder._card.setOnClickListener(v -> {
+            Navigation.findNavController(v).navigate(R.id.action_service_card_to_service_details_regular, createBundle(product));
+        });
         try {
             holder._image.setImageURI(convertToUrisFromBase64(holder._image.getContext(),product.getImage()));
         } catch (IOException e) {
@@ -93,7 +98,12 @@ public class ProductsResponseAdapter extends RecyclerView.Adapter<ProductsRespon
 
 
     }
+    private Bundle createBundle(ProductPaginationResponse service) {
 
+        Bundle bundle = new Bundle();
+        bundle.putLong("productId", service.getId());
+        return bundle;
+    }
     @Override
     public int getItemCount() {
         return _products.size();
