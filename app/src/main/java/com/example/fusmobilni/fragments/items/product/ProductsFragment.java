@@ -25,6 +25,7 @@ import com.example.fusmobilni.core.CustomSharedPrefs;
 import com.example.fusmobilni.databinding.FragmentServiceViewBinding;
 import com.example.fusmobilni.fragments.items.product.filters.ProductFilterFragment;
 import com.example.fusmobilni.fragments.users.filters.ServiceProviderFilterFragment;
+import com.example.fusmobilni.fragments.users.filters.ServiceProviderProductFilterFragment;
 import com.example.fusmobilni.interfaces.DeleteServiceListener;
 import com.example.fusmobilni.requests.products.GetProductResponse;
 import com.example.fusmobilni.requests.services.GetServiceResponse;
@@ -120,7 +121,7 @@ public class ProductsFragment extends Fragment implements DeleteServiceListener 
         Bundle bundle = new Bundle();
         bundle.putDouble("minValue", 0);
         bundle.putDouble("maxValue", 10000);
-        ProductFilterFragment filterFragment = new ProductFilterFragment();
+        ServiceProviderProductFilterFragment filterFragment = new ServiceProviderProductFilterFragment();
         filterFragment.setArguments(bundle);
 
         filterFragment.show(getParentFragmentManager(), filterFragment.getTag());
