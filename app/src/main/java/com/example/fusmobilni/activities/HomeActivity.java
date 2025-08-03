@@ -1,8 +1,13 @@
 package com.example.fusmobilni.activities;
 
+import android.Manifest;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -142,8 +147,37 @@ public class HomeActivity extends AppCompatActivity {
         _topAppBarConfiguration = new AppBarConfiguration.Builder(R.id.home_fragment).setOpenableLayout(_drawer).build();
         NavigationUI.setupWithNavController(_navigationView, _navController);
         NavigationUI.setupActionBarWithNavController(this, _navController, _topAppBarConfiguration);
-    }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            requestPermissions(new String[]{Manifest.permission.POST_NOTIFICATIONS}, 1);
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(
+                    "socket_channel_id",
+                    "Socket Notifications",
+                    NotificationManager.IMPORTANCE_HIGH
+            );
+            channel.setDescription("Channel for incoming socket messages");
+            NotificationManager manager = getSystemService(NotificationManager.class);
+            manager.createNotificationChannel(channel);
+        }
 
+        String destination = getIntent().getStringExtra("navigateTo");
+        Log.d("HomeActivity", "navigateTo: " + destination); // 🔍 DEBUG: confirm it's passed
+        Intent i = getIntent();
+        if (i != null)
+            if ("notifications".equals(getIntent().getStringExtra("navigateTo")))
+                _navController.navigate(R.id.notifications_fragment);
+
+    }
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent); // update the intent
+        if ("notifications".equals(intent.getStringExtra("navigateTo"))) {
+            NavController navController = Navigation.findNavController(this, R.id.fragment_nav_content_main);
+            navController.navigate(R.id.notifications_fragment);
+        }
+    }
     @ExperimentalBadgeUtils
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
