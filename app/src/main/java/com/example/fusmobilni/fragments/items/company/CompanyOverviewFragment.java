@@ -3,6 +3,7 @@ package com.example.fusmobilni.fragments.items.company;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -11,9 +12,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.fusmobilni.R;
 import com.example.fusmobilni.adapters.items.reviews.ItemReviewsAdapter;
 import com.example.fusmobilni.clients.ClientUtils;
 import com.example.fusmobilni.databinding.FragmentCompanyOverviewBinding;
+import com.example.fusmobilni.databinding.FragmentForeignUserProfileBinding;
+import com.example.fusmobilni.fragments.communication.blocks.BlockModalFragment;
+import com.example.fusmobilni.fragments.dialogs.FailiureDialogFragment;
+import com.example.fusmobilni.fragments.dialogs.SpinnerDialogFragment;
+import com.example.fusmobilni.fragments.dialogs.SuccessDialogFragment;
 import com.example.fusmobilni.helper.UriConverter;
 import com.example.fusmobilni.responses.users.GetCompanyOverviewResponse;
 
@@ -69,6 +76,10 @@ public class CompanyOverviewFragment extends Fragment {
 
             }
         });
+        initializeDialogs();
+        binding.reportButton.setOnClickListener((v)->{
+            Navigation.findNavController(v).navigate(R.id.action_to_report_form,createReportBundle());
+        });
         return view;
     }
 
@@ -99,5 +110,20 @@ public class CompanyOverviewFragment extends Fragment {
         binding.companyDescription.setText(companyOverview.companyDescription);
         binding.companyName.setText(companyOverview.companyName);
         binding.companyOwner.setText(String.format("%s %s", companyOverview.name, companyOverview.surname));
+    }
+    private Bundle createReportBundle() {
+        Bundle bundle = new Bundle();
+        bundle.putLong("reportedId", spId);
+        return bundle;
+    }
+
+    private SpinnerDialogFragment _loader;
+    private SuccessDialogFragment _success;
+    private FailiureDialogFragment _failure;
+    private void initializeDialogs() {
+        _loader = new SpinnerDialogFragment();
+        _loader.setCancelable(false);
+        _success = new SuccessDialogFragment();
+        _failure = new FailiureDialogFragment();
     }
 }

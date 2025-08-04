@@ -70,7 +70,7 @@ public class ReportFormFragment extends Fragment {
     private void sendReport() {
         CustomSharedPrefs prefs = CustomSharedPrefs.getInstance();
         if (prefs == null || prefs.getUser() == null) {
-            return;
+            openFailureWindow("You are not logged in!");
         }
 
         _loader.show(getFragmentManager(), "loading_spinner");

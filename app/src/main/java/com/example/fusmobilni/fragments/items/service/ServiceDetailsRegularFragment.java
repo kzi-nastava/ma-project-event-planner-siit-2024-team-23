@@ -106,7 +106,11 @@ public class ServiceDetailsRegularFragment extends Fragment {
 
     private Bundle createUserProfileBundle() {
         Bundle bundle = new Bundle();
-        bundle.putLong("userId", _service.getProvider().getId());
+        if (_service != null){
+            bundle.putLong("userId", _service.getProvider().getId());
+        } else if (_product != null) {
+            bundle.putLong("userId", _product.getProvider().getId());
+        }
         return bundle;
     }
 
