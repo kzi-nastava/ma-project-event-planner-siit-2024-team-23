@@ -19,5 +19,5 @@ Pre nego što pokrenete aplikaciju, obavezno instalirajte sledeće:
    ```bash
    git clone git@github.com:kzi-nastava/ma-project-event-planner-siit-2024-team-23.git
 2. Otvorite aplikaciju u Android Studiju
-3. Povevezite fizicki uredjaj ili pokrenite emulator
+3. Povezite fizicki uredjaj ili pokrenite emulator
 4. Pokrenite aplikaciju
