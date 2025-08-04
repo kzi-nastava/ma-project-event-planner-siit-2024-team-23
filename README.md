@@ -1,23 +1,22 @@
 # Event Planner
 
-Event Planner je android aplikacija koja je razvijena radi polaganja predmeta mobilne aplikacije na SIIT-u.
+**Event Planner** is an Android application developed as part of the Mobile Applications course at **SIIT**.
 
-## Preduslovi
+## Prerequisites
 
-Pre nego što pokrenete aplikaciju, obavezno instalirajte sledeće:
+Before running the application, make sure the following tools are installed:
 
-- [Android Studio](https://developer.android.com/studio) – Preporučena najnovija stabilna verzija
-- [Java Development Kit (JDK)](https://www.oracle.com/java/technologies/downloads/)
-- [Android SDK](https://developer.android.com/studio#downloads) – Instalira se automatski preko Android Studija (u `SDK Manager` sekciji)
-- [Android Virtual Device (AVD)](https://developer.android.com/studio/run/managing-avds) – Za pokretanje aplikacije na emulatoru
-- Stabilna internet konekcija – Za preuzimanje zavisnosti, build alata i biblioteka
+- [Android Studio](https://developer.android.com/studio) – Recommended: latest stable version  
+- [Java Development Kit (JDK)](https://www.oracle.com/java/technologies/downloads/)  
+- [Android SDK](https://developer.android.com/studio#downloads) – Automatically installed via Android Studio (check the `SDK Manager`)  
+- [Android Virtual Device (AVD)](https://developer.android.com/studio/run/managing-avds) – For running the app on an emulator  
+- A stable internet connection – Required for downloading dependencies, build tools, and libraries
 
+## Running the Application
 
-## Pokretanje aplikacije
-
-1. **Klonirajte repozitorijum** (ako aplikaciju preuzimate sa GitHub-a):
+1. **Clone the repository** (if downloading from GitHub):
    ```bash
    git clone git@github.com:kzi-nastava/ma-project-event-planner-siit-2024-team-23.git
-2. Otvorite aplikaciju u Android Studiju
-3. Povezite fizicki uredjaj ili pokrenite emulator
-4. Pokrenite aplikaciju
+2. Open the application in Android Studio
+3. Connect physical device or turn on the emulator
+4. Start the application
