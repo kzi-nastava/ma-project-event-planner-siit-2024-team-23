@@ -41,6 +41,8 @@ public class MultiStepProductFormTwo extends Fragment {
         viewModel = new ViewModelProvider(requireActivity()).get(ProductViewModel.class);
         View view = binding.getRoot();
         binding.serviceDurationField.setVisibility(View.GONE);
+        binding.serviceMinDurationField.setVisibility(View.GONE);
+        binding.serviceMaxDurationField.setVisibility(View.GONE);
         binding.reservationDeadlineField.setVisibility(View.GONE);
         binding.cancellationDeadlineField.setVisibility(View.GONE);
         binding.confirmationMethodLabel.setVisibility(View.GONE);
