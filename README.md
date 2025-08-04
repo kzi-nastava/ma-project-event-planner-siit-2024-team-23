@@ -1,6 +1,6 @@
-# Eventplaner
+# Event Planner
 
-Event planer je android aplikacija koja je razvijena radi polaganja predmeta mobilne aplikacije na SIIT-u.
+Event Planner je android aplikacija koja je razvijena radi polaganja predmeta mobilne aplikacije na SIIT-u.
 
 ## Preduslovi
 
