@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:background="@color/white"
     android:scrollbarSize="16sp"
-    tools:context=".fragments.EventFilterFragment">
+    tools:context=".fragments.events.event.filters.EventFilterFragment">
 
     <!-- TODO: Update blank fragment layout -->
 
@@ -115,7 +115,7 @@
                 android:id="@+id/open_datepicker"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
+                android:layout_marginStart="16dp"
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"
                 android:text="Choose from your calendar"
@@ -127,6 +127,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0"
                 app:strokeColor="@color/primary_blue_900"
                 app:strokeWidth="1dp" />
         </androidx.constraintlayout.widget.ConstraintLayout>

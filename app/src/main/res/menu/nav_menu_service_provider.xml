@@ -1,26 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:checkableBehavior="single">
-        <item
-            android:title="Home">
+        <item android:title="@string/home">
             <menu>
 
                 <item
                     android:id="@id/home_fragment"
                     android:icon="@drawable/ic_home_big_black"
-                    android:title="Home" />
+                    android:title="@string/home" />
                 <item
                     android:id="@+id/event_fragment"
                     android:icon="@drawable/baseline_event_24"
-                    android:title="Events" />
+                    android:title="@string/events" />
                 <item
                     android:id="@+id/products_fragment"
                     android:icon="@drawable/outline_shopping_bag_24"
-                    android:title="Products" />
+                    android:title="@string/products" />
                 <item
                     android:id="@+id/services_fragment"
                     android:icon="@drawable/ic_notification"
-                    android:title="Services" />
+                    android:title="@string/services" />
+                <item
+                    android:id="@+id/price_list_fragment"
+                    android:icon="@drawable/ic_notification"
+                    android:title="@string/price_list" />
 
             </menu>
 
@@ -29,14 +32,12 @@
     </group>
 
     <group android:checkableBehavior="single">
-        <item
-            android:title="Notifications"
-            >
+        <item android:title="@string/notifications">
             <menu>
                 <item
-                    android:id="@+id/messages_fragment"
+                    android:id="@+id/chat_fragment"
                     android:icon="@drawable/outline_message_24"
-                    android:title="Messages" />
+                    android:title="@string/messages" />
                 <item
                     android:id="@+id/notifications_fragment"
                     android:icon="@drawable/ic_notification"
@@ -45,43 +46,26 @@
         </item>
     </group>
 
-    <!--    todo-->
     <group android:checkableBehavior="single">
-        <item
-            android:title="My products"
-            >
+        <item android:title="@string/my_products">
             <menu>
                 <item
-                    android:id="@+id/products_fragments"
+                    android:id="@+id/reservations_fragment"
                     android:icon="@drawable/outline_message_24"
-                    android:title="Products" />
-                <item
-                    android:id="@+id/services_fragments"
-                    android:icon="@drawable/outline_message_24"
-                    android:title="Services" />
-                <item
-                    android:id="@+id/pricelist_fragments"
-                    android:icon="@drawable/outline_message_24"
-                    android:title="Pricelist" />
-                <item
-                    android:id="@+id/reservations_fragments"
-                    android:icon="@drawable/outline_message_24"
-                    android:title="Reservations" />
+                    android:title="@string/my_reservations" />
             </menu>
         </item>
     </group>
 
 
     <group android:checkableBehavior="single">
-        <item
-            android:title="Profile"
-            >
+        <item android:title="@string/profile">
             <menu>
                 <!--todo-->
                 <item
-                    android:id="@+id/login_activity"
-                    android:icon="@drawable/baseline_login_24"
-                    android:title="Profile" />
+                    android:id="@+id/viewProfileFragment"
+                    android:icon="@drawable/outline_person_24"
+                    android:title="@string/profile" />
             </menu>
         </item>
     </group>

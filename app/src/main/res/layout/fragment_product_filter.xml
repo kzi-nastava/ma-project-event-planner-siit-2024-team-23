@@ -6,9 +6,7 @@
     android:layout_height="wrap_content"
     android:background="@color/white"
     android:scrollbarSize="16sp"
-    tools:context=".fragments.ProductFilterFragment">
-
-    <!-- TODO: Update blank fragment layout -->
+    tools:context=".fragments.items.product.filters.ProductFilterFragment">
 
     <LinearLayout
         android:layout_width="match_parent"

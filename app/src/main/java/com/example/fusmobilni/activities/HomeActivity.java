@@ -1,11 +1,15 @@
 package com.example.fusmobilni.activities;
 
+import android.Manifest;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.content.Intent;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
-import android.window.OnBackInvokedDispatcher;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -14,21 +18,31 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.example.fusmobilni.R;
+import com.example.fusmobilni.clients.ClientUtils;
+import com.example.fusmobilni.core.CustomSharedPrefs;
 import com.example.fusmobilni.databinding.ActivityHomeBinding;
+import com.example.fusmobilni.model.enums.UserType;
+import com.example.fusmobilni.responses.auth.LoginResponse;
+import com.example.fusmobilni.viewModels.notifications.NotificationViewModel;
+import com.google.android.material.badge.BadgeDrawable;
+import com.google.android.material.badge.BadgeUtils;
+import com.google.android.material.badge.ExperimentalBadgeUtils;
 import com.google.android.material.navigation.NavigationView;
+
 import androidx.activity.OnBackPressedCallback;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Objects;
 
 public class HomeActivity extends AppCompatActivity {
     private ActivityHomeBinding _binding;
+    private NotificationViewModel _notificationViewModel;
     private AppBarConfiguration _topAppBarConfiguration;
     private DrawerLayout _drawer;
     private NavigationView _navigationView;
@@ -36,19 +50,27 @@ public class HomeActivity extends AppCompatActivity {
     private Toolbar _topToolbar;
     private ActionBar _actionBar;
     private ActionBarDrawerToggle _actionBarDrawerToggle;
-
-    private Set<Integer> topLevelDestinations = new HashSet<>();
+    private BadgeDrawable notificationsBadge;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+
         super.onCreate(savedInstanceState);
+
+        ClientUtils.initialize(CustomSharedPrefs.getInstance(getApplicationContext()));
+
         _binding = ActivityHomeBinding.inflate(getLayoutInflater());
         setContentView(_binding.getRoot());
-
         _drawer = _binding.drawerLayout;
         _navigationView = _binding.navView;
         _topToolbar = _binding.activityHomeBase.topAppBar;
 
+        // get logged in user
+        CustomSharedPrefs sharedPrefs = CustomSharedPrefs.getInstance();
+        LoginResponse user = sharedPrefs.getUser();
+
+        setupDrawerMenu(user != null && user.getRole() != null ? user.getRole() : UserType.UNAUTHENTICATED_USER);
         setSupportActionBar(_topToolbar);
         if (_actionBar != null) {
             _actionBar.setDisplayHomeAsUpEnabled(false);
@@ -61,25 +83,17 @@ public class HomeActivity extends AppCompatActivity {
         _drawer.addDrawerListener(_actionBarDrawerToggle);
         _actionBarDrawerToggle.syncState();
 
-
-        // This line will now correctly reference the NavHostFragment
-
-        // Hide or show items based on the user login status and role
-//        Menu menu = _navigationView.getMenu();
-//        menu.findItem(R.id.third_dummy_fragment).setVisible(false);
-
-
         //    when the drawer is opened and user clicks the back btn we want to close
         //    the drawer not to go back to main activity
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                if(_drawer.isDrawerOpen(GravityCompat.START)){
+                if (_drawer.isDrawerOpen(GravityCompat.START)) {
                     _drawer.closeDrawer(GravityCompat.START);
                     return;
                 }
                 // If the NavController has fragments in the back stack, pop the back stack
-                if (_navController.getCurrentDestination().getId() != R.id.home_fragment) {
+                if (Objects.requireNonNull(_navController.getCurrentDestination()).getId() != R.id.home_fragment) {
                     _navController.popBackStack();
                     return;
                 }
@@ -89,14 +103,28 @@ public class HomeActivity extends AppCompatActivity {
 
 
     }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        CustomSharedPrefs sharedPrefs = CustomSharedPrefs.getInstance();
+        LoginResponse user = sharedPrefs.getUser();
+        setupDrawerMenu(user != null && user.getRole() != null ? user.getRole() : UserType.UNAUTHENTICATED_USER);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
+
         _navController = Navigation.findNavController(this, R.id.fragment_nav_content_main);
         _navController.addOnDestinationChangedListener((navController, navDestination, bundle) -> {
             int id = navDestination.getId();
-            boolean isTopLevelDestination = topLevelDestinations.contains(id);
-
             _drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
             if (id == R.id.home_fragment) {
                 // Show drawer toggle only on the home fragment
@@ -119,16 +147,130 @@ public class HomeActivity extends AppCompatActivity {
         _topAppBarConfiguration = new AppBarConfiguration.Builder(R.id.home_fragment).setOpenableLayout(_drawer).build();
         NavigationUI.setupWithNavController(_navigationView, _navController);
         NavigationUI.setupActionBarWithNavController(this, _navController, _topAppBarConfiguration);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            requestPermissions(new String[]{Manifest.permission.POST_NOTIFICATIONS}, 1);
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(
+                    "socket_channel_id",
+                    "Socket Notifications",
+                    NotificationManager.IMPORTANCE_HIGH
+            );
+            channel.setDescription("Channel for incoming socket messages");
+            NotificationManager manager = getSystemService(NotificationManager.class);
+            manager.createNotificationChannel(channel);
+        }
+
+        String destination = getIntent().getStringExtra("navigateTo");
+        Log.d("HomeActivity", "navigateTo: " + destination); // 🔍 DEBUG: confirm it's passed
+        Intent i = getIntent();
+        if (i != null)
+            if ("notifications".equals(getIntent().getStringExtra("navigateTo")))
+                _navController.navigate(R.id.notifications_fragment);
+
     }
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent); // update the intent
+        if ("notifications".equals(intent.getStringExtra("navigateTo"))) {
+            NavController navController = Navigation.findNavController(this, R.id.fragment_nav_content_main);
+            navController.navigate(R.id.notifications_fragment);
+        }
+    }
+    @ExperimentalBadgeUtils
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.toolbar_menu, menu);
+
+        MenuItem profileItem = menu.findItem(R.id.login_activity);
+        CustomSharedPrefs sharedPrefs = CustomSharedPrefs.getInstance();
+        LoginResponse user = sharedPrefs.getUser();
+
+        if (user != null) {
+            // If the user is logged in, load their profile image
+//            TODO
+//            if (user.getAvatar() != null) {
+//                File imgFile = new File(user.getAvatar());
+//                if (imgFile.exists()) {
+//                    Bitmap bitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+//                    Drawable drawable = new BitmapDrawable(getResources(), bitmap);
+//                    profileItem.setIcon(drawable); // Set the user's profile image
+//                }
+//            }
+        } else {
+            // If not logged in, use a default icon
+            profileItem.setIcon(R.drawable.ic_person_white);
+        }
+        initializeNotifications();
         return true;
     }
+
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         _navController = Navigation.findNavController(this, R.id.fragment_nav_content_main);
+        int id = item.getItemId();
+
+        if (id == R.id.login_activity) {// Retrieve the login status from SharedPreferences
+            CustomSharedPrefs sharedPrefs = CustomSharedPrefs.getInstance();
+            LoginResponse user = sharedPrefs.getUser();
+            if (user != null) {
+                // If logged in, navigate to the profile fragment
+                _navController.navigate(R.id.viewProfileFragment);
+            } else {
+                // If not logged in, navigate to the login page
+                Intent loginIntent = new Intent(this, LoginActivity.class);
+                startActivity(loginIntent);
+            }
+            return true;
+        }
         return NavigationUI.onNavDestinationSelected(item, _navController) || super.onOptionsItemSelected(item);
+    }
+
+    @ExperimentalBadgeUtils
+    private void addBadge(MenuItem menuItem, int count) {
+
+        // Get or create the BadgeDrawable
+        notificationsBadge = BadgeDrawable.create(this);
+        notificationsBadge.setNumber(count); // Set badge number
+        notificationsBadge.setVisible(true); // Show the badge
+        notificationsBadge.setBadgeTextColor(Color.WHITE);
+        // Attach the badge to the menu item
+        BadgeUtils.attachBadgeDrawable(notificationsBadge, _topToolbar, menuItem.getItemId());
+
+    }
+
+    @ExperimentalBadgeUtils
+    private void resetBadge(MenuItem menuItem) {
+        BadgeUtils.detachBadgeDrawable(notificationsBadge, _topToolbar, menuItem.getItemId());
+    }
+
+    @ExperimentalBadgeUtils
+    public void initializeNotifications() {
+        CustomSharedPrefs prefs = CustomSharedPrefs.getInstance();
+
+        _notificationViewModel = new ViewModelProvider(this).get(NotificationViewModel.class);
+        if (prefs.getUser() == null) {
+            return;
+        }
+        _notificationViewModel.setUserId(prefs.getUser().getId());
+        _notificationViewModel.connectToSocket(this);
+        _notificationViewModel.getCountUnread().observe(this, v -> {
+            if (_notificationViewModel.getCountUnread().getValue() > 0) {
+                MenuItem menuItem = _topToolbar.getMenu().findItem(R.id.notifications_fragment);
+                if (menuItem == null) {
+                    return;
+                }
+                addBadge(menuItem, _notificationViewModel.getCountUnread().getValue());
+            } else {
+                MenuItem menuItem = _topToolbar.getMenu().findItem(R.id.notifications_fragment);
+                if (menuItem == null) {
+                    return;
+                }
+                resetBadge(menuItem);
+            }
+        });
+
     }
 
     @Override
@@ -137,6 +279,24 @@ public class HomeActivity extends AppCompatActivity {
         return NavigationUI.navigateUp(_navController, _topAppBarConfiguration) || super.onSupportNavigateUp();
     }
 
-
-
+    private void setupDrawerMenu(UserType userRole) {
+        Menu menu = _navigationView.getMenu();
+        menu.clear();
+        switch (userRole) {
+            case ADMIN:
+                _navigationView.inflateMenu(R.menu.nav_menu_admin);
+                break;
+            case EVENT_ORGANIZER:
+                _navigationView.inflateMenu(R.menu.nav_menu_event_organizer);
+                break;
+            case SERVICE_PROVIDER:
+                _navigationView.inflateMenu(R.menu.nav_menu_service_provider);
+                break;
+            case AUTHENTICATED_USER:
+                _navigationView.inflateMenu(R.menu.nav_menu_auth_user);
+                break;
+            default:
+                _navigationView.inflateMenu(R.menu.nav_menu_unauth_user);
+        }
+    }
 }

@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="250dp"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:layout_margin="8dp"
     android:background="@color/white"
     app:cardCornerRadius="8dp"
@@ -15,7 +15,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:id="@+id/eventCard"
+        >
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -57,9 +59,10 @@
                         android:layout_height="wrap_content"
                         android:alpha="70"
                         android:background="#00FFFFFF"
+                        android:fontFamily="@font/poppins"
                         android:padding="8dp"
-                        android:text="10"
 
+                        android:text="10"
                         android:textAlignment="center"
                         android:textColor="@color/accent_red"
                         android:textSize="16sp"
@@ -72,6 +75,7 @@
                         android:layout_height="wrap_content"
                         android:alpha="70"
                         android:background="#00FFFFFF"
+                        android:fontFamily="@font/poppins"
                         android:padding="8dp"
                         android:text="Jun. 204"
                         android:textAlignment="center"
@@ -112,16 +116,35 @@
                 android:id="@+id/textViewServiceTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:autoSizeMaxTextSize="16sp"
                 android:autoSizeMinTextSize="8sp"
                 android:autoSizeStepGranularity="2sp"
                 android:autoSizeTextType="uniform"
                 android:ellipsize="end"
-                android:padding="10dp"
+                android:fontFamily="@font/poppins"
+                android:paddingHorizontal="10dp"
                 android:text="International Band Music festiva"
                 android:textColor="@android:color/black"
+                android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/textViewEventDescription"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:padding="10dp"
+                android:text="TextView"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -134,27 +157,35 @@
             android:padding="10dp">
 
             <ImageView
+                android:id="@+id/attendieOne"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_marginEnd="4dp"
-                android:src="@drawable/ic_person" />
+                android:src="@drawable/ic_person"
+                android:tint="@color/primary_blue_900" />
 
             <ImageView
+                android:id="@+id/attendieTwo"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_marginEnd="4dp"
-                android:src="@drawable/ic_person" />
+                android:src="@drawable/ic_person"
+                android:tint="@color/primary_blue_900" />
 
             <ImageView
+                android:id="@+id/attendieThree"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_marginEnd="4dp"
-                android:src="@drawable/ic_person" />
+                android:src="@drawable/ic_person"
+                android:tint="@color/primary_blue_900" />
 
             <TextView
+                android:id="@+id/numberGoingTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
+                android:fontFamily="@font/poppins"
                 android:text="+20 Going"
                 android:textColor="@color/black"
                 android:textSize="14sp" />
@@ -177,11 +208,12 @@
             <TextView
                 android:id="@+id/textViewLocation"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:drawablePadding="4dp"
 
+                android:fontFamily="@font/poppins"
                 android:text="36 Guild Street London, UK"
-                android:textAlignment="center"
+                android:textAlignment="textStart"
                 android:textColor="@color/text_700"
                 android:textSize="14sp"
                 app:layout_constraintBottom_toBottomOf="parent"

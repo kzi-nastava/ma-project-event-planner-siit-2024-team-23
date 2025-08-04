@@ -2,25 +2,25 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:checkableBehavior="single">
         <item
-            android:title="Home">
+            android:title="@string/home">
             <menu>
 
                 <item
                     android:id="@id/home_fragment"
                     android:icon="@drawable/ic_home_big_black"
-                    android:title="Home" />
+                    android:title="@string/home" />
                 <item
                     android:id="@+id/event_fragment"
                     android:icon="@drawable/baseline_event_24"
-                    android:title="Events" />
+                    android:title="@string/events" />
                 <item
                     android:id="@+id/products_fragment"
                     android:icon="@drawable/outline_shopping_bag_24"
-                    android:title="Products" />
+                    android:title="@string/products" />
                 <item
                     android:id="@+id/services_fragment"
                     android:icon="@drawable/ic_notification"
-                    android:title="Services" />
+                    android:title="@string/services" />
 
             </menu>
 
@@ -30,22 +30,22 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:title="Notifications"
+            android:title="@string/notifications"
             >
             <menu>
                 <item
-                    android:id="@+id/messages_fragment"
+                    android:id="@+id/chat_fragment"
                     android:icon="@drawable/outline_message_24"
-                    android:title="Messages" />
+                    android:title="@string/messages" />
                 <item
                     android:id="@+id/notifications_fragment"
                     android:icon="@drawable/ic_notification"
-                    android:title="Notifications" />
+                    android:title="@string/notifications" />
                 <!--todo -->
                 <item
-                    android:id="@+id/calendar_fragment"
+                    android:id="@+id/eventOrganizerEventDetailsFragment"
                     android:icon="@drawable/ic_notification"
-                    android:title="My events" />
+                    android:title="@string/my_events" />
             </menu>
         </item>
     </group>
@@ -53,14 +53,14 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:title="Profile"
+            android:title="@string/profile"
             >
             <menu>
                 <!--todo-->
                 <item
-                    android:id="@+id/login_activity"
-                    android:icon="@drawable/baseline_login_24"
-                    android:title="Profile" />
+                    android:id="@+id/viewProfileFragment"
+                    android:icon="@drawable/outline_person_24"
+                    android:title="@string/profile" />
             </menu>
         </item>
     </group>

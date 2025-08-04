@@ -25,6 +25,13 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         this.clickListener = clickListener;
     }
 
+    public void setData(ArrayList<Uri> imageUris) {
+        this.imageUris = new ArrayList<>(imageUris);
+        notifyDataSetChanged();
+    }
+
+
+
 
     @NonNull
     @Override

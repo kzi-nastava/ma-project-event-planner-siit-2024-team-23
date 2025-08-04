@@ -1,8 +1,10 @@
 package com.example.fusmobilni.activities;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
@@ -13,12 +15,17 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.fusmobilni.R;
-import com.example.fusmobilni.adapters.RegistrationAdapter;
+import com.example.fusmobilni.adapters.users.register.RegistrationAdapter;
+import com.example.fusmobilni.clients.ClientUtils;
+import com.example.fusmobilni.core.CustomSharedPrefs;
 import com.example.fusmobilni.databinding.ActivityRegisterBinding;
-import com.example.fusmobilni.fragments.RegisterFragments.RoleSelectionFragment;
+import com.example.fusmobilni.fragments.dialogs.SpinnerDialogFragment;
+import com.example.fusmobilni.fragments.users.register.regular.RoleSelectionFragment;
 import com.example.fusmobilni.interfaces.FragmentValidation;
-import com.example.fusmobilni.model.enums.RegisterUserRole;
-import com.example.fusmobilni.viewModels.RegisterViewModel;
+import com.example.fusmobilni.interfaces.IRegisterCallback;
+import com.example.fusmobilni.model.enums.UserType;
+import com.example.fusmobilni.responses.register.regular.RegisterResponse;
+import com.example.fusmobilni.viewModels.users.register.RegisterViewModel;
 import com.google.android.material.button.MaterialButton;
 
 import java.util.ArrayList;
@@ -31,11 +38,14 @@ public class RegisterActivity extends AppCompatActivity {
     private LinearLayout _signUpLayout;
     private List<Fragment> _fragments;
     private RegisterViewModel _registerViewModel;
-
+    private SpinnerDialogFragment _loader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        ClientUtils.initialize(CustomSharedPrefs.getInstance(getApplicationContext()));
+
         ActivityRegisterBinding binding = ActivityRegisterBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         getSupportActionBar();
@@ -47,6 +57,8 @@ public class RegisterActivity extends AppCompatActivity {
         });
 
         _registerViewModel = new ViewModelProvider(this).get(RegisterViewModel.class);
+        _loader = new SpinnerDialogFragment();
+        _loader.setCancelable(false);
         _viewPager = binding.viewPager;
         _signUpLayout = binding.signUpLayout;
 
@@ -92,23 +104,36 @@ public class RegisterActivity extends AppCompatActivity {
             Fragment currentFragment = _fragments.get(currentItem);
 
             if (((FragmentValidation) currentFragment).validate()){
-                _viewPager.setCurrentItem(_viewPager.getCurrentItem() + 1);
-
-                // if we are on fragment before success message we remove buttons and submit
-                if(_viewPager.getCurrentItem() == _adapter.getItemCount() - 1){
-                    _signUpLayout.setVisibility(View.GONE);
-                    // TODO: implement request here afterwards
+                if(_viewPager.getCurrentItem() == _adapter.getItemCount() - 2){
                     submitRegistration();
+                    return;
                 }
+                _viewPager.setCurrentItem(_viewPager.getCurrentItem() + 1);
             }
         }
     }
 
-    public void onIntroFinished(RegisterUserRole selectedRole) {
+    public void onIntroFinished(UserType selectedRole) {
         _registerViewModel.setRole(selectedRole);
     }
 
     private void submitRegistration() {
+        _loader.show(getSupportFragmentManager(), "loading_spinner");
+        _registerViewModel.createUser(RegisterActivity.this, new IRegisterCallback(){
+            @Override
+            public void onSuccess(RegisterResponse response) {
+                Log.d("tag", "Registration successful: " + response.toString());
+                _signUpLayout.setVisibility(View.GONE);
+                _viewPager.setCurrentItem(_viewPager.getCurrentItem() + 1);
+                _loader.dismiss();
+            }
+            @Override
+            public void onFailure(Throwable throwable) {
+                Log.d("tag" , "Registration failed:" + throwable.getMessage());
+                Toast.makeText(RegisterActivity.this, throwable.getMessage(), Toast.LENGTH_SHORT).show();
+                _loader.dismiss();
+            }
+        });
     }
 
 

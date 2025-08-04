@@ -10,8 +10,7 @@
         android:id="@+id/home_fragment"
         android:name="com.example.fusmobilni.fragments.HomeFragment"
         android:label="Home"
-        tools:layout="@layout/fragment_home"
-        >
+        tools:layout="@layout/fragment_home">
         <action
             android:id="@+id/action_home_to_events"
             app:destination="@id/event_fragment" />
@@ -25,22 +24,27 @@
             android:id="@+id/action_home_fragment_to_notifications_fragment"
             app:destination="@id/notifications_fragment" />
         <action
-            android:id="@+id/action_home_fragment_to_messages_fragment"
-            app:destination="@id/messages_fragment" />
-        <action
             android:id="@+id/action_home_fragment_to_login_activity"
             app:destination="@id/login_activity" />
         <action
             android:id="@+id/action_home_fragment_to_register_activity"
             app:destination="@id/register_activity" />
+        <action
+            android:id="@+id/action_home_fragment_to_viewProfileFragment"
+            app:destination="@id/viewProfileFragment" />
+        <action
+            android:id="@+id/action_home_fragment_to_eventTypeFragment"
+            app:destination="@id/event_types_fragment" />
+        <action
+            android:id="@+id/action_home_fragment_to_eventOrganizerEventDetailsFragment"
+            app:destination="@id/eventOrganizerEventDetailsFragment" />
     </fragment>
 
     <fragment
         android:id="@+id/event_fragment"
-        android:name="com.example.fusmobilni.fragments.EventSearchFragment"
+        android:name="com.example.fusmobilni.fragments.events.event.filters.EventSearchFragment"
         android:label="Events"
-        tools:layout="@layout/event_fragment_search"
-        >
+        tools:layout="@layout/event_fragment_search">
         <action
             android:id="@+id/action_event_to_home"
             app:destination="@id/home_fragment" />
@@ -48,10 +52,9 @@
 
     <fragment
         android:id="@+id/products_fragment"
-        android:name="com.example.fusmobilni.fragments.ProductsFragment"
+        android:name="com.example.fusmobilni.fragments.items.product.ProductsFragment"
         android:label="Products"
-        tools:layout="@layout/fragment_products"
-        >
+        tools:layout="@layout/fragment_products">
         <action
             android:id="@+id/action_products_to_home"
             app:destination="@id/home_fragment" />
@@ -59,10 +62,9 @@
 
     <fragment
         android:id="@+id/services_fragment"
-        android:name="com.example.fusmobilni.fragments.ServiceView"
+        android:name="com.example.fusmobilni.fragments.items.service.ServiceView"
         android:label="Services"
-        tools:layout="@layout/fragment_service_view"
-        >
+        tools:layout="@layout/fragment_service_view">
         <action
             android:id="@+id/action_services_to_home"
             app:destination="@id/home_fragment" />
@@ -71,35 +73,24 @@
     <!-- Notifications Section -->
     <fragment
         android:id="@+id/notifications_fragment"
-        android:name="com.example.fusmobilni.fragments.NotificationsFragment"
+        android:name="com.example.fusmobilni.fragments.communication.notifications.NotificationsFragment"
         android:label="Notifications"
-        tools:layout="@layout/fragment_notifications"
-        >
+        tools:layout="@layout/fragment_notifications">
         <action
             android:id="@+id/action_notifications_fragment_to_home_fragment"
             app:destination="@id/home_fragment" />
     </fragment>
     <fragment
         android:id="@+id/service_search_fragment"
-        android:name="com.example.fusmobilni.fragments.ServiceSearchFragment"
-        tools:layout="@layout/fragment_service_search"
-        android:label="Browse Services"/>
-    <fragment
-        android:id="@+id/messages_fragment"
-        android:name="com.example.fusmobilni.fragments.MessagesFragment"
-        android:label="Messages"
-        tools:layout="@layout/fragment_messages"
-        >
-        <action
-            android:id="@+id/action_messages_fragment_to_home_fragment"
-            app:destination="@id/home_fragment" />
-    </fragment>
+        android:name="com.example.fusmobilni.fragments.items.service.Filters.ServiceSearchFragment"
+        android:label="Browse Services"
+        tools:layout="@layout/fragment_service_search" />
 
     <fragment
         android:id="@+id/events_search_fragment"
-        android:name="com.example.fusmobilni.fragments.EventSearchFragment"
+        android:name="com.example.fusmobilni.fragments.events.event.filters.EventSearchFragment"
         android:label="Search"
-        tools:layout="@layout/event_fragment_search"/>
+        tools:layout="@layout/event_fragment_search" />
     <action
         android:id="@+id/action_homeFragment_to_searchFragment"
         app:destination="@id/events_search_fragment" />
@@ -109,41 +100,58 @@
         android:id="@+id/login_activity"
         android:name="com.example.fusmobilni.activities.LoginActivity"
         android:label="Login"
-        tools:layout="@layout/activity_login"
-        />
-
+        tools:layout="@layout/activity_login" />
     <activity
         android:id="@+id/register_activity"
         android:name="com.example.fusmobilni.activities.RegisterActivity"
         android:label="Register"
-        tools:layout="@layout/activity_register"
-        />
+        tools:layout="@layout/activity_register" />
+    <activity
+        android:id="@+id/fast_register_activity"
+        android:name="com.example.fusmobilni.activities.FastRegisterActivity"
+        android:label="Fast Register"
+        tools:layout="@layout/activity_fast_register" />
 
 
     <fragment
         android:id="@+id/service_creation_step_one"
-        android:name="com.example.fusmobilni.fragments.MultiStepServiceFormOne"
+        android:name="com.example.fusmobilni.fragments.items.service.Forms.MultiStepServiceFormOne"
         android:label="ServiceCreationStepOne"
-        android:layout="@layout/fragment_multi_step_service_form_one">
-    </fragment>
+        android:layout="@layout/fragment_multi_step_service_form_one"></fragment>
 
     <fragment
         android:id="@+id/service_creation_step_two"
-        android:name="com.example.fusmobilni.fragments.MultiStepServiceFormTwo"
+        android:name="com.example.fusmobilni.fragments.items.service.Forms.MultiStepServiceFormTwo"
         android:label="ServiceCreationStepTwo"
-        android:layout="@layout/fragment_multi_step_service_form_two">
-    </fragment>
+        android:layout="@layout/fragment_multi_step_service_form_two"></fragment>
 
     <fragment
         android:id="@+id/service_creation_step_three"
-        android:name="com.example.fusmobilni.fragments.MultiStepServiceFormThree"
+        android:name="com.example.fusmobilni.fragments.items.service.Forms.MultiStepServiceFormThree"
         android:label="ServiceCreationStepThree"
-        android:layout="@layout/fragment_multi_step_service_form_three">
-    </fragment>
+        android:layout="@layout/fragment_multi_step_service_form_three" />
+    <fragment
+        android:id="@+id/product_creation_step_three"
+        android:name="com.example.fusmobilni.fragments.items.product.Forms.MultiStepProductFormThree"
+        android:label="Step 3:"
+        android:layout="@layout/fragment_multi_step_service_form_three" />
+    <fragment
+        android:id="@+id/product_creation_step_two"
+        android:name="com.example.fusmobilni.fragments.items.product.Forms.MultiStepProductFormTwo"
+        android:label="Step 2:"
+        android:layout="@layout/fragment_multi_step_service_form_two" />
+    <fragment
+        android:id="@+id/product_creation_step_one"
+        android:name="com.example.fusmobilni.fragments.items.product.Forms.MultiStepProductFormOne"
+        android:label="Step 1:"
+        android:layout="@layout/fragment_multi_step_service_form_one" />
 
     <action
         android:id="@+id/action_serviceView_toServiceCreationStepOne"
-        app:destination="@id/service_creation_step_one"/>
+        app:destination="@id/service_creation_step_one" />
+    <action
+        android:id="@+id/action_productView_toProductCreationStepOne"
+        app:destination="@id/product_creation_step_one" />
 
     <action
         android:id="@+id/action_serviceCreation_toServiceView"
@@ -151,34 +159,395 @@
 
     <action
         android:id="@+id/action_serviceCreationStepOne_toServiceCreationStepTwo"
-        app:destination="@id/service_creation_step_two"/>
+        app:destination="@id/service_creation_step_two" />
 
     <action
         android:id="@+id/action_serviceCreationStepTwo_toServiceCreationStepOne"
-        app:destination="@id/service_creation_step_one"/>
+        app:destination="@id/service_creation_step_one" />
 
     <action
         android:id="@+id/action_serviceCreationStepTwo_toServiceCreationStepThree"
-        app:destination="@id/service_creation_step_three"/>
+        app:destination="@id/service_creation_step_three" />
 
     <action
         android:id="@+id/action_serviceCreationStepThree_toServiceCreationStepTwo"
-        app:destination="@id/service_creation_step_two"/>
+        app:destination="@id/service_creation_step_two" />
 
     <action
         android:id="@+id/action_serviceCreationStepThree_toServiceView"
-        app:destination="@id/services_fragment"/>
+        app:destination="@id/services_fragment" />
+    <action
+        android:id="@+id/action_productCreationStepOne_toProductCreationStepTwo"
+        app:destination="@id/product_creation_step_two" />
+    <action
+        android:id="@+id/action_productCreationStepTwo_toProductCreationStepOne"
+        app:destination="@id/product_creation_step_one" />
+    <action
+        android:id="@+id/action_productCreationStepTwo_toProductCreationStepThree"
+        app:destination="@id/product_creation_step_three" />
+    <action
+        android:id="@+id/action_productCreationStepThree_toProductCreationStepTwo"
+        app:destination="@id/product_creation_step_two" />
+    <action
+        android:id="@+id/action_productCreationStepThree_toProductView"
+        app:destination="@id/products_fragment" />
     <fragment
         android:id="@+id/products_search_fragment"
-        android:name="com.example.fusmobilni.fragments.ProductSearchFragment"
+        android:name="com.example.fusmobilni.fragments.items.product.filters.ProductSearchFragment"
         android:label="Browse Products"
-        tools:layout="@layout/fragment_product_search"/>
+        tools:layout="@layout/fragment_product_search" />
+    <fragment
+        android:id="@+id/event_review_fragment"
+        android:name="com.example.fusmobilni.fragments.events.event.reviews.EventReviewFormFragment"
+        android:label=""
+        tools:layout="@layout/fragment_event_review_form" />
+    <fragment
+        android:id="@+id/item_review_fragment"
+        android:name="com.example.fusmobilni.fragments.items.reviews.ItemReviewFormFragment"
+        android:label=""
+        tools:layout="@layout/fragment_item_review_form" />
     <action
         android:id="@+id/action_home_fragment_to_product_search"
         app:destination="@id/products_search_fragment" />
 
     <action
         android:id="@+id/action_home_fragment_to_service_search"
-        app:destination="@id/service_search_fragment"/>
+        app:destination="@id/service_search_fragment" />
+    <fragment
+        android:id="@+id/updateProfileFragment"
+        android:name="com.example.fusmobilni.fragments.users.profile.UpdateProfileFragment"
+        android:label="Profile update"
+        tools:layout="@layout/fragment_update_profile">
+        <action
+            android:id="@+id/action_updateProfileFragment_to_viewProfileFragment"
+            app:destination="@id/viewProfileFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/stepOneUpdateFragment"
+        android:name="com.example.fusmobilni.fragments.users.profile.StepOneUpdateFragment"
+        android:label="fragment_step_one_update"
+        tools:layout="@layout/fragment_step_one_update">
+        <action
+            android:id="@+id/action_stepOneUpdateFragment_to_updateProfileFragment"
+            app:destination="@id/updateProfileFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/viewProfileFragment"
+        android:name="com.example.fusmobilni.fragments.users.profile.ViewProfileFragment"
+        android:label="My profile"
+        tools:layout="@layout/fragment_view_profile">
+        <action
+            android:id="@+id/action_viewProfileFragment_to_home_fragment"
+            app:destination="@id/home_fragment" />
+        <action
+            android:id="@+id/action_viewProfileFragment_to_updateProfileFragment"
+            app:destination="@id/updateProfileFragment" />
+        <action
+            android:id="@+id/action_viewProfileFragment_to_userCalendarFragment"
+            app:destination="@id/userCalendarFragment" />
+        <action
+            android:id="@+id/action_viewProfileFragment_to_eventDetailsFragment"
+            app:destination="@id/eventDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/userCalendarFragment"
+        android:name="com.example.fusmobilni.fragments.users.profile.UserCalendarFragment"
+        android:label="My calendar"
+        tools:layout="@layout/fragment_user_calendar">
+        <action
+            android:id="@+id/action_userCalendarFragment_to_viewProfileFragment"
+            app:destination="@id/viewProfileFragment" />
+        <action
+            android:id="@+id/action_userCalendarFragment_to_eventDetailsFragment"
+            app:destination="@id/eventDetailsFragment" />
+    </fragment>
 
+
+    <fragment
+        android:id="@+id/categories_page"
+        android:name="com.example.fusmobilni.fragments.items.OfferingsPage"
+        android:label="OfferingOverview"
+        android:layout="@layout/fragment_offerings_page"></fragment>
+
+    <action
+        android:id="@+id/home_toOfferingsPage"
+        app:destination="@id/categories_page" />
+    <fragment
+        android:id="@+id/event_invitations_fragment"
+        android:name="com.example.fusmobilni.fragments.events.event.createEventSteps.InvitationsFragment"
+        android:label="Invitations"
+        tools:layout="@layout/fragment_invitations" />
+    <action
+        android:id="@+id/action_service_card_to_service_details"
+        app:destination="@id/serviceDetailsFragment" />
+    <action
+        android:id="@+id/action_service_card_to_service_details_regular"
+        app:destination="@+id/serviceDetailsFragmentRegular" />
+    <action
+        android:id="@+id/action_service_details_to_service_reservation"
+        app:destination="@id/serviceReservationFragment" />
+    <fragment
+        android:id="@+id/categories_creation_form"
+        android:name="com.example.fusmobilni.fragments.items.category.CategoryCreationForm"
+        android:label="OfferingCreation"
+        android:layout="@layout/fragment_category_creation_form"></fragment>
+
+    <action
+        android:id="@+id/categories_toCreationForm"
+        app:destination="@id/categories_creation_form" />
+
+    <action
+        android:id="@+id/creationForm_toCategories"
+        app:destination="@id/categories_page" />
+    <fragment
+        android:id="@+id/serviceDetailsFragment"
+        android:name="com.example.fusmobilni.fragments.items.service.ServiceDetailsFragment"
+        android:label=""></fragment>
+    <fragment
+        android:id="@+id/serviceDetailsFragmentRegular"
+        android:name="com.example.fusmobilni.fragments.items.service.ServiceDetailsRegularFragment"
+        android:label=""></fragment>
+    <fragment
+        android:id="@+id/serviceReservationFragment"
+        android:name="com.example.fusmobilni.fragments.items.service.ServiceReservationFragment"
+        android:label=""></fragment>
+
+
+    <fragment
+        android:id="@+id/categories_proposal_page"
+        android:name="com.example.fusmobilni.fragments.items.category.proposals.CategoryProposalsPage"
+        android:label="CategoryProposals"
+        android:layout="@layout/fragment_category_proposals_page"></fragment>
+    <action
+        android:id="@+id/action_product_card_to_product_details"
+        app:destination="@id/productDetailsFragment" />
+    <action
+        android:id="@+id/categoriesPage_toCategoryProposals"
+        app:destination="@id/categories_proposal_page" />
+
+    <action
+        android:id="@+id/categoryProposals_toCategoriesPage"
+        app:destination="@id/categories_page" />
+
+    <fragment
+        android:id="@+id/categories_proposal_modification_page"
+        android:name="com.example.fusmobilni.fragments.items.category.proposals.ModifyCategoryProposalFragment"
+        android:label="CategoryProposals"
+        android:layout="@layout/fragment_modify_category_proposal"></fragment>
+
+    <action
+        android:id="@+id/categoryProposals_toModificationForm"
+        app:destination="@id/categories_proposal_modification_page" />
+
+    <action
+        android:id="@+id/categoryModificationForm_toCategoryProposals"
+        app:destination="@id/categories_proposal_page" />
+    <action
+        android:id="@+id/action_to_fast_register_activity"
+        app:destination="@id/fast_register_activity" />
+    <fragment
+        android:id="@+id/eventDetailsFragment"
+        android:name="com.example.fusmobilni.fragments.events.event.EventDetailsFragment"
+        android:label="Details" />
+    <fragment
+        android:id="@+id/eventOrganizerEventDetailsFragment"
+        android:name="com.example.fusmobilni.fragments.events.event.EventOrganizerEventFragment"
+        android:label="My events"
+        tools:layout="@layout/fragment_event_organizer_event_details">
+        <action
+            android:id="@+id/action_eventOrganizerEventDetailsFragment_to_createEventFragment"
+            app:destination="@id/createEventFragment" />
+    </fragment>
+    <action
+        android:id="@+id/action_eventOrganizerEventDetailsFragment_to_eventDetailsFragment"
+        app:destination="@id/eventDetailsFragment" />
+    <fragment
+        android:id="@+id/event_types_fragment"
+        android:name="com.example.fusmobilni.fragments.events.eventType.EventTypeFragment"
+        android:label="Event type"
+        tools:layout="@layout/fragment_event_type">
+        <action
+            android:id="@+id/eventType_to_eventTypeUpdate"
+            app:destination="@id/eventTypeCreationForm" />
+
+    </fragment>
+    <fragment
+        android:id="@+id/eventTypeCreationForm"
+        android:name="com.example.fusmobilni.fragments.events.eventType.EventTypeCreationForm"
+        android:label=""
+        tools:layout="@layout/fragment_event_type_creation_form">
+        <action
+            android:id="@+id/eventTypeCreation_to_eventType"
+            app:destination="@id/event_types_fragment" />
+
+    </fragment>
+    <fragment
+        android:id="@+id/productDetailsFragment"
+        android:name="com.example.fusmobilni.fragments.items.product.ProductDetailsFragment"
+        android:label="Product Details">
+        <argument
+            android:name="product"
+            app:argType="com.example.fusmobilni.model.items.product.Product" />
+    </fragment>
+    <fragment
+        android:id="@+id/createEventFragment"
+        android:name="com.example.fusmobilni.fragments.events.event.CreateEventFragment"
+        android:label="Create event"
+        tools:layout="@layout/fragment_create_event"></fragment>
+    <action
+        android:id="@+id/action_createEventFragment_to_eventOrganizerEventDetailsFragment"
+        app:destination="@id/eventOrganizerEventDetailsFragment" />
+    <fragment
+        android:id="@+id/viewProductsFragment"
+        android:name="com.example.fusmobilni.fragments.events.event.createEventSteps.ChooseProductFragment"
+        android:label="View Products"
+        tools:layout="@layout/fragment_choose_product">
+        <!--        <action-->
+        <!--            android:id="@+id/action_viewProductsFragment_to_productDetailsFragment"-->
+        <!--            app:destination="@id/productDetailsFragment" -->
+        <!--            />-->
+    </fragment>
+    <action
+        android:id="@+id/action_viewProductsFragment_to_stepTwoFragment"
+        app:destination="@id/stepTwoFragment" />
+    <fragment
+        android:id="@+id/stepTwoFragment"
+        android:name="com.example.fusmobilni.fragments.events.event.CreateEventFragment"
+        android:label=""
+        tools:layout="@layout/fragment_create_event">
+
+    </fragment>
+    <action
+        android:id="@+id/action_stepTwoFragment_to_viewProductsFragment"
+        app:destination="@id/viewProductsFragment" />
+    <action
+        android:id="@+id/to_verify_email"
+        app:destination="@+id/veri" />
+
+    <action
+        android:id="@+id/action_serviceReservation_to_stepTeoFragment"
+        app:destination="@id/stepTwoFragment" />
+
+    <action
+        android:id="@+id/action_to_item_review_form"
+        app:destination="@id/item_review_fragment" />
+
+    <fragment
+        android:id="@+id/chat_fragment"
+        android:name="com.example.fusmobilni.fragments.communication.chat.ChatsOverviewFragment"
+        android:label=""
+        tools:layout="@layout/fragment_chats_overview"></fragment>
+
+    <action
+        android:id="@+id/action_toChatsFragment"
+        app:destination="@id/chat_fragment" />
+
+    <fragment
+        android:id="@+id/chat_layout_fragment"
+        android:name="com.example.fusmobilni.fragments.communication.chat.ChatFragment"
+        android:label=""
+        tools:layout="@layout/fragment_chat"></fragment>
+
+    <action
+        android:id="@+id/action_chatOverviews_toChat"
+        app:destination="@id/chat_layout_fragment" />
+    <fragment
+        android:id="@+id/reviewApprovalFragment"
+        android:name="com.example.fusmobilni.fragments.admin.ReviewApprovalFragment"
+        android:label="Create event"
+        tools:layout="@layout/fragment_review_approval">
+
+    </fragment>
+    <action
+        android:id="@+id/action_to_itemr_review_approval"
+        app:destination="@id/reviewApprovalFragment" />
+
+
+    <fragment
+        android:id="@+id/price_list_fragment"
+        android:name="com.example.fusmobilni.fragments.items.pricelist.PriceListFragment"
+        android:label=""
+        tools:layout="@layout/fragment_price_list" />
+
+    <fragment
+        android:id="@+id/price_list_edit_fragment"
+        android:name="com.example.fusmobilni.fragments.items.pricelist.EditPriceListItemFragment"
+        android:label=""
+        tools:layout="@layout/fragment_edit_price_list_item" />
+    <fragment
+        android:id="@+id/reservations_fragment"
+        android:name="com.example.fusmobilni.fragments.items.serviceReservationOverview.ServiceReservationsOverview"
+        android:label="Reservations"
+        tools:layout="@layout/fragment_service_reservations" />
+
+    <action
+        android:id="@+id/action_priceList_toPriceListEdit"
+        app:destination="@id/price_list_edit_fragment" />
+
+    <action
+        android:id="@+id/action_priceListEdit_toPriceList"
+        app:destination="@id/price_list_fragment" />
+
+    <action
+        android:id="@+id/action_eventDetails_toBudgetPlanning"
+        app:destination="@id/stepTwoFragment" />
+    <action
+        android:id="@+id/action_to_event_review"
+        app:destination="@id/event_review_fragment" />
+    <action
+        android:id="@+id/action_to_event_statistics"
+        app:destination="@id/event_statistics" />
+    <fragment
+        android:id="@+id/event_statistics"
+        android:name="com.example.fusmobilni.fragments.events.event.stats.EventStatisticsFragment"
+        android:label="Statistics"
+        tools:layout="@layout/fragment_event_statistics" />
+    <fragment
+        android:id="@+id/company_overview_fragment"
+        android:name="com.example.fusmobilni.fragments.items.company.CompanyOverviewFragment"
+        android:label=""
+        tools:layout="@layout/fragment_company_overview" />
+    <fragment
+        android:id="@+id/block_form_fragment"
+        android:name="com.example.fusmobilni.fragments.communication.blocks.BlockFormFragment"
+        android:label=""
+        tools:layout="@layout/fragment_block_form" />
+    <fragment
+        android:id="@+id/report_form_fragment"
+        android:name="com.example.fusmobilni.fragments.communication.reports.ReportFormFragment"
+        android:label=""
+        tools:layout="@layout/fragment_report_form" />
+    <fragment
+        android:id="@+id/foreign_user_profile_fragment"
+        android:name="com.example.fusmobilni.fragments.users.profile.foreign.ForeignUserProfileFragment"
+        android:label=""
+        tools:layout="@layout/fragment_foreign_user_profile" />
+    <fragment
+        android:id="@+id/upgrade_user_fragment"
+        android:name="com.example.fusmobilni.fragments.users.userUpgrade.UpgradeUserFragment"
+        android:label="Upgrade account"
+        tools:layout="@layout/fragment_upgrade_user" />
+    <fragment
+        android:id="@+id/report_approval_fragment"
+        android:name="com.example.fusmobilni.fragments.admin.ReportApprovalFragment"
+        android:label=""
+        tools:layout="@layout/fragment_report_approval" />
+    <action
+        android:id="@+id/action_to_report_approval"
+        app:destination="@+id/report_approval_fragment" />
+    <action
+        android:id="@+id/action_toForeignUserProfile"
+        app:destination="@id/foreign_user_profile_fragment" />
+    <action
+        android:id="@+id/action_to_block_form"
+        app:destination="@id/block_form_fragment" />
+    <action
+        android:id="@+id/action_to_report_form"
+        app:destination="@id/report_form_fragment" />
+    <action
+        android:id="@+id/action_toCompanyOverview"
+        app:destination="@id/company_overview_fragment" />
+    <action
+        android:id="@+id/action_toAccountUpgrade"
+        app:destination="@+id/upgrade_user_fragment" />
 </navigation>

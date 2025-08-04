@@ -4,23 +4,41 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
+import android.os.Looper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.example.fusmobilni.R;
-import com.example.fusmobilni.adapters.EventsAdapter;
-import com.example.fusmobilni.adapters.ProductsAdapter;
-import com.example.fusmobilni.adapters.ServicesAdapter;
+import com.example.fusmobilni.adapters.events.event.EventsAdapter;
+import com.example.fusmobilni.adapters.items.product.ProductsAdapter;
+import com.example.fusmobilni.adapters.items.service.ServicesAdapter;
+import com.example.fusmobilni.adapters.loading.LoadingCardVerticalAdapter;
+import com.example.fusmobilni.clients.ClientUtils;
+import com.example.fusmobilni.core.CustomSharedPrefs;
 import com.example.fusmobilni.databinding.FragmentHomeBinding;
-import com.example.fusmobilni.model.Event;
-import com.example.fusmobilni.model.Product;
-import com.example.fusmobilni.model.Service;
+import com.example.fusmobilni.model.event.Event;
+import com.example.fusmobilni.model.items.product.Product;
+import com.example.fusmobilni.model.items.service.Service;
+import com.example.fusmobilni.responses.events.home.EventHomeResponse;
+import com.example.fusmobilni.responses.events.home.EventsHomeResponse;
+import com.example.fusmobilni.responses.items.products.home.ProductHomeResponse;
+import com.example.fusmobilni.responses.items.products.home.ProductsHomeResponse;
+import com.example.fusmobilni.responses.items.services.home.ServiceHomeResponse;
+import com.example.fusmobilni.responses.items.services.home.ServicesHomeResponse;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -29,21 +47,7 @@ import java.util.List;
  */
 public class HomeFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private FragmentHomeBinding _binding;
-    private List<Event> events;
-    private List<Service> services;
-    private List<Product> products;
-
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    private LinearLayout _eventsContainer;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -51,10 +55,6 @@ public class HomeFragment extends Fragment {
 
     public static HomeFragment newInstance() {
         HomeFragment fragment = new HomeFragment();
-//        Bundle args = new Bundle();
-//        args.putString(ARG_PARAM1, param1);
-//        args.putString(ARG_PARAM2, param2);
-//        fragment.setArguments(args);
         return fragment;
     }
 
@@ -62,8 +62,7 @@ public class HomeFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+
         }
     }
 
@@ -73,58 +72,115 @@ public class HomeFragment extends Fragment {
         _binding = FragmentHomeBinding.inflate(inflater, container, false);
         View view = _binding.getRoot();
 
-        events = fillEvents();
-        services = fillServices();
-        products = fillProducts();
 
-        this._binding.eventsRecycleView.setAdapter(new EventsAdapter(events));
-        this._binding.servicesRecycleView.setAdapter(new ServicesAdapter(services));
-        this._binding.productsRecycleView.setAdapter(new ProductsAdapter(products));
+        initializeLoadingCards();
 
-        this._binding.homeEventsSeeAllButton.setOnClickListener(v->{
+        this._binding.eventsRecycleView.setAdapter(new EventsAdapter(new ArrayList<>()));
+        this._binding.servicesRecycleView.setAdapter(new ServicesAdapter(new ArrayList<>()));
+        this._binding.productsRecycleView.setAdapter(new ProductsAdapter(new ArrayList<>()));
+
+        _binding.eventsRecycleView.setVisibility(View.GONE);
+        _binding.servicesRecycleView.setVisibility(View.GONE);
+        _binding.productsRecycleView.setVisibility(View.GONE);
+
+        this._binding.homeEventsSeeAllButton.setOnClickListener(v -> {
             Navigation.findNavController(view).navigate(R.id.action_homeFragment_to_searchFragment);
         });
-        this._binding.homeServicesSeeAllButton.setOnClickListener(v->{
+        this._binding.homeServicesSeeAllButton.setOnClickListener(v -> {
 
             Navigation.findNavController(view).navigate(R.id.action_home_fragment_to_service_search);
         });
-        this._binding.productsSeeAllButton.setOnClickListener(v->{
+        this._binding.productsSeeAllButton.setOnClickListener(v -> {
             Navigation.findNavController(view).navigate(R.id.action_home_fragment_to_product_search);
         });
 
+        fetchEvents();
+        fetchServices();
+        fetchProducts();
         return view;
     }
 
-    private ArrayList<Service> fillServices() {
-        ArrayList<Service> s = new ArrayList<>();
-        s.add(new Service("Live band for weddings and parties", "Wedding Band", "New York", "Music"));
-        s.add(new Service("Professional photography for events", "Photography Service", "Los Angeles", "Art"));
-        s.add(new Service("Catering services for all occasions", "Catering Service", "Chicago", "Food"));
-        s.add(new Service("Event decoration and setup", "Decoration Service", "San Francisco", "Art"));
-        s.add(new Service("Spacious venue for corporate events", "Venue Rental", "Miami", "Travel"));
-        return s;
+    private void turnOffShimmer(RecyclerView loadingCardsView, RecyclerView actualCards) {
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+            loadingCardsView.setAdapter(new LoadingCardVerticalAdapter(0));
+            loadingCardsView.setVisibility(View.GONE);
+            actualCards.setVisibility(View.VISIBLE);
+
+        }, 1500); //
     }
 
-    private ArrayList<Event> fillEvents() {
-        ArrayList<Event> e = new ArrayList<>();
-        e.add(new Event("Food and Wine Tasting", "12-07-2024", "Napa Valley Vineyard", "Food"));
-        e.add(new Event("Tech Innovators Conference", "15-08-2024", "Silicon Valley Expo Center", "Tech"));
-        e.add(new Event("Autumn Art and Sculpture Exhibition", "18-09-2024", "Paris Art Museum", "Art"));
-        e.add(new Event("Global Startup Pitch Event", "22-11-2024", "Berlin Startup Hub", "Tech"));
-        e.add(new Event("International Film and Documentary Festival", "05-11-2024", "Toronto Film Centre", "Art"));
-        return e;
-
-    }
-    private  ArrayList<Product> fillProducts(){
-        ArrayList<Product> p = new ArrayList<>();
-        p.add(new Product("Gourmet Pizza", "A delicious blend of flavors", 15.99, "New York", "Food"));
-        p.add(new Product("Lemonade", "Refreshing and invigorating beverage", 3.49, "California", "Health"));
-        p.add(new Product("Mixed Nuts", "Sweet and savory snacks", 5.99, "Texas", "Sports"));
-        p.add(new Product("Croissants", "Freshly baked pastries", 2.99, "France", "Art"));
-        p.add(new Product("Dark Chocolate Truffles", "Artisanal chocolates", 12.49, "Belgium", "Fashion"));
-
-        return p;
-
+    private void initializeLoadingCards() {
+        _binding.eventsLoadingCards.setAdapter(new LoadingCardVerticalAdapter(5));
+        _binding.serviceLoadingCards.setAdapter(new LoadingCardVerticalAdapter(5));
+        _binding.productLoadingCards.setAdapter(new LoadingCardVerticalAdapter(5));
     }
 
+    private void fetchProducts() {
+        CustomSharedPrefs prefs = CustomSharedPrefs.getInstance();
+        Long userId = (prefs != null && prefs.getUser() != null) ? prefs.getUser().getId() : null;
+        Call<ProductsHomeResponse> call = ClientUtils.productsService.findTopFiveProducts(userId);
+        call.enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<ProductsHomeResponse> call, Response<ProductsHomeResponse> response) {
+                if (response.isSuccessful()) {
+                    List<ProductHomeResponse> list = response.body().products;
+                    _binding.productsRecycleView.setAdapter(new ProductsAdapter(list));
+                    turnOffShimmer(_binding.productLoadingCards, _binding.productsRecycleView);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ProductsHomeResponse> call, Throwable t) {
+                Log.d("tag", t.getMessage());
+                Toast.makeText(requireActivity(), t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private void fetchServices() {
+        CustomSharedPrefs prefs = CustomSharedPrefs.getInstance();
+        Long userId = (prefs != null && prefs.getUser() != null) ? prefs.getUser().getId() : null;
+        Call<ServicesHomeResponse> call = ClientUtils.serviceOfferingService.findTopFiveServices(userId);
+        call.enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<ServicesHomeResponse> call, Response<ServicesHomeResponse> response) {
+                if (response.isSuccessful()) {
+
+                    List<ServiceHomeResponse> list = response.body().content;
+                    _binding.servicesRecycleView.setAdapter(new ServicesAdapter(list));
+                    turnOffShimmer(_binding.serviceLoadingCards, _binding.servicesRecycleView);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ServicesHomeResponse> call, Throwable t) {
+                Log.d("tag", t.getMessage());
+                Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private void fetchEvents() {
+        CustomSharedPrefs prefs = CustomSharedPrefs.getInstance();
+        Long userId = (prefs != null && prefs.getUser() != null) ? prefs.getUser().getId() : null;
+        Call<EventsHomeResponse> call = ClientUtils.eventsService.findTopFiveEvents(userId);
+        call.enqueue(new Callback<>() {
+            @Override
+
+            public void onResponse(Call<EventsHomeResponse> call, Response<EventsHomeResponse> response) {
+                if (response.isSuccessful()) {
+                    List<EventHomeResponse> list = response.body().events;
+                    _binding.eventsRecycleView.setAdapter(new EventsAdapter(list));
+                    turnOffShimmer(_binding.eventsLoadingCards, _binding.eventsRecycleView);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<EventsHomeResponse> call, Throwable t) {
+                Log.d("tag", t.getMessage());
+                Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+
+    }
 }

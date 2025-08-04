@@ -2,6 +2,12 @@ plugins {
     alias(libs.plugins.android.application)
 }
 
+def getIpAddress() {
+    Properties properties = new Properties()
+    properties.load(project.rootProject.file('local.properties').newDataInputStream())
+    return properties.getProperty("ip_addr");
+}
+
 android {
     namespace 'com.example.fusmobilni'
     compileSdk 34
@@ -12,11 +18,15 @@ android {
         targetSdk 34
         versionCode 1
         versionName "1.0"
-
+        buildConfigField "String", "IP_ADDR", "\"" + getIpAddress() + "\""
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
     }
 
     buildTypes {
+//        debug {
+//            buildConfigField "String", "IP_ADDR", "\"192.168.1.4\"" // Replace with your dev server IP
+//        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
@@ -26,11 +36,12 @@ android {
         sourceCompatibility JavaVersion.VERSION_11
         targetCompatibility JavaVersion.VERSION_11
     }
-    buildFeatures{
+    buildFeatures {
         viewBinding true
+        buildConfig true
     }
 
-    task wrapper(type: Wrapper){
+    task wrapper(type: Wrapper) {
         gradleVersion = '7.2'
     }
 
@@ -42,7 +53,8 @@ android {
 
 dependencies {
     implementation libs.glide
-    implementation 'androidx.constraintlayout:constraintlayout:2.2.0'
+    implementation libs.constraintlayout
+    implementation libs.car.ui.lib
     annotationProcessor libs.compiler
     implementation libs.appcompat
     implementation libs.material
@@ -55,4 +67,20 @@ dependencies {
     androidTestImplementation libs.espresso.core
     implementation libs.ucrop
     implementation libs.imagepicker
+    implementation libs.datastore.preferences
+    implementation libs.gson
+    implementation libs.view
+    implementation 'com.squareup.retrofit2:retrofit:2.4.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
+    implementation 'com.google.code.gson:gson:2.10.1'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.11.0'
+    implementation 'com.facebook.shimmer:shimmer:0.5.0'
+    implementation 'com.github.NaikSoftware:StompProtocolAndroid:1.6.6'
+    implementation 'com.squareup.okhttp3:okhttp:3.12.1'
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.5'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.0'
+    implementation libs.cardview
+    implementation libs.mpandroidchart
+    implementation libs.osmdroid.android
+
 }

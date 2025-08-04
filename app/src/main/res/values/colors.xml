@@ -2,7 +2,7 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-
+    <color name="transparent">#00000000</color>
     <!--    BLUE    -->
     <color name="primary_blue_900">#5669FF</color>
     <color name="primary_blue_700">#7887FF</color>
@@ -13,7 +13,8 @@
     <color name="secondary_cyan_700">#66FBFF</color>
     <color name="secondary_cyan_500">#99FCFF</color>
     <color name="secondary_cyan_300">#CCFEFF</color>
-
+    <color name="shimmer_placeholder">#E0E0E0</color>
+    <color name="shimmer_back_ground">#5A5A5A</color>
     <!--    TEXT   -->
     <color name="text_900">#120D26</color>
     <color name="text_800">#29253C</color>

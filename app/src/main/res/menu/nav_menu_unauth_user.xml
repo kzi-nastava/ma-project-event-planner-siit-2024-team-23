@@ -21,6 +21,20 @@
                     android:id="@+id/services_fragment"
                     android:icon="@drawable/ic_notification"
                     android:title="Services" />
+                <item
+
+                    android:id="@+id/categories_page"
+                    android:icon="@drawable/ic_notification"
+                    android:title="Categories" />
+
+                <item
+                    android:id="@+id/event_invitations_fragment"
+                    android:icon="@drawable/plus_icon"
+                    android:title="Event Invitations"/>
+                <item
+                    android:id="@id/eventOrganizerEventDetailsFragment"
+                    android:icon="@drawable/ic_home_big_black"
+                    android:title="Home" />
 
             </menu>
 
@@ -41,6 +55,10 @@
                     android:id="@+id/register_activity"
                     android:icon="@drawable/ic_person"
                     android:title="Register" />
+                <item
+                    android:id="@+id/fast_register_activity"
+                    android:icon="@drawable/plus_icon"
+                    android:title="Fast register"/>
             </menu>
         </item>
     </group>
