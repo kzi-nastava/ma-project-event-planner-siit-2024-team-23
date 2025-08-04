@@ -14,6 +14,7 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -88,12 +89,14 @@ public class MultiStepServiceFormThree extends Fragment implements ItemClickList
         binding.forwardButton.setOnClickListener(v -> {
             //create new service
             if (validate()) {
-                viewModel.submit(getContext());
-                requireActivity().getViewModelStore().clear();
-                NavOptions navOptions = new NavOptions.Builder()
-                        .setPopUpTo(R.id.services_fragment, true)
-                        .build();
-                Navigation.findNavController(view).navigate(R.id.action_serviceCreationStepThree_toServiceView, null, navOptions);
+                viewModel.submit(getContext(), () -> {
+                    Log.d("Tag", "navigacija...");
+                    requireActivity().getViewModelStore().clear();
+                    NavOptions navOptions = new NavOptions.Builder()
+                            .setPopUpTo(R.id.services_fragment, true)
+                            .build();
+                    Navigation.findNavController(view).navigate(R.id.action_serviceCreationStepThree_toServiceView, null, navOptions);
+                });
             }
         });
 

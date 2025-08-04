@@ -255,19 +255,21 @@ public class ServiceViewModel extends ViewModel {
     }
 
 
-    public void submit(Context context) {
-        if(Objects.equals(category.getValue(), "Custom")) {
-            createProposal(context);
+    public void submit(Context context, Runnable onSuccess) {
+        if (Objects.equals(category.getValue(), "Custom")) {
+            createProposal(context, onSuccess);
             return;
         }
+
         if (isUpdating.getValue()) {
-            updateService(context);
+            updateService(context, onSuccess);
         } else {
-            createService(context);
+            createService(context, onSuccess);
         }
     }
 
-    private void updateService(Context context) {
+
+    private void updateService(Context context, Runnable onSuccess) {
         Gson gson = new Gson();
         Long userId = getUserId(context);
         if (userId == null)
@@ -295,6 +297,7 @@ public class ServiceViewModel extends ViewModel {
             call.enqueue(new Callback<GetServiceResponse>() {
                 @Override
                 public void onResponse(Call<GetServiceResponse> call, Response<GetServiceResponse> response) {
+                    onSuccess.run();
                 }
 
                 @Override
@@ -306,7 +309,7 @@ public class ServiceViewModel extends ViewModel {
         }
     }
 
-    public void createService(Context context) {
+    public void createService(Context context, Runnable onSuccess) {
         Gson gson = new Gson();
         Long userId = getUserId(context);
         if (userId == null)
@@ -333,6 +336,8 @@ public class ServiceViewModel extends ViewModel {
         call.enqueue(new Callback<GetServiceResponse>() {
             @Override
             public void onResponse(Call<GetServiceResponse> call, Response<GetServiceResponse> response) {
+                Log.d("Tag", "Kreirano");
+                onSuccess.run();
             }
 
             @Override
@@ -349,7 +354,7 @@ public class ServiceViewModel extends ViewModel {
         return user.getId();
     }
 
-    private void createProposal(Context context) {
+    private void createProposal(Context context, Runnable onSuccess) {
         Gson gson = new Gson();
         Long userId = getUserId(context);
         if (userId == null)
@@ -378,6 +383,7 @@ public class ServiceViewModel extends ViewModel {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 Log.d("Tag", String.valueOf(response.code()));
+                onSuccess.run();
             }
 
             @Override

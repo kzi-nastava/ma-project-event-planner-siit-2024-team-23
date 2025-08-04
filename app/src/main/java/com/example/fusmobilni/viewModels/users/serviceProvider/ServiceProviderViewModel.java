@@ -1,9 +1,13 @@
 package com.example.fusmobilni.viewModels.users.serviceProvider;
 
+import android.content.Context;
+import android.util.Log;
+
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.fusmobilni.clients.ClientUtils;
+import com.example.fusmobilni.core.CustomSharedPrefs;
 import com.example.fusmobilni.requests.services.GetServiceResponse;
 import com.example.fusmobilni.requests.services.GetServicesResponse;
 import com.example.fusmobilni.requests.services.ServiceFilterRequest;
@@ -27,7 +31,7 @@ public class ServiceProviderViewModel extends ViewModel {
     private final MutableLiveData<Long> categoryId = new MutableLiveData<>(null);
     private final MutableLiveData<Long> eventTypeId = new MutableLiveData<>(null);
     private final MutableLiveData<Double> lowerBoundaryPrice = new MutableLiveData<>(0.0);
-    private final MutableLiveData<Double> upperBoundaryPrice = new MutableLiveData<>(8000.0);
+    private final MutableLiveData<Double> upperBoundaryPrice = new MutableLiveData<>(100000.0);
     private final MutableLiveData<Boolean> availability = new MutableLiveData<>(true);
     private final MutableLiveData<String> searchConstraint = new MutableLiveData<>("");
 
@@ -38,7 +42,7 @@ public class ServiceProviderViewModel extends ViewModel {
     }
 
 
-    public void applyFilters() {
+    public void applyFilters(Context context) {
         ArrayList<Long> eventTypeIds = new ArrayList<>();
         if (eventTypeId.getValue() != null) {
             eventTypeIds.add(eventTypeId.getValue());
@@ -47,7 +51,9 @@ public class ServiceProviderViewModel extends ViewModel {
                 searchConstraint.getValue(), lowerBoundaryPrice.getValue(), upperBoundaryPrice.getValue(),
                 categoryId.getValue(), eventTypeIds, isAvailabilityEnabled.getValue(), availability.getValue()
         );
-        Call<GetServicesCardResponse> response = ClientUtils.serviceOfferingService.findAllByServiceProvider(2L, request);
+
+        Long spId = CustomSharedPrefs.getInstance(context).getUser().getId();
+        Call<GetServicesCardResponse> response = ClientUtils.serviceOfferingService.findAllByServiceProvider(spId, request);
         response.enqueue(new Callback<GetServicesCardResponse>() {
             @Override
             public void onResponse(Call<GetServicesCardResponse> call, Response<GetServicesCardResponse> response) {
@@ -61,17 +67,36 @@ public class ServiceProviderViewModel extends ViewModel {
         });
     }
 
-    public void resetFilters() {
+    public void resetFilters(Context context) {
         this.category.setValue("");
         this.categoryId.setValue(null);
         this.eventTypeId.setValue(null);
         this.eventType.setValue("");
         this.lowerBoundaryPrice.setValue(0.0);
-        this.upperBoundaryPrice.setValue(10000.0);
+        this.upperBoundaryPrice.setValue(100000.0);
         this.setIsAvailabilityEnabled(false);
         this.availability.setValue(true);
-        applyFilters();
+        applyFilters(context);
     }
+
+    public ServiceFilterRequest buildCurrentFilter() {
+        ArrayList<Long> eventTypeIds = new ArrayList<>();
+        if (eventTypeId.getValue() != null) {
+            eventTypeIds.add(eventTypeId.getValue());
+        }
+
+        return new ServiceFilterRequest(
+                searchConstraint.getValue(),
+                lowerBoundaryPrice.getValue() != null ? lowerBoundaryPrice.getValue() : 0.0,
+                upperBoundaryPrice.getValue() != null ? upperBoundaryPrice.getValue() : 100000.0,
+                categoryId.getValue(),
+                eventTypeIds,
+                isAvailabilityEnabled.getValue() != null ? isAvailabilityEnabled.getValue() : false,
+                availability.getValue() != null ? availability.getValue() : true
+        );
+    }
+
+
 
     public void setData(List<GetServiceCardResponse> services) {
         this.services.setValue(services);
@@ -107,9 +132,9 @@ public class ServiceProviderViewModel extends ViewModel {
         return searchConstraint;
     }
 
-    public void setSearchConstraint(String searchConstraint) {
+    public void setSearchConstraint(String searchConstraint, Context context) {
         this.searchConstraint.setValue(searchConstraint);
-        applyFilters();
+        applyFilters(context);
     }
 
     public MutableLiveData<Double> getLowerBoundaryPrice() {

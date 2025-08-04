@@ -322,19 +322,19 @@ public class ProductViewModel extends ViewModel {
     }
 
 
-    public void submit(Context context) {
+    public void submit(Context context, Runnable onSuccess) {
         if(Objects.equals(category.getValue(), "Custom")) {
-            createProposal(context);
+            createProposal(context, onSuccess);
             return;
         }
         if (isUpdating.getValue()) {
-            updateService(context);
+            updateService(context, onSuccess);
         } else {
-            createService(context);
+            createService(context, onSuccess);
         }
     }
 
-    private void updateService(Context context) {
+    private void updateService(Context context, Runnable onSuccess) {
         Gson gson = new Gson();
         Long userId = getUserId(context);
         if (userId == null)
@@ -359,6 +359,7 @@ public class ProductViewModel extends ViewModel {
             call.enqueue(new Callback<>() {
                 @Override
                 public void onResponse(@NonNull Call<GetProductResponse> call, @NonNull Response<GetProductResponse> response) {
+                    onSuccess.run();
                 }
 
                 @Override
@@ -370,7 +371,7 @@ public class ProductViewModel extends ViewModel {
         }
     }
 
-    public void createService(Context context) {
+    public void createService(Context context, Runnable onSuccess) {
         Gson gson = new Gson();
         Long userId = getUserId(context);
         if (userId == null)
@@ -394,6 +395,7 @@ public class ProductViewModel extends ViewModel {
         call.enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<GetProductResponse> call, @NonNull Response<GetProductResponse> response) {
+                onSuccess.run();
             }
 
             @Override
@@ -410,7 +412,7 @@ public class ProductViewModel extends ViewModel {
         return user.getId();
     }
 
-    private void createProposal(Context context) {
+    private void createProposal(Context context, Runnable onSuccess) {
         Gson gson = new Gson();
         Long userId = getUserId(context);
         if (userId == null)
@@ -435,6 +437,7 @@ public class ProductViewModel extends ViewModel {
         call.enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
+                onSuccess.run();
                 Log.d("Tag", String.valueOf(response.code()));
             }
 

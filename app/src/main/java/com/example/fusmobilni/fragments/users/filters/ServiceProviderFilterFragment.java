@@ -152,13 +152,13 @@ public class ServiceProviderFilterFragment extends BottomSheetDialogFragment {
         Button applyBtn = dialogView.findViewById(R.id.applyButton);
 
         resetBtn.setOnClickListener(v -> {
-            viewModel.resetFilters();
+            viewModel.resetFilters(requireContext());
             dismiss();
         });
 
         applyBtn.setOnClickListener(v -> {
             initializeFilterValues();
-            viewModel.applyFilters();
+            viewModel.applyFilters(requireContext());
             dismiss();
         });
     }

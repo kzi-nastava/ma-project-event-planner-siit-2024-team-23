@@ -63,6 +63,12 @@ public class ServiceView extends Fragment implements DeleteServiceListener {
         super.onCreate(savedInstanceState);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        viewModel.applyFilters(requireContext());
+    }
+
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -119,7 +125,7 @@ public class ServiceView extends Fragment implements DeleteServiceListener {
     }
 
     @Override
-    public void onDeleteService(int position) {
+    public void onDeleteService(Long id) {
         deleteModal = binding.getRoot().findViewById(R.id.nigger);
         binding.modalBackground.setVisibility(View.VISIBLE);
         deleteModal.setVisibility(View.VISIBLE);
@@ -132,7 +138,9 @@ public class ServiceView extends Fragment implements DeleteServiceListener {
         });
 
         confirmButton.setOnClickListener(v -> {
-            Long id = this.services.get(position).id;
+
+            int position = findServicePositionById(id);
+            if (position == -1) return;
             Call<Void> response = ClientUtils.serviceOfferingService.delete(id);
             response.enqueue(new Callback<Void>() {
                 @Override
@@ -154,9 +162,10 @@ public class ServiceView extends Fragment implements DeleteServiceListener {
     }
 
     @Override
-    public void onUpdateService(int position) {
-        GetServiceCardResponse service = services.get(position);
-        Call<GetServiceResponse> findById = ClientUtils.serviceOfferingService.findById(service.id);
+    public void onUpdateService(Long id) {
+        int position = findServicePositionById(id);
+        if (position == -1) return;
+        Call<GetServiceResponse> findById = ClientUtils.serviceOfferingService.findById(id);
         findById.enqueue(new Callback<GetServiceResponse>() {
             @Override
             public void onResponse(Call<GetServiceResponse> call, Response<GetServiceResponse> response) {
@@ -191,7 +200,7 @@ public class ServiceView extends Fragment implements DeleteServiceListener {
 
                 handler.removeCallbacksAndMessages(null);
                 handler.postDelayed(() -> {
-                    viewModel.setSearchConstraint(s.toString());
+                    viewModel.setSearchConstraint(s.toString(), requireContext());
                 }, DEBOUNCE_DELAY);
             }
 
@@ -200,6 +209,13 @@ public class ServiceView extends Fragment implements DeleteServiceListener {
 
             }
         });
+    }
+
+    private int findServicePositionById(Long id) {
+        for (int i = 0; i < services.size(); i++) {
+            if (services.get(i).id.equals(id)) return i;
+        }
+        return -1;
     }
 
 }

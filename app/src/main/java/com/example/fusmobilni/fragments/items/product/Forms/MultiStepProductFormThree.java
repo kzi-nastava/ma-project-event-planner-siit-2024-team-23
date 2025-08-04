@@ -88,12 +88,14 @@ public class MultiStepProductFormThree extends Fragment implements ItemClickList
         binding.forwardButton.setOnClickListener(v -> {
             //create new service
             if (validate()) {
-                viewModel.submit(getContext());
-                requireActivity().getViewModelStore().clear();
-                NavOptions navOptions = new NavOptions.Builder()
-                        .setPopUpTo(R.id.products_fragment, true)
-                        .build();
-                Navigation.findNavController(view).navigate(R.id.action_productCreationStepThree_toProductView, null, navOptions);
+                viewModel.submit(getContext(), () -> {
+                    requireActivity().getViewModelStore().clear();
+                    NavOptions navOptions = new NavOptions.Builder()
+                            .setPopUpTo(R.id.products_fragment, true)
+                            .build();
+                    Navigation.findNavController(view).navigate(R.id.action_productCreationStepThree_toProductView, null, navOptions);
+                });
+
             }
         });
 
