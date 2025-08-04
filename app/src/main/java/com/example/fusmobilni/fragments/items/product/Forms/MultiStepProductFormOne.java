@@ -124,7 +124,7 @@ public class MultiStepProductFormOne extends Fragment {
         });
 
         if (viewModel.getIsUpdating().getValue()) {
-            binding.textView2.setText("Update Service Form");
+            binding.textView2.setText(R.string.update_product_form);
         }
 
         return view;
