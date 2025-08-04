@@ -71,6 +71,12 @@ public class ProductsFragment extends Fragment implements DeleteServiceListener 
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        viewModel.applyFilters(requireContext());
+    }
+
+    @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentServiceViewBinding.inflate(inflater, container, false);
@@ -128,7 +134,7 @@ public class ProductsFragment extends Fragment implements DeleteServiceListener 
     }
 
     @Override
-    public void onDeleteService(int position) {
+    public void onDeleteService(Long id) {
         deleteModal = binding.getRoot().findViewById(R.id.nigger);
         TextView deleteLabel = deleteModal.findViewById(R.id.deleteLabel);
         deleteLabel.setText(R.string.product_delete_label);
@@ -143,7 +149,8 @@ public class ProductsFragment extends Fragment implements DeleteServiceListener 
         });
 
         confirmButton.setOnClickListener(v -> {
-            Long id = this.products.get(position).id;
+            int position = findProductByPosition(id);
+            if (position == -1) return;
             Call<Void> response = ClientUtils.productsService.delete(id);
             response.enqueue(new Callback<>() {
                 @Override
@@ -165,9 +172,10 @@ public class ProductsFragment extends Fragment implements DeleteServiceListener 
     }
 
     @Override
-    public void onUpdateService(int position) {
-        ProductHomeResponse service = products.get(position);
-        Call<GetProductResponse> findById = ClientUtils.productsService.findById(service.id);
+    public void onUpdateService(Long id) {
+        int position = findProductByPosition(id);
+        if (position == -1) return;
+        Call<GetProductResponse> findById = ClientUtils.productsService.findById(id);
         findById.enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<GetProductResponse> call, @NonNull Response<GetProductResponse> response) {
@@ -211,5 +219,12 @@ public class ProductsFragment extends Fragment implements DeleteServiceListener 
 
             }
         });
+    }
+
+    private int findProductByPosition(Long id) {
+        for (int i = 0; i < products.size(); i++) {
+            if (products.get(i).id.equals(id)) return i;
+        }
+        return -1;
     }
 }

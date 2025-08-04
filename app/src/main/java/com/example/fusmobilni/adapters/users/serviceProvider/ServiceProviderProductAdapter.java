@@ -56,8 +56,8 @@ public class ServiceProviderProductAdapter extends RecyclerView.Adapter<ServiceP
         ProductHomeResponse service = serviceList.get(position);
         holder.title.setText(service.name);
         holder.description.setText(service.description);
-        holder.deleteButton.setOnClickListener(v -> clickListener.onDeleteService(position));
-        holder.editButton.setOnClickListener(v -> clickListener.onUpdateService(position));
+        holder.deleteButton.setOnClickListener(v -> clickListener.onDeleteService(service.id));
+        holder.editButton.setOnClickListener(v -> clickListener.onUpdateService(service.id));
         holder.location.setText(service.location.toString());
         holder.price.setText(service.price.toString());
         holder.category.setText(service.category.name + ", " + service.category.description);

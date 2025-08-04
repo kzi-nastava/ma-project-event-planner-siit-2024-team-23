@@ -54,8 +54,8 @@ public class ServiceProviderServiceAdapter extends RecyclerView.Adapter<ServiceP
         GetServiceCardResponse service = serviceList.get(position);
         holder.title.setText(service.name);
         holder.description.setText(service.description);
-        holder.deleteButton.setOnClickListener(v -> clickListener.onDeleteService(position));
-        holder.editButton.setOnClickListener(v -> clickListener.onUpdateService(position));
+        holder.deleteButton.setOnClickListener(v -> clickListener.onDeleteService(service.id));
+        holder.editButton.setOnClickListener(v -> clickListener.onUpdateService(service.id));
         try {
             holder.image.setImageURI(convertToUrisFromBase64(holder.title.getContext(), service.image));
         } catch (IOException e) {

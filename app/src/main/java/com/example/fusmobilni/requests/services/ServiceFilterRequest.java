@@ -26,7 +26,7 @@ public class ServiceFilterRequest {
     public ServiceFilterRequest() {
         this.name="";
         this.minPrice = 0;
-        this.maxPrice = 10000;
+        this.maxPrice = 100000;
         this.categoryId = null;
         this.eventTypeIds = new ArrayList<>();
         this.availabilityEnabled = false;
