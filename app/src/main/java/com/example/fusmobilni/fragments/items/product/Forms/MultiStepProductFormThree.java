@@ -98,7 +98,7 @@ public class MultiStepProductFormThree extends Fragment implements ItemClickList
         });
 
         if (Boolean.TRUE.equals(viewModel.getIsUpdating().getValue())) {
-            binding.textView2.setText(R.string.update_service_form);
+            binding.textView2.setText(R.string.update_product_form);
         }
 
         return view;
